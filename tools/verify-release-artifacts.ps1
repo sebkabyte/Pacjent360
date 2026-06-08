@@ -192,8 +192,8 @@ Assert-ZipMatchesDirectory -ZipPath $repoZipPath -Directory $repoDirPath -Requir
   ".gitignore",
   "README.md",
   "SECURITY.md",
-  "GO_LIVE_CHECKLIST.md",
-  "DEPLOYMENT_RUNBOOK_NAZWA.md",
+  "docs/deployment/GO_LIVE_CHECKLIST.md",
+  "docs/deployment/DEPLOYMENT_RUNBOOK_NAZWA.md",
   "tools/verify-release-artifacts.ps1"
 )
 

@@ -2,7 +2,7 @@
 
 Status: plan wdrozenia funkcji eksperymentalnych w prototypie Pacjent 360.
 
-Normatywne zrodlo: `SSOT.md`. Obowiazuja tez `DISCLAIMER.md`, `SECURITY.md`, `GO_LIVE_CHECKLIST.md`, `RISKS.md` i `CONTRIBUTING.md`.
+Normatywne zrodlo: `SSOT.md`. Obowiazuja tez `docs/legal/DISCLAIMER.md`, `SECURITY.md`, `docs/deployment/GO_LIVE_CHECKLIST.md`, `docs/governance/RISKS.md` i `CONTRIBUTING.md`.
 
 Ten plan dotyczy wylacznie asystentow operacyjnych. Asystenci moga porzadkowac kontekst, wskazywac braki, przygotowywac pytania DITL i tworzyc wersje robocze raportow. Nie diagnozuja, nie triazuja, nie rekomenduja terapii, nie oceniaja pilnosci i nie przyjmuja realnych danych pacjentow.
 

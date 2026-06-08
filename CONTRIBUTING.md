@@ -8,7 +8,7 @@ Dziękuję za zainteresowanie Pacjent 360. Projekt dotyczy danych i kontekstu me
 - Nie dodawaj funkcji, które diagnozują, zalecają terapię, oceniają pilność albo zastępują decyzję lekarza.
 - Każda flaga, pytanie i automatyzacja musi mieć źródło oraz status DITL.
 - W UI używaj języka: pytanie, brak danych, zadanie, status. Unikaj: diagnoza, zalecenie, wskazanie, pilne, należy.
-- Dla funkcji publicznych sprawdź `RISKS.md` i Clinical Safety Checklist z README.
+- Dla funkcji publicznych sprawdź `docs/governance/RISKS.md` i Clinical Safety Checklist z README.
 
 ## Workflow
 

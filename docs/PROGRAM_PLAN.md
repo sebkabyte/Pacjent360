@@ -207,7 +207,7 @@ Zakres:
 
 | Milestone | Status | Uwagi |
 | --- | --- | --- |
-| M0 Publication Ready | done locally / go-live gated | `dist/public` przechodzi build, verifier i browser smoke, a `dist/upload-ready` przechodzi verifier oraz HTTP smoke jako katalog uploadu. Produkcyjny go-live i publiczne repo nadal czekaja na aliasy `security@pacjent360.com.pl` i `kontakt@pacjent360.com.pl`. |
+| M0 Publication Ready | repo alpha open / go-live gated | Publiczne repo alpha zostalo otwarte z czystej allowlisty. `dist/public` przechodzi build, verifier i browser smoke, a `dist/upload-ready` przechodzi verifier oraz HTTP smoke jako katalog uploadu. Produkcyjny go-live domeny i prywatna obsluga zgloszen nadal czekaja na aliasy `security@pacjent360.com.pl` i `kontakt@pacjent360.com.pl`. |
 | M1 Program SSOT Freeze | done directionally | `PROGRAM_PLAN.md` jest nadrzednym harmonogramem. `CLAUDE.md`, `CODEX_*` i FAZY/CKP/MOB/NAT sa backlogiem wykonawczym albo historia prac. |
 | M2 Data Contract v0.1 | done vertical slice | Jest `patient360-contract.js`, `schema/patient360.schema.json`, eksport `schemaVersion: 7`, `sourceQuality`, typ zrodla `consent`, walidator i ADR `0004-data-contract-v7.md`. |
 | M3 Patient Map Core | done vertical slice + snapshot / needs further hardening | Dodano `patient360-map-model.js`, przepieto renderer mapy na czysty model, dodano walidator M3, snapshot fixture i edge-case fixture. Dalsze pasma/warstwy i pelny rozdzial renderera zostaja w kolejnych iteracjach. |
@@ -226,7 +226,7 @@ Zadania:
 - skonfigurowac i przetestowac `security@pacjent360.com.pl` oraz `kontakt@pacjent360.com.pl`,
 - przygotowac public repo allowlist,
 - zdecydowac, ktore dokumenty robocze AI zostaja prywatne,
-- nie robic `git add .` przed publicznym repo.
+- nie robic `git add .`; publiczne repo aktualizowac przez allowlist i czysta paczke.
 
 Definition of Done:
 
@@ -476,7 +476,7 @@ Warunki przejscia dalej:
 ### P0 no-go
 
 - Nie publikowac starego `dist/public`.
-- Nie otwierac publicznego repo bez aliasow kontaktowych.
+- Nie uruchamiac produkcyjnego go-live domeny ani prywatnej obslugi zgloszen bez aliasow kontaktowych.
 - Nie publikowac roboczych dokumentow AI bez czyszczenia.
 - Nie dodawac LLM runtime bez A0, dry-run, walidatora, zrodel i audytu.
 - Nie uzywac realnych danych pacjentow w demo, fixtures, promptach ani walidacji publicznej.
@@ -566,6 +566,7 @@ Minimalna allowlista publicznego repo:
 
 ```text
 .github/
+.gitattributes
 .htaccess
 .gitignore
 index.html
@@ -587,29 +588,19 @@ assets/
 README.md
 LICENSE
 NOTICE
-DOCS_LICENSE.md
-DISCLAIMER.md
-PRIVACY.md
 SECURITY.md
 CONTRIBUTING.md
 CHANGELOG.md
-RISKS.md
-ROADMAP.md
-PROGRAM_PLAN.md
-GO_LIVE_CHECKLIST.md
-GITHUB_SETUP.md
-DEPLOYMENT_RUNBOOK_NAZWA.md
-ARCHITECTURE.md
-TIMELINE_VISION.md
-SSOT.md
-SPRINTS.md
-VALIDATION_PROTOCOL.md
-VALIDATION_FEEDBACK_FORM.md
-VALIDATION_RESULTS_TEMPLATE.csv
-CRISIS_COMMUNICATION.md
-ACCESSIBILITY_CHECKLIST.md
-ROLLBACK.md
-PUBLISHING.md
+docs/ARCHITECTURE.md
+docs/PROGRAM_PLAN.md
+docs/ROADMAP.md
+docs/SPRINTS.md
+docs/SSOT.md
+docs/TIMELINE_VISION.md
+docs/governance/
+docs/legal/
+docs/deployment/
+docs/validation/
 robots.txt
 sitemap.xml
 docs/adr/
@@ -714,7 +705,7 @@ Praktyczna zasada:
 - `consent:{id}` nie oznacza realnego podpisu kwalifikowanego ani integracji z systemem publicznym; w MVP to lokalny artefakt zakresu dostepu,
 - nowe zgody z formularza musza miec self-reference `consent:{id}` i przechodzic `tools/validate-consent-draft.ps1`.
 
-### D-009: contact gate przed publicznym repo i go-live
+### D-009: contact gate przed go-live i prywatna obsluga zgloszen
 
 Decyzja: DNS/MX nie wystarcza do odblokowania publikacji.
 
@@ -723,8 +714,8 @@ Praktyczna zasada:
 - `tools/verify-contact-gate.ps1 -DnsOnly` sprawdza tylko techniczny precheck poczty domeny,
 - pelny gate wymaga recznego testu wysylka-odbior-odpowiedz dla `security@pacjent360.com.pl` i `kontakt@pacjent360.com.pl`,
 - po recznym tescie uruchamiamy `tools/verify-contact-gate.ps1 -ReceiptConfirmed -MonitorOwner "..."`,
-- wynik trzeba zapisac w `GO_LIVE_CHECKLIST.md` albo `HANDOVER.md`,
-- bez tego publiczne repo i produkcyjny go-live pozostaja no-go.
+- wynik trzeba zapisac w `docs/deployment/GO_LIVE_CHECKLIST.md` albo prywatnym handoverze,
+- bez tego produkcyjny go-live domeny i prywatna obsluga zgloszen pozostaja no-go.
 
 ### D-010: post-deploy verifier domeny
 

@@ -6,9 +6,9 @@ Jeśli po publikacji pojawi się poważne ryzyko, że strona lub demo sugeruje d
 
 1. Zastąp publiczny `index.html` zawartością `maintenance.html` albo ustaw przekierowanie na `maintenance.html`.
 2. Wyłącz link do `demo.html`.
-3. Zapisz incydent w `RISKS.md`.
+3. Zapisz incydent w `docs/governance/RISKS.md`.
 4. Zapisz decyzję i czas reakcji w `CHANGELOG.md`.
-5. Popraw problem lokalnie i wykonaj pełny check publikacyjny z `PUBLISHING.md`.
+5. Popraw problem lokalnie i wykonaj pełny check publikacyjny z `docs/deployment/PUBLISHING.md`.
 
 ## Czas reakcji
 

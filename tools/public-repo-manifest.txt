@@ -1,5 +1,5 @@
 # Pacjent 360 public repository allowlist.
-# This file is executable documentation for PROGRAM_PLAN.md D-002.
+# This file is executable documentation for docs/PROGRAM_PLAN.md D-002.
 .github/
 .gitattributes
 .htaccess
@@ -23,29 +23,19 @@ assets/
 README.md
 LICENSE
 NOTICE
-DOCS_LICENSE.md
-DISCLAIMER.md
-PRIVACY.md
 SECURITY.md
 CONTRIBUTING.md
 CHANGELOG.md
-RISKS.md
-ROADMAP.md
-PROGRAM_PLAN.md
-GO_LIVE_CHECKLIST.md
-GITHUB_SETUP.md
-DEPLOYMENT_RUNBOOK_NAZWA.md
-ARCHITECTURE.md
-TIMELINE_VISION.md
-SSOT.md
-SPRINTS.md
-VALIDATION_PROTOCOL.md
-VALIDATION_FEEDBACK_FORM.md
-VALIDATION_RESULTS_TEMPLATE.csv
-CRISIS_COMMUNICATION.md
-ACCESSIBILITY_CHECKLIST.md
-ROLLBACK.md
-PUBLISHING.md
+docs/ARCHITECTURE.md
+docs/PROGRAM_PLAN.md
+docs/ROADMAP.md
+docs/SPRINTS.md
+docs/SSOT.md
+docs/TIMELINE_VISION.md
+docs/governance/
+docs/legal/
+docs/deployment/
+docs/validation/
 robots.txt
 sitemap.xml
 docs/adr/
