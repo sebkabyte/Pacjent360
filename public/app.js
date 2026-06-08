@@ -1799,28 +1799,14 @@ function renderPatientPortal() {
   const decision = activeDecision();
   const patientQuestions = preVisitModel.patientQuestions;
   const upcoming = patientPortalUpcoming(decisions, timeline);
+  const caregiverModel = PATIENT360_CAREGIVER_MODEL.buildCaregiverModel({
+    state,
+    patientId: state.activePatientId
+  });
 
   return `
-    ${pageHeader("Mój Pacjent 360", "Widok pacjenta: badania, wizyty, leki, dokumenty i pytania na rozmowę z lekarzem. Ustalenia pozostają po stronie lekarza.", "user-round")}
-    <section class="section-band patient-home-hero">
-      <div>
-        <p class="eyebrow">Mój profil</p>
-        <h2>${escapeHtml(patient.name)}</h2>
-        <p>${calculateAge(patient.birthDate)} lat, ${escapeHtml(patient.sex)}. Kontakt wspierający: ${escapeHtml(patient.guardian || "brak danych")}.</p>
-      </div>
-      <div class="patient-home-note">
-        <i data-lucide="info"></i>
-        <span>Ten widok pomaga przygotować się do wizyty i zrozumieć własne dane. Nie zastępuje konsultacji lekarskiej.</span>
-      </div>
-    </section>
-
-    <div class="patient-summary-grid">
-      ${metric("Dokumenty", docs.length, "w historii pacjenta", "files")}
-      ${metric("Wyniki", observations.length, "wartości i zakresy ze źródła", "activity")}
-      ${metric("Leki", meds.length, "przepisane i faktycznie brane", "pill")}
-      ${metric("Pytania", patientQuestions.length, "do omówienia z lekarzem", "message-circle-question")}
-    </div>
-
+    ${pageHeader("Aplikacja pacjenta", "Osobisty widok Pacjent 360: mapa zdarzeń, następne kroki, leki, dokumenty i udostępnianie opiekunowi. Nie zastępuje konsultacji lekarskiej.", "smartphone")}
+    ${renderPatientAppHome({ patient, preVisitModel, docs, observations, meds, patientQuestions, upcoming, timeline, caregiverModel })}
     ${renderPreVisitFlow(preVisitModel)}
     ${renderFullDataAccess("patient")}
     ${renderPatientMap360({ persona: "patient", embedded: true })}
@@ -1943,6 +1929,111 @@ function activeVisitChecklist() {
     patientId: state.activePatientId,
     searchQuery: state.search
   }).checklist;
+}
+
+function renderPatientAppHome({ patient, preVisitModel, docs, observations, meds, patientQuestions, upcoming, timeline, caregiverModel }) {
+  const checklistSummary = preVisitModel.checklistSummary || visitChecklistSummary(preVisitModel.checklist);
+  const nextItem = upcoming[0] || null;
+  const medConfirmCount = meds.filter((med) => {
+    const actual = normalize(med.actualStatus || "");
+    return actual.includes("niepotwierd") || actual.includes("deklarow") || actual.includes("otc");
+  }).length;
+  const activeScopes = caregiverModel?.activeScopes || [];
+  const latestEvent = timeline[0] || null;
+
+  return `
+    <section class="section-band patient-app-home">
+      <div class="patient-app-hero">
+        <div>
+          <p class="eyebrow">Aplikacja pacjenta</p>
+          <h2>Moje zdrowie w jednej mapie</h2>
+          <p>
+            ${escapeHtml(patient.name)} · ${calculateAge(patient.birthDate)} lat. Ten widok porządkuje historię,
+            przygotowanie do wizyty i następne kroki. Decyzje kliniczne zostają po stronie lekarza.
+          </p>
+          <div class="patient-app-actions" aria-label="Skróty aplikacji pacjenta">
+            <button class="patient-app-tab active" data-set-view="patientPortal"><i data-lucide="home"></i>Start</button>
+            <button class="patient-app-tab" data-set-view="timeline"><i data-lucide="git-branch"></i>Mapa</button>
+            <button class="patient-app-tab" data-set-view="medications"><i data-lucide="pill"></i>Leki</button>
+            <button class="patient-app-tab" data-set-view="documents"><i data-lucide="files"></i>Dokumenty</button>
+            <button class="patient-app-tab" data-set-view="consent"><i data-lucide="shield-check"></i>Udostępnianie</button>
+          </div>
+        </div>
+        <article class="patient-today-card">
+          <span>Dziś / najbliższy krok</span>
+          <strong>${escapeHtml(nextItem?.title || "Uzupełnij kontekst przed wizytą")}</strong>
+          <p>${escapeHtml(nextItem ? `${formatDate(nextItem.date)} · ${nextItem.body}` : "Zacznij od dokumentów, leków, wywiadu i pytań do lekarza.")}</p>
+          <div class="source-line">${sourceChips(nextItem?.sourceRefs || [`patient:${patient.id}`])}</div>
+        </article>
+      </div>
+
+      <div class="patient-app-grid">
+        ${renderPatientAppTile({
+          label: "Przygotowanie",
+          title: checklistSummary.status.label,
+          body: `${checklistSummary.ready} gotowe · ${checklistSummary.confirm} do potwierdzenia · ${checklistSummary.missing} braki`,
+          icon: checklistSummary.status.icon,
+          statusClass: checklistSummary.status.className,
+          view: "patientPortal"
+        })}
+        ${renderPatientAppTile({
+          label: "Mapa zdarzeń",
+          title: latestEvent ? latestEvent.title : "Brak zdarzeń",
+          body: latestEvent ? `${formatDate(latestEvent.date)} · ${latestEvent.track}` : "Dodaj dokument lub wywiad demo, aby zbudować mapę.",
+          icon: "map",
+          statusClass: "info",
+          view: "timeline"
+        })}
+        ${renderPatientAppTile({
+          label: "Leki",
+          title: medConfirmCount ? `${medConfirmCount} do potwierdzenia` : `${meds.length} na liście`,
+          body: "Przepisane, faktycznie przyjmowane, OTC i suplementy jako pytania do lekarza.",
+          icon: "pill",
+          statusClass: medConfirmCount ? "pending" : "done",
+          view: "medications"
+        })}
+        ${renderPatientAppTile({
+          label: "Pytania",
+          title: `${patientQuestions.length} do rozmowy`,
+          body: "Pytania i braki danych są przygotowaniem do rozmowy, nie zaleceniem systemu.",
+          icon: "message-circle-question",
+          statusClass: patientQuestions.length ? "pending" : "done",
+          view: "interview"
+        })}
+      </div>
+
+      <div class="patient-app-secondary">
+        <article class="patient-app-panel">
+          <div class="patient-card-head">
+            <span>Dokumenty i wyniki</span>
+            <i data-lucide="folder-open"></i>
+          </div>
+          <strong>${docs.length} dokumenty · ${observations.length} wyniki</strong>
+          <p>Wszystko pozostaje źródłem do sprawdzenia. Wyniki pokazują zakres podany przez źródło, bez interpretacji klinicznej.</p>
+          <button class="ghost-button" data-set-view="documents"><i data-lucide="files"></i>Otwórz dokumenty</button>
+        </article>
+        <article class="patient-app-panel">
+          <div class="patient-card-head">
+            <span>Opiekun i rodzina</span>
+            <i data-lucide="users-round"></i>
+          </div>
+          <strong>${activeScopes.length ? `${activeScopes.length} aktywne zakresy dostępu` : "Brak aktywnego dostępu"}</strong>
+          <p>Pacjent decyduje, co opiekun widzi: leki, wizyty, dokumenty, zadania, obserwacje albo raport.</p>
+          <button class="ghost-button" data-set-view="consent"><i data-lucide="shield-check"></i>Zarządzaj zgodami</button>
+        </article>
+      </div>
+    </section>
+  `;
+}
+
+function renderPatientAppTile({ label, title, body, icon, statusClass, view }) {
+  return `
+    <button class="patient-app-tile ${escapeHtml(statusClass || "info")}" type="button" data-set-view="${escapeHtml(view)}">
+      <span><i data-lucide="${escapeHtml(icon)}"></i>${escapeHtml(label)}</span>
+      <strong>${escapeHtml(title)}</strong>
+      <small>${escapeHtml(body)}</small>
+    </button>
+  `;
 }
 
 function visitChecklistItemState(item = {}) {
