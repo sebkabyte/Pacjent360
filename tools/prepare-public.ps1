@@ -6,8 +6,12 @@ param(
 $ErrorActionPreference = "Stop"
 
 $root = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+$sourceRoot = Join-Path $root "public"
 $target = Join-Path $root $OutputDir
 $resolvedDist = Join-Path $root "dist"
+if (-not (Test-Path $sourceRoot)) {
+  throw "Missing public source directory: $sourceRoot"
+}
 
 if (Test-Path $target) {
   $resolvedTarget = (Resolve-Path $target).Path
@@ -42,7 +46,7 @@ $files = @(
 )
 
 foreach ($file in $files) {
-  $source = Join-Path $root $file
+  $source = Join-Path $sourceRoot $file
   if (-not (Test-Path $source)) {
     throw "Missing required public file: $file"
   }
@@ -51,7 +55,7 @@ foreach ($file in $files) {
 
 $assetTarget = Join-Path $target "assets"
 New-Item -ItemType Directory -Force -Path $assetTarget | Out-Null
-Copy-Item -LiteralPath (Join-Path $root "assets/hero-clinical-context.png") -Destination $assetTarget
+Copy-Item -LiteralPath (Join-Path $sourceRoot "assets/hero-clinical-context.png") -Destination $assetTarget
 
 $blockedNames = @(
   "1.txt",

@@ -77,8 +77,8 @@ Repo jest dojrzalym prototypem alpha, ale nadal lokalnym i statycznym.
 
 | Obszar | Stan |
 | --- | --- |
-| Strona publiczna | `index.html`, `site.css`, `site.js`, `assets/` |
-| Demo MVP | `demo.html`, `app.js`, `styles.css` |
+| Strona publiczna | `public/index.html`, `public/site.css`, `public/site.js`, `public/assets/` |
+| Demo MVP | `public/demo.html`, `public/app.js`, `public/styles.css` |
 | Model lokalny | `localStorage`, `pacjent360-state-v6`, dane fikcyjne |
 | Mapa Pacjenta 360 | wspolny komponent lekarz/pacjent, zdarzenia, epizody, relacje, inspektor |
 | Dokumentacja safety | `DISCLAIMER.md`, `PRIVACY.md`, `SECURITY.md`, `RISKS.md`, `GO_LIVE_CHECKLIST.md` |
@@ -88,10 +88,10 @@ Repo jest dojrzalym prototypem alpha, ale nadal lokalnym i statycznym.
 
 Wazne ustalenia councilu:
 
-- `dist/public` moze byc starsze niz najnowszy `app.js` i `styles.css`; przed publikacja trzeba zawsze odswiezyc paczke.
+- `dist/public` moze byc starsze niz najnowszy `public/app.js` i `public/styles.css`; przed publikacja trzeba zawsze odswiezyc paczke.
 - Publiczne repo jest no-go bez dzialajacych aliasow `security@pacjent360.com.pl` i `kontakt@pacjent360.com.pl`.
 - Materialy robocze AI, np. `CLAUDE.md`, `CODEX_*`, `HANDOVER.md`, powinny byc traktowane jako prywatne albo polprywatne do osobnego oczyszczenia.
-- `app.js` jest akceptowalny dla MVP, ale nie dla dalszej architektury produktu. Kolejne milestone'y musza wydzielic kontrakty danych, walidatory, fixtures i renderery.
+- `public/app.js` jest akceptowalny dla MVP, ale nie dla dalszej architektury produktu. Kolejne milestone'y musza wydzielic kontrakty danych, walidatory, fixtures i renderery.
 
 ## Filary programu
 
@@ -209,9 +209,9 @@ Zakres:
 | --- | --- | --- |
 | M0 Publication Ready | repo alpha open / go-live gated | Publiczne repo alpha zostalo otwarte z czystej allowlisty. `dist/public` przechodzi build, verifier i browser smoke, a `dist/upload-ready` przechodzi verifier oraz HTTP smoke jako katalog uploadu. Produkcyjny go-live domeny i prywatna obsluga zgloszen nadal czekaja na aliasy `security@pacjent360.com.pl` i `kontakt@pacjent360.com.pl`. |
 | M1 Program SSOT Freeze | done directionally | `PROGRAM_PLAN.md` jest nadrzednym harmonogramem. `CLAUDE.md`, `CODEX_*` i FAZY/CKP/MOB/NAT sa backlogiem wykonawczym albo historia prac. |
-| M2 Data Contract v0.1 | done vertical slice | Jest `patient360-contract.js`, `schema/patient360.schema.json`, eksport `schemaVersion: 7`, `sourceQuality`, typ zrodla `consent`, walidator i ADR `0004-data-contract-v7.md`. |
-| M3 Patient Map Core | done vertical slice + snapshot / needs further hardening | Dodano `patient360-map-model.js`, przepieto renderer mapy na czysty model, dodano walidator M3, snapshot fixture i edge-case fixture. Dalsze pasma/warstwy i pelny rozdzial renderera zostaja w kolejnych iteracjach. |
-| M4 Pre-Visit Workflow | vertical slice + model | Kokpit pacjenta ma flow "Przygotowanie krok po kroku", checklist summary, statusy `gotowe / do potwierdzenia / brak danych`, czysty model `patient360-previsit-model.js`, fixture no-data i walidator M4. Pelne M4 nadal wymaga wariantu opiekuna. |
+| M2 Data Contract v0.1 | done vertical slice | Jest `public/patient360-contract.js`, `schema/patient360.schema.json`, eksport `schemaVersion: 7`, `sourceQuality`, typ zrodla `consent`, walidator i ADR `0004-data-contract-v7.md`. |
+| M3 Patient Map Core | done vertical slice + snapshot / needs further hardening | Dodano `public/patient360-map-model.js`, przepieto renderer mapy na czysty model, dodano walidator M3, snapshot fixture i edge-case fixture. Dalsze pasma/warstwy i pelny rozdzial renderera zostaja w kolejnych iteracjach. |
+| M4 Pre-Visit Workflow | vertical slice + model | Kokpit pacjenta ma flow "Przygotowanie krok po kroku", checklist summary, statusy `gotowe / do potwierdzenia / brak danych`, czysty model `public/patient360-previsit-model.js`, fixture no-data i walidator M4. Pelne M4 nadal wymaga wariantu opiekuna. |
 
 ## Harmonogram rzeczowo-techniczny
 
@@ -230,7 +230,7 @@ Zadania:
 
 Definition of Done:
 
-- `node --check app.js` pass,
+- `node --check public/app.js` pass,
 - clean package bez `1.txt`, `linkedin-story.md`, `.git`, `.env`, `.claude`, roboczych materialow AI,
 - publiczne pliki maja disclaimer/privacy,
 - znany jest rollback.
@@ -264,7 +264,7 @@ Definition of Done:
 
 Obecny model `v6` nie musi zostac przebudowany jednorazowo. Data Contract v0.1 powinien byc warstwa kompatybilnosci nad obecnymi tablicami.
 
-| Obecnie w `app.js` | Kontrakt v0.1 | Migracja v6 -> v7 |
+| Obecnie w `public/app.js` | Kontrakt v0.1 | Migracja v6 -> v7 |
 | --- | --- | --- |
 | `documents[]`, `interviews[]`, `observations[]`, `medications[]`, `decisionContexts[]` | `Source[]` + rekordy domenowe | utworzyc rejestr `sources[]` z typem, data, tytulem i ref do rekordu |
 | stringi `sourceRefs` typu `doc:d1` | `SourceRef` | zachowac stringi w UI, ale walidowac je przez `sources[]` |
@@ -302,11 +302,11 @@ Refaktor plikow `state/renderers/validators/fixtures` jest osobnym etapem M3/M7,
 Status implementacyjny M2:
 
 - schemat: `schema/patient360.schema.json`,
-- wspolne slowniki kontraktu: `patient360-contract.js`,
+- wspolne slowniki kontraktu: `public/patient360-contract.js`,
 - eksport demo: `schemaVersion: 7`, `contractVersion: 0.1`, `sources[]`, `claims[]`, `timelineEvents[]`, `timelineEpisodes[]`, `timelineRelations[]`, `consentScopes[]`, `audit[]`, `sourceQuality`, `domainData`,
 - walidator: `powershell -ExecutionPolicy Bypass -File tools\validate-data-contract.ps1`,
 - decyzja migracyjna: `docs/adr/0004-data-contract-v7.md`,
-- zakres: warstwa kompatybilnosci nad obecnym `app.js`, bez pelnego refaktoru monolitu.
+- zakres: warstwa kompatybilnosci nad obecnym `public/app.js`, bez pelnego refaktoru monolitu.
 
 ### Tydzien 2-3: Patient Map Core
 
@@ -567,30 +567,14 @@ Minimalna allowlista publicznego repo:
 ```text
 .github/
 .gitattributes
-.htaccess
 .gitignore
-index.html
-demo.html
-disclaimer.html
-privacy.html
-maintenance.html
-health.txt
-site.css
-site.js
-patient360-contract.js
-patient360-map-model.js
-patient360-previsit-model.js
-patient360-caregiver-model.js
-patient360-consent-model.js
-styles.css
-app.js
-assets/
 README.md
 LICENSE
 NOTICE
 SECURITY.md
 CONTRIBUTING.md
 CHANGELOG.md
+public/
 docs/ARCHITECTURE.md
 docs/PROGRAM_PLAN.md
 docs/ROADMAP.md

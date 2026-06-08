@@ -2,6 +2,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const root = path.resolve(__dirname, "..");
+const publicRoot = path.join(root, "public");
 
 function assert(condition, message) {
   if (!condition) {
@@ -10,7 +11,7 @@ function assert(condition, message) {
 }
 
 function read(file) {
-  return fs.readFileSync(path.join(root, file), "utf8");
+  return fs.readFileSync(path.join(publicRoot, file), "utf8");
 }
 
 function matches(text, regex) {

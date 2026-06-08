@@ -3,9 +3,10 @@ const path = require("path");
 const vm = require("vm");
 
 const root = path.resolve(__dirname, "..");
-const appPath = path.join(root, "app.js");
+const publicRoot = path.join(root, "public");
+const appPath = path.join(publicRoot, "app.js");
 const edgeCasePath = path.join(root, "fixtures", "caregiver-scope-edgecases.json");
-const caregiverModel = require(path.join(root, "patient360-caregiver-model.js"));
+const caregiverModel = require(path.join(publicRoot, "patient360-caregiver-model.js"));
 
 const PATIENT_SCOPED_COLLECTION_KEYS = [
   "decisionContexts",
