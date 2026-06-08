@@ -3,9 +3,10 @@ const path = require("path");
 const vm = require("vm");
 
 const root = path.resolve(__dirname, "..");
-const appPath = path.join(root, "app.js");
+const publicRoot = path.join(root, "public");
+const appPath = path.join(publicRoot, "app.js");
 const schemaPath = path.join(root, "schema", "patient360.schema.json");
-const contract = require(path.join(root, "patient360-contract.js"));
+const contract = require(path.join(publicRoot, "patient360-contract.js"));
 
 const DATA_SCHEMA_VERSION = contract.DATA_SCHEMA_VERSION;
 const DATA_CONTRACT_VERSION = contract.DATA_CONTRACT_VERSION;

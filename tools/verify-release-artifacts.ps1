@@ -188,10 +188,11 @@ Assert-ZipMatchesDirectory -ZipPath $uploadRootZipPath -Directory $publicDirPath
 )
 
 Assert-ZipMatchesDirectory -ZipPath $repoZipPath -Directory $repoDirPath -RequiredFiles @(
-  ".htaccess",
   ".gitignore",
   "README.md",
   "SECURITY.md",
+  "public/.htaccess",
+  "public/index.html",
   "docs/deployment/GO_LIVE_CHECKLIST.md",
   "docs/deployment/DEPLOYMENT_RUNBOOK_NAZWA.md",
   "tools/verify-release-artifacts.ps1"

@@ -34,12 +34,12 @@ function Invoke-External {
 $root = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 
 $nodeCheckFiles = @(
-  "app.js",
-  "patient360-contract.js",
-  "patient360-map-model.js",
-  "patient360-previsit-model.js",
-  "patient360-caregiver-model.js",
-  "patient360-consent-model.js",
+  "public/app.js",
+  "public/patient360-contract.js",
+  "public/patient360-map-model.js",
+  "public/patient360-previsit-model.js",
+  "public/patient360-caregiver-model.js",
+  "public/patient360-consent-model.js",
   "tools/validate-data-contract.js",
   "tools/validate-map-model.js",
   "tools/validate-previsit-workflow.js",
@@ -69,9 +69,9 @@ Invoke-External "Validation pack validation" "powershell" @("-ExecutionPolicy", 
 
 if ($SkipBrowser) {
   Write-Host ""
-  Write-Host "SKIP: Browser smoke on working tree (-SkipBrowser)"
+  Write-Host "SKIP: Browser smoke on public source (-SkipBrowser)"
 } else {
-  Invoke-External "Browser smoke on working tree" "node" @((Join-Path $root "tools/smoke-browser.js"), "--packageDir", $root)
+  Invoke-External "Browser smoke on public source" "node" @((Join-Path $root "tools/smoke-browser.js"), "--packageDir", (Join-Path $root "public"))
 }
 
 Write-Host ""

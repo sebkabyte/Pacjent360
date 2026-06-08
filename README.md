@@ -204,11 +204,11 @@ Po skonfigurowaniu poczty użyj `tools/verify-contact-gate.ps1`: najpierw `-DnsO
 
 ## Quick start
 
-1. Otwórz `index.html` w przeglądarce.
+1. Otwórz `public/index.html` w przeglądarce.
 2. Opcjonalnie uruchom lokalny serwer:
 
 ```powershell
-python -m http.server 4173 --bind 127.0.0.1
+python -m http.server 4173 --bind 127.0.0.1 --directory public
 ```
 
 3. Wejdź na:
@@ -229,8 +229,8 @@ Nie wpisuj do demo realnych danych pacjentów. Zmiany w demo mogą być zapisane
 
 Root repozytorium ma być czytelny. Szczegółowe dokumenty są w `docs/`, żeby publiczny widok projektu nie mieszał strony, demo, governance i planów roboczych w jednym miejscu.
 
-- `index.html`, `demo.html`, `disclaimer.html`, `privacy.html`, `maintenance.html` - publiczna strona, demo i strony bezpieczeństwa.
-- `app.js`, `styles.css`, `patient360-*.js`, `schema/`, `fixtures/` - prototyp MVP, modele i fikcyjne dane testowe.
+- `public/` - źródła statycznej strony, demo i plików publikowanych w document root hostingu.
+- `public/app.js`, `public/styles.css`, `public/patient360-*.js`, `schema/`, `fixtures/` - prototyp MVP, modele i fikcyjne dane testowe.
 - `README.md`, `LICENSE`, `NOTICE`, `SECURITY.md`, `CONTRIBUTING.md`, `CHANGELOG.md` - podstawowe dokumenty open source.
 - `docs/PROGRAM_PLAN.md` - nadrzędny plan strategiczny i harmonogram rzeczowo-techniczny.
 - `docs/ARCHITECTURE.md` - architektura Pacjent 360 jako warstwy kontekstu nad IKP/P1.

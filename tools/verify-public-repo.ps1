@@ -110,18 +110,18 @@ foreach ($pattern in $privateTextPatterns) {
   Assert-True (-not $hits) ("Private marker found in public repo package: " + $pattern)
 }
 
-& node --check (Join-Path $target "patient360-contract.js") | Out-Null
-Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo patient360-contract.js"
-& node --check (Join-Path $target "patient360-map-model.js") | Out-Null
-Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo patient360-map-model.js"
-& node --check (Join-Path $target "patient360-previsit-model.js") | Out-Null
-Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo patient360-previsit-model.js"
-& node --check (Join-Path $target "patient360-caregiver-model.js") | Out-Null
-Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo patient360-caregiver-model.js"
-& node --check (Join-Path $target "patient360-consent-model.js") | Out-Null
-Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo patient360-consent-model.js"
-& node --check (Join-Path $target "app.js") | Out-Null
-Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo app.js"
+& node --check (Join-Path $target "public/patient360-contract.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-contract.js"
+& node --check (Join-Path $target "public/patient360-map-model.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-map-model.js"
+& node --check (Join-Path $target "public/patient360-previsit-model.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-previsit-model.js"
+& node --check (Join-Path $target "public/patient360-caregiver-model.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-caregiver-model.js"
+& node --check (Join-Path $target "public/patient360-consent-model.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-consent-model.js"
+& node --check (Join-Path $target "public/app.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/app.js"
 & node --check (Join-Path $target "tools/validate-data-contract.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-data-contract.js"
 & node --check (Join-Path $target "tools/validate-map-model.js") | Out-Null

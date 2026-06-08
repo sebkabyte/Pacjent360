@@ -2,9 +2,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const root = path.resolve(__dirname, "..");
+const publicRoot = path.join(root, "public");
 const fixturePath = path.join(root, "fixtures", "consent-draft-edgecases.json");
-const consentModel = require(path.join(root, "patient360-consent-model.js"));
-const caregiverModel = require(path.join(root, "patient360-caregiver-model.js"));
+const consentModel = require(path.join(publicRoot, "patient360-consent-model.js"));
+const caregiverModel = require(path.join(publicRoot, "patient360-caregiver-model.js"));
 
 function assert(condition, message) {
   if (!condition) {

@@ -3,11 +3,12 @@ const path = require("path");
 const vm = require("vm");
 
 const root = path.resolve(__dirname, "..");
-const appPath = path.join(root, "app.js");
+const publicRoot = path.join(root, "public");
+const appPath = path.join(publicRoot, "app.js");
 const snapshotPath = path.join(root, "fixtures", "patient-map-model.snapshot.json");
 const edgeCasePath = path.join(root, "fixtures", "patient-map-model-edgecases.json");
-const contract = require(path.join(root, "patient360-contract.js"));
-const mapModel = require(path.join(root, "patient360-map-model.js"));
+const contract = require(path.join(publicRoot, "patient360-contract.js"));
+const mapModel = require(path.join(publicRoot, "patient360-map-model.js"));
 
 const TIMELINE_PERIODS = [
   { id: "episode", label: "Epizod" },
