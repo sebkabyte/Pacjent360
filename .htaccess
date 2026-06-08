@@ -1,0 +1,20 @@
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on [OR]
+  RewriteCond %{HTTP_HOST} !^pacjent360\.com\.pl$ [NC]
+  RewriteRule ^ https://pacjent360.com.pl%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+  Header always set X-Frame-Options "DENY"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+</IfModule>
+
+<FilesMatch "^(\.env|1\.txt|linkedin-story\.md|CLAUDE\.md|CODEX_.*|HANDOVER\.md|pacjent360-(public|upload-root|public-repo)\.zip(\.sha256)?|release-manifest\.json|upload-ready-manifest\.json|deployment-handoff\.txt|go-live-status\.txt|domain-diagnostics\.txt|document-root-checklist\.txt)$">
+  Require all denied
+</FilesMatch>

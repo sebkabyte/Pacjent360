@@ -1,0 +1,7 @@
+Pacjent 360 static deployment health
+project=pacjent360
+package=upload-root
+status=ready
+contains_patient_data=false
+medical_device=false
+clinical_decision_support=false

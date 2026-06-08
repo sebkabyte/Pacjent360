@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Polityka prywatności | Pacjent 360</title>
+    <meta
+      name="description"
+      content="Polityka prywatności prototypu Pacjent 360. Demo działa lokalnie i nie powinno być używane z realnymi danymi pacjentów."
+    />
+    <meta property="og:title" content="Polityka prywatności | Pacjent 360" />
+    <meta property="og:description" content="Informacja o prywatności, logach serwera i lokalnym działaniu demo Pacjent 360." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://pacjent360.com.pl/privacy.html" />
+    <link rel="canonical" href="https://pacjent360.com.pl/privacy.html" />
+    <link rel="icon" href="assets/hero-clinical-context.png" />
+    <link rel="stylesheet" href="site.css" />
+  </head>
+  <body>
+    <header class="site-nav" aria-label="Nawigacja strony">
+      <a class="brand" href="index.html" aria-label="Pacjent 360">
+        <span>360</span>
+        <strong>Pacjent 360</strong>
+      </a>
+      <nav>
+        <a href="index.html#dlaczego">Dlaczego</a>
+        <a href="index.html#produkt">Produkt</a>
+        <a href="index.html#wspolpraca">Współpraca</a>
+        <a href="demo.html">Demo MVP</a>
+      </nav>
+    </header>
+
+    <main class="legal-main">
+      <section class="legal-hero">
+        <p class="eyebrow">Prywatność</p>
+        <h1>Polityka prywatności</h1>
+        <p>
+          Pacjent 360 jest statycznym prototypem koncepcyjnym. Publiczna strona nie wymaga konta,
+          a demo jest przeznaczone wyłącznie do pracy z fikcyjnymi danymi pacjentów.
+        </p>
+      </section>
+
+      <section class="legal-content">
+        <article>
+          <h2>Administrator danych</h2>
+          <p>
+            Administratorem danych związanych z publiczną stroną projektu Pacjent 360 jest Sebastian
+            Kalisz. Kontakt w sprawach prywatności:
+            <a href="mailto:kontakt@pacjent360.com.pl">kontakt@pacjent360.com.pl</a>.
+          </p>
+        </article>
+        <article>
+          <h2>Podstawa prawna i cel</h2>
+          <p>
+            Podstawą prawną ewentualnego przetwarzania danych technicznych jest Art. 6(1)(f) RODO,
+            czyli uzasadniony interes administratora polegający na hostingu statycznej strony,
+            zapewnieniu jej działania i podstawowym bezpieczeństwie technicznym.
+          </p>
+        </article>
+        <article>
+          <h2>Zakres danych</h2>
+          <p>
+            Strona publiczna nie zbiera danych osobowych przez formularze, konta użytkowników,
+            cookies analityczne ani tracking. Demo MVP działa lokalnie w przeglądarce i korzysta z
+            fikcyjnych danych. Dane wpisane w demo mogą zostać zapisane w <code>localStorage</code>
+            przeglądarki, obecnie pod kluczem <code>pacjent360-state-v6</code>. Pozostają lokalne
+            dla przeglądarki do czasu resetu demo albo wyczyszczenia danych strony.
+          </p>
+        </article>
+        <article>
+          <h2>Zewnętrzny CDN</h2>
+          <p>
+            Strona i demo używają biblioteki ikon Lucide pobieranej z
+            <code>https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js</code>. Wersja jest przypięta,
+            a skrypt w <code>index.html</code> i <code>demo.html</code> ma atrybut SRI
+            <code>integrity</code> oraz <code>crossorigin="anonymous"</code>. unpkg.com działa w oparciu
+            o Cloudflare CDN. Adres IP odwiedzającego może być widoczny dla operatora CDN wraz ze
+            standardowymi informacjami technicznymi, takimi jak user-agent, referer i czas żądania.
+          </p>
+        </article>
+        <article>
+          <h2>Logi serwera</h2>
+          <p>
+            Hosting nazwa.pl może rejestrować standardowe logi HTTP, takie jak adres IP, user-agent,
+            timestamp, ścieżka URL i kod odpowiedzi HTTP. Retencja logów zależy od polityki hostingu
+            nazwa.pl. Logi służą utrzymaniu działania strony i bezpieczeństwu technicznemu.
+          </p>
+        </article>
+        <article>
+          <h2>Prawa użytkownika</h2>
+          <p>
+            W zakresie wynikającym z RODO możesz poprosić o dostęp do danych, sprostowanie,
+            usunięcie, ograniczenie przetwarzania, przenoszenie danych albo wnieść sprzeciw wobec
+            przetwarzania. W sprawach prywatności napisz na
+            <a href="mailto:kontakt@pacjent360.com.pl">kontakt@pacjent360.com.pl</a>.
+          </p>
+        </article>
+        <article>
+          <h2>Skarga do PUODO</h2>
+          <p>
+            Masz prawo wnieść skargę do Prezesa Urzędu Ochrony Danych Osobowych (PUODO), jeśli
+            uważasz, że przetwarzanie danych narusza przepisy o ochronie danych osobowych.
+          </p>
+        </article>
+        <article>
+          <h2>Brak profilowania i śledzenia</h2>
+          <p>
+            Strona nie profiluje użytkowników, nie używa cookies analitycznych i nie śledzi zachowań
+            odwiedzających. Projekt nie korzysta z reklam ani narzędzi marketingowego trackingu.
+          </p>
+        </article>
+        <article>
+          <h2>Brak integracji z IKP/P1</h2>
+          <p>
+            Pacjent 360 nie loguje się do IKP, nie przechowuje loginów, nie scrapuje danych i nie korzysta
+            z oficjalnej integracji z P1. Ewentualne integracje mogą powstać wyłącznie legalną,
+            oficjalną ścieżką.
+          </p>
+        </article>
+        <article>
+          <h2>Dane realne</h2>
+          <p>
+            Do publicznych issue, repozytorium, formularzy feedbacku i demo nie wolno dodawać realnych
+            danych pacjentów. Feedback najlepiej odnosić do fikcyjnych case studies albo do ogólnych
+            problemów workflow.
+          </p>
+        </article>
+        <a class="text-link" href="index.html">Wróć do strony projektu</a>
+      </section>
+    </main>
+
+    <footer>
+      <span>Pacjent 360</span>
+      <span class="footer-links">
+        <a href="index.html">Strona główna</a>
+        <a href="disclaimer.html">Disclaimer</a>
+        <a href="privacy.html">Prywatność</a>
+      </span>
+    </footer>
+  </body>
+</html>

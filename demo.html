@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Pacjent 360 | Demo kontekstu wizyty</title>
+    <link rel="icon" href="assets/hero-clinical-context.png" />
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"
+      integrity="sha384-uTYyvsSSUZeaPhb5RbKlQa0zY/WpX/QHfvg2mczXyBQOpkWPEDy9lczyp+w7SKXu"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script src="patient360-contract.js" defer></script>
+    <script src="patient360-map-model.js" defer></script>
+    <script src="patient360-previsit-model.js" defer></script>
+    <script src="patient360-caregiver-model.js" defer></script>
+    <script src="patient360-consent-model.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#viewRoot">Przejdź do treści demo</a>
+    <div class="demo-watermark" role="note">
+      <strong>PROTOTYP KONCEPCYJNY — DANE FIKCYJNE — NIE UŻYWAĆ Z REALNYMI DANYMI PACJENTA</strong>
+    </div>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Nawigacja modułów">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">360</div>
+          <div>
+            <strong>Pacjent 360</strong>
+            <span>Kontekst wizyty i pytań</span>
+          </div>
+        </div>
+
+        <nav class="nav-list" aria-label="Widoki demo">
+          <div class="nav-section-label">Kokpity</div>
+          <button class="nav-item cockpit-nav active" data-view="core" title="Kokpit lekarza">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Lekarz</span>
+          </button>
+          <button class="nav-item cockpit-nav" data-view="patientPortal" title="Kokpit pacjenta">
+            <i data-lucide="user-round"></i>
+            <span>Pacjent</span>
+          </button>
+          <button class="nav-item cockpit-nav" data-view="caregiverPortal" title="Kokpit opiekuna">
+            <i data-lucide="users-round"></i>
+            <span>Opiekun</span>
+          </button>
+          <div class="nav-section-label">Pełne dane</div>
+          <button class="nav-item" data-view="interview" title="Wywiad pacjenta i opiekuna">
+            <i data-lucide="messages-square"></i>
+            <span>Wywiad</span>
+          </button>
+          <button class="nav-item" data-view="documents" title="Rejestr dokumentów">
+            <i data-lucide="files"></i>
+            <span>Dokumenty</span>
+          </button>
+          <button class="nav-item" data-view="timeline" title="Mapa Pacjenta 360">
+            <i data-lucide="git-branch"></i>
+            <span>Mapa</span>
+          </button>
+          <button class="nav-item" data-view="medications" title="Leki i alergie">
+            <i data-lucide="pill"></i>
+            <span>Leki</span>
+          </button>
+          <button class="nav-item" data-view="observations" title="Wyniki i zakresy podane przez źródła">
+            <i data-lucide="activity"></i>
+            <span>Wyniki</span>
+          </button>
+          <button class="nav-item" data-view="risks" title="Sygnały i pytania DITL">
+            <i data-lucide="flag"></i>
+            <span>Sygnały</span>
+          </button>
+          <button class="nav-item" data-view="reports" title="Raporty specjalistyczne">
+            <i data-lucide="clipboard-list"></i>
+            <span>Raporty</span>
+          </button>
+          <button class="nav-item" data-view="consent" title="Zgody i dostęp">
+            <i data-lucide="shield-check"></i>
+            <span>Zgody</span>
+          </button>
+          <button class="nav-item" data-view="audit" title="Audyt">
+            <i data-lucide="scroll-text"></i>
+            <span>Audyt</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <p>Niezależny prototyp. Nie jest usługą CeZ, NFZ, IKP ani e-Profilem Pacjenta.</p>
+          <div>
+            <span class="status-dot"></span>
+            <span>Dane demo, lokalnie</span>
+          </div>
+          <a href="disclaimer.html">Disclaimer medyczny</a>
+          <a href="privacy.html">Prywatność</a>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div class="patient-switcher">
+            <label for="patientSelect">Pacjent</label>
+            <select id="patientSelect"></select>
+          </div>
+
+          <div class="global-search">
+            <i data-lucide="search"></i>
+            <input id="searchInput" type="search" aria-label="Szukaj w danych demo" placeholder="Szukaj w decyzjach, wywiadach, sygnałach, lekach..." />
+          </div>
+
+          <div class="topbar-actions">
+            <button class="icon-button" id="resetDemo" title="Przywróć dane demo" aria-label="Przywróć dane demo">
+              <i data-lucide="rotate-ccw"></i>
+            </button>
+            <button class="icon-button" id="exportJson" title="Eksportuj JSON demo" aria-label="Eksportuj JSON demo">
+              <i data-lucide="download"></i>
+            </button>
+            <button class="icon-button" id="printReport" title="Podgląd wydruku demo" aria-label="Podgląd wydruku demo">
+              <i data-lucide="printer"></i>
+            </button>
+          </div>
+        </header>
+
+        <section class="alert-strip" id="criticalStrip" aria-live="polite"></section>
+
+        <div class="content-grid">
+          <section class="view-panel" id="viewRoot" aria-live="polite"></section>
+
+          <aside class="evidence-panel" aria-label="Indeks źródeł">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Skąd to wiemy</p>
+                <h2>Źródła demo</h2>
+              </div>
+              <button class="icon-button compact" id="closeEvidence" title="Wyczyść wybór źródła" aria-label="Wyczyść wybór źródła">
+                <i data-lucide="x"></i>
+              </button>
+            </div>
+            <div id="evidenceRoot"></div>
+          </aside>
+        </div>
+      </main>
+    </div>
+
+    <dialog id="entryDialog" aria-labelledby="dialogTitle">
+      <form method="dialog" id="dialogForm">
+        <div class="dialog-head">
+          <h2 id="dialogTitle">Dodaj wpis</h2>
+          <button type="button" class="icon-button compact" data-close-dialog title="Zamknij" aria-label="Zamknij">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div id="dialogFields" class="dialog-fields"></div>
+        <menu class="dialog-actions">
+          <button type="button" data-close-dialog class="ghost-button">Anuluj</button>
+          <button value="default" id="dialogSubmit" class="primary-button">Zapisz wpis demo</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <dialog id="confirmDialog" aria-labelledby="confirmTitle">
+      <div class="dialog-head">
+        <h2 id="confirmTitle">Potwierdzenie</h2>
+        <button type="button" class="icon-button compact" data-close-confirm title="Zamknij" aria-label="Zamknij">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div id="confirmBody" class="dialog-fields"></div>
+      <menu class="dialog-actions">
+        <button type="button" id="confirmSecondaryAction" class="ghost-button">Anuluj</button>
+        <button type="button" id="confirmAction" class="danger-button">Cofnij dostęp</button>
+      </menu>
+    </dialog>
+  </body>
+</html>

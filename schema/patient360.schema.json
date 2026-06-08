@@ -1,0 +1,375 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pacjent360.com.pl/schema/patient360.schema.json",
+  "title": "Pacjent 360 Data Contract v0.1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schemaVersion",
+    "contractVersion",
+    "exportedAt",
+    "intendedUse",
+    "patient",
+    "sources",
+    "claims",
+    "timelineEvents",
+    "timelineEpisodes",
+    "timelineRelations",
+    "consentScopes",
+    "audit",
+    "sourceQuality",
+    "domainData"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 7
+    },
+    "contractVersion": {
+      "const": "0.1"
+    },
+    "exportedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "intendedUse": {
+      "type": "string",
+      "minLength": 1
+    },
+    "patient": {
+      "type": "object",
+      "required": ["id", "name"],
+      "additionalProperties": true
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/claim"
+      }
+    },
+    "timelineEvents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/timelineEvent"
+      }
+    },
+    "timelineEpisodes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/timelineEpisode"
+      }
+    },
+    "timelineRelations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/timelineRelation"
+      }
+    },
+    "consentScopes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/consentScope"
+      }
+    },
+    "audit": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/auditEntry"
+      }
+    },
+    "sourceQuality": {
+      "$ref": "#/$defs/sourceQuality"
+    },
+    "domainData": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "sourceRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sourceRefs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/sourceRef"
+      }
+    },
+    "claimType": {
+      "enum": [
+        "Known",
+        "Unknown",
+        "Uncertain",
+        "To verify",
+        "flag:red",
+        "flag:amber",
+        "flag:green",
+        "flag:blue",
+        "decisionContext",
+        "ditlQuestion",
+        "timelineEvent",
+        "report"
+      ]
+    },
+    "claimStatus": {
+      "enum": [
+        "",
+        "Known",
+        "Unknown",
+        "Uncertain",
+        "To verify",
+        "DITL: do oceny lekarza",
+        "do wyjaśnienia",
+        "wyjaśnione",
+        "odrzucone",
+        "dalsza kontrola",
+        "potwierdzone",
+        "do potwierdzenia",
+        "rozbieżność",
+        "orientacyjne",
+        "planowane"
+      ]
+    },
+    "timelineTrack": {
+      "enum": [
+        "objawy",
+        "badania",
+        "leki",
+        "kontekst medyczny",
+        "hospitalizacje",
+        "konsultacje",
+        "funkcjonowanie",
+        "decyzje medyczne",
+        "obserwacje z wywiadu"
+      ]
+    },
+    "timelineStatus": {
+      "enum": [
+        "potwierdzone",
+        "do potwierdzenia",
+        "rozbieżność",
+        "planowane",
+        "orientacyjne"
+      ]
+    },
+    "relationType": {
+      "enum": [
+        "powiązane czasowo",
+        "powiązane źródłem"
+      ]
+    },
+    "consentStatus": {
+      "enum": [
+        "aktywny",
+        "cofnięty",
+        "wygasły"
+      ]
+    },
+    "auditActionType": {
+      "enum": [
+        "local_demo_audit",
+        "ditl_status_change",
+        "consent_change",
+        "export",
+        "import",
+        "validation"
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["ref", "type", "title"],
+      "properties": {
+        "ref": {
+          "$ref": "#/$defs/sourceRef"
+        },
+        "type": {
+          "enum": [
+            "document",
+            "interview",
+            "transcript",
+            "observation",
+            "medication",
+            "flag",
+            "decisionContext",
+            "report",
+            "consent"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "patientId": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "recordId": {
+          "type": "string"
+        }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id", "patientId", "claimType", "text", "sourceRefs"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "patientId": {
+          "type": "string"
+        },
+        "claimType": {
+          "$ref": "#/$defs/claimType"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "$ref": "#/$defs/claimStatus"
+        },
+        "sourceRefs": {
+          "$ref": "#/$defs/sourceRefs"
+        },
+        "linkedRef": {
+          "type": "string"
+        }
+      }
+    },
+    "timelineEvent": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id", "patientId", "date", "track", "title", "status", "sourceRefs", "claimRefs", "schemaStatus"],
+      "properties": {
+        "track": {
+          "$ref": "#/$defs/timelineTrack"
+        },
+        "status": {
+          "$ref": "#/$defs/timelineStatus"
+        },
+        "sourceRefs": {
+          "$ref": "#/$defs/sourceRefs"
+        },
+        "claimRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "schemaStatus": {
+          "enum": ["projected_from_sources", "planned_not_fact"]
+        }
+      }
+    },
+    "timelineEpisode": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id", "patientId", "title", "startDate", "endDate", "status", "sourceRefs", "eventRefs"],
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/timelineStatus"
+        },
+        "sourceRefs": {
+          "$ref": "#/$defs/sourceRefs"
+        },
+        "eventRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "timelineRelation": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id", "patientId", "fromEventId", "toEventId", "relationType", "sourceRefs", "causality"],
+      "properties": {
+        "relationType": {
+          "$ref": "#/$defs/relationType"
+        },
+        "sourceRefs": {
+          "$ref": "#/$defs/sourceRefs"
+        },
+        "causality": {
+          "const": "not_asserted"
+        }
+      }
+    },
+    "consentScope": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id", "patientId", "subject", "scope", "validTo", "status", "sourceRefs"],
+      "properties": {
+        "role": {
+          "type": "string"
+        },
+        "caregiverId": {
+          "type": "string"
+        },
+        "caregiverName": {
+          "type": "string"
+        },
+        "areas": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "$ref": "#/$defs/consentStatus"
+        },
+        "sourceRefs": {
+          "$ref": "#/$defs/sourceRefs"
+        }
+      }
+    },
+    "auditEntry": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id", "patientId", "date", "actor", "action", "actionType"],
+      "properties": {
+        "actionType": {
+          "$ref": "#/$defs/auditActionType"
+        }
+      }
+    },
+    "sourceQuality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sources", "claims", "sourceMissingCount"],
+      "properties": {
+        "sources": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "claims": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sourceMissingCount": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}
