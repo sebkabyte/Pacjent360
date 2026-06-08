@@ -332,6 +332,7 @@
       return eventDate && todayDate ? eventDate >= todayDate : false;
     });
     const todayColumn = todayCandidateIndex >= 0 ? todayCandidateIndex + 1 : Math.max(events.length, 1);
+    const todayPercent = timelinePositionPercent(today, range);
     const episodes = byPatient(state.timelineEpisodes, safePatientId);
     const episodeByEventIdMap = buildEpisodeByEventId(episodes);
     const episodeByEventId = Object.fromEntries(episodeByEventIdMap.entries());
@@ -367,6 +368,8 @@
       periodId: period.id,
       detail,
       detailId: detail.id,
+      zoom,
+      zoomPercent: Math.round(zoom * 100),
       trackFilter,
       safePersona,
       persona: safePersona,
@@ -384,6 +387,7 @@
       selected: selectedEnriched,
       selectedId,
       todayColumn,
+      todayPercent,
       layers,
       activeTracks,
       hiddenTracks,
@@ -416,6 +420,10 @@
     }
     if (!model.patientId) errors.push("patientId is missing");
     if (!model.range?.start || !model.range?.end) errors.push("range.start/range.end are required");
+    if (!Number.isFinite(model.zoom)) errors.push("zoom is missing or invalid");
+    if (!model.geometry || !Number.isFinite(model.geometry.eventWidth) || !Number.isFinite(model.geometry.mapHeight)) {
+      errors.push("geometry is missing or invalid");
+    }
     const ids = new Set();
     (model.events || []).forEach((event) => {
       if (!event.id) errors.push("event.id is missing");

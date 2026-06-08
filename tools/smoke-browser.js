@@ -309,6 +309,77 @@ async function main() {
     assert(report.hasReport, "Reports view should render context report");
     assert(report.hasKnownUnknown, "Reports view should include Known / Unknown / Uncertain / To verify");
 
+    const timeline = await client.evaluate(`(() => {
+      document.querySelector('nav button[data-view="timeline"]').click();
+      const map = document.querySelector('.temporal-map');
+      const zoomText = document.querySelector('.temporal-zoom-control strong')?.textContent.trim() || '';
+      const summaryZoom = [...document.querySelectorAll('.temporal-summary article')]
+        .find((item) => item.textContent.includes('Zoom'))?.querySelector('strong')?.textContent.trim() || '';
+      const style = map ? getComputedStyle(map) : null;
+      const parsePercent = (value) => {
+        const match = String(value || '').match(/(-?\\d+(?:\\.\\d+)?)%/);
+        return match ? Number(match[1]) : Number.NaN;
+      };
+      const eventPositions = [...document.querySelectorAll('.temporal-event')].map((event) => ({
+        id: event.dataset.selectTimelineEvent || '',
+        left: parsePercent(event.style.getPropertyValue('--event-left')),
+        style: event.getAttribute('style') || ''
+      }));
+      const miniTickPositions = [...document.querySelectorAll('.mini-tick')].map((tick) => ({
+        id: tick.dataset.mapEventId || '',
+        left: parsePercent(tick.style.left),
+        style: tick.getAttribute('style') || ''
+      }));
+      const inlineStyles = [...document.querySelectorAll('.temporal-map,.temporal-event,.mini-tick,.temporal-today-marker')]
+        .map((node) => node.getAttribute('style') || '');
+      const cardRects = [...document.querySelectorAll('.temporal-card')].map((card) => {
+        const rect = card.getBoundingClientRect();
+        return { width: rect.width, height: rect.height, left: rect.left, top: rect.top };
+      });
+      const eventRects = [...document.querySelectorAll('.temporal-event')].map((event) => {
+        const rect = event.getBoundingClientRect();
+        return { width: rect.width, height: rect.height };
+      });
+      const bodyText = document.body.textContent || '';
+      return {
+        activeView: document.querySelector('nav button.active')?.dataset.view || null,
+        hasMap: Boolean(map),
+        zoomText,
+        summaryZoom,
+        bodyHasNaN: bodyText.includes('NaN'),
+        styleHasNaN: Boolean(map?.getAttribute('style')?.includes('NaN')),
+        inlineStyles,
+        eventPositions,
+        miniTickPositions,
+        eventWidth: style?.getPropertyValue('--event-width').trim() || '',
+        cardWidth: style?.getPropertyValue('--card-width').trim() || '',
+        mapHeight: style?.getPropertyValue('--map-height').trim() || '',
+        eventCount: document.querySelectorAll('.temporal-event').length,
+        cardCount: document.querySelectorAll('.temporal-card').length,
+        branchCount: document.querySelectorAll('.temporal-branch').length,
+        hasTodayMarker: Boolean(document.querySelector('.temporal-today-marker')),
+        cardRects,
+        eventRects,
+        hasHorizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
+      };
+    })()`);
+    assert(timeline.activeView === "timeline", `Expected timeline view, got ${timeline.activeView}`);
+    assert(timeline.hasMap, "Timeline view should render temporal map");
+    assert(!timeline.bodyHasNaN && !timeline.styleHasNaN, "Timeline view must not render NaN values");
+    assert(timeline.inlineStyles.every((style) => !style.includes("NaN")), "Timeline inline styles must not contain NaN values");
+    assert(/^\d+%$/.test(timeline.zoomText) && /^\d+%$/.test(timeline.summaryZoom), `Timeline zoom labels should be numeric percentages, got ${timeline.zoomText}/${timeline.summaryZoom}`);
+    assert(/^\d+px$/.test(timeline.eventWidth) && /^\d+px$/.test(timeline.cardWidth) && /^\d+px$/.test(timeline.mapHeight), "Timeline geometry CSS variables should be finite px values");
+    assert(timeline.eventCount >= 1 && timeline.cardCount === timeline.eventCount && timeline.branchCount === timeline.eventCount, "Timeline events should each render a card and branch");
+    assert(timeline.hasTodayMarker, "Timeline should render today marker");
+    assert(timeline.eventPositions.length === timeline.miniTickPositions.length, "Timeline and minimap should render the same number of dated points");
+    assert(timeline.eventPositions.every((item) => item.id && Number.isFinite(item.left) && item.left >= 0 && item.left <= 100), "Timeline events should expose finite --event-left percentages");
+    assert(timeline.miniTickPositions.every((item) => item.id && Number.isFinite(item.left) && item.left >= 0 && item.left <= 100), "Timeline minimap ticks should expose finite left percentages");
+    const miniById = new Map(timeline.miniTickPositions.map((item) => [item.id, item.left]));
+    assert(timeline.eventPositions.every((item) => miniById.has(item.id) && Math.abs(miniById.get(item.id) - item.left) <= 0.1), "Timeline minimap ticks should align with event positions");
+    assert(timeline.cardRects.every((rect) => rect.width >= 120 && Number.isFinite(rect.left) && Number.isFinite(rect.top)), "Timeline cards should have finite positions and usable width");
+    assert(timeline.eventRects.every((rect) => rect.width >= 120 && rect.height >= 300), "Timeline event lanes should have stable dimensions");
+    assert(!timeline.hasHorizontalOverflow, "Timeline should scroll inside workbench, not create body horizontal overflow");
+
     const caregiver = await client.evaluate(`(() => {
       document.querySelector('nav button[data-view="caregiverPortal"]').click();
       return {
@@ -548,6 +619,38 @@ async function main() {
     assert(mobile.stepCount === 6, `Mobile smoke expected 6 steps, got ${mobile.stepCount}`);
     assert(!mobile.hasHorizontalOverflow, "Mobile patient view should not create body horizontal overflow");
     assert(!mobile.gridColumns.includes(" ") || mobile.gridColumns.split(" ").length <= 1, `Mobile pre-visit grid should be one column, got ${mobile.gridColumns}`);
+
+    const mobileTimeline = await client.evaluate(`(() => {
+      document.querySelector('nav button[data-view="timeline"]').click();
+      const map = document.querySelector('.temporal-map');
+      const event = document.querySelector('.temporal-event');
+      const card = document.querySelector('.temporal-card');
+      const scroll = document.querySelector('.temporal-scroll');
+      const eventRect = event?.getBoundingClientRect();
+      const cardRect = card?.getBoundingClientRect();
+      const bodyText = document.body.textContent || '';
+      const inlineStyles = [...document.querySelectorAll('.temporal-map,.temporal-event,.mini-tick,.temporal-today-marker')]
+        .map((node) => node.getAttribute('style') || '');
+      return {
+        activeView: document.querySelector('nav button.active')?.dataset.view || null,
+        hasMap: Boolean(map),
+        bodyHasNaN: bodyText.includes('NaN'),
+        inlineHasNaN: inlineStyles.some((style) => style.includes('NaN')),
+        eventWidth: eventRect?.width || 0,
+        eventHeight: eventRect?.height || 0,
+        cardWidth: cardRect?.width || 0,
+        cardLeft: cardRect?.left || 0,
+        scrollsInsideMap: scroll ? scroll.scrollWidth > scroll.clientWidth : false,
+        hasBodyOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
+      };
+    })()`);
+    assert(mobileTimeline.activeView === "timeline", "Mobile timeline smoke should open timeline view");
+    assert(mobileTimeline.hasMap, "Mobile timeline should render temporal map");
+    assert(!mobileTimeline.bodyHasNaN && !mobileTimeline.inlineHasNaN, "Mobile timeline must not render NaN values");
+    assert(mobileTimeline.eventWidth >= 120 && mobileTimeline.eventHeight >= 300, "Mobile timeline event lanes should keep usable dimensions");
+    assert(mobileTimeline.cardWidth >= 120 && Number.isFinite(mobileTimeline.cardLeft), "Mobile timeline cards should keep finite usable dimensions");
+    assert(mobileTimeline.scrollsInsideMap, "Mobile timeline should scroll inside the temporal workbench");
+    assert(!mobileTimeline.hasBodyOverflow, "Mobile timeline should not create body horizontal overflow");
 
     const browserIssues = client.events.filter((event) => {
       if (event.method === "Runtime.exceptionThrown") return true;

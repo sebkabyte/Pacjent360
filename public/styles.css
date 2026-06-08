@@ -2067,12 +2067,11 @@ dialog::backdrop {
 
 .temporal-map {
   position: relative;
-  display: grid;
+  display: block;
   --event-width: 270px;
   --card-width: 274px;
-  grid-template-columns: repeat(var(--event-count), minmax(var(--event-width), 1fr));
-  gap: 20px;
-  min-width: max(100%, calc(var(--event-count) * (var(--event-width) + 22px)));
+  --map-width: 960px;
+  min-width: max(100%, var(--map-width));
   min-height: var(--map-height, 800px);
   padding: 26px 38px;
   border: 1px solid #cbd7df;
@@ -2112,9 +2111,15 @@ dialog::backdrop {
 }
 
 .temporal-event {
-  position: relative;
+  position: absolute;
+  left: clamp(calc(var(--card-width) / 2 + 22px), var(--event-left, 0%), calc(100% - var(--card-width) / 2 - 22px));
+  top: 26px;
+  bottom: 26px;
   z-index: 1;
-  min-height: var(--event-height, 748px);
+  width: var(--card-width);
+  min-height: 0;
+  height: calc(var(--map-height, 800px) - 52px);
+  transform: translateX(-50%);
   scroll-snap-align: center;
 }
 
@@ -2183,7 +2188,7 @@ dialog::backdrop {
 .temporal-card {
   position: absolute;
   left: 50%;
-  width: min(var(--card-width), calc(100vw - 76px));
+  width: min(100%, var(--card-width), calc(100vw - 76px));
   padding: 12px;
   transform: translateX(-50%);
   border: 1px solid #ccd7df;
@@ -2299,20 +2304,23 @@ dialog::backdrop {
 }
 
 .temporal-today-marker {
-  position: relative;
+  position: absolute;
+  left: clamp(28px, var(--today-left, 100%), calc(100% - 28px));
+  top: 0;
+  bottom: 0;
   z-index: 2;
-  min-height: var(--event-height, 748px);
+  width: 2px;
+  transform: translateX(-50%);
   pointer-events: none;
 }
 
 .temporal-today-marker::before {
   content: "";
   position: absolute;
-  left: 50%;
+  left: 0;
   top: 28px;
   bottom: 28px;
   width: 2px;
-  transform: translateX(-50%);
   border-radius: 999px;
   background: rgba(37, 99, 235, 0.5);
 }
@@ -2712,7 +2720,7 @@ dialog::backdrop {
   }
 
   .temporal-map {
-    min-width: max(100%, calc(var(--event-count) * (var(--event-width) + 20px)));
+    min-width: max(100%, var(--map-width));
   }
 
   .patient-map-workbench {
@@ -2842,15 +2850,13 @@ dialog::backdrop {
   }
 
   .temporal-scroll {
-    overflow-x: visible;
+    overflow-x: auto;
   }
 
   .temporal-map {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-    min-width: 0;
-    min-height: 0;
+    display: block;
+    min-width: max(100%, var(--map-width));
+    min-height: var(--map-height, 680px);
     padding: 16px;
     background:
       linear-gradient(90deg, rgba(15, 118, 110, 0.06) 1px, transparent 1px),
@@ -2859,70 +2865,75 @@ dialog::backdrop {
   }
 
   .temporal-spine {
-    left: 28px;
-    right: auto;
-    top: 16px;
-    bottom: 16px;
-    width: 8px;
-    height: auto;
-    transform: none;
-    grid-template-columns: 1fr;
+    left: 24px;
+    right: 24px;
+    top: 50%;
+    bottom: auto;
+    width: auto;
+    height: 10px;
+    transform: translateY(-50%);
+    grid-template-columns: repeat(4, 1fr);
   }
 
   .temporal-spine span {
-    display: none;
+    display: block;
   }
 
   .temporal-event {
-    display: grid;
-    grid-template-columns: 32px minmax(0, 1fr);
-    gap: 10px;
+    position: absolute;
+    left: clamp(calc(var(--card-width) / 2 + 18px), var(--event-left, 0%), calc(100% - var(--card-width) / 2 - 18px));
+    top: 18px;
+    bottom: 18px;
+    display: block;
+    width: var(--card-width);
     min-height: 0;
+    height: calc(var(--map-height, 680px) - 36px);
+    transform: translateX(-50%);
   }
 
   .temporal-branch,
   .temporal-event.above .temporal-branch,
   .temporal-event.below .temporal-branch {
-    position: relative;
-    left: auto;
-    top: auto;
-    bottom: auto;
-    width: 32px;
-    height: auto;
-    min-height: 100%;
-    transform: none;
-    background: transparent;
+    position: absolute;
+    left: 50%;
+    width: 2px;
+    height: var(--branch-depth);
+    min-height: 0;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg, rgba(200, 169, 77, 0.2), #a0772b, var(--teal));
   }
 
   .temporal-branch::before,
   .temporal-event.above .temporal-branch::before,
   .temporal-event.below .temporal-branch::before {
-    left: 8px;
-    top: 16px;
+    left: 50%;
+    top: auto;
     bottom: auto;
-    transform: none;
+    transform: translateX(-50%);
   }
 
   .temporal-branch::after {
-    display: none;
+    display: block;
   }
 
   .temporal-card,
   .temporal-event.above .temporal-card,
   .temporal-event.below .temporal-card {
-    position: static;
-    width: 100%;
-    transform: none;
+    position: absolute;
+    left: 50%;
+    width: min(100%, var(--card-width), calc(100vw - 56px));
+    transform: translateX(-50%);
   }
 
   .detail-overview .temporal-map,
   .detail-detail .temporal-map {
-    min-height: 0;
+    min-height: var(--map-height, 680px);
   }
 
   .detail-overview .temporal-event,
   .detail-detail .temporal-event {
     min-height: 0;
+    height: calc(var(--map-height, 680px) - 36px);
   }
 }
 
@@ -3036,10 +3047,8 @@ dialog::backdrop {
   }
 
   .temporal-map {
-    display: grid;
-    grid-template-columns: repeat(var(--event-count), minmax(var(--event-width), 1fr));
-    gap: 14px;
-    min-width: max(100%, calc(var(--event-count) * (var(--event-width) + 16px)));
+    display: block;
+    min-width: max(100%, var(--map-width));
     min-height: var(--map-height, 680px);
   }
 
@@ -3057,10 +3066,16 @@ dialog::backdrop {
   .temporal-event,
   .detail-overview .temporal-event,
   .detail-detail .temporal-event {
-    position: relative;
+    position: absolute;
+    left: clamp(calc(var(--card-width) / 2 + 18px), var(--event-left, 0%), calc(100% - var(--card-width) / 2 - 18px));
+    top: 18px;
+    bottom: 18px;
     z-index: 1;
     display: block;
-    min-height: var(--event-height, 560px);
+    width: var(--card-width);
+    min-height: 0;
+    height: calc(var(--map-height, 680px) - 36px);
+    transform: translateX(-50%);
   }
 
   .temporal-branch,
@@ -3122,7 +3137,10 @@ dialog::backdrop {
   }
 
   .temporal-today-marker {
-    min-height: var(--event-height, 560px);
+    left: clamp(28px, var(--today-left, 100%), calc(100% - 28px));
+    top: 0;
+    bottom: 0;
+    min-height: 0;
   }
 
   .demo-watermark {
