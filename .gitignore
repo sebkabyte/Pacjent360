@@ -1,0 +1,11 @@
+1.txt
+linkedin-story.md
+.env
+.env.*
+.claude/
+node_modules/
+.git/
+dist/
+build/
+.cache/
+*.log

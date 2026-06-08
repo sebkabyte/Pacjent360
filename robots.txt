@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /index.html
+Allow: /disclaimer.html
+Allow: /privacy.html
+Allow: /sitemap.xml
+Disallow: /demo.html
+Disallow: /app.js
+Disallow: /styles.css
+Disallow: /maintenance.html
+
+Sitemap: https://pacjent360.com.pl/sitemap.xml

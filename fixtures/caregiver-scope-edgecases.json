@@ -1,0 +1,114 @@
+{
+  "fixtureVersion": 1,
+  "activePatientId": "caregiver-active",
+  "patients": [
+    {
+      "id": "caregiver-active",
+      "name": "Przypadek caregiver active",
+      "age": 70
+    },
+    {
+      "id": "caregiver-none",
+      "name": "Przypadek caregiver none",
+      "age": 44
+    }
+  ],
+  "medications": [
+    {
+      "id": "cm1",
+      "patientId": "caregiver-active",
+      "name": "Lek przewlekly A",
+      "status": "aktywny",
+      "actualStatus": "niepotwierdzone",
+      "question": "Czy lek jest na aktualnej liście do rozmowy z lekarzem?",
+      "sourceRefs": ["medication:cm1"]
+    },
+    {
+      "id": "cm2",
+      "patientId": "caregiver-active",
+      "name": "Suplement OTC",
+      "status": "OTC/suplement",
+      "actualStatus": "niepotwierdzone",
+      "question": "Czy suplement został dopisany do listy pytań?",
+      "sourceRefs": ["interview:ci1"]
+    }
+  ],
+  "visitChecklists": [
+    {
+      "id": "cvc1",
+      "patientId": "caregiver-active",
+      "visitDate": "2026-06-18",
+      "visitType": "Wizyta kontrolna",
+      "items": [
+        { "id": "cvci1", "label": "Lista leków", "status": "do potwierdzenia", "sourceRefs": ["medication:cm1"] },
+        { "id": "cvci2", "label": "Dokument tożsamości", "status": "gotowe", "sourceRefs": ["doc:cd1"] }
+      ]
+    }
+  ],
+  "documents": [
+    {
+      "id": "cd1",
+      "patientId": "caregiver-active",
+      "title": "Wypis demo",
+      "type": "dokument",
+      "status": "do potwierdzenia",
+      "date": "2026-06-01",
+      "eventDate": "2026-06-01"
+    }
+  ],
+  "observations": [],
+  "interviews": [
+    {
+      "id": "ci1",
+      "patientId": "caregiver-active",
+      "date": "2026-06-02",
+      "scenario": "Wywiad demo"
+    }
+  ],
+  "reports": [
+    {
+      "id": "cr1",
+      "patientId": "caregiver-active",
+      "type": "Raport kontekstowy"
+    }
+  ],
+  "consents": [
+    {
+      "id": "cg-active-med",
+      "patientId": "caregiver-active",
+      "subject": "Opiekun lekowy demo",
+      "scope": "leki i zadania lekowe",
+      "role": "opiekun lekowy",
+      "caregiverId": "caregiver-med",
+      "caregiverName": "Opiekun lekowy demo",
+      "areas": ["medications", "tasks"],
+      "validTo": "2026-12-31",
+      "status": "aktywny"
+    },
+    {
+      "id": "cg-revoked-visit",
+      "patientId": "caregiver-active",
+      "subject": "Opiekun wizyt demo",
+      "scope": "wizyty, dokumenty i raport",
+      "role": "opiekun wizyt",
+      "caregiverId": "caregiver-visit",
+      "caregiverName": "Opiekun wizyt demo",
+      "areas": ["visits", "documents", "report"],
+      "validTo": "2026-12-31",
+      "status": "cofnięty"
+    },
+    {
+      "id": "cg-none-revoked",
+      "patientId": "caregiver-none",
+      "subject": "Dawny opiekun",
+      "scope": "raport",
+      "role": "osoba wspierająca",
+      "caregiverId": "caregiver-old",
+      "caregiverName": "Dawny opiekun",
+      "areas": ["report"],
+      "validTo": "2026-01-01",
+      "status": "cofnięty"
+    }
+  ],
+  "audit": []
+}

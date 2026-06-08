@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Pacjent 360 | Kontekst wizyty i pytań</title>
+    <meta
+      name="description"
+      content="Pacjent 360 to otwarty projekt: pamięć, kontekst i checklista pacjenta przed wizytą, w trakcie rozmowy medycznej i po wizycie."
+    />
+    <meta property="og:title" content="Pacjent 360 | Pamięć, kontekst i checklista pacjenta" />
+    <meta
+      property="og:description"
+      content="Od rozproszonej historii do jasnych pytań przed wizytą, ustaleń w trakcie i kroków po wizycie. Otwarty projekt porządkujący kontekst pacjenta."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://pacjent360.com.pl/" />
+    <meta property="og:image" content="https://pacjent360.com.pl/assets/hero-clinical-context.png" />
+    <link rel="canonical" href="https://pacjent360.com.pl/" />
+    <link rel="icon" href="assets/hero-clinical-context.png" />
+    <link rel="stylesheet" href="site.css" />
+    <script
+      src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"
+      integrity="sha384-uTYyvsSSUZeaPhb5RbKlQa0zY/WpX/QHfvg2mczXyBQOpkWPEDy9lczyp+w7SKXu"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script src="site.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Przejdź do treści</a>
+    <header class="site-nav" aria-label="Nawigacja strony">
+      <a class="brand" href="#top" aria-label="Pacjent 360">
+        <span>360</span>
+        <strong>Pacjent 360</strong>
+      </a>
+      <nav aria-label="Sekcje strony">
+        <a href="#dlaczego">Dlaczego</a>
+        <a href="#produkt">Produkt</a>
+        <a href="#petla">Pętla</a>
+        <a href="#granice">Granice</a>
+        <a href="#case-studies">Case studies</a>
+        <a href="#opensource">Open source</a>
+        <a href="#wspolpraca">Współpraca</a>
+        <a href="demo.html">Demo MVP</a>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <section class="hero" aria-label="Pacjent 360">
+        <img src="assets/hero-clinical-context.png" alt="" class="hero-image" />
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <p class="eyebrow">Pamięć, kontekst i checklista pacjenta</p>
+          <h1>Pacjent 360</h1>
+          <p class="hero-copy">
+            Od rozproszonej historii do jasnych pytań przed wizytą, ustaleń w trakcie i kroków po wizycie.
+            Otwarty projekt porządkujący kontekst pacjenta — nie zastępuje lekarza.
+          </p>
+          <div class="hero-actions">
+            <a class="primary-link" href="demo.html"><i data-lucide="play-circle"></i> Zobacz demo MVP</a>
+            <a class="secondary-link" href="#produkt"><i data-lucide="workflow"></i> Jak to działa</a>
+          </div>
+          <p class="hero-note">
+            Doctor in the Loop: system porządkuje pytania, a decyzje pozostają po stronie lekarza.
+          </p>
+        </div>
+      </section>
+
+      <section class="intro-band" id="dlaczego">
+        <div class="section-label">Problem</div>
+        <div class="intro-grid">
+          <h2>Pacjent ma dane, ale nie ma kontekstu. Lekarz ma minuty, nie godziny.</h2>
+          <p>
+            Pacjent 360 porządkuje dokumentację, wyniki, wywiad, leki, funkcjonowanie, obserwacje
+            opiekunów i planowane kontakty medyczne. Efektem ma być jasny kontekst: co wiadomo,
+            czego brakuje, co jest niepewne i jakie pytania trzeba omówić z lekarzem.
+          </p>
+        </div>
+      </section>
+
+      <section class="independence-band" aria-label="Projekt niezależny">
+        <div>
+          <p class="eyebrow">Projekt niezależny</p>
+          <h2>Pacjent 360 nie jest usługą CeZ, NFZ, IKP ani e-Profilem Pacjenta.</h2>
+        </div>
+        <p>
+          To niezależny, open source prototyp koncepcyjny pokazujący, jak można porządkować kontekst
+          pacjenta wokół dokumentów, wywiadu, leków, osi czasu i pytań DITL. Projekt nie loguje się
+          do IKP, nie przechowuje loginów, nie scrapuje danych i nie korzysta z oficjalnej integracji z P1.
+        </p>
+      </section>
+
+      <section class="principles">
+        <article>
+          <i data-lucide="user-check"></i>
+          <h3>Doctor in the Loop</h3>
+          <p>Każda decyzja zostaje przy lekarzu. System porządkuje kontekst i pytania.</p>
+        </article>
+        <article>
+          <i data-lucide="messages-square"></i>
+          <h3>Wywiad jako źródło</h3>
+          <p>Rozmowa z pacjentem, opiekunem lub rodziną jest oznaczona jako wywiad, a nie fakt laboratoryjny.</p>
+        </article>
+        <article>
+          <i data-lucide="git-branch"></i>
+          <h3>Film, nie zdjęcie</h3>
+          <p>Multi-track timeline pokazuje objawy, badania, leki, funkcjonowanie i decyzje w czasie.</p>
+        </article>
+        <article>
+          <i data-lucide="flag"></i>
+          <h3>Sygnały, nie wyroki</h3>
+          <p>Sygnały kontekstowe pomagają skupić uwagę na pytaniach i lukach, ale nie są gotową oceną ani decyzją po stronie systemu.</p>
+        </article>
+      </section>
+
+      <section class="case-section" id="produkt">
+        <div class="section-label">Jak pomaga</div>
+        <div class="case-intro">
+          <h2>Jedna warstwa danych, trzy perspektywy pracy.</h2>
+          <p>
+            MVP pokazuje, jak te same źródła mogą wspierać lekarza, pacjenta i opiekuna bez tworzenia
+            automatycznej decyzji po stronie systemu. Każda perspektywa widzi pełny kontekst, ale inny
+            priorytet pracy.
+          </p>
+        </div>
+        <div class="site-case-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));" aria-label="Perspektywy Pacjent 360">
+          <article>
+            <span>LEKARZ</span>
+            <h3>Pacjent w 90 sekund</h3>
+            <p>Pytania, braki danych i rozbieżności do wyjaśnienia przed rozmową lub decyzją lekarza.</p>
+          </article>
+          <article>
+            <span>PACJENT</span>
+            <h3>Moja historia i co dalej</h3>
+            <p>Badania, wizyty, dokumenty, leki i pytania zebrane w jednym miejscu przed wizytą.</p>
+          </article>
+          <article>
+            <span>OPIEKUN</span>
+            <h3>Co zorganizować</h3>
+            <p>Zadania, terminy, dokumenty i zakres wsparcia widoczny tylko za zgodą pacjenta.</p>
+          </article>
+        </div>
+        <a class="text-link" href="demo.html">Otwórz działające demo <i data-lucide="arrow-right"></i></a>
+      </section>
+
+      <section class="case-section" id="petla">
+        <div class="section-label">Pętla wizyty</div>
+        <div class="case-intro">
+          <h2>Przed wizytą, w trakcie i po wizycie.</h2>
+          <p>
+            Pacjent 360 nie kończy się na raporcie. Projekt pokazuje zamkniętą pętlę pracy:
+            przygotowanie kontekstu, rozmowę z lekarzem i uporządkowanie następnych kroków.
+          </p>
+        </div>
+        <div class="site-case-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));" aria-label="Etapy pętli wizyty">
+          <article>
+            <span>01</span>
+            <h3>Przed wizytą</h3>
+            <p>Zbierz dokumenty, pytania, listę leków, obserwacje i braki danych do omówienia.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>W trakcie</h3>
+            <p>Lekarz widzi kontekst, źródła i pytania DITL, a decyzje pozostają po jego stronie.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Po wizycie</h3>
+            <p>Ustalenia są opisane prostym językiem jako zadania, dokumenty i następne kroki do potwierdzenia.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="boundaries-section" id="granice">
+        <div class="section-label">Czym Pacjent 360 nie jest</div>
+        <div class="boundaries-grid">
+          <article>
+            <i data-lucide="badge-alert"></i>
+            <h3>Nie jest wyrobem medycznym</h3>
+            <p>Prototyp nie jest certyfikowanym systemem klinicznym i nie jest przeznaczony do użycia z realnymi danymi pacjentów.</p>
+          </article>
+          <article>
+            <i data-lucide="activity"></i>
+            <h3>Nie ustala kolejności obsługi</h3>
+            <p>Flagi są markerami uwagi do wyjaśnienia. Nie oznaczają kolejności obsługi, gotowej oceny ani ścieżki postępowania.</p>
+          </article>
+          <article>
+            <i data-lucide="stethoscope"></i>
+            <h3>Nie zastępuje lekarza</h3>
+            <p>System porządkuje źródła i pytania. Decyzje kliniczne pozostają po stronie lekarza: Doctor in the Loop.</p>
+          </article>
+          <article>
+            <i data-lucide="building-2"></i>
+            <h3>Nie zastępuje IKP/P1</h3>
+            <p>Pacjent 360 jest warstwą kontekstu i walidowanym prototypem, a nie alternatywą dla systemów publicznych.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="case-section" id="case-studies">
+        <div class="section-label">Case studies</div>
+        <div class="case-intro">
+          <h2>Raport kontekstowy musi zmieniać soczewkę zależnie od sytuacji.</h2>
+          <p>
+            Raport kontekstowy pokazujemy na fikcyjnych, kompozytowych archetypach. To nie są historie
+            realnych pacjentów ani rodzin, tylko neutralne sytuacje projektowe do walidacji
+            formatu: co lekarz musi wyjaśnić przed decyzją?
+          </p>
+        </div>
+        <div class="site-case-grid">
+          <article>
+            <span>01</span>
+            <h3>Gotowość do procedury</h3>
+            <p>Czy przed procedurą zebrano pytania wymagające oceny lekarza?</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>Konsultacja specjalistyczna</h3>
+            <p>Czy specjalista widzi całość pacjenta, nie tylko jedną dziedzinę?</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Nagła zmiana stanu</h3>
+            <p>Czy nowa zmiana została oznaczona jako obserwacja do wyjaśnienia?</p>
+          </article>
+          <article>
+            <span>04</span>
+            <h3>Uzgodnienie leków</h3>
+            <p>Czy dokumentacja zgadza się z tym, co pacjent realnie przyjmuje?</p>
+          </article>
+          <article>
+            <span>05</span>
+            <h3>Przejście opieki</h3>
+            <p>Czy po zmianie etapu opieki wiadomo, kto odpowiada za następny krok?</p>
+          </article>
+        </div>
+        <p class="site-case-note">Każdy case study jest fikcyjnym kompozytem edukacyjnym, a nie opisem historii choroby konkretnej osoby.</p>
+      </section>
+
+      <section class="opensource-band" id="opensource">
+        <div class="section-label">Open source</div>
+        <div class="opensource-content">
+          <h2>Zaproszenie do współpracy open source.</h2>
+          <p>
+            Pacjent 360 dotyka problemu wspólnego dla lekarzy, pacjentów, rodzin, placówek i systemu
+            publicznego. Dlatego prototyp powinien być rozwijany jawnie: z udziałem praktyków klinicznych,
+            ekspertów ochrony danych, projektantów usług, inżynierów i osób, które znają realne ścieżki pacjenta.
+          </p>
+          <ul>
+            <li><i data-lucide="check-circle-2"></i> Jawny model danych i jawne źródła wniosków.</li>
+            <li><i data-lucide="check-circle-2"></i> Brak automatycznych decyzji po stronie systemu.</li>
+            <li><i data-lucide="check-circle-2"></i> Priorytet: bezpieczeństwo, prywatność i lekarz w pętli.</li>
+            <li><i data-lucide="check-circle-2"></i> Kod prototypu na Apache 2.0, dokumentacja na CC BY 4.0, z jasnym disclaimerem medycznym.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="collaboration-section" id="wspolpraca">
+        <div>
+          <p class="eyebrow">Współpraca</p>
+          <h2>Potrzebujemy walidacji klinicznej, technicznej i prawnej.</h2>
+        </div>
+        <div class="collaboration-grid">
+          <article>
+            <i data-lucide="stethoscope"></i>
+            <h3>Klinicyści</h3>
+            <p>Ocena scenariuszy, flag, języka pytań DITL i przydatności raportu kontekstowego w realnej pracy.</p>
+          </article>
+          <article>
+            <i data-lucide="shield-check"></i>
+            <h3>Prawo i dane</h3>
+            <p>Bezpieczeństwo, zgody, prywatność, ścieżka zgodności i granice prototypu.</p>
+          </article>
+          <article>
+            <i data-lucide="code-2"></i>
+            <h3>Technologia</h3>
+            <p>Model danych, interoperacyjność, eksport, audyt, jakość źródeł i architektura open source.</p>
+          </article>
+          <article>
+            <i data-lucide="users"></i>
+            <h3>Pacjenci i UX</h3>
+            <p>Dwa kokpity: profesjonalny widok lekarza i zrozumiały widok pacjenta z dostępem do pełnych danych.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="cta-section">
+        <p class="eyebrow">pacjent360.com.pl</p>
+        <h2>Zobacz MVP i pomóż zwalidować kierunek.</h2>
+        <p>
+          Szukamy uwag klinicznych, prawnych, technicznych i produktowych. Celem jest sprawdzić,
+          czy taki format porządkowania danych może realnie pomóc lekarzom, pacjentom i systemowi publicznemu.
+        </p>
+        <div class="hero-actions">
+          <a class="primary-link" href="demo.html"><i data-lucide="layout-dashboard"></i> Demo MVP</a>
+          <a class="secondary-link" href="#wspolpraca"><i data-lucide="git-pull-request"></i> Obszary współpracy</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Pacjent 360</span>
+      <span class="footer-links">
+        <a href="demo.html">Demo MVP</a>
+        <a href="disclaimer.html">Disclaimer</a>
+        <a href="privacy.html">Prywatność</a>
+        <span>DITL by design.</span>
+      </span>
+    </footer>
+  </body>
+</html>

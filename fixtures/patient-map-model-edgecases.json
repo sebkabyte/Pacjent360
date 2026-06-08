@@ -1,0 +1,104 @@
+{
+  "fixtureVersion": 1,
+  "patients": [
+    {
+      "id": "edge-empty",
+      "name": "Pacjent bez zdarzen",
+      "birthDate": "1980-01-01"
+    },
+    {
+      "id": "edge-map",
+      "name": "Pacjent edge case",
+      "birthDate": "1975-03-20"
+    }
+  ],
+  "timelineEvents": [
+    {
+      "id": "edge-e1",
+      "patientId": "edge-map",
+      "date": "2026-05-01",
+      "track": "badania",
+      "title": "Zdarzenie z brakujacym zrodlem",
+      "description": "Fixture sprawdza source_missing.",
+      "status": "do potwierdzenia",
+      "sourceRefs": ["source_missing"],
+      "episodeId": "edge-ep1"
+    },
+    {
+      "id": "edge-e2",
+      "patientId": "edge-map",
+      "date": "2026-06-20",
+      "track": "konsultacje",
+      "title": "Planowana konsultacja",
+      "description": "Fixture sprawdza status planowane.",
+      "status": "planowane",
+      "sourceRefs": ["doc:edge-d1"],
+      "episodeId": "edge-ep1"
+    }
+  ],
+  "timelineEpisodes": [
+    {
+      "id": "edge-ep1",
+      "patientId": "edge-map",
+      "title": "Epizod edge",
+      "startDate": "2026-05-01",
+      "endDate": "2026-06-20",
+      "status": "do potwierdzenia",
+      "summary": "Syntetyczny epizod testowy bez realnych danych.",
+      "eventRefs": ["edge-e1", "edge-e2"],
+      "sourceRefs": ["source_missing", "doc:edge-d1"]
+    }
+  ],
+  "timelineRelations": [
+    {
+      "id": "edge-r1",
+      "patientId": "edge-map",
+      "fromEventId": "edge-e1",
+      "toEventId": "edge-e2",
+      "relationType": "powiazane czasowo",
+      "label": "Dwa zdarzenia w tym samym syntetycznym epizodzie.",
+      "sourceRefs": ["source_missing"],
+      "causality": "not_asserted"
+    },
+    {
+      "id": "edge-r-bad",
+      "patientId": "edge-map",
+      "fromEventId": "edge-e1",
+      "toEventId": "edge-e2",
+      "relationType": "powiazane czasowo",
+      "label": "Fixture negatywny: taka relacja nie moze przejsc walidacji.",
+      "sourceRefs": ["source_missing"],
+      "causality": "asserted"
+    }
+  ],
+  "flags": [
+    {
+      "id": "edge-f1",
+      "patientId": "edge-map",
+      "color": "blue",
+      "category": "Pytanie testowe",
+      "question": "Czy zrodlo tego zdarzenia wymaga uzupelnienia?",
+      "status": "do wyjasnienia",
+      "sourceRefs": ["source_missing"]
+    }
+  ],
+  "decisionContexts": [
+    {
+      "id": "edge-dc1",
+      "patientId": "edge-map",
+      "type": "kontekst testowy",
+      "clinicalQuestion": "Czy model mapy zachowuje pytania DITL?",
+      "status": "do wyjasnienia",
+      "contactDate": "2026-06-08",
+      "sourceRefs": ["doc:edge-d1"],
+      "ditlQuestions": [
+        {
+          "id": "edge-q1",
+          "question": "Czy planowana konsultacja ma potwierdzone zrodlo?",
+          "status": "do wyjasnienia",
+          "sourceRefs": ["doc:edge-d1"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "patients": [
+    {
+      "id": "consent-p1",
+      "name": "Pacjent testowy"
+    }
+  ],
+  "cases": [
+    {
+      "id": "support-selected-areas",
+      "patientId": "consent-p1",
+      "consentId": "cg-test-1",
+      "values": {
+        "recipientKind": "support",
+        "subject": "Opiekun testowy",
+        "caregiverName": "Opiekun testowy",
+        "role": "opiekun wizyt",
+        "scope": "opis wspomina leki i dokumenty, ale zakres kontrolują checkboxy",
+        "validTo": "2026-09-30",
+        "consentArea_medications": "medications",
+        "consentArea_report": "report"
+      },
+      "expect": {
+        "valid": true,
+        "role": "opiekun wizyt",
+        "subject": "Opiekun testowy",
+        "areas": ["medications", "report"],
+        "absentAreas": ["visits", "documents"],
+        "caregiverIdPrefix": "caregiver-",
+        "sourceRefs": ["consent:cg-test-1"]
+      }
+    },
+    {
+      "id": "patient-self",
+      "patientId": "consent-p1",
+      "consentId": "cg-test-2",
+      "values": {
+        "recipientKind": "patient",
+        "scope": "Pacjent sprawdza własny raport",
+        "validTo": "2026-12-31",
+        "consentArea_observations": "observations",
+        "consentArea_report": "report"
+      },
+      "expect": {
+        "valid": true,
+        "role": "pacjent",
+        "subject": "Pacjent",
+        "areas": ["observations", "report"],
+        "caregiverId": "patient-self-consent-p1",
+        "sourceRefs": ["consent:cg-test-2"]
+      }
+    },
+    {
+      "id": "missing-area",
+      "patientId": "consent-p1",
+      "consentId": "cg-test-3",
+      "values": {
+        "recipientKind": "support",
+        "subject": "Opiekun bez zakresu",
+        "scope": "opis zawiera leki, ale nie ma checkboxów",
+        "validTo": "2026-09-30"
+      },
+      "expect": {
+        "valid": false,
+        "errorCode": "missing_area"
+      }
+    },
+    {
+      "id": "missing-recipient",
+      "patientId": "consent-p1",
+      "consentId": "cg-test-4",
+      "values": {
+        "recipientKind": "support",
+        "scope": "zakres bez odbiorcy",
+        "validTo": "2026-09-30",
+        "consentArea_documents": "documents"
+      },
+      "expect": {
+        "valid": false,
+        "errorCode": "missing_recipient"
+      }
+    },
+    {
+      "id": "legacy-areas-fallback",
+      "patientId": "consent-p1",
+      "consentId": "cg-test-5",
+      "values": {
+        "recipientKind": "support",
+        "subject": "Starszy formularz",
+        "role": "osoba wspierająca",
+        "areas": "dokumenty, raport",
+        "scope": "opis nie powinien dodawać leków",
+        "validTo": "2026-09-30"
+      },
+      "expect": {
+        "valid": true,
+        "role": "osoba wspierająca",
+        "subject": "Starszy formularz",
+        "areas": ["documents", "report"],
+        "absentAreas": ["medications"],
+        "sourceRefs": ["consent:cg-test-5"]
+      }
+    },
+    {
+      "id": "unknown-area-only",
+      "patientId": "consent-p1",
+      "consentId": "cg-test-6",
+      "values": {
+        "recipientKind": "support",
+        "subject": "Nieznany zakres",
+        "scope": "brak znanego zakresu",
+        "validTo": "2026-09-30",
+        "consentArea_unknown": "unknown"
+      },
+      "expect": {
+        "valid": false,
+        "errorCode": "missing_area"
+      }
+    }
+  ]
+}

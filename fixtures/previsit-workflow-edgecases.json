@@ -1,0 +1,120 @@
+{
+  "fixtureVersion": 1,
+  "patients": [
+    {
+      "id": "previsit-empty",
+      "name": "Pacjent bez danych",
+      "birthDate": "1990-01-01",
+      "sex": "brak danych",
+      "guardian": "brak",
+      "currentProblem": "",
+      "biggestChange": "",
+      "patientQuestion": "",
+      "patientSummary": ""
+    },
+    {
+      "id": "previsit-ready",
+      "name": "Pacjent przygotowany",
+      "birthDate": "1988-02-02",
+      "sex": "brak danych",
+      "guardian": "opiekun demo",
+      "currentProblem": "Syntetyczny kontekst przed wizyta.",
+      "biggestChange": "Brak realnych danych.",
+      "patientQuestion": "Co warto omowic z lekarzem podczas wizyty?",
+      "patientSummary": "Fixture bez realnych danych pacjenta."
+    }
+  ],
+  "documents": [
+    {
+      "id": "pv-doc1",
+      "patientId": "previsit-ready",
+      "title": "Dokument demo",
+      "type": "Konsultacja",
+      "date": "2026-06-01",
+      "eventDate": "2026-06-01",
+      "facility": "Placowka demo",
+      "author": "Autor demo",
+      "summary": "Syntetyczny dokument testowy.",
+      "quality": "pelny",
+      "trust": "wysoki",
+      "extractionStatus": "przetworzony"
+    }
+  ],
+  "medications": [
+    {
+      "id": "pv-med1",
+      "patientId": "previsit-ready",
+      "name": "Lek demo",
+      "dose": "1 x dziennie",
+      "frequency": "codziennie",
+      "status": "aktywny",
+      "actualStatus": "zgloszony jako przyjmowany",
+      "story": "Syntetyczna historia leku.",
+      "question": "Czy lista lekow zostala potwierdzona?",
+      "sourceRefs": ["doc:pv-doc1"]
+    }
+  ],
+  "interviews": [
+    {
+      "id": "pv-int1",
+      "patientId": "previsit-ready",
+      "scenario": "Wywiad demo",
+      "date": "2026-06-02",
+      "speaker": "pacjent",
+      "confidence": "wysoka",
+      "answers": {
+        "baseline": "Fixture bez realnych danych."
+      },
+      "transcript": "Syntetyczna transkrypcja demo."
+    }
+  ],
+  "knownUnknowns": [],
+  "flags": [],
+  "decisionContexts": [
+    {
+      "id": "pv-dc1",
+      "patientId": "previsit-ready",
+      "type": "Wizyta demo",
+      "clinicalQuestion": "Jak uporzadkowac pytania przed wizyta?",
+      "status": "do wyjasnienia",
+      "contactDate": "2026-06-08",
+      "sourceRefs": ["doc:pv-doc1"],
+      "ditlQuestions": [
+        {
+          "id": "pv-q1",
+          "question": "Czy pacjent ma wszystkie dokumenty do omowienia?",
+          "status": "do wyjasnienia",
+          "sourceRefs": ["doc:pv-doc1"]
+        }
+      ]
+    }
+  ],
+  "visitChecklists": [
+    {
+      "id": "pv-vc1",
+      "patientId": "previsit-ready",
+      "visitDate": "2026-06-09",
+      "visitType": "Wizyta demo",
+      "items": [
+        {
+          "id": "pv-vci1",
+          "label": "Dokument demo",
+          "status": "gotowe",
+          "sourceRefs": ["doc:pv-doc1"]
+        },
+        {
+          "id": "pv-vci2",
+          "label": "Wywiad demo",
+          "status": "gotowe",
+          "sourceRefs": ["interview:pv-int1"]
+        },
+        {
+          "id": "pv-vci3",
+          "label": "Lista pytan",
+          "status": "gotowe",
+          "sourceRefs": ["decision:pv-dc1"]
+        }
+      ]
+    }
+  ]
+}
