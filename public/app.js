@@ -2297,7 +2297,8 @@ function renderPatientMap360({ persona = "doctor", embedded = false } = {}) {
   const geometry = mapModel.geometry;
   const selected = mapModel.selectedEvent;
   const selectedId = mapModel.selectedId;
-  const todayColumn = mapModel.todayColumn;
+  const todayPercent = Number.isFinite(mapModel.todayPercent) ? mapModel.todayPercent : 100;
+  const mapWidth = Math.max(events.length * (geometry.eventWidth + 22) + 76, 960);
 
   if (!events.length) {
     return `
@@ -2345,7 +2346,7 @@ function renderPatientMap360({ persona = "doctor", embedded = false } = {}) {
       <div class="patient-map-workbench">
         <div class="patient-map-canvas">
           <div class="temporal-scroll" aria-label="Mapa Pacjenta 360">
-            <div class="temporal-map ${zoom <= 0.58 ? "zoom-compact" : ""}" style="--event-count: ${events.length}; --event-width: ${geometry.eventWidth}px; --card-width: ${geometry.cardWidth}px; --map-height: ${geometry.mapHeight}px; --event-height: ${geometry.eventHeight}px;">
+            <div class="temporal-map ${zoom <= 0.58 ? "zoom-compact" : ""}" style="--event-count: ${events.length}; --event-width: ${geometry.eventWidth}px; --card-width: ${geometry.cardWidth}px; --map-width: ${mapWidth}px; --map-height: ${geometry.mapHeight}px; --event-height: ${geometry.eventHeight}px;">
               <div class="temporal-spine" aria-hidden="true">
                 <span>historia</span>
                 <span>stan</span>
@@ -2353,7 +2354,7 @@ function renderPatientMap360({ persona = "doctor", embedded = false } = {}) {
                 <span>decyzja</span>
               </div>
               ${events.map((event, index) => renderTimelineEvent(event, index, detail.id, zoom, selectedId, safePersona)).join("")}
-              <div class="temporal-today-marker" style="grid-column: ${todayColumn};" aria-label="Dziś na mapie pacjenta"><span>Dziś</span></div>
+              <div class="temporal-today-marker" style="--today-left: ${todayPercent}%;" aria-label="Dziś na mapie pacjenta"><span>Dziś</span></div>
             </div>
           </div>
           <p class="temporal-scroll-hint"><i data-lucide="move-horizontal"></i> Oddal, aby zobaczyć cały odcinek jako jedną linię. Przybliż, żeby rozsunąć zdarzenia, przewijać je poziomo i wejść w źródła.</p>
@@ -2726,6 +2727,7 @@ function renderTimelineLegend(events, trackFilter) {
 }
 
 function renderTimelineMiniMap(events, range) {
+  const tickPosition = (event) => Number.isFinite(event.positionPercent) ? event.positionPercent : timelinePositionPercent(event.date, range);
   return `
     <div class="temporal-minimap" aria-label="Mini-mapa wybranego zakresu">
       <div class="temporal-minimap-head">
@@ -2738,8 +2740,9 @@ function renderTimelineMiniMap(events, range) {
           <button
             type="button"
             class="mini-tick ${event.virtual ? "virtual" : ""}"
-            style="left: ${timelinePositionPercent(event.date, range)}%;"
+            style="left: ${tickPosition(event)}%;"
             data-timeline-jump="${escapeHtml(index)}"
+            data-map-event-id="${escapeHtml(event.id)}"
             title="${escapeHtml(`${formatDate(event.date)} • ${event.title}`)}"
             aria-label="Przejdź do zdarzenia: ${escapeHtml(event.title)}"
           >
@@ -2779,6 +2782,7 @@ function renderTimelineEvent(event, index, detailId = "standard", zoom = 0.9, se
   const trackIndex = Math.max(TRACKS.indexOf(event.track), 0);
   const side = index % 2 === 0 ? "above" : "below";
   const branchDepth = Math.round((82 + (trackIndex % 4) * 18) * (0.72 + zoom * 0.28));
+  const eventLeft = Number.isFinite(event.positionPercent) ? event.positionPercent : 0;
   const isOverview = detailId === "overview";
   const eventDate = parseDateOnly(event.date);
   const todayDate = parseDateOnly(todayInputValue());
@@ -2798,7 +2802,7 @@ function renderTimelineEvent(event, index, detailId = "standard", zoom = 0.9, se
       role="button"
       aria-pressed="${selected ? "true" : "false"}"
       aria-label="${escapeHtml(`${formatDate(event.date)}: ${event.title}. ${personaHint}`)}"
-      style="grid-column: ${index + 1}; --branch-depth: ${branchDepth}px;"
+      style="--event-left: ${eventLeft}%; --branch-depth: ${branchDepth}px;"
     >
       <div class="temporal-branch" aria-hidden="true"></div>
       <div class="temporal-card">
