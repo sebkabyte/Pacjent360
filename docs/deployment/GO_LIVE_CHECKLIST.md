@@ -29,7 +29,7 @@ Ostatni lokalny release candidate po audycie council:
 | Granice kliniczne | Strona i demo nie sugerują diagnozy, triage, pilności, terapii ani decyzji klinicznej | ✅ OK lokalnie — neutralne DITL, raport kontekstowy, brak starych fraz w `dist/public` (2026-06-08) |
 | Niezależność | Widać komunikat, że projekt nie jest usługą CeZ, NFZ, IKP ani e-Profilem Pacjenta | ✅ OK lokalnie — `index.html` i `demo.html` (2026-06-08) |
 | Prawo i zaufanie | Działają `disclaimer.html` i `privacy.html` | ✅ OK lokalnie — link check i browser smoke (2026-06-08) |
-| Kontakt bezpieczeństwa | Przed publicznym repo i produkcyjnym go-live działają oraz są monitorowane aliasy `security@pacjent360.com.pl` i `kontakt@pacjent360.com.pl` | ⛔ NO-GO — DNS/MX precheck OK, nadal brakuje ręcznego testu odbioru, odpowiedzi i monitoringu |
+| Kontakt bezpieczeństwa | Przed produkcyjnym go-live domeny i prywatną obsługą zgłoszeń działają oraz są monitorowane aliasy `security@pacjent360.com.pl` i `kontakt@pacjent360.com.pl` | ⛔ NO-GO — DNS/MX precheck OK, nadal brakuje ręcznego testu odbioru, odpowiedzi i monitoringu |
 | Domena produkcyjna | `https://pacjent360.com.pl/index.html` zwraca 200 i przechodzi verifier domeny | ⛔ NO-GO — automatyczny verifier zwraca 404 przed uploadem paczki |
 | Supply chain | Zewnętrzny CDN jest jawny w privacy, Lucide ma pinned version i SRI, brak `lucide@latest` | ✅ OK — `unpkg.com/lucide@0.468.0` + SRI w `index.html` i `demo.html` |
 | Nagłówki i przekierowania hostingu | Hosting wysyła CSP z `frame-ancestors 'none'`, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy` oraz przekierowuje HTTP/`www` do kanonicznego HTTPS | ⏳ gotowe w `.htaccess`; potwierdzić po uploadzie przez `tools\verify-deployed-site.ps1` i `tools\domain-diagnostics.js` |
@@ -93,8 +93,8 @@ Poniższe kroki są rozbiciem tej samej bramki na pojedyncze komendy.
 15. Uruchom `powershell -ExecutionPolicy Bypass -File tools\verify-public.ps1`.
 16. Uruchom `powershell -ExecutionPolicy Bypass -File tools\smoke-public.ps1`.
 17. Po zmianach UI uruchom `powershell -ExecutionPolicy Bypass -File tools\smoke-browser.ps1`.
-18. Przed publicznym repo uruchom `powershell -ExecutionPolicy Bypass -File tools\prepare-public-repo.ps1 -Zip`.
-19. Przed publicznym repo uruchom `powershell -ExecutionPolicy Bypass -File tools\verify-public-repo.ps1`.
+18. Przed aktualizacją publicznego repo uruchom `powershell -ExecutionPolicy Bypass -File tools\prepare-public-repo.ps1 -Zip`.
+19. Przed aktualizacją publicznego repo uruchom `powershell -ExecutionPolicy Bypass -File tools\verify-public-repo.ps1`.
 20. Po zapisaniu manifestu uruchom `powershell -ExecutionPolicy Bypass -File tools\verify-release-artifacts.ps1`.
 21. Przygotuj katalog uploadu: `powershell -ExecutionPolicy Bypass -File tools\prepare-hosting-upload.ps1`.
 22. Uruchom HTTP smoke katalogu uploadu: `powershell -ExecutionPolicy Bypass -File tools\smoke-public.ps1 -PackageDir "dist/upload-ready" -Port 4194`.
@@ -260,11 +260,11 @@ Poniższe kroki są rozbiciem tej samej bramki na pojedyncze komendy.
 
 ## P0 No-Go Triggers z audytu
 
-Publikację domeny albo otwarcie publicznego repo trzeba zatrzymać, jeśli wystąpi którekolwiek z P0:
+Publikację domeny albo aktualizację publicznego repo trzeba zatrzymać, jeśli wystąpi którekolwiek z P0:
 
 - README nie pokazuje statusu **alpha / v0.2.0-alpha**, Quick start albo Clinical Safety Checklist zgodnej z `CONTRIBUTING.md`.
-- W `SECURITY.md` lub README nadal brakuje jawnego modelu kontaktu albo nie ma informacji **DO UZUPEŁNIENIA PRZED PUBLICZNYM REPO** przy nieskonfigurowanej skrzynce.
-- Aliasy `security@pacjent360.com.pl` i `kontakt@pacjent360.com.pl` nie są skonfigurowane, przetestowane i monitorowane przed publicznym repo.
+- W `SECURITY.md` lub README brakuje jawnego modelu kontaktu albo tekst sugeruje, że nieskonfigurowane skrzynki już działają.
+- Aliasy `security@pacjent360.com.pl` i `kontakt@pacjent360.com.pl` nie są skonfigurowane, przetestowane i monitorowane przed produkcyjnym go-live domeny albo prywatną obsługą zgłoszeń.
 - `PRIVACY.md` albo `privacy.html` nie ujawnia `localStorage` oraz zewnętrznego CDN `unpkg.com/lucide@0.468.0` z pinned version i SRI.
 - Lucide zostaje zmienione na `lucide@latest`, CDN traci SRI albo pojawia się nowy zewnętrzny zasób bez review supply chain.
 - Demo albo strona brzmią jak diagnoza, triage, rekomendacja terapeutyczna, ocena pilności albo decyzja kliniczna.

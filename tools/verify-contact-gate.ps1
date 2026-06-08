@@ -73,7 +73,7 @@ Write-Host "2. Use a neutral subject, for example: Pacjent 360 contact gate test
 Write-Host "3. Do not include patient data, medical details, passwords or private files."
 Write-Host "4. Confirm the message arrives in the monitored mailbox and is not only in spam."
 Write-Host "5. Reply from the monitored mailbox and confirm the external sender receives the reply."
-Write-Host "6. Record date, aliases, monitor owner and result in GO_LIVE_CHECKLIST.md or HANDOVER.md."
+Write-Host "6. Record date, aliases, monitor owner and result in docs/deployment/GO_LIVE_CHECKLIST.md or a private handover note."
 
 if ($DnsOnly) {
   Write-Host ""

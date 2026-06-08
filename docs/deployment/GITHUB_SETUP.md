@@ -1,6 +1,6 @@
 # GitHub Setup
 
-Checklist przed otwarciem publicznego repozytorium.
+Checklist przed aktualizacja publicznego repozytorium.
 
 ## Przed publikacją repo
 
@@ -33,7 +33,7 @@ Checklist przed otwarciem publicznego repozytorium.
 - Po ręcznym teście wysyłka-odbiór-odpowiedź uruchom `powershell -ExecutionPolicy Bypass -File tools\verify-contact-gate.ps1 -ReceiptConfirmed -MonitorOwner "..."`.
 - Po publikacji domeny uruchom `powershell -ExecutionPolicy Bypass -File tools\verify-deployed-site.ps1 -BaseUrl "https://pacjent360.com.pl" -CompareLocalPackage -LocalPublicPath "dist/upload-ready"`.
 - Uruchom status publikacji: `node tools\release-readiness.js`; po potwierdzeniu aliasów dodaj `-ReceiptConfirmed -MonitorOwner "..."`.
-- Przejrzyj `RISKS.md`, `DISCLAIMER.md`, `PRIVACY.md` i `NOTICE`.
+- Przejrzyj `docs/governance/RISKS.md`, `docs/legal/DISCLAIMER.md`, `docs/legal/PRIVACY.md` i `NOTICE`.
 - Potwierdź w checklist/handover aliasy `security@pacjent360.com.pl` i `kontakt@pacjent360.com.pl`.
 - Zastosuj allowlistę D-002 z `PROGRAM_PLAN.md`.
 - Nie publikuj domyślnie: `CLAUDE.md`, `CODEX_*`, `HANDOVER.md`, `prints/`, `dist/`, `.env`, `.git/`, prywatnych notatek ani danych pacjentów.
@@ -52,6 +52,6 @@ Checklist przed otwarciem publicznego repozytorium.
 - Strona publiczna.
 - Demo MVP.
 - Disclaimer i privacy.
-- README, architecture, risks, contributing, security zgodnie z allowlistą D-002 w `PROGRAM_PLAN.md`.
+- README, architecture, risks, contributing, security zgodnie z allowlistą D-002 w `docs/PROGRAM_PLAN.md`.
 - Bez prywatnych plików roboczych.
 - Pierwszy upload repo powinien pochodzic z `dist/repo`, nie z calego katalogu roboczego.

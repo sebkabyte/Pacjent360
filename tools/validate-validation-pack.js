@@ -13,14 +13,14 @@ function read(file) {
   return fs.readFileSync(path.join(root, file), "utf8");
 }
 
-const protocol = read("VALIDATION_PROTOCOL.md");
-const form = read("VALIDATION_FEEDBACK_FORM.md");
-const csv = read("VALIDATION_RESULTS_TEMPLATE.csv");
+const protocol = read("docs/validation/VALIDATION_PROTOCOL.md");
+const form = read("docs/validation/VALIDATION_FEEDBACK_FORM.md");
+const csv = read("docs/validation/VALIDATION_RESULTS_TEMPLATE.csv");
 
 for (const [name, content] of Object.entries({
-  "VALIDATION_PROTOCOL.md": protocol,
-  "VALIDATION_FEEDBACK_FORM.md": form,
-  "VALIDATION_RESULTS_TEMPLATE.csv": csv
+  "docs/validation/VALIDATION_PROTOCOL.md": protocol,
+  "docs/validation/VALIDATION_FEEDBACK_FORM.md": form,
+  "docs/validation/VALIDATION_RESULTS_TEMPLATE.csv": csv
 })) {
   assert(!content.includes("1.txt"), `${name} should not reference private source file`);
   assert(!content.includes("linkedin-story"), `${name} should not reference private story file`);

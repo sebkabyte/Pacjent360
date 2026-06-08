@@ -129,9 +129,9 @@ Uwaga CSP: dyrektywa `frame-ancestors` nie dziala z poziomu meta tagu. Paczka za
 
 `index.html` jest publiczną stroną projektu. `demo.html` jest działającym prototypem MVP. `disclaimer.html` jest publicznym ograniczeniem medycznym prototypu. `privacy.html` opisuje prywatność i lokalne działanie demo. `maintenance.html` służy do szybkiego rollbacku. `health.txt` jest neutralnym plikiem kontrolnym do potwierdzenia poprawnego document root po uploadzie.
 
-## Warunki przed publicznym repo i go-live
+## Warunki przed aktualizacja repo i go-live
 
-Nie otwieraj repozytorium publicznego ani nie publikuj domeny produkcyjnie, jeśli w `README.md` lub `SECURITY.md` nadal widnieje **DO UZUPEŁNIENIA PRZED PUBLICZNYM REPO** bez potwierdzonego kanału kontaktu.
+Nie aktualizuj repozytorium publicznego ani nie publikuj domeny produkcyjnie, jeśli w `README.md` lub `SECURITY.md` tekst sugeruje, że nieskonfigurowane skrzynki kontaktowe już działają.
 
 Przed go-live trzeba skonfigurować i przetestować wymagane aliasy:
 
@@ -158,11 +158,11 @@ Nie publikuj na hostingu:
 - `linkedin-story.md` - osobny materiał na LinkedIn, nie treść strony WWW.
 - `.git/` - repozytorium lokalne.
 - `CLAUDE.md`, `CODEX_*`, `HANDOVER.md`, `prints/`, `dist/` - robocze materiały AI, artefakty smoke testów i paczki builda; nie trafiają do publicznego GitHuba domyślnie.
-- `ARCHITECTURE.md`, `README.md`, `DISCLAIMER.md`, `PUBLISHING.md`, `RISKS.md` - dokumenty repozytorium; mogą trafić do publicznego GitHuba tylko zgodnie z allowlistą D-002 w `PROGRAM_PLAN.md`.
+- `docs/ARCHITECTURE.md`, `README.md`, `docs/legal/DISCLAIMER.md`, `docs/deployment/PUBLISHING.md`, `docs/governance/RISKS.md` - dokumenty repozytorium; mogą trafić do publicznego GitHuba tylko zgodnie z allowlistą D-002 w `docs/PROGRAM_PLAN.md`.
 
 ## Szybka ścieżka w nazwa.pl
 
-Szczegółowy runbook pierwszego uploadu jest w `DEPLOYMENT_RUNBOOK_NAZWA.md`.
+Szczegółowy runbook pierwszego uploadu jest w `docs/deployment/DEPLOYMENT_RUNBOOK_NAZWA.md`.
 
 Według centrum pomocy nazwa.pl domenę i hosting konfiguruje się w Panelu Klienta pod adresem `https://nazwa.pl/panel`. Dla domeny zarejestrowanej w nazwa.pl przejdź do `Usługi -> Domeny`, wybierz `pacjent360.com.pl` i skonfiguruj przekierowanie domeny na usługę hostingową. Dla CloudHosting można też wskazać katalog, z którego ma być serwowana strona.
 
@@ -174,7 +174,7 @@ Oficjalne instrukcje:
 
 ## Minimalny check po publikacji
 
-1. Przejdź przez `GO_LIVE_CHECKLIST.md`.
+1. Przejdź przez `docs/deployment/GO_LIVE_CHECKLIST.md`.
 2. Uruchom verifier domeny:
 
 ```powershell

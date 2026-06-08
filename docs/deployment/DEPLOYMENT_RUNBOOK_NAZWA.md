@@ -193,7 +193,7 @@ DNS/MX precheck nie wystarcza.
 powershell -ExecutionPolicy Bypass -File tools\verify-contact-gate.ps1 -DnsOnly
 ```
 
-Przed publicznym repo i produkcyjnym go-live wykonaj recznie:
+Przed produkcyjnym go-live i prywatna obsluga zgloszen wykonaj recznie:
 
 1. Wyslij neutralny test na `security@pacjent360.com.pl`.
 2. Potwierdz odbior w monitorowanej skrzynce.
@@ -211,6 +211,6 @@ Jesli po publikacji pojawi sie P0 safety/privacy:
 
 1. Zastap publiczny `index.html` zawartoscia `maintenance.html` albo ustaw przekierowanie na `maintenance.html`.
 2. Wylacz publiczny link do `demo.html`.
-3. Zapisz incydent w `RISKS.md`.
+3. Zapisz incydent w `docs/governance/RISKS.md`.
 4. Zapisz decyzje w `CHANGELOG.md`.
 5. Popraw lokalnie i ponownie uruchom `tools\validate-go-live.ps1`.

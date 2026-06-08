@@ -4,9 +4,9 @@ Status: kierunek rozwoju eksperymentalnego dla Pacjent 360.
 
 Nadrzedny plan programu po audycie repo i council: `PROGRAM_PLAN.md`.
 
-FAZY 0-4, CKP/MOB/NAT i sprinty asystentow opisane nizej sa teraz szczegolowym backlogiem wykonawczym mapowanym do M0-M12 z `PROGRAM_PLAN.md`. Nie stanowia rownoleglego harmonogramu. Status 2026-06-08: M0 Publication Ready i M2 Data Contract v0.1 sa wykonane lokalnie jako powtarzalny vertical slice. Produkcyjny go-live i publiczne repo nadal czekaja na aliasy kontaktowe oraz decyzje allowlist.
+FAZY 0-4, CKP/MOB/NAT i sprinty asystentow opisane nizej sa teraz szczegolowym backlogiem wykonawczym mapowanym do M0-M12 z `PROGRAM_PLAN.md`. Nie stanowia rownoleglego harmonogramu. Status 2026-06-08: M0 Publication Ready i M2 Data Contract v0.1 sa wykonane lokalnie jako powtarzalny vertical slice. Publiczne repo alpha jest otwarte z czystej allowlisty; produkcyjny go-live domeny i prywatna obsluga zgloszen nadal czekaja na potwierdzone aliasy kontaktowe.
 
-Normatywne zrodlo: `SSOT.md`. Obowiazuja tez `DISCLAIMER.md`, `SECURITY.md`, `GO_LIVE_CHECKLIST.md`, `RISKS.md` i `SPRINTS.md`.
+Normatywne zrodlo: `SSOT.md`. Obowiazuja tez `docs/legal/DISCLAIMER.md`, `SECURITY.md`, `docs/deployment/GO_LIVE_CHECKLIST.md`, `docs/governance/RISKS.md` i `SPRINTS.md`.
 Analiza luk kokpitow: `docs/COCKPIT_GAP_ANALYSIS.md`.
 
 Asystenci LLM w tym projekcie sa narzedziami operacyjnymi. Ich zadaniem jest porzadkowanie kontekstu, wskazywanie brakow, pilnowanie zrodel, przygotowanie checklist i tworzenie draftow do weryfikacji. Nie diagnozuja, nie triazuja, nie rekomenduja terapii i nie pracuja na realnych danych pacjentow.

@@ -17,7 +17,7 @@ Problemem bardzo często nie jest brak danych. Problemem jest brak kontekstu.
 - Status projektu: **alpha / v0.2.0-alpha**.
 - To jest statyczny prototyp koncepcyjny i demonstracyjny, nie system gotowy do użycia klinicznego.
 - Demo korzysta z fikcyjnych, kompozytowych przypadków i nie powinno przyjmować realnych danych pacjentów.
-- Przed publicznym repo i go-live wymagane są osobne bramki: bezpieczeństwo, prywatność, clinical safety, dostępność i publikacja czystej paczki.
+- Przed go-live domeny wymagane są osobne bramki: bezpieczeństwo, prywatność, clinical safety, dostępność, działające kanały kontaktu i publikacja czystej paczki hostingowej.
 
 ## O co chodzi
 
@@ -160,7 +160,7 @@ Ta lista jest obowiązkową bramką dla zmian publicznych i PR, zgodnie z `CONTR
 - Czy UI używa języka: pytanie, brak danych, zadanie, status, kontekst, do wyjaśnienia?
 - Czy UI unika języka: diagnoza, zalecenie, wskazanie, pilne, należy, leczenie, terapia, w normie, poza normą?
 - Czy użytkownik widzi, że Pacjent 360 nie jest IKP, P1, CeZ, NFZ ani e-Profilem Pacjenta?
-- Czy zmiana jest spójna z `DISCLAIMER.md`, `RISKS.md`, `PRIVACY.md` i `SECURITY.md`?
+- Czy zmiana jest spójna z `docs/legal/DISCLAIMER.md`, `docs/governance/RISKS.md`, `docs/legal/PRIVACY.md` i `SECURITY.md`?
 
 Jeśli odpowiedź na którekolwiek pytanie jest negatywna albo niepewna, zmiana jest **no-go** do czasu wyjaśnienia przez review kliniczne, prawne lub bezpieczeństwa.
 
@@ -193,12 +193,12 @@ Szukamy rozmowy i współpracy z osobami, które mogą pomóc odpowiedzieć na p
 
 Kanały kontaktu dla projektu nie są jeszcze potwierdzone jako skonfigurowane.
 
-**DO UZUPEŁNIENIA PRZED PUBLICZNYM REPO:** przed otwarciem repozytorium publicznego i go-live trzeba skonfigurować, przetestować i opisać działające aliasy:
+**DO UZUPEŁNIENIA PRZED GO-LIVE DOMENY I PRYWATNYM OBSŁUGIWANIEM ZGŁOSZEŃ:** trzeba skonfigurować, przetestować i opisać działające aliasy:
 
 - `security@pacjent360.com.pl` - prywatne zgłoszenia podatności, incydentów prywatności i ryzyk clinical safety.
 - `kontakt@pacjent360.com.pl` - ogólny kontakt projektowy, współpraca i pytania organizacyjne.
 
-Te adresy są proponowanym, wymaganym modelem kontaktu przed publikacją; ten dokument nie deklaruje, że skrzynki już działają. Do czasu potwierdzenia kanałów nie publikuj szczegółów podatności, danych pacjentów ani ryzyk prywatności w publicznych issue.
+Te adresy są proponowanym modelem kontaktu; ten dokument nie deklaruje, że skrzynki już działają. Do czasu potwierdzenia kanałów nie publikuj szczegółów podatności, danych pacjentów ani ryzyk prywatności w publicznych issue.
 
 Po skonfigurowaniu poczty użyj `tools/verify-contact-gate.ps1`: najpierw `-DnsOnly`, a po ręcznym teście wysyłka-odbiór-odpowiedź `-ReceiptConfirmed -MonitorOwner "..."`.
 
@@ -227,64 +227,22 @@ Nie wpisuj do demo realnych danych pacjentów. Zmiany w demo mogą być zapisane
 
 ## Mapa projektu
 
-- `PROGRAM_PLAN.md` - **nadrzędny plan strategiczny i harmonogram rzeczowo-techniczny po audycie council.**
-- `index.html` - publiczna strona projektu pod `pacjent360.com.pl`.
-- `disclaimer.html` - publiczny disclaimer medyczny linkowany ze strony.
-- `privacy.html` - publiczna polityka prywatności dla strony i demo.
-- `maintenance.html` - awaryjna strona wyłączenia projektu po publikacji.
-- `health.txt` - publiczny plik kontrolny do szybkiego potwierdzenia, ze serwer pokazuje paczke Pacjent 360 z wlasciwego document root.
-- `demo.html` - działające demo MVP.
-- `SSOT.md` - pojedyncze źródło prawdy dla roli LLM i agentów: sekretariat kontekstu, nie doradca medyczny.
-- `TIMELINE_VISION.md` - SSOT dla Mapy Pacjenta 360: docelowy timeline, warstwy, epizody, zasilanie danymi i asystenci operacyjni.
-- `SPRINTS.md` - aktywny backlog sprintów A0-A8 dla asystentów operacyjnych i LLM.
-- `ROADMAP.md` - roadmapa wdrożenia: teraz, 2 tygodnie, 6 tygodni, później i świadome no-go.
-- `ARCHITECTURE.md` - architektura Pacjent 360 jako warstwy kontekstu nad IKP/P1.
-- `patient360-contract.js` - wspólne słowniki Data Contract używane przez demo i walidator CLI, w tym źródła `consent:*`.
-- `patient360-map-model.js` - czysty model Mapy Pacjenta 360 używany przez renderer demo i walidator M3.
-- `patient360-previsit-model.js` - czysty model M4 dla flow przygotowania do wizyty.
-- `patient360-caregiver-model.js` - czysty model M7 dla zakresu zgód i kokpitu opiekuna.
-- `patient360-consent-model.js` - czysty model M7 dla szkicu zgody: typ odbiorcy, wybrane obszary, preview i walidacja bez DOM.
-- `fixtures/patient-map-model.snapshot.json` - stabilny snapshot regresyjny modelu mapy dla fikcyjnych danych demo.
-- `fixtures/patient-map-model-edgecases.json` - syntetyczne przypadki brzegowe mapy bez realnych danych.
-- `fixtures/previsit-workflow-edgecases.json` - syntetyczne przypadki M4: pacjent bez danych i pacjent przygotowany.
-- `fixtures/caregiver-scope-edgecases.json` - syntetyczne przypadki M7: aktywny opiekun, cofnięty dostęp i brak aktywnej zgody.
-- `fixtures/consent-draft-edgecases.json` - syntetyczne przypadki M7: opiekun, pacjent, brak zakresu, brak odbiorcy i nieznany obszar.
-- `schema/patient360.schema.json` - Data Contract v0.1 dla eksportu `schemaVersion: 7`.
-- `docs/adr/0004-data-contract-v7.md` - decyzja migracyjna: runtime `v6`, eksport `schemaVersion: 7`.
-- `DISCLAIMER.md` - ograniczenia medyczne i regulacyjne prototypu.
-- `PRIVACY.md`, `SECURITY.md`, `CONTRIBUTING.md`, `RISKS.md`, `CHANGELOG.md` - dokumenty pracy open source.
-- `VALIDATION_PROTOCOL.md`, `CRISIS_COMMUNICATION.md`, `ACCESSIBILITY_CHECKLIST.md`, `ROLLBACK.md` - protokoły walidacji, komunikacji i bezpieczeństwa publikacji.
-- `VALIDATION_FEEDBACK_FORM.md`, `VALIDATION_RESULTS_TEMPLATE.csv` - szablony sesji walidacyjnej i zbierania wynikow bez danych osobowych.
-- `GO_LIVE_CHECKLIST.md` - ostatnia bramka go/no-go przed publikacją domeny.
-- `GITHUB_SETUP.md` - checklist przed otwarciem publicznego repozytorium.
-- `DEPLOYMENT_RUNBOOK_NAZWA.md` - praktyczny runbook uploadu `dist/upload-ready` na nazwa.pl i testu po publikacji.
-- `PUBLISHING.md` - szybka instrukcja publikacji na hostingu.
-- `tools/prepare-public.ps1` - skrypt budujący czystą paczkę publiczną `dist/public`.
-- `dist/pacjent360-upload-root.zip` - czytelny alias ZIP do rozpakowania bezposrednio w document root domeny; zawiera pliki w root archiwum, bez folderu nadrzednego.
-- `tools/prepare-hosting-upload.ps1` - rozpakowuje zweryfikowany hosting ZIP do `dist/upload-ready`, czyli katalogu do wgrania na nazwa.pl.
-- `tools/verify-public.ps1` - skrypt sprawdzający paczkę publiczną: allowlista, linki, prywatne pliki, Lucide/SRI i ryzykowne frazy.
-- `tools/public-repo-manifest.txt`, `tools/prepare-public-repo.ps1`, `tools/verify-public-repo.ps1` - allowlista i skrypty czystej paczki publicznego repo.
-- `tools/validate-go-live.ps1` - pełna lokalna bramka go-live: walidatory, build paczek, verify, HTTP smoke `dist/public`, browser smoke, public repo package, manifest, verifier artefaktów ZIP, HTTP smoke `dist/upload-ready`, lokalny post-deploy compare i raport readiness `dist/go-live-status.txt`.
-- `tools/release-readiness.js` - lekki pulpit statusu przed publikacją: manifest release, manifest plików uploadu, `dist/upload-ready`, deployment handoff, document-root checklist, DNS/contact gate, domena, ekspozycja artefaktow pomocniczych i konkretne następne kroki; opcja `-ReportPath "dist/go-live-status.txt"` zapisuje trwały raport statusu.
-- `tools/domain-diagnostics.js` - lekka diagnostyka DNS/HTTP/HTTPS dla `pacjent360.com.pl`, `www`, root, `index.html`, `demo.html`, `health.txt` i przypadkowo publicznych artefaktow pomocniczych; opcja `-ReportPath "dist/domain-diagnostics.txt"` zapisuje raport pomocny przy 404 po uploadzie.
-- `tools/verify-contact-gate.ps1` - techniczny i ręczny gate dla aliasów `security@...` oraz `kontakt@...`; nie zastępuje potwierdzenia odbioru poczty.
-- `tools/verify-deployed-site.ps1` - post-deploy verifier dla domeny lub hostingu po wrzuceniu `dist/upload-ready`; sprawdza tez, ze ZIP-y, `.sha256`, manifesty, handoff i raporty statusu/diagnostyki nie zostaly publicznie w document root; opcja `-CompareLocalPackage` porównuje wdrożone pliki z lokalną paczką.
-- `tools/smoke-deployed-compare.ps1` - lokalnie serwuje `dist/upload-ready` i uruchamia post-deploy verifier z `-CompareLocalPackage`.
-- `tools/write-release-manifest.ps1` - zapisuje `dist/release-manifest.json` i SHA256 paczek po pełnej bramce go-live.
-- `tools/write-upload-manifest.ps1` - zapisuje `dist/upload-ready-manifest.json` z rozmiarem i SHA256 każdego pliku z `dist/upload-ready`, `dist/document-root-checklist.txt` z krótka lista plikow dla operatora oraz `dist/deployment-handoff.txt` z krótkim handoffem uploadu.
-- `tools/verify-release-artifacts.ps1` - sprawdza ZIP-y release, `.sha256`, manifest, brak prywatnych plików, zgodność ZIP-ów z `dist/public` oraz `dist/repo`, a także rozpakowany hosting ZIP jako symulację uploadu.
-- `.htaccess` - konfiguracja Apache/nazwa.pl dla nagłówków bezpieczeństwa hostingu, blokady listingu katalogów oraz przekierowania HTTP/`www` do kanonicznego HTTPS.
-- `tools/validate-data-contract.ps1` - walidator Data Contract v0.1 dla danych demo i eksportu.
-- `tools/validate-map-model.ps1` - walidator M3 dla Mapy Pacjenta 360: wspólna historia lekarz/pacjent, warstwy, źródła i neutralne relacje.
-- `tools/validate-previsit-workflow.ps1` - walidator M4 dla przygotowania do wizyty i safety copy.
-- `tools/validate-caregiver-scope.ps1` - walidator M7 dla zakresu opiekuna, zadań organizacyjnych i cofnięcia zgody.
-- `tools/validate-consent-draft.ps1` - walidator M7 dla szkicu zgody i reguły, że `scope` nie nadaje obszarów dostępu.
-- `tools/validate-a11y.ps1` - statyczny walidator dostępności: skip-linki, etykiety, dialogi, `alt`, focus-visible.
-- `tools/validate-validation-pack.ps1` - walidator protokolu, formularza i tabeli wynikow walidacji.
-- `tools/validate-pre-show.ps1` - read-only bramka przed sesja z reviewerem; nie buduje paczek i nie zapisuje manifestu.
-- `robots.txt` i `sitemap.xml` - podstawowe pliki publikacyjne dla domeny.
-- `LICENSE` - Apache License 2.0 dla kodu prototypu.
-- `DOCS_LICENSE.md` - CC BY 4.0 dla dokumentacji i materiałów koncepcyjnych.
+Root repozytorium ma być czytelny. Szczegółowe dokumenty są w `docs/`, żeby publiczny widok projektu nie mieszał strony, demo, governance i planów roboczych w jednym miejscu.
+
+- `index.html`, `demo.html`, `disclaimer.html`, `privacy.html`, `maintenance.html` - publiczna strona, demo i strony bezpieczeństwa.
+- `app.js`, `styles.css`, `patient360-*.js`, `schema/`, `fixtures/` - prototyp MVP, modele i fikcyjne dane testowe.
+- `README.md`, `LICENSE`, `NOTICE`, `SECURITY.md`, `CONTRIBUTING.md`, `CHANGELOG.md` - podstawowe dokumenty open source.
+- `docs/PROGRAM_PLAN.md` - nadrzędny plan strategiczny i harmonogram rzeczowo-techniczny.
+- `docs/ARCHITECTURE.md` - architektura Pacjent 360 jako warstwy kontekstu nad IKP/P1.
+- `docs/SSOT.md` - pojedyncze źródło prawdy dla roli LLM i asystentów operacyjnych.
+- `docs/TIMELINE_VISION.md` - docelowa mapa pacjenta, warstwy, epizody i zasilanie danymi.
+- `docs/ROADMAP.md`, `docs/SPRINTS.md` - roadmapa i aktywny backlog rozwoju.
+- `docs/legal/` - disclaimer, prywatność i licencja dokumentacji.
+- `docs/governance/` - risk register, komunikacja kryzysowa i dostępność.
+- `docs/deployment/` - publikacja, rollback, GitHub i nazwa.pl.
+- `docs/validation/` - protokół walidacji, formularz feedbacku i szablon wyników.
+- `docs/adr/` - decyzje architektoniczne.
+- `tools/` - walidatory, smoke testy i skrypty budowania czystych paczek.
 
 ## Licencje i znak projektu
 
@@ -292,19 +250,19 @@ Kod, skrypty, modele danych, testy i pliki techniczne Pacjent 360 są udostępni
 
 Dokumentacja, architektura, roadmapa, opisy koncepcyjne i materiały projektowe są udostępniane na warunkach Creative Commons Attribution 4.0 International (CC BY 4.0), chyba że dany plik wskazuje inaczej.
 
-Nazwa Pacjent 360, domena `pacjent360.com.pl`, identyfikacja projektu i materiały opisujące jego status nie mogą być używane w sposób sugerujący oficjalną afiliację z CeZ, NFZ, IKP, P1, e-Profilem Pacjenta, certyfikację kliniczną, status wyrobu medycznego albo gotowość do użycia medycznego. Szczegóły: `NOTICE`, `DISCLAIMER.md` i `DOCS_LICENSE.md`.
+Nazwa Pacjent 360, domena `pacjent360.com.pl`, identyfikacja projektu i materiały opisujące jego status nie mogą być używane w sposób sugerujący oficjalną afiliację z CeZ, NFZ, IKP, P1, e-Profilem Pacjenta, certyfikację kliniczną, status wyrobu medycznego albo gotowość do użycia medycznego. Szczegóły: `NOTICE`, `docs/legal/DISCLAIMER.md` i `docs/legal/DOCS_LICENSE.md`.
 
 ## Ważne ograniczenie
 
 To repozytorium jest prototypem koncepcyjnym. Każde użycie produkcyjne wymaga walidacji klinicznej, prawnej, bezpieczeństwa, ochrony danych i zgodności regulacyjnej.
 
-**Dla modeli AI, asystentów operacyjnych i nowych kontrybutorów:** zacznij od `PROGRAM_PLAN.md`, potem przejdź do `SSOT.md`, `ARCHITECTURE.md` i `TIMELINE_VISION.md`.
+**Dla modeli AI, asystentów operacyjnych i nowych kontrybutorów:** zacznij od `docs/PROGRAM_PLAN.md`, potem przejdź do `docs/SSOT.md`, `docs/ARCHITECTURE.md` i `docs/TIMELINE_VISION.md`.
 
-Najważniejszy dokument techniczny: `ARCHITECTURE.md`.
+Najważniejszy dokument techniczny: `docs/ARCHITECTURE.md`.
 
-Najważniejszy dokument bezpieczeństwa medycznego: `DISCLAIMER.md`.
+Najważniejszy dokument bezpieczeństwa medycznego: `docs/legal/DISCLAIMER.md`.
 
-Najważniejszy dokument dla LLM i asystentów operacyjnych: `SSOT.md`. Sprinty i roadmapa muszą być z nim zgodne.
+Najważniejszy dokument dla LLM i asystentów operacyjnych: `docs/SSOT.md`. Sprinty i roadmapa muszą być z nim zgodne.
 
 ## Referencje koncepcyjne
 
