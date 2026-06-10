@@ -1042,9 +1042,9 @@ const demoState = {
     {
       id: "g3",
       patientId: "p1",
-      subject: "Anna K. - opiekun lekowy",
+      subject: "Anna K. - córka",
       scope: "leki, zadania lekowe, przypomnienia i pytania o uzgodnienie listy leków",
-      role: "opiekun lekowy",
+      role: "osoba wspierająca",
       caregiverId: "cg-med-p1",
       caregiverName: "Anna K.",
       areas: ["medications", "tasks"],
@@ -1055,9 +1055,9 @@ const demoState = {
     {
       id: "g4",
       patientId: "p1",
-      subject: "Piotr K. - opiekun wizyt",
+      subject: "Piotr K. - osoba wspierająca",
       scope: "wizyty, dokumenty i raport kontekstowy",
-      role: "opiekun wizyt",
+      role: "osoba wspierająca",
       caregiverId: "cg-visit-p1",
       caregiverName: "Piotr K.",
       areas: ["visits", "documents", "report"],
@@ -3277,7 +3277,7 @@ function renderCaregiverScope(scope) {
     <article class="caregiver-scope ${scope.status === "aktywny" ? "active" : "inactive"}">
       <div>
         <strong>${escapeHtml(scope.subject)}</strong>
-        <small>${escapeHtml(scope.role)} · do ${escapeHtml(formatDate(scope.validTo))}</small>
+        <small>${escapeHtml(PATIENT360_CAREGIVER_MODEL.displayRole(scope.role))} · do ${escapeHtml(formatDate(scope.validTo))}</small>
       </div>
       <span class="status-chip ${statusClass(scope.status)}">${escapeHtml(scope.status)}</span>
       <p>${escapeHtml(scope.scope)}</p>
@@ -3403,7 +3403,7 @@ function renderConsentScopeRow(scope) {
     <tr>
       <td>
         <strong>${escapeHtml(scope.subject)}</strong><br>
-        <span class="muted">${escapeHtml(scope.role)} · do ${escapeHtml(formatDate(scope.validTo))}</span>
+        <span class="muted">${escapeHtml(PATIENT360_CAREGIVER_MODEL.displayRole(scope.role))} · do ${escapeHtml(formatDate(scope.validTo))}</span>
       </td>
       ${areas.map((area) => {
         const allowed = active && scope.areas.includes(area.key);
@@ -3461,7 +3461,7 @@ function openConsentRevokeDialog(consentId) {
     <div class="confirm-summary">
       <p class="record-body">Potwierdź cofnięcie dostępu dla: <strong>${escapeHtml(scope.subject)}</strong>.</p>
       <div class="record-meta">
-        <span class="tag">${escapeHtml(scope.role)}</span>
+        <span class="tag">${escapeHtml(PATIENT360_CAREGIVER_MODEL.displayRole(scope.role))}</span>
         <span class="tag">do ${escapeHtml(formatDate(scope.validTo))}</span>
       </div>
       <div class="confirm-tags" aria-label="Zakres zgody">
@@ -3509,7 +3509,7 @@ function openConsentCreateDialog(id, values) {
     <div class="confirm-summary">
       <p class="record-body">Sprawdź zakres przed zapisem dostępu dla: <strong>${escapeHtml(consent.subject)}</strong>.</p>
       <div class="record-meta">
-        <span class="tag">${escapeHtml(consent.role)}</span>
+        <span class="tag">${escapeHtml(PATIENT360_CAREGIVER_MODEL.displayRole(consent.role))}</span>
         <span class="tag">pacjent: ${escapeHtml(patientName)}</span>
         <span class="tag">do ${escapeHtml(formatDate(consent.validTo))}</span>
       </div>
@@ -3654,7 +3654,7 @@ function renderEvidenceCard(ref, parsed, record) {
     return `<article class="record"><p class="record-title">${escapeHtml(record.type)}</p><p class="record-body">${escapeHtml(record.clinicalQuestion)}</p><div class="source-line">${sourceChips(record.sourceRefs)}</div></article>`; // decisionContext
   }
   if (parsed.type === "consent") {
-    return `<article class="record"><p class="record-title">Zgoda: ${escapeHtml(record.subject)}</p><p class="record-body">${escapeHtml(record.scope)}</p><p class="record-body"><strong>Rola:</strong> ${escapeHtml(record.role || "")}<br><strong>Status:</strong> ${escapeHtml(record.status || "")}<br><strong>Do:</strong> ${formatDate(record.validTo)}</p><div class="source-line">${sourceChips((record.sourceRefs || []).filter((item) => item !== ref))}</div></article>`;
+    return `<article class="record"><p class="record-title">Zgoda: ${escapeHtml(record.subject)}</p><p class="record-body">${escapeHtml(record.scope)}</p><p class="record-body"><strong>Rola:</strong> ${escapeHtml(PATIENT360_CAREGIVER_MODEL.displayRole(record.role || ""))}<br><strong>Status:</strong> ${escapeHtml(record.status || "")}<br><strong>Do:</strong> ${formatDate(record.validTo)}</p><div class="source-line">${sourceChips((record.sourceRefs || []).filter((item) => item !== ref))}</div></article>`;
   }
   return `<article class="record"><p class="record-title">${escapeHtml(sourceLabel(ref))}</p></article>`;
 }
@@ -3983,7 +3983,7 @@ function dialogConfig(type) {
         },
         { name: "subject", label: "Odbiorca / nazwa opiekuna" },
         { name: "caregiverName", label: "Imię lub nazwa opiekuna" },
-        { name: "role", label: "Rola", kind: "select", options: ["osoba wspierająca", "opiekun lekowy", "opiekun wizyt", "rodzina"] },
+        { name: "role", label: "Rola", kind: "select", options: ["rodzic", "opiekun prawny", "osoba wspierająca", "rodzina"] },
         {
           name: "consentArea",
           label: "Obszary udostępnienia",
