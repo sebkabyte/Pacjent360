@@ -209,6 +209,32 @@ async function waitForReady(client) {
   throw new Error("Page did not finish loading before screenshot");
 }
 
+async function prepareAppState(client) {
+  if (!args.view && !args.patient) return;
+  const view = args.view ? JSON.stringify(String(args.view)) : "null";
+  const patient = args.patient ? JSON.stringify(String(args.patient)) : "null";
+  await client.evaluate(`(async () => {
+    const pause = (ms = 120) => new Promise((resolve) => setTimeout(resolve, ms));
+    const patientId = ${patient};
+    const viewId = ${view};
+    if (patientId) {
+      const select = document.querySelector('#patientSelect');
+      if (select) {
+        select.value = patientId;
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+        await pause();
+      }
+    }
+    if (viewId) {
+      const button = document.querySelector('nav button[data-view="' + viewId + '"]');
+      if (button) {
+        button.click();
+        await pause();
+      }
+    }
+  })()`);
+}
+
 async function captureScreenshot(client) {
   try {
     return await client.call("Page.captureScreenshot", {
@@ -265,6 +291,7 @@ async function main() {
     const url = screenshotUrl(args.url, serverPort);
     await client.call("Page.navigate", { url });
     await waitForReady(client);
+    await prepareAppState(client);
     const screenshot = await captureScreenshot(client);
     assert(screenshot.data, "CDP did not return screenshot data");
     fs.writeFileSync(outputPath, Buffer.from(screenshot.data, "base64"));

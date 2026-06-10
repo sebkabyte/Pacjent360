@@ -38,6 +38,7 @@ $files = @(
   "site.js",
   "patient360-contract.js",
   "patient360-map-model.js",
+  "patient360-map-view.js",
   "patient360-previsit-model.js",
   "patient360-caregiver-model.js",
   "patient360-consent-model.js",
