@@ -32,6 +32,8 @@ $files = @(
   "privacy.html",
   "maintenance.html",
   "health.txt",
+  "brand/tokens.css",
+  "brand/components.css",
   "site.css",
   "site.js",
   "patient360-contract.js",
@@ -50,7 +52,12 @@ foreach ($file in $files) {
   if (-not (Test-Path $source)) {
     throw "Missing required public file: $file"
   }
-  Copy-Item -LiteralPath $source -Destination (Join-Path $target $file)
+  $destination = Join-Path $target $file
+  $destinationDir = Split-Path -Parent $destination
+  if (-not (Test-Path $destinationDir)) {
+    New-Item -ItemType Directory -Force -Path $destinationDir | Out-Null
+  }
+  Copy-Item -LiteralPath $source -Destination $destination
 }
 
 $assetTarget = Join-Path $target "assets"

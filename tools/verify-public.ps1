@@ -38,6 +38,8 @@ $expectedFiles = @(
   "privacy.html",
   "maintenance.html",
   "health.txt",
+  "brand/tokens.css",
+  "brand/components.css",
   "site.css",
   "site.js",
   "patient360-contract.js",

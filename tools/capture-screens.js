@@ -209,6 +209,22 @@ async function waitForReady(client) {
   throw new Error("Page did not finish loading before screenshot");
 }
 
+async function captureScreenshot(client) {
+  try {
+    return await client.call("Page.captureScreenshot", {
+      format: "png",
+      captureBeyondViewport: true,
+      fromSurface: true
+    });
+  } catch (error) {
+    if (!String(error.message || "").includes("0 width")) throw error;
+    return client.call("Page.captureScreenshot", {
+      format: "png",
+      fromSurface: true
+    });
+  }
+}
+
 async function main() {
   assert(fs.existsSync(packageDir), `Package directory does not exist: ${packageDir}`);
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
@@ -249,11 +265,7 @@ async function main() {
     const url = screenshotUrl(args.url, serverPort);
     await client.call("Page.navigate", { url });
     await waitForReady(client);
-    const screenshot = await client.call("Page.captureScreenshot", {
-      format: "png",
-      captureBeyondViewport: true,
-      fromSurface: true
-    });
+    const screenshot = await captureScreenshot(client);
     assert(screenshot.data, "CDP did not return screenshot data");
     fs.writeFileSync(outputPath, Buffer.from(screenshot.data, "base64"));
     console.log(`Screenshot saved: ${outputPath}`);
