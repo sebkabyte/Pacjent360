@@ -380,6 +380,108 @@ async function main() {
     assert(timeline.eventRects.every((rect) => rect.width >= 120 && rect.height >= 300), "Timeline event lanes should have stable dimensions");
     assert(!timeline.hasHorizontalOverflow, "Timeline should scroll inside workbench, not create body horizontal overflow");
 
+    const timelineInteractions = await client.evaluate(`(async () => {
+      const pause = (ms = 80) => new Promise((resolve) => setTimeout(resolve, ms));
+      const eventsBefore = [...document.querySelectorAll('.temporal-event')].map((event) => ({
+        id: event.dataset.selectTimelineEvent || '',
+        title: event.querySelector('.temporal-card strong')?.textContent.trim() || '',
+        track: event.querySelector('.temporal-track')?.textContent.trim().replace(/\\s+/g, ' ') || ''
+      })).filter((event) => event.id);
+      const targetEvent = eventsBefore.find((event) => !event.id.startsWith('anchor-')) || eventsBefore[0];
+      const targetNode = [...document.querySelectorAll('.temporal-event')]
+        .find((event) => event.dataset.selectTimelineEvent === targetEvent?.id);
+      if (targetNode) targetNode.click();
+      await pause();
+      const selectedAfterClick = document.querySelector('.temporal-event.selected')?.dataset.selectTimelineEvent || '';
+      const inspectorTitleAfterClick = document.querySelector('.timeline-inspector .inspector-head h3')?.textContent.trim() || '';
+      const inspectorHasSources = Boolean(document.querySelector('.timeline-inspector [data-source-ref]'));
+
+      const enabledTrackButton = [...document.querySelectorAll('[data-filter-track]')]
+        .find((button) => !button.disabled && !button.classList.contains('active'));
+      const selectedTrack = enabledTrackButton?.dataset.filterTrack || '';
+      const countBeforeFilter = document.querySelectorAll('.temporal-event').length;
+      if (enabledTrackButton) enabledTrackButton.click();
+      await pause();
+      const activeTrack = document.querySelector('[data-filter-track].active')?.dataset.filterTrack || '';
+      const filteredEvents = [...document.querySelectorAll('.temporal-event')].map((event) => ({
+        id: event.dataset.selectTimelineEvent || '',
+        track: event.querySelector('.temporal-track')?.textContent.trim().replace(/\\s+/g, ' ') || ''
+      }));
+      const countAfterFilter = filteredEvents.length;
+      const filterApplied = Boolean(activeTrack) && activeTrack === selectedTrack && countAfterFilter <= countBeforeFilter &&
+        filteredEvents.every((event) => event.track.includes(activeTrack));
+      const activeTrackButton = document.querySelector('[data-filter-track].active');
+      if (activeTrackButton) activeTrackButton.click();
+      await pause();
+
+      const zoomRangeBefore = Number(document.querySelector('[data-timeline-zoom-range]')?.value || 0);
+      const zoomButton = [...document.querySelectorAll('[data-timeline-zoom-step]')]
+        .find((button) => Number(button.dataset.timelineZoomStep) > 0);
+      if (zoomButton) zoomButton.click();
+      await pause();
+      const zoomRangeAfter = Number(document.querySelector('[data-timeline-zoom-range]')?.value || 0);
+      const zoomTextAfter = document.querySelector('.temporal-zoom-control strong')?.textContent.trim() || '';
+
+      const scroller = document.querySelector('.temporal-scroll');
+      const lastTick = [...document.querySelectorAll('.mini-tick')].at(-1);
+      if (scroller) scroller.scrollLeft = 0;
+      const scrollBeforeJump = scroller?.scrollLeft || 0;
+      if (lastTick) lastTick.click();
+      await pause(260);
+      const scrollAfterJump = scroller?.scrollLeft || 0;
+      const minimapJumpWorked = Boolean(lastTick) && Boolean(scroller) && scrollAfterJump >= scrollBeforeJump;
+
+      const patientSelect = document.querySelector('#patientSelect');
+      if (patientSelect) {
+        patientSelect.value = 'p2';
+        patientSelect.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      await pause();
+      const p2EventCount = document.querySelectorAll('.temporal-event').length;
+      const p2PatientValue = document.querySelector('#patientSelect')?.value || '';
+      const p2FirstTitle = document.querySelector('.temporal-event .temporal-card strong')?.textContent.trim() || '';
+      if (patientSelect) {
+        patientSelect.value = 'p1';
+        patientSelect.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      await pause();
+      return {
+        eventsBefore,
+        targetEvent,
+        selectedAfterClick,
+        inspectorTitleAfterClick,
+        inspectorHasSources,
+        selectedTrack,
+        activeTrack,
+        countBeforeFilter,
+        countAfterFilter,
+        filterApplied,
+        zoomRangeBefore,
+        zoomRangeAfter,
+        zoomTextAfter,
+        scrollBeforeJump,
+        scrollAfterJump,
+        minimapJumpWorked,
+        p2PatientValue,
+        p2EventCount,
+        p2FirstTitle,
+        resetPatientValue: document.querySelector('#patientSelect')?.value || '',
+        activeViewAfterReset: document.querySelector('nav button.active')?.dataset.view || null
+      };
+    })()`);
+    assert(timelineInteractions.eventsBefore.length >= 1, "Timeline interaction smoke needs at least one event");
+    assert(timelineInteractions.selectedAfterClick === timelineInteractions.targetEvent.id, "Clicking a timeline event should select it");
+    assert(timelineInteractions.inspectorTitleAfterClick.includes(timelineInteractions.targetEvent.title), "Timeline inspector should show clicked event title");
+    assert(timelineInteractions.inspectorHasSources, "Timeline inspector should expose source chips for selected event");
+    assert(timelineInteractions.filterApplied, `Timeline track filter should reduce or preserve events for selected track ${timelineInteractions.selectedTrack}`);
+    assert(timelineInteractions.zoomRangeAfter > timelineInteractions.zoomRangeBefore, `Timeline zoom-in should increase range value from ${timelineInteractions.zoomRangeBefore} to ${timelineInteractions.zoomRangeAfter}`);
+    assert(/^\d+%$/.test(timelineInteractions.zoomTextAfter), `Timeline zoom label should remain a percentage after interaction, got ${timelineInteractions.zoomTextAfter}`);
+    assert(timelineInteractions.minimapJumpWorked, "Timeline minimap click should keep navigator wired to the scroll area");
+    assert(timelineInteractions.p2PatientValue === "p2", "Patient switcher should move to p2 during timeline smoke");
+    assert(timelineInteractions.p2EventCount === 3, `Switching to p2 should reload map events, got ${timelineInteractions.p2EventCount}`);
+    assert(timelineInteractions.p2FirstTitle.length > 0, "Switching patient should render p2 event cards");
+    assert(timelineInteractions.resetPatientValue === "p1" && timelineInteractions.activeViewAfterReset === "timeline", "Timeline smoke should reset patient to p1 for later checks");
+
     const caregiver = await client.evaluate(`(() => {
       document.querySelector('nav button[data-view="caregiverPortal"]').click();
       return {
