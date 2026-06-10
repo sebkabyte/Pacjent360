@@ -1,8 +1,8 @@
-# Pacjent 360 SSOT: LLM Agents
+# Pacjent 360 SSOT: LLM i agenci operacyjni
 
-Status: decyzja produktowa po council.
+Status: decyzja produktowa po council. Zakres: wyłącznie rola LLM i agentów operacyjnych.
 
-Ten dokument jest pojedynczym źródłem prawdy dla roli LLM i agentów w Pacjent 360. Obowiązuje dla backlogu, prototypów, demo, przyszłych PR oraz rozmów z partnerami. W razie konfliktu języka lub zakresu agentów z innymi materiałami produktowymi ten dokument ma pierwszeństwo do czasu formalnej aktualizacji.
+Nadrzędnym źródłem prawdy o produkcie jest `PRODUCT_SSOT.md` w katalogu głównym repo (ADR 0005). Ten dokument jest pojedynczym źródłem prawdy **dla roli LLM i agentów** w Pacjent 360 i działa w granicach wyznaczonych przez `PRODUCT_SSOT.md`. Obowiązuje dla backlogu, prototypów, demo, przyszłych PR oraz rozmów z partnerami. W razie konfliktu języka lub zakresu agentów z innymi materiałami produktowymi ten dokument ma pierwszeństwo do czasu formalnej aktualizacji; w razie konfliktu o to, czym jest produkt, rozstrzyga `PRODUCT_SSOT.md`.
 
 ## Decyzja główna
 

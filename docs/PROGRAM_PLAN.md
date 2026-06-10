@@ -12,18 +12,20 @@ Ten dokument spina `README.md`, `ARCHITECTURE.md`, `SSOT.md`, `TIMELINE_VISION.m
 
 FAZY 0-4 z `CLAUDE.md`, zadania `CKP-*`, `MOB-*`, `NAT-*` oraz `CODEX_GOALS.md` nie sa anulowane. Sa objete przez M0-M12 jako szczegolowy backlog wykonawczy i material historyczny. Nie powinny byc traktowane jako rownolegly, konkurencyjny harmonogram.
 
-Hierarchia robocza:
+Hierarchia robocza (po ADR 0005, 2026-06-10):
 
 ```text
-SSOT.md / DISCLAIMER.md / SECURITY.md / RISKS.md
+PRODUCT_SSOT.md / DISCLAIMER.md / SECURITY.md / RISKS.md
   -> PROGRAM_PLAN.md
     -> ARCHITECTURE.md / TIMELINE_VISION.md / ROADMAP.md
-      -> SPRINTS.md / CLAUDE.md / CODEX_GOALS.md / HANDOVER.md
+      -> SPRINTS.md / SSOT.md (zakres: LLM/agenci)
+        -> CLAUDE.md / CODEX_GOALS.md / HANDOVER.md (prywatne, robocze)
 ```
 
 Zasada:
 
-- `SSOT.md` rzadzi granicami LLM/asystentow.
+- `PRODUCT_SSOT.md` mowi, czym jest produkt i co jest no-go (ADR 0005).
+- `docs/SSOT.md` rzadzi granicami LLM/asystentow w ramach `PRODUCT_SSOT.md`.
 - `TIMELINE_VISION.md` rzadzi docelowa Mapa Pacjenta 360.
 - `PROGRAM_PLAN.md` rzadzi kolejnoscia prac.
 - `CLAUDE.md` jest kontekstem AI i szczegolowym backlogiem, ale nie nadrzednym planem programu.
@@ -202,6 +204,8 @@ Zakres:
 | M10 | Manual Agent Dry-Run | tydzien 10 | dry-run bez realnych danych, preview, no hidden commit |
 | M11 | First Safe Assistants | tydzien 11 | `DataQualityAgent`, `SourceGroundingAgent`, `DemoSafetyLintAgent` |
 | M12 | Strategic Decision Gate | tydzien 12 | decyzja: open source community, pilot instytucjonalny, PWA/backend, pivot albo stop |
+| M13 | Care Circle Language & Authority | po M7, przed M8 | rozdzial krag opieki (ludzie) vs agenci (funkcje), slownictwo UI/copy, kierunek macierzy authority (rodzic/opiekun prawny/osoba wspierajaca) |
+| M14 | Definition of Harm & Safety Case | rownolegle z M5 | `DEFINITION_OF_HARM.md` (H-001..H-010), `SAFETY_CASE.md` jako argumentacja z istniejacych dowodow, testy negatywne w walidatorach |
 
 ### Aktualny status milestone'ow - 2026-06-08
 
@@ -740,14 +744,43 @@ Praktyczna zasada:
 - jesli stary prompt koliduje z `PROGRAM_PLAN.md`, wygrywa `PROGRAM_PLAN.md`,
 - jesli stary prompt koliduje z safety/privacy/security, wygrywaja `SSOT.md`, `DISCLAIMER.md`, `SECURITY.md` i `RISKS.md`.
 
+## Materialy zewnetrzne GPT (TEMP/) - status adopcji 2026-06-10
+
+Autor dostarczyl w `TEMP/` materialy koncepcyjne z rozmow z GPT PRO: notatki, paczki plikow (v1, v2, Program Foundation, Repo Alignment v5), warianty stron WWW i master prompty wykonawcze. Decyzja autora: pliki GPT sa wylacznie ideami; kierunek okresla ten plan. Master prompty z TEMP nie sa harmonogramem i nie wolno ich wykonywac wprost.
+
+### Przyjete (zmapowane do planu)
+
+- `PRODUCT_SSOT.md` + hierarchia dokumentow -> wykonane, ADR 0005.
+- Rozdzial krag opieki (ludzie) vs agenci operacyjni (funkcje) -> M13.
+- Definition of Harm (H-001..H-010) + Safety Case -> M14.
+- `evidenceClass` (dokument vs relacja pacjenta vs obserwacja opiekuna) -> M13/M14, kontrakt danych.
+- Zasada traceability strona<->repo -> `PRODUCT_SSOT.md` sekcja 7, obowiazuje od zaraz.
+- Wedge A+B (rodzic/opiekun przygotowuje wizyte + lekarz 90 sekund) -> `docs/product/FIRST_WEDGE.md`, zatwierdzony przez autora 2026-06-10.
+- Design story-website jako baza nowej strony publicznej -> po operacji tresci (bez roadmapy krajowej i budzetow).
+
+### Odroczone (dobre, ale po walidacji M5/M6)
+
+- Wersjonowanie raportow (`ReportVersion`) -> kandydat M15 po M5.
+- Macierz authority dziecko/rodzic/opiekun prawny jako KOD -> po decyzji wedge w pilocie; jako DOKUMENT czesc M13.
+- Threat model prompt injection -> wlaczyc do istniejacego M9 Agent Safety A0, nie dublowac.
+- Polityka retencji/usuwania danych -> dokument przed jakimikolwiek realnymi danymi; MVP ich nie ma.
+
+### Odrzucone jako plan (zostaja w TEMP jako referencja)
+
+- Program Foundation Pack (fazy P0-P5, 14 rol, budzety 1,5-4 mln PLN na 90 dni, 400 mln-1,2 mld PLN rollout) - scenariusz finansowania, nie plan pracy jednoosobowego projektu alpha.
+- Architektura komorkowa 38M, Temporal/LangGraph, SLO/observability, model organizacji, kodowanie ICD/SNOMED/LOINC, break-glass - horyzont po walidacji i po decyzji M12.
+- Systemy milestone'ow z paczek (M00-M12 v2, workstreamy v1, PR-001..005 v5) - kolizja numeracji z tym planem; tresc czerpiemy wybiorczo, numeracji nie importujemy.
+
 ## Najblizszy rekomendowany krok
 
-Nie zaczynac szerokich nowych funkcji przed finalnym domknieciem publikacji. Najblizszy krok to contact gate i finalny human review:
+Zatwierdzony plan biezacy (2026-06-10): FAZA A higiena repo (wykonana: git podpiety do origin/main, .gitignore chroni materialy robocze) -> FAZA B konsolidacja planu (ten dokument, PRODUCT_SSOT, wedge) -> FAZA C nowa strona publiczna na bazie story-website po operacji tresci + restyle demo + rebuild paczki -> FAZA D poprawki produktowe (slownictwo kregu opieki, DoH, Safety Case, evidenceClass).
+
+Rownolegle, poza kodem (wylacznie autor):
 
 1. skonfigurowac i recznie przetestowac aliasy `security@pacjent360.com.pl` oraz `kontakt@pacjent360.com.pl`,
 2. uruchomic `tools/verify-contact-gate.ps1 -ReceiptConfirmed -MonitorOwner "..."`,
-3. uruchomic `tools/validate-go-live.ps1` po ostatnich zmianach,
-4. wykonac finalny human review na hostingu/domenie,
-5. dopiero potem zdecydowac: public repo, ograniczona publikacja preview albo dalszy hardening M7/M8.
+3. wgrac `dist/upload-ready` (po rebuildzie z FAZY C) do document root domeny,
+4. uruchomic `tools/verify-deployed-site.ps1` i `node tools/release-readiness.js`,
+5. finalny human review na domenie.
 
-Rownolegle, poza kodem, trzeba domknac decyzje public repo. Contact gate pozostaje bramka dla produkcyjnego go-live oraz otwarcia repozytorium, ale nie blokuje dalszego lokalnego hardeningu produktu.
+Contact gate pozostaje bramka dla produkcyjnego go-live, ale nie blokuje lokalnego hardeningu produktu.
