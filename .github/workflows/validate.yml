@@ -1,0 +1,56 @@
+name: Validate
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Static validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Check JavaScript syntax
+        run: |
+          for file in public/*.js tools/*.js; do
+            node --check "$file"
+          done
+
+      - name: Validate data contract
+        run: node tools/validate-data-contract.js
+
+      - name: Validate map model
+        run: node tools/validate-map-model.js
+
+      - name: Validate previsit workflow
+        run: node tools/validate-previsit-workflow.js
+
+      - name: Validate caregiver scope
+        run: node tools/validate-caregiver-scope.js
+
+      - name: Validate consent draft
+        run: node tools/validate-consent-draft.js
+
+      - name: Validate accessibility rules
+        run: node tools/validate-a11y.js
+
+      - name: Validate harm gates
+        run: node tools/validate-harm-gates.js
+
+      - name: Validate M5 pack
+        run: node tools/validate-validation-pack.js
