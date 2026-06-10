@@ -1,0 +1,78 @@
+/*
+  Pacjent360 brand tokens.
+  These values describe the interface language, not clinical urgency.
+  Data-status colors must always be paired with text and an icon.
+*/
+
+:root {
+  /* Typography */
+  --p360-font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --p360-font-mono: "IBM Plex Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+
+  /* Core colors */
+  --p360-color-ink: #1f2933;
+  --p360-color-ink-strong: #10242a;
+  --p360-color-muted: #607080;
+  --p360-color-subtle: #8795a1;
+  --p360-color-line: #d8e0e7;
+  --p360-color-line-strong: #b8c5d0;
+  --p360-color-paper: #ffffff;
+  --p360-color-wash: #f5f7f9;
+  --p360-color-wash-strong: #eef3f6;
+
+  /* Product accents */
+  --p360-color-teal: #0f766e;
+  --p360-color-teal-strong: #0f5c56;
+  --p360-color-teal-soft: #d9f0ee;
+  --p360-color-blue: #2563eb;
+  --p360-color-blue-soft: #dbeafe;
+  --p360-color-amber: #b45309;
+  --p360-color-amber-soft: #fff4d6;
+  --p360-color-red: #b42318;
+  --p360-color-red-soft: #fde3df;
+  --p360-color-green: #15803d;
+  --p360-color-green-soft: #dcfce7;
+
+  /* Data statuses, not clinical urgency */
+  --p360-status-confirmed-fg: var(--p360-color-green);
+  --p360-status-confirmed-bg: var(--p360-color-green-soft);
+  --p360-status-pending-fg: var(--p360-color-amber);
+  --p360-status-pending-bg: var(--p360-color-amber-soft);
+  --p360-status-info-fg: var(--p360-color-blue);
+  --p360-status-info-bg: var(--p360-color-blue-soft);
+  --p360-status-conflict-fg: var(--p360-color-red);
+  --p360-status-conflict-bg: var(--p360-color-red-soft);
+
+  /* Spacing */
+  --p360-space-1: 4px;
+  --p360-space-2: 8px;
+  --p360-space-3: 12px;
+  --p360-space-4: 16px;
+  --p360-space-6: 24px;
+  --p360-space-8: 32px;
+  --p360-space-12: 48px;
+  --p360-space-16: 64px;
+
+  /* Radius */
+  --p360-radius-xs: 4px;
+  --p360-radius-sm: 8px;
+  --p360-radius-md: 12px;
+  --p360-radius-lg: 22px;
+  --p360-radius-pill: 999px;
+
+  /* Shadows */
+  --p360-shadow-sm: 0 6px 18px rgba(31, 41, 51, 0.08);
+  --p360-shadow-md: 0 10px 30px rgba(31, 41, 51, 0.08);
+  --p360-shadow-elevated: 0 24px 70px rgba(31, 41, 51, 0.14);
+
+  /* Focus */
+  --p360-focus-color: var(--p360-color-blue);
+  --p360-focus-width: 3px;
+  --p360-focus-offset: 2px;
+
+  /* Motion */
+  --p360-motion-fast: 120ms;
+  --p360-motion-normal: 180ms;
+  --p360-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+}
+
