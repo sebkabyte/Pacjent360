@@ -141,9 +141,9 @@ Cel: opiekun jest realna persona, nie tylko wpis w zgodach.
 
 Zakres:
 
-- opiekun lekowy,
-- opiekun wizyt,
-- osoba wspierajaca,
+- rodzic,
+- opiekun prawny,
+- osoba wspierajaca (z zakresem dostepu, np. leki albo wizyty),
 - granularne zgody,
 - audyt dostepu,
 - widok opiekuna z zadaniami.
@@ -401,7 +401,7 @@ Zadania:
 Definition of Done:
 
 - widac, kto co widzi, dlaczego i do kiedy,
-- opiekun lekowy i opiekun wizyt maja rozne zakresy,
+- osoby wspierajace maja rozne zakresy dostepu (np. obszar lekow vs obszar wizyt),
 - cofniecie zgody zmienia widocznosc i zapisuje audyt.
 
 ### Tydzien 7-8: After Visit Loop MVP

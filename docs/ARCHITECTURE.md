@@ -275,9 +275,9 @@ SupportPerson
 
 Role produktowe:
 
-- `Opiekun lekowy`: widzi plan lekow i moze oznaczac przypomnienia jako wykonane. Moze korzystac z asystenta lekowego, ktory pilnuje harmonogramu, brakow potwierdzenia i rozbieznosci miedzy lekiem przepisanym a faktycznie przyjmowanym.
-- `Opiekun wizyt`: widzi wizyty, checklisty i dokumenty wymagane na wizyte. Moze korzystac z asystenta wizyt, ktory pilnuje terminu, kompletu dokumentow, pytan do lekarza i zadan przed kontaktem medycznym.
-- `Rodzina / osoba wspierajaca`: widzi wybrane dane i moze dodac obserwacje.
+- `Rodzic / opiekun prawny / osoba wspierajaca`: czlowiek w kregu opieki z relacja do pacjenta i zakresem dostepu wynikajacym ze zgody. Czlowiek z dostepem do obszaru lekow widzi plan lekow i moze oznaczac zadania jako wykonane; czlowiek z dostepem do obszaru wizyt widzi terminy, checklisty i dokumenty wymagane na wizyte.
+- `Asystent lekow / asystent wizyt`: funkcje systemu, nie osoby i nie role ludzi. Asystent lekow pomaga uporzadkowac harmonogram, braki potwierdzenia i rozbieznosci miedzy lekiem przepisanym a faktycznie przyjmowanym; asystent wizyt pilnuje kompletu dokumentow, pytan do lekarza i zadan przed kontaktem medycznym. Decyzja zawsze nalezy do czlowieka.
+- `Rodzina / osoba wspierajaca`: widzi wybrane dane i moze dodac obserwacje (oznaczone jako obserwacje, nie fakty kliniczne).
 - `Lekarz`: widzi raport i zrodla podczas kontaktu medycznego.
 - `Pacjent`: wlasciciel zgody, zakresu i odwolania dostepu.
 

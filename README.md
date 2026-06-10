@@ -112,10 +112,11 @@ Najbliższy rozwój projektu powinien odpowiadać na potrzeby trzech osób patrz
    - pacjent widzi, co ma przygotować, sprawdzić lub omówić przy kolejnym kontakcie,
    - opiekun może pilnować tylko tych zadań, do których pacjent dał mu dostęp.
 
-4. **Krąg wsparcia i przypomnienia**
-   - pacjent świadomie udostępnia wybrane dane opiekunowi lub rodzinie,
-   - opiekun lekowy widzi harmonogram i może oznaczać przypomnienia jako wykonane,
-   - opiekun wizyt widzi terminy, checklisty i dokumenty potrzebne na wizytę.
+4. **Krąg wsparcia i zadania**
+   - pacjent świadomie udostępnia wybrane dane rodzicowi, opiekunowi lub rodzinie,
+   - człowiek z dostępem do obszaru leków widzi harmonogram i może oznaczać zadania jako wykonane,
+   - człowiek z dostępem do obszaru wizyt widzi terminy, checklisty i dokumenty potrzebne na wizytę,
+   - asystenci (funkcje systemu) pomagają porządkować te obszary; decyzje podejmuje człowiek.
 
 5. **Medication Story z udziałem farmaceuty**
    - projekt powinien lepiej rozróżniać leki przepisane, wykupione i faktycznie przyjmowane,

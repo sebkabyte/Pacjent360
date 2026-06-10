@@ -22,11 +22,26 @@
 
   const CAREGIVER_ROLES = Object.freeze([
     "pacjent",
-    "opiekun lekowy",
-    "opiekun wizyt",
+    "rodzic",
+    "opiekun prawny",
     "osoba wspierająca",
-    "rodzina"
+    "rodzina",
+    // wartości historyczne - zachowane dla kompatybilności zapisanych zgód;
+    // człowiek w kręgu opieki ma relację i zakres dostępu, agent jest funkcją systemu
+    "opiekun lekowy",
+    "opiekun wizyt"
   ]);
+
+  // Legacy role -> neutralny język człowieka z zakresem; nowe zgody używają relacji + obszarów
+  const ROLE_DISPLAY = Object.freeze({
+    "opiekun lekowy": "osoba wspierająca · obszar: leki",
+    "opiekun wizyt": "osoba wspierająca · obszar: wizyty"
+  });
+
+  function displayRole(role) {
+    const key = String(role || "").toLowerCase();
+    return ROLE_DISPLAY[key] || role || "osoba wspierająca";
+  }
 
   const FORBIDDEN_CAREGIVER_PHRASES = Object.freeze([
     "pilnie",
@@ -80,8 +95,6 @@
     if (role === "pacjent") return "pacjent";
     if (CAREGIVER_ROLES.includes(role)) return role;
     const scope = normalize(consent.scope || "");
-    if (scope.includes("lek")) return "opiekun lekowy";
-    if (scope.includes("wizyt") || scope.includes("procedur") || scope.includes("dokument")) return "opiekun wizyt";
     if (scope.includes("rodzin")) return "rodzina";
     return "osoba wspierająca";
   }
@@ -268,10 +281,12 @@
   return Object.freeze({
     CAREGIVER_AREAS,
     CAREGIVER_ROLES,
+    ROLE_DISPLAY,
     FORBIDDEN_CAREGIVER_PHRASES,
     buildCaregiverModel,
     validateCaregiverModel,
     normalizeAreas,
-    consentToScope
+    consentToScope,
+    displayRole
   });
 });

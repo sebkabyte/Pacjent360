@@ -263,7 +263,7 @@ Wprowadzic bramke zgody i zakresy opiekuna, zanim asystenci zaczna wspierac zada
 
 ### Testy
 
-- Testy macierzy rol i zakresow: pacjent, opiekun lekowy, opiekun wizyt, lekarz demo.
+- Testy macierzy rol i zakresow: pacjent, osoba wspierajaca z obszarem lekow, osoba wspierajaca z obszarem wizyt, lekarz demo.
 - Testy negatywne dla wygaslej i ograniczonej zgody.
 - Testy leakage: komunikat odmowy nie moze ujawniac danych.
 - Testy audit trail na syntetycznych eventach.
@@ -310,7 +310,7 @@ Przetestowac asystenta lekowego jako dry-run operacyjny: harmonogram, potwierdze
 - Fixtures: lek przepisany ale niepotwierdzony, OTC bez dawki, odstawienie z wywiadu, rozne nazwy tego samego leku.
 - Testy zakazu: brak sugestii zmiany dawki, odstawienia, zamiany lub rozpoczecia leczenia.
 - Testy source grounding dla kazdego wpisu lekowego.
-- Testy roli opiekuna lekowego i cofniecia zgody.
+- Testy zakresu dostepu do obszaru lekow i cofniecia zgody.
 - Manual review przez osobe z kompetencja clinical safety.
 
 ### Clinical Safety Gate
