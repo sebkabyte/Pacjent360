@@ -30,6 +30,7 @@ const PATIENT_SCOPED_COLLECTION_KEYS = [
   "timelineEvents",
   "timelineEpisodes",
   "timelineRelations",
+  "stageSummaries",
   "conditions",
   "medications",
   "allergies",

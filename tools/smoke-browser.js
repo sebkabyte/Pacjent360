@@ -312,9 +312,12 @@ async function main() {
     const timeline = await client.evaluate(`(() => {
       document.querySelector('nav button[data-view="timeline"]').click();
       const map = document.querySelector('.temporal-map');
-      const zoomText = document.querySelector('.temporal-zoom-control strong')?.textContent.trim() || '';
       const summaryZoom = [...document.querySelectorAll('.temporal-summary article')]
         .find((item) => item.textContent.includes('Zoom'))?.querySelector('strong')?.textContent.trim() || '';
+      const semanticLevels = [...document.querySelectorAll('[data-timeline-view-level]')].map((button) => ({
+        id: button.dataset.timelineViewLevel || '',
+        active: button.classList.contains('active')
+      }));
       const style = map ? getComputedStyle(map) : null;
       const parsePercent = (value) => {
         const match = String(value || '').match(/(-?\\d+(?:\\.\\d+)?)%/);
@@ -344,8 +347,14 @@ async function main() {
       return {
         activeView: document.querySelector('nav button.active')?.dataset.view || null,
         hasMap: Boolean(map),
-        zoomText,
         summaryZoom,
+        semanticLevels,
+        stageCount: document.querySelectorAll('.stage-card').length,
+        stagePointCount: document.querySelectorAll('.stage-point').length,
+        laneCount: document.querySelectorAll('.temporal-lane-band').length,
+        laneLabelCount: document.querySelectorAll('.lane-label').length,
+        episodeBandCount: document.querySelectorAll('.episode-band').length,
+        hasMinimapWindow: Boolean(document.querySelector('.minimap-window')),
         bodyHasNaN: bodyText.includes('NaN'),
         styleHasNaN: Boolean(map?.getAttribute('style')?.includes('NaN')),
         inlineStyles,
@@ -367,7 +376,12 @@ async function main() {
     assert(timeline.hasMap, "Timeline view should render temporal map");
     assert(!timeline.bodyHasNaN && !timeline.styleHasNaN, "Timeline view must not render NaN values");
     assert(timeline.inlineStyles.every((style) => !style.includes("NaN")), "Timeline inline styles must not contain NaN values");
-    assert(/^\d+%$/.test(timeline.zoomText) && /^\d+%$/.test(timeline.summaryZoom), `Timeline zoom labels should be numeric percentages, got ${timeline.zoomText}/${timeline.summaryZoom}`);
+    assert(timeline.semanticLevels.length === 4 && timeline.semanticLevels.some((item) => item.id === "episode" && item.active), "Timeline should expose four semantic film levels with episode active by default");
+    assert(/^\d+%$/.test(timeline.summaryZoom), `Timeline summary zoom should remain a numeric technical value, got ${timeline.summaryZoom}`);
+    assert(timeline.stageCount >= 3 && timeline.stagePointCount >= timeline.stageCount, "Timeline should render holistic stage summary cards with sourced points");
+    assert(timeline.laneCount >= 3 && timeline.laneLabelCount === timeline.laneCount, "Timeline should render labeled presentation lanes");
+    assert(timeline.episodeBandCount >= 1, "Timeline should render episode background bands");
+    assert(timeline.hasMinimapWindow, "Timeline minimap should render current-window indicator");
     assert(/^\d+px$/.test(timeline.eventWidth) && /^\d+px$/.test(timeline.cardWidth) && /^\d+px$/.test(timeline.mapHeight), "Timeline geometry CSS variables should be finite px values");
     assert(timeline.eventCount >= 1 && timeline.cardCount === timeline.eventCount && timeline.branchCount === timeline.eventCount, "Timeline events should each render a card and branch");
     assert(timeline.hasTodayMarker, "Timeline should render today marker");
@@ -377,7 +391,7 @@ async function main() {
     const miniById = new Map(timeline.miniTickPositions.map((item) => [item.id, item.left]));
     assert(timeline.eventPositions.every((item) => miniById.has(item.id) && Math.abs(miniById.get(item.id) - item.left) <= 0.1), "Timeline minimap ticks should align with event positions");
     assert(timeline.cardRects.every((rect) => rect.width >= 120 && Number.isFinite(rect.left) && Number.isFinite(rect.top)), "Timeline cards should have finite positions and usable width");
-    assert(timeline.eventRects.every((rect) => rect.width >= 120 && rect.height >= 300), "Timeline event lanes should have stable dimensions");
+    assert(timeline.eventRects.every((rect) => rect.width >= 120 && rect.height >= 40), "Timeline event cards should have stable usable dimensions");
     assert(!timeline.hasHorizontalOverflow, "Timeline should scroll inside workbench, not create body horizontal overflow");
 
     const timelineInteractions = await client.evaluate(`(async () => {
@@ -420,7 +434,16 @@ async function main() {
       if (zoomButton) zoomButton.click();
       await pause();
       const zoomRangeAfter = Number(document.querySelector('[data-timeline-zoom-range]')?.value || 0);
-      const zoomTextAfter = document.querySelector('.temporal-zoom-control strong')?.textContent.trim() || '';
+      const activeSemanticBeforeVisit = document.querySelector('[data-timeline-view-level].active')?.dataset.timelineViewLevel || '';
+      const visitButton = document.querySelector('[data-timeline-view-level="visit"]');
+      if (visitButton) visitButton.click();
+      await pause();
+      const activeSemanticAfterVisit = document.querySelector('[data-timeline-view-level].active')?.dataset.timelineViewLevel || '';
+      const stagePoint = document.querySelector('.stage-point[data-select-timeline-event]');
+      const stagePointEventId = stagePoint?.dataset.selectTimelineEvent || '';
+      if (stagePoint) stagePoint.click();
+      await pause();
+      const selectedAfterStagePoint = document.querySelector('.temporal-event.selected')?.dataset.selectTimelineEvent || '';
 
       const scroller = document.querySelector('.temporal-scroll');
       const lastTick = [...document.querySelectorAll('.mini-tick')].at(-1);
@@ -458,7 +481,10 @@ async function main() {
         filterApplied,
         zoomRangeBefore,
         zoomRangeAfter,
-        zoomTextAfter,
+        activeSemanticBeforeVisit,
+        activeSemanticAfterVisit,
+        stagePointEventId,
+        selectedAfterStagePoint,
         scrollBeforeJump,
         scrollAfterJump,
         minimapJumpWorked,
@@ -475,7 +501,9 @@ async function main() {
     assert(timelineInteractions.inspectorHasSources, "Timeline inspector should expose source chips for selected event");
     assert(timelineInteractions.filterApplied, `Timeline track filter should reduce or preserve events for selected track ${timelineInteractions.selectedTrack}`);
     assert(timelineInteractions.zoomRangeAfter > timelineInteractions.zoomRangeBefore, `Timeline zoom-in should increase range value from ${timelineInteractions.zoomRangeBefore} to ${timelineInteractions.zoomRangeAfter}`);
-    assert(/^\d+%$/.test(timelineInteractions.zoomTextAfter), `Timeline zoom label should remain a percentage after interaction, got ${timelineInteractions.zoomTextAfter}`);
+    assert(timelineInteractions.activeSemanticBeforeVisit === "episode", "Timeline should start interactions from episode semantic level");
+    assert(timelineInteractions.activeSemanticAfterVisit === "visit", "Timeline semantic zoom should switch to visit level");
+    assert(timelineInteractions.selectedAfterStagePoint === timelineInteractions.stagePointEventId, "Stage summary click should select the linked map event");
     assert(timelineInteractions.minimapJumpWorked, "Timeline minimap click should keep navigator wired to the scroll area");
     assert(timelineInteractions.p2PatientValue === "p2", "Patient switcher should move to p2 during timeline smoke");
     assert(timelineInteractions.p2EventCount === 3, `Switching to p2 should reload map events, got ${timelineInteractions.p2EventCount}`);
@@ -738,6 +766,8 @@ async function main() {
         hasMap: Boolean(map),
         bodyHasNaN: bodyText.includes('NaN'),
         inlineHasNaN: inlineStyles.some((style) => style.includes('NaN')),
+        stageCount: document.querySelectorAll('.stage-card').length,
+        laneCount: document.querySelectorAll('.temporal-lane-band').length,
         eventWidth: eventRect?.width || 0,
         eventHeight: eventRect?.height || 0,
         cardWidth: cardRect?.width || 0,
@@ -749,7 +779,8 @@ async function main() {
     assert(mobileTimeline.activeView === "timeline", "Mobile timeline smoke should open timeline view");
     assert(mobileTimeline.hasMap, "Mobile timeline should render temporal map");
     assert(!mobileTimeline.bodyHasNaN && !mobileTimeline.inlineHasNaN, "Mobile timeline must not render NaN values");
-    assert(mobileTimeline.eventWidth >= 120 && mobileTimeline.eventHeight >= 300, "Mobile timeline event lanes should keep usable dimensions");
+    assert(mobileTimeline.stageCount >= 1 && mobileTimeline.laneCount >= 1, "Mobile timeline should keep stage summary and lanes");
+    assert(mobileTimeline.eventWidth >= 120 && mobileTimeline.eventHeight >= 40, "Mobile timeline event cards should keep usable dimensions");
     assert(mobileTimeline.cardWidth >= 120 && Number.isFinite(mobileTimeline.cardLeft), "Mobile timeline cards should keep finite usable dimensions");
     assert(mobileTimeline.scrollsInsideMap, "Mobile timeline should scroll inside the temporal workbench");
     assert(!mobileTimeline.hasBodyOverflow, "Mobile timeline should not create body horizontal overflow");
