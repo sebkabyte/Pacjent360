@@ -38,7 +38,7 @@ for (const file of htmlFiles) {
 
 assert(html["index.html"].includes('class="skip-link"') && html["index.html"].includes('href="#main-content"'), "index.html should expose a skip link to main content");
 assert(html["index.html"].includes('<main id="main-content">'), "index.html skip link target should exist");
-assert(html["index.html"].includes('<nav aria-label="Sekcje strony">'), "index.html nav should have an accessible label");
+assert(/<nav\b[^>]*aria-label="Sekcje strony"/.test(html["index.html"]), "index.html nav should have an accessible label");
 
 assert(html["demo.html"].includes('class="skip-link"') && html["demo.html"].includes('href="#viewRoot"'), "demo.html should expose a skip link to the rendered view");
 assert(html["demo.html"].includes('id="viewRoot"'), "demo.html skip link target should exist");
