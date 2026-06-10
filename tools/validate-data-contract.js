@@ -12,6 +12,8 @@ const DATA_SCHEMA_VERSION = contract.DATA_SCHEMA_VERSION;
 const DATA_CONTRACT_VERSION = contract.DATA_CONTRACT_VERSION;
 const SOURCE_MISSING_REF = contract.SOURCE_MISSING_REF;
 const SOURCE_TYPES = contract.SOURCE_TYPES;
+const EVIDENCE_CLASSES = contract.EVIDENCE_CLASSES;
+const SOURCE_TYPE_TO_EVIDENCE_CLASS = contract.SOURCE_TYPE_TO_EVIDENCE_CLASS;
 const SOURCE_REF_PREFIX_TO_TYPE = contract.SOURCE_REF_PREFIX_TO_TYPE;
 const CLAIM_TYPES = contract.CLAIM_TYPES;
 const CLAIM_STATUSES = contract.CLAIM_STATUSES;
@@ -130,6 +132,7 @@ function addSource(sources, ref, type, title, record, date = "") {
   sources.set(ref, {
     ref,
     type,
+    evidenceClass: SOURCE_TYPE_TO_EVIDENCE_CLASS[type] || "system_generated",
     title: title || ref,
     patientId: record?.patientId || "",
     date: date || record?.date || record?.eventDate || record?.contactDate || record?.generatedAt || "",
@@ -358,6 +361,13 @@ function validateContract(contract) {
     const parsed = parseSourceRef(source.ref);
     const expectedType = SOURCE_REF_PREFIX_TO_TYPE[parsed.type];
     if (expectedType && source.type !== expectedType) errors.push(`source ${source.ref} has type ${source.type}, expected ${expectedType}`);
+    if (source.evidenceClass !== undefined) {
+      if (!EVIDENCE_CLASSES.includes(source.evidenceClass)) errors.push(`source ${source.ref} has invalid evidenceClass ${source.evidenceClass}`);
+      const expectedClass = SOURCE_TYPE_TO_EVIDENCE_CLASS[source.type];
+      if (expectedClass && source.evidenceClass !== expectedClass && source.evidenceClass !== "caregiver_reported") {
+        errors.push(`source ${source.ref} has evidenceClass ${source.evidenceClass}, expected ${expectedClass}`);
+      }
+    }
   });
 
   const checkRefs = (owner, refs) => normalizeSourceRefs(refs).forEach((ref) => {
@@ -436,6 +446,7 @@ function compareEnum(name, actual, expected) {
 function validateSchemaEnums(schema) {
   const defs = schema.$defs || {};
   compareEnum("source.type", defs.source?.properties?.type?.enum || [], SOURCE_TYPES);
+  compareEnum("source.evidenceClass", defs.source?.properties?.evidenceClass?.enum || [], EVIDENCE_CLASSES);
   compareEnum("claimType", defs.claimType?.enum || [], CLAIM_TYPES);
   compareEnum("claimStatus", defs.claimStatus?.enum || [], CLAIM_STATUSES);
   compareEnum("timelineTrack", defs.timelineTrack?.enum || [], TIMELINE_TRACKS);

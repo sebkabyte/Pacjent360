@@ -37,7 +37,10 @@
     },
     "patient": {
       "type": "object",
-      "required": ["id", "name"],
+      "required": [
+        "id",
+        "name"
+      ],
       "additionalProperties": true
     },
     "sources": {
@@ -185,7 +188,11 @@
     "source": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["ref", "type", "title"],
+      "required": [
+        "ref",
+        "type",
+        "title"
+      ],
       "properties": {
         "ref": {
           "$ref": "#/$defs/sourceRef"
@@ -221,13 +228,27 @@
         },
         "recordId": {
           "type": "string"
+        },
+        "evidenceClass": {
+          "enum": [
+            "official_document",
+            "patient_reported",
+            "caregiver_reported",
+            "system_generated"
+          ]
         }
       }
     },
     "claim": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["id", "patientId", "claimType", "text", "sourceRefs"],
+      "required": [
+        "id",
+        "patientId",
+        "claimType",
+        "text",
+        "sourceRefs"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -257,7 +278,17 @@
     "timelineEvent": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["id", "patientId", "date", "track", "title", "status", "sourceRefs", "claimRefs", "schemaStatus"],
+      "required": [
+        "id",
+        "patientId",
+        "date",
+        "track",
+        "title",
+        "status",
+        "sourceRefs",
+        "claimRefs",
+        "schemaStatus"
+      ],
       "properties": {
         "track": {
           "$ref": "#/$defs/timelineTrack"
@@ -275,14 +306,26 @@
           }
         },
         "schemaStatus": {
-          "enum": ["projected_from_sources", "planned_not_fact"]
+          "enum": [
+            "projected_from_sources",
+            "planned_not_fact"
+          ]
         }
       }
     },
     "timelineEpisode": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["id", "patientId", "title", "startDate", "endDate", "status", "sourceRefs", "eventRefs"],
+      "required": [
+        "id",
+        "patientId",
+        "title",
+        "startDate",
+        "endDate",
+        "status",
+        "sourceRefs",
+        "eventRefs"
+      ],
       "properties": {
         "status": {
           "$ref": "#/$defs/timelineStatus"
@@ -301,7 +344,15 @@
     "timelineRelation": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["id", "patientId", "fromEventId", "toEventId", "relationType", "sourceRefs", "causality"],
+      "required": [
+        "id",
+        "patientId",
+        "fromEventId",
+        "toEventId",
+        "relationType",
+        "sourceRefs",
+        "causality"
+      ],
       "properties": {
         "relationType": {
           "$ref": "#/$defs/relationType"
@@ -317,7 +368,15 @@
     "consentScope": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["id", "patientId", "subject", "scope", "validTo", "status", "sourceRefs"],
+      "required": [
+        "id",
+        "patientId",
+        "subject",
+        "scope",
+        "validTo",
+        "status",
+        "sourceRefs"
+      ],
       "properties": {
         "role": {
           "type": "string"
@@ -345,7 +404,14 @@
     "auditEntry": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["id", "patientId", "date", "actor", "action", "actionType"],
+      "required": [
+        "id",
+        "patientId",
+        "date",
+        "actor",
+        "action",
+        "actionType"
+      ],
       "properties": {
         "actionType": {
           "$ref": "#/$defs/auditActionType"
@@ -355,7 +421,11 @@
     "sourceQuality": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["sources", "claims", "sourceMissingCount"],
+      "required": [
+        "sources",
+        "claims",
+        "sourceMissingCount"
+      ],
       "properties": {
         "sources": {
           "type": "integer",

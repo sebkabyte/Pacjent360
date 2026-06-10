@@ -49,6 +49,7 @@ $nodeCheckFiles = @(
   "tools/validate-consent-draft.js",
   "tools/validate-a11y.js",
   "tools/validate-validation-pack.js",
+  "tools/validate-harm-gates.js",
   "tools/domain-diagnostics.js",
   "tools/release-readiness.js",
   "tools/smoke-browser.js"
@@ -70,6 +71,7 @@ $powerShellCheckFiles = @(
   "tools/validate-consent-draft.ps1",
   "tools/validate-a11y.ps1",
   "tools/validate-validation-pack.ps1",
+  "tools/validate-harm-gates.ps1",
   "tools/validate-pre-show.ps1",
   "tools/validate-go-live.ps1",
   "tools/verify-contact-gate.ps1",
@@ -107,6 +109,7 @@ Invoke-External "Caregiver scope validation" "powershell" @("-ExecutionPolicy", 
 Invoke-External "Consent draft validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-consent-draft.ps1"))
 Invoke-External "Accessibility static validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-a11y.ps1"))
 Invoke-External "Validation pack validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-validation-pack.ps1"))
+Invoke-External "Definition of Harm gates" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-harm-gates.ps1"))
 
 Invoke-External "Prepare public package" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/prepare-public.ps1"), "-Zip")
 Invoke-External "Verify public package" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/verify-public.ps1"))

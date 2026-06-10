@@ -12,6 +12,7 @@ build/
 
 # Prywatne materialy robocze AI i autora - nigdy nie publikowac (decyzja D-006 PROGRAM_PLAN)
 TEMP/
+TEMP_REVIEW_OUTPUT/
 CLAUDE.md
 CODEX_*.md
 HANDOVER.md
