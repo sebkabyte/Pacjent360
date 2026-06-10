@@ -49,7 +49,10 @@ $expectedFiles = @(
   "app.js",
   "robots.txt",
   "sitemap.xml",
-  "assets/hero-clinical-context.png"
+  "assets/hero-clinical-context.png",
+  "assets/story.css",
+  "assets/story.js",
+  "assets/favicon.svg"
 )
 
 $actualFiles = Get-ChildItem -LiteralPath $target -Force -Recurse -File | ForEach-Object {
@@ -140,10 +143,9 @@ Assert-True ($demo.IndexOf('src="patient360-consent-model.js"') -lt $demo.IndexO
 Assert-True (-not ($index.Contains("frame-ancestors") -or $demo.Contains("frame-ancestors") -or $privacy.Contains("frame-ancestors") -or $disclaimer.Contains("frame-ancestors"))) "frame-ancestors must be configured as an HTTP header, not as a meta CSP directive"
 
 $lucidePinned = "https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"
-Assert-True ($index.Contains($lucidePinned)) "index.html should use pinned Lucide"
+Assert-True (-not ($index.Contains("unpkg.com"))) "index.html should not load external scripts (landing is self-contained)"
 Assert-True ($demo.Contains($lucidePinned)) "demo.html should use pinned Lucide"
 Assert-True ($privacy.Contains($lucidePinned)) "privacy.html should disclose pinned Lucide"
-Assert-True ($index -match 'integrity="sha384-[^"]+"' -and $index -match 'crossorigin="anonymous"') "index.html should use SRI and crossorigin for Lucide"
 Assert-True ($demo -match 'integrity="sha384-[^"]+"' -and $demo -match 'crossorigin="anonymous"') "demo.html should use SRI and crossorigin for Lucide"
 
 $legacyPhrases = @(

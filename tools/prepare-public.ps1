@@ -55,7 +55,19 @@ foreach ($file in $files) {
 
 $assetTarget = Join-Path $target "assets"
 New-Item -ItemType Directory -Force -Path $assetTarget | Out-Null
-Copy-Item -LiteralPath (Join-Path $sourceRoot "assets/hero-clinical-context.png") -Destination $assetTarget
+$assetFiles = @(
+  "assets/hero-clinical-context.png",
+  "assets/story.css",
+  "assets/story.js",
+  "assets/favicon.svg"
+)
+foreach ($asset in $assetFiles) {
+  $source = Join-Path $sourceRoot $asset
+  if (-not (Test-Path $source)) {
+    throw "Missing required public asset: $asset"
+  }
+  Copy-Item -LiteralPath $source -Destination $assetTarget
+}
 
 $blockedNames = @(
   "1.txt",
