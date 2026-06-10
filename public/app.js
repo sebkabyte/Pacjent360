@@ -7,6 +7,10 @@ const PATIENT360_MAP_MODEL = globalThis.Patient360MapModel;
 if (!PATIENT360_MAP_MODEL) {
   throw new Error("Missing patient360-map-model.js");
 }
+const PATIENT360_MAP_VIEW = globalThis.Patient360MapView;
+if (!PATIENT360_MAP_VIEW) {
+  throw new Error("Missing patient360-map-view.js");
+}
 const PATIENT360_PREVISIT_MODEL = globalThis.Patient360PreVisitModel;
 if (!PATIENT360_PREVISIT_MODEL) {
   throw new Error("Missing patient360-previsit-model.js");
@@ -2387,84 +2391,14 @@ function renderPatientMap360({ persona = "doctor", embedded = false } = {}) {
     details: TIMELINE_DETAILS,
     zoomConfig: TIMELINE_ZOOM
   });
-  const period = mapModel.period;
-  const detail = mapModel.detail;
-  const zoom = mapModel.zoom;
-  const safePersona = mapModel.safePersona;
-  const range = mapModel.range;
-  const clinicalEvents = mapModel.clinicalEvents;
-  const filteredEvents = mapModel.filteredEvents;
-  const trackFilter = mapModel.trackFilter;
-  const events = mapModel.events;
-  const geometry = mapModel.geometry;
-  const selected = mapModel.selectedEvent;
-  const selectedId = mapModel.selectedId;
-  const todayPercent = Number.isFinite(mapModel.todayPercent) ? mapModel.todayPercent : 100;
-  const mapWidth = Math.max(events.length * (geometry.eventWidth + 22) + 76, 960);
-
-  if (!events.length) {
-    return `
-      <section class="section-band temporal-section patient-map360 ${embedded ? "embedded" : ""}">
-        <div class="temporal-head">
-          <div>
-            <p class="eyebrow">Mapa Pacjenta 360</p>
-            <h2>Brak zdarzeń dla wybranego zakresu</h2>
-            <p class="episode-narrative">Zmień zakres czasu, filtr toru albo wyszukiwanie, aby zobaczyć historię pacjenta.</p>
-          </div>
-        </div>
-        ${embedded ? "" : renderTimelineControls(period, detail, zoom)}
-        ${renderTimelineOverview(filteredEvents, range, detail, zoom)}
-        ${renderTimelineLegend(clinicalEvents, trackFilter)}
-        ${emptyState("Brak zdarzeń na mapie pacjenta dla wybranego zakresu.")}
-      </section>
-    `;
-  }
-
-  return `
-    <section class="section-band temporal-section patient-map360 detail-${escapeHtml(detail.id)} ${embedded ? "embedded" : ""}">
-      <div class="temporal-head">
-        <div>
-          <p class="eyebrow">Mapa Pacjenta 360</p>
-          <h2>${embedded ? "Mapa najważniejszych zdarzeń" : "Warstwowa historia pacjenta"}</h2>
-          <p class="episode-narrative">${escapeHtml(mapModel.summary.narrative)}</p>
-        </div>
-        <div class="timeline-head-actions">
-          <div class="temporal-range">
-            <span>${formatDate(range.start)}</span>
-            <i data-lucide="arrow-right"></i>
-            <span>${formatDate(range.end)}</span>
-          </div>
-          ${embedded ? `<button class="ghost-button" data-set-view="timeline"><i data-lucide="map"></i>Pełna mapa</button>` : ""}
-        </div>
-      </div>
-      <section class="safety-note compact">
-        <i data-lucide="shield-alert"></i>
-        <span>Mapa pokazuje zdarzenia, źródła, luki i pytania DITL. Relacje są opisane jako powiązania czasowe lub źródłowe, nie jako przyczyna.</span>
-      </section>
-      ${embedded ? "" : renderTimelineControls(period, detail, zoom)}
-      ${renderTimelineOverview(filteredEvents, range, detail, zoom)}
-      ${embedded ? "" : renderTimelineLegend(clinicalEvents, trackFilter)}
-      ${renderTimelineMiniMap(events, range)}
-      <div class="patient-map-workbench">
-        <div class="patient-map-canvas">
-          <div class="temporal-scroll" aria-label="Mapa Pacjenta 360">
-            <div class="temporal-map ${zoom <= 0.58 ? "zoom-compact" : ""}" style="--event-count: ${events.length}; --event-width: ${geometry.eventWidth}px; --card-width: ${geometry.cardWidth}px; --map-width: ${mapWidth}px; --map-height: ${geometry.mapHeight}px; --event-height: ${geometry.eventHeight}px;">
-              <div class="temporal-spine" aria-hidden="true">
-                <span>historia</span>
-                <span>stan</span>
-                <span>sygnały</span>
-                <span>decyzja</span>
-              </div>
-              ${events.map((event, index) => renderTimelineEvent(event, index, detail.id, zoom, selectedId, safePersona)).join("")}
-              <div class="temporal-today-marker" style="--today-left: ${todayPercent}%;" aria-label="Dziś na mapie pacjenta"><span>Dziś</span></div>
-            </div>
-          </div>
-          <p class="temporal-scroll-hint"><i data-lucide="move-horizontal"></i> Oddal, aby zobaczyć cały odcinek jako jedną linię. Przybliż, żeby rozsunąć zdarzenia, przewijać je poziomo i wejść w źródła.</p>
-        </div>
-        ${renderTimelineInspector(selected, safePersona, events)}
-      </div>
-    </section>
-  `;
+  return PATIENT360_MAP_VIEW.render({
+    mapModel,
+    embedded,
+    periods: TIMELINE_PERIODS,
+    details: TIMELINE_DETAILS,
+    zoomConfig: TIMELINE_ZOOM,
+    sourceChips
+  });
 }
 
 function renderTimelineInspector(event, persona, events) {
