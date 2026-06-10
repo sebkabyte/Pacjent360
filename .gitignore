@@ -9,3 +9,12 @@ dist/
 build/
 .cache/
 *.log
+
+# Prywatne materialy robocze AI i autora - nigdy nie publikowac (decyzja D-006 PROGRAM_PLAN)
+TEMP/
+CLAUDE.md
+CODEX_*.md
+HANDOVER.md
+STATE.md
+prints/
+*.patch
