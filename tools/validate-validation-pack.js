@@ -21,6 +21,7 @@ const extendedDocs = [
   "docs/validation/cases/CASE-01-opiekun-przygotowuje-wizyte.md",
   "docs/validation/cases/CASE-02-lekarz-90-sekund.md",
   "docs/validation/cases/CASE-03-rozbieznosc-lekowa.md",
+  "docs/validation/cases/CASE-04-rodzic-przygotowuje-wizyte-dziecka.md",
   "docs/validation/SESSION_SCRIPT_DOCTOR.md",
   "docs/validation/SESSION_SCRIPT_CAREGIVER.md"
 ];

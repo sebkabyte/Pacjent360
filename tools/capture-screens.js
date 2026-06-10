@@ -215,9 +215,18 @@ async function prepareAppState(client) {
   const patient = args.patient ? JSON.stringify(String(args.patient)) : "null";
   await client.evaluate(`(async () => {
     const pause = (ms = 120) => new Promise((resolve) => setTimeout(resolve, ms));
+    const waitFor = async (predicate, timeoutMs = 5000) => {
+      const deadline = Date.now() + timeoutMs;
+      while (Date.now() < deadline) {
+        if (predicate()) return true;
+        await pause(100);
+      }
+      return false;
+    };
     const patientId = ${patient};
     const viewId = ${view};
     if (patientId) {
+      await waitFor(() => [...document.querySelectorAll('#patientSelect option')].some((option) => option.value === patientId));
       const select = document.querySelector('#patientSelect');
       if (select) {
         select.value = patientId;
@@ -226,6 +235,7 @@ async function prepareAppState(client) {
       }
     }
     if (viewId) {
+      await waitFor(() => Boolean(document.querySelector('nav button[data-view="' + viewId + '"]')));
       const button = document.querySelector('nav button[data-view="' + viewId + '"]');
       if (button) {
         button.click();

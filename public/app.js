@@ -320,6 +320,22 @@ const demoState = {
       patientSummary: "Masz kontrolę kardiologiczną. Masz 1 lek do potwierdzenia, czy nadal jest przyjmowany. Ostatnie echo serca jest z kwietnia.",
       patientQuestion: "Co warto omówić z lekarzem: potwierdź, czy przyjmujesz atorwastatynę, zapytaj o wynik echa.",
       consentScope: "raport kardiologiczny do 2026-06-12"
+    },
+    {
+      id: "p3",
+      name: "Przypadek pediatryczny C",
+      birthDate: "2017-09-18",
+      sex: "K",
+      height: 132,
+      weight: 29,
+      guardian: "rodzic",
+      baselineState: "Dziecko w wieku szkolnym, rodzic przygotowuje kontrolę po niedawnym epizodzie infekcyjnym zapisanym w dokumentacji demo.",
+      currentProblem: "Kontrola pediatryczna po infekcji; do uporządkowania są dokumenty, leki faktycznie podane w domu, obserwacje rodzica i pytania na wizytę.",
+      biggestChange: "Rodzic odnotował poprawę samopoczucia, ale lista leków z dokumentacji nie zgadza się w pełni z tym, co faktycznie podano w domu.",
+      decisionToday: "Jakie informacje rodzic może przygotować do omówienia z lekarzem podczas kontroli dziecka?",
+      patientSummary: "Rodzic przygotowuje kontrolę po infekcji. W danych demo są 3 dokumenty, 2 leki do porównania i obserwacje opiekuna do omówienia z lekarzem.",
+      patientQuestion: "Co warto omówić z lekarzem: które leki faktycznie podano, jakie objawy rodzic obserwował w domu i jakie dokumenty zabrać na kontrolę.",
+      consentScope: "rodzic: pełny zakres; drugi rodzic: wizyty i dokumenty do 2026-07-15"
     }
   ],
   decisionContexts: [
@@ -372,6 +388,35 @@ const demoState = {
           question: "Czy pacjent zgłasza nowe duszności, omdlenia, ból w klatce lub obrzęki od ostatniego echa?",
           status: "do wyjaśnienia",
           sourceRefs: ["doc:d4"]
+        }
+      ]
+    },
+    {
+      id: "dc3",
+      patientId: "p3",
+      type: "Przygotowanie kontroli pediatrycznej",
+      clinicalQuestion: "Co lekarz musi wyjaśnić z rodzicem podczas kontroli po infekcji dziecka?", // demoState decisionContext
+      contactDate: "2026-06-12",
+      status: "DITL: do oceny lekarza",
+      sourceRefs: ["doc:d5", "doc:d7", "interview:i3"],
+      ditlQuestions: [
+        {
+          id: "hq6",
+          question: "Czy lista leków faktycznie podanych w domu została porównana z dokumentacją?",
+          status: "do wyjaśnienia",
+          sourceRefs: ["interview:i3", "medication:m6", "medication:m7"]
+        },
+        {
+          id: "hq7",
+          question: "Czy obserwacje rodzica po infekcji są zapisane jako wywiad, a nie jako fakt laboratoryjny?",
+          status: "do wyjaśnienia",
+          sourceRefs: ["interview:i3", "observation:o7", "observation:o8"]
+        },
+        {
+          id: "hq8",
+          question: "Czy dokumenty i wyniki potrzebne na kontrolę są kompletne w zakresie danych demo?",
+          status: "dalsza kontrola",
+          sourceRefs: ["doc:d5", "doc:d6", "doc:d7"]
         }
       ]
     }
@@ -436,6 +481,51 @@ const demoState = {
       trust: "wysoki",
       source: "import PDF",
       summary: "Frakcja wyrzutowa 50%, łagodna niedomykalność mitralna."
+    },
+    {
+      id: "d5",
+      patientId: "p3",
+      type: "Porada pediatryczna",
+      title: "Wpis z porady po infekcji",
+      date: "2026-05-20",
+      eventDate: "2026-05-20",
+      facility: "Poradnia Pediatryczna Alfa",
+      author: "lek. pediatra",
+      quality: "skan",
+      extractionStatus: "wymaga weryfikacji",
+      trust: "średni",
+      source: "zdjęcie dokumentu",
+      summary: "W dokumencie zapisano kontrolę po infekcji oraz listę leków do porównania z relacją rodzica."
+    },
+    {
+      id: "d6",
+      patientId: "p3",
+      type: "Laboratorium",
+      title: "Morfologia i CRP po infekcji",
+      date: "2026-05-24",
+      eventDate: "2026-05-24",
+      facility: "Laboratorium Diagnostyczne Beta",
+      author: "system LIS",
+      quality: "wynik elektroniczny",
+      extractionStatus: "przetworzony",
+      trust: "wysoki",
+      source: "import PDF",
+      summary: "Wyniki kontrolne po infekcji dodane do omówienia podczas wizyty pediatrycznej."
+    },
+    {
+      id: "d7",
+      patientId: "p3",
+      type: "Termin wizyty",
+      title: "Potwierdzenie kontroli pediatrycznej",
+      date: "2026-06-03",
+      eventDate: "2026-06-12",
+      facility: "Rejestracja poradni",
+      author: "system rejestracji",
+      quality: "potwierdzenie elektroniczne",
+      extractionStatus: "przetworzony",
+      trust: "wysoki",
+      source: "ręczne dodanie",
+      summary: "W dokumencie zapisano termin kontroli oraz listę dokumentów do zabrania przez rodzica."
     }
   ],
   interviews: [
@@ -476,6 +566,25 @@ const demoState = {
       transcript:
         "Pacjent: Przychodzę na kontrolę po echu. Czuję się dobrze, nie mam nowych objawów. Mam w dokumentach atorwastatynę, ale chcę potwierdzić, czy nadal ją przyjmuję. Chciałbym wiedzieć, co z wynikiem echa.",
       sourceRefs: ["doc:d4"]
+    },
+    {
+      id: "i3",
+      patientId: "p3",
+      date: "2026-06-06",
+      scenario: "Wywiad przed kontrolą dziecka z rodzicem",
+      speaker: "rodzic",
+      confidence: "średnia",
+      answers: {
+        baseline: "Rodzic zgłasza, że dziecko zwykle chodzi do szkoły i funkcjonuje samodzielnie adekwatnie do wieku.",
+        current: "Rodzic przygotowuje kontrolę po infekcji i chce uporządkować dokumenty, leki oraz obserwacje z domu.",
+        symptoms: "Rodzic odnotował spadek gorączki i poprawę aktywności, ale chce omówić utrzymujący się kaszel w wywiadzie.",
+        function: "Rodzic zgłasza stopniowy powrót do normalnej aktywności; powrót do zajęć szkolnych pozostaje do omówienia.",
+        medications: "Rodzic deklaruje, że lek A z dokumentacji został zakończony wcześniej niż zapisano, a lek doraźny OTC był podawany według potrzeby.",
+        family: "Drugi rodzic ma mieć dostęp do terminów wizyt i dokumentów, bez dostępu do pełnego raportu."
+      },
+      transcript:
+        "Rodzic: Chcę przygotować kontrolę po infekcji. Mam wpis z porady, wynik morfologii i CRP oraz potwierdzenie terminu. Lek A z dokumentacji był podany krócej niż pamiętam z opisu, a lek doraźny podawaliśmy tylko przy temperaturze. Dziecko czuje się lepiej, ale chcę zapytać o kaszel, powrót do szkoły i co zabrać na wizytę.",
+      sourceRefs: ["doc:d5", "doc:d6", "doc:d7"]
     }
   ],
   timelineEvents: [
@@ -586,6 +695,78 @@ const demoState = {
       description: "Kontrola po echu: omówienie frakcji wyrzutowej i dalszego planu kontroli.",
       confidence: "wysoka",
       sourceRefs: ["doc:d4", "decision:dc2"]
+    },
+    {
+      id: "te10",
+      patientId: "p3",
+      date: "2026-05-20",
+      track: "konsultacje",
+      episodeId: "ep3",
+      status: "potwierdzone",
+      title: "Porada po infekcji",
+      description: "W dokumencie zapisano wizytę po infekcji i listę elementów do kontroli.",
+      confidence: "średnia",
+      sourceRefs: ["doc:d5"]
+    },
+    {
+      id: "te11",
+      patientId: "p3",
+      date: "2026-05-21",
+      track: "leki",
+      episodeId: "ep3",
+      status: "do potwierdzenia",
+      title: "Lista leków dziecka wymaga porównania",
+      description: "Rodzic zgłasza różnicę między dokumentem a faktycznym podaniem leku A.",
+      confidence: "średnia",
+      sourceRefs: ["doc:d5", "interview:i3", "medication:m6", "medication:m7"]
+    },
+    {
+      id: "te12",
+      patientId: "p3",
+      date: "2026-05-24",
+      track: "badania",
+      episodeId: "ep3",
+      status: "potwierdzone",
+      title: "Wyniki kontrolne po infekcji",
+      description: "Morfologia i CRP są dostępne jako dane do interpretacji przez lekarza.",
+      confidence: "wysoka",
+      sourceRefs: ["doc:d6", "observation:o6"]
+    },
+    {
+      id: "te13",
+      patientId: "p3",
+      date: "2026-06-06",
+      track: "obserwacje z wywiadu",
+      episodeId: "ep3",
+      status: "do potwierdzenia",
+      title: "Obserwacje rodzica po infekcji",
+      description: "Rodzic odnotował poprawę aktywności, spadek temperatury i pytanie o kaszel.",
+      confidence: "średnia",
+      sourceRefs: ["interview:i3", "transcript:i3", "observation:o7", "observation:o8"]
+    },
+    {
+      id: "te14",
+      patientId: "p3",
+      date: "2026-06-08",
+      track: "funkcjonowanie",
+      episodeId: "ep3",
+      status: "do potwierdzenia",
+      title: "Powrót do aktywności szkolnej do omówienia",
+      description: "Rodzic zgłasza stopniowy powrót do aktywności, bez rozstrzygania znaczenia klinicznego przez system.",
+      confidence: "średnia",
+      sourceRefs: ["interview:i3", "observation:o8"]
+    },
+    {
+      id: "te15",
+      patientId: "p3",
+      date: "2026-06-12",
+      track: "decyzje medyczne",
+      episodeId: "ep3",
+      status: "planowane",
+      title: "Kontrola pediatryczna: pytania do lekarza",
+      description: "Kontekst DITL przed kontrolą dziecka po infekcji.",
+      confidence: "wysoka",
+      sourceRefs: ["doc:d7", "decision:dc3"]
     }
   ],
   timelineEpisodes: [
@@ -608,6 +789,16 @@ const demoState = {
       status: "planowane",
       summary: "Epizod łączy wynik echa, wywiad i planowaną kontrolę. Pytania pozostają do omówienia z lekarzem.",
       sourceRefs: ["doc:d4", "interview:i2", "decision:dc2"]
+    },
+    {
+      id: "ep3",
+      patientId: "p3",
+      title: "Kontrola dziecka po infekcji",
+      startDate: "2026-05-20",
+      endDate: "2026-06-12",
+      status: "do potwierdzenia",
+      summary: "Epizod porządkuje dokumenty, wyniki, leki faktycznie podane w domu, obserwacje rodzica i pytania przed kontrolą pediatryczną.",
+      sourceRefs: ["doc:d5", "doc:d6", "doc:d7", "interview:i3", "decision:dc3"]
     }
   ],
   stageSummaries: [
@@ -722,6 +913,76 @@ const demoState = {
           sourceRefs: ["doc:d4", "decision:dc2"]
         }
       ]
+    },
+    {
+      id: "stage-p3-1",
+      patientId: "p3",
+      order: 1,
+      title: "Tło",
+      points: [
+        {
+          text: "w dokumencie zapisano kontrolę dziecka po infekcji",
+          status: "potwierdzone",
+          eventRef: "te10",
+          sourceRefs: ["doc:d5"]
+        }
+      ]
+    },
+    {
+      id: "stage-p3-2",
+      patientId: "p3",
+      order: 2,
+      title: "Początek zmiany",
+      points: [
+        {
+          text: "rodzic odnotował rozbieżność między dokumentacją a faktycznym podaniem leku",
+          status: "do potwierdzenia",
+          eventRef: "te11",
+          sourceRefs: ["interview:i3", "medication:m6"]
+        }
+      ]
+    },
+    {
+      id: "stage-p3-3",
+      patientId: "p3",
+      order: 3,
+      title: "Kontakty i diagnostyka",
+      points: [
+        {
+          text: "w dokumencie zapisano wyniki kontrolne do interpretacji przez lekarza",
+          status: "potwierdzone",
+          eventRef: "te12",
+          sourceRefs: ["doc:d6", "observation:o6"]
+        }
+      ]
+    },
+    {
+      id: "stage-p3-4",
+      patientId: "p3",
+      order: 4,
+      title: "Stan obecny",
+      points: [
+        {
+          text: "rodzic odnotował poprawę aktywności i pytania o kaszel oraz powrót do szkoły",
+          status: "do omówienia z lekarzem",
+          eventRef: "te13",
+          sourceRefs: ["interview:i3", "observation:o7", "observation:o8"]
+        }
+      ]
+    },
+    {
+      id: "stage-p3-5",
+      patientId: "p3",
+      order: 5,
+      title: "Co dalej organizacyjnie",
+      points: [
+        {
+          text: "do omówienia z lekarzem pozostaje lista leków, dokumenty i zakres informacji dla drugiego rodzica",
+          status: "do omówienia z lekarzem",
+          eventRef: "te15",
+          sourceRefs: ["decision:dc3", "consent:g6", "doc:d7"]
+        }
+      ]
     }
   ],
   timelineRelations: [
@@ -754,6 +1015,26 @@ const demoState = {
       label: "Kontrola jest planowanym kontaktem po badaniu echo.",
       status: "planowane",
       sourceRefs: ["doc:d4", "decision:dc2"]
+    },
+    {
+      id: "tr4",
+      patientId: "p3",
+      fromEventId: "te11",
+      toEventId: "te15",
+      relationType: "powiązane czasowo",
+      label: "Lista leków jest elementem kontekstu przed planowaną kontrolą pediatryczną.",
+      status: "do potwierdzenia",
+      sourceRefs: ["interview:i3", "medication:m6", "decision:dc3"]
+    },
+    {
+      id: "tr5",
+      patientId: "p3",
+      fromEventId: "te13",
+      toEventId: "te15",
+      relationType: "powiązane źródłem",
+      label: "Obserwacje rodzica i pytania DITL pochodzą z tego samego wywiadu przed wizytą.",
+      status: "do potwierdzenia",
+      sourceRefs: ["interview:i3", "decision:dc3"]
     }
   ],
   conditions: [
@@ -792,6 +1073,15 @@ const demoState = {
       certainty: "wysoka",
       since: "2012",
       sourceRefs: ["doc:d4"]
+    },
+    {
+      id: "c5",
+      patientId: "p3",
+      name: "Kontrola po infekcji zapisana w dokumencie",
+      status: "do potwierdzenia",
+      certainty: "średnia",
+      since: "2026-05",
+      sourceRefs: ["doc:d5", "interview:i3"]
     }
   ],
   medications: [
@@ -879,6 +1169,40 @@ const demoState = {
       story: "Lek widoczny w dokumentacji demo; brak świeżego wywiadu o realnym przyjmowaniu.",
       symptomLink: "",
       question: "Czy pacjent nadal faktycznie przyjmuje lek zgodnie z dokumentacją?"
+    },
+    {
+      id: "m6",
+      patientId: "p3",
+      name: "Lek A po infekcji",
+      substance: "lek z dokumentacji pediatrycznej",
+      dose: "dawka z dokumentacji",
+      frequency: "2x dziennie",
+      from: "2026-05-20",
+      to: "2026-05-25",
+      status: "zakończony w dokumentacji",
+      actualStatus: "rodzic zgłasza krótsze podawanie",
+      indication: "kontekst infekcji z dokumentu demo",
+      sourceRefs: ["doc:d5", "interview:i3", "transcript:i3"],
+      story: "Dokument i wywiad rodzica opisują ten sam lek, ale czas faktycznego podawania wymaga porównania podczas wizyty.",
+      symptomLink: "obserwacje rodzica po infekcji",
+      question: "Czy czas faktycznego podawania leku A został porównany z dokumentacją?"
+    },
+    {
+      id: "m7",
+      patientId: "p3",
+      name: "Lek doraźny OTC dla dziecka",
+      substance: "lek przeciwgorączkowy OTC",
+      dose: "brak danych w dokumentacji",
+      frequency: "doraźnie według relacji rodzica",
+      from: "2026-05-20",
+      to: "",
+      status: "OTC",
+      actualStatus: "rodzic zgłasza podawany doraźnie",
+      indication: "relacja rodzica w wywiadzie demo",
+      sourceRefs: ["interview:i3", "transcript:i3"],
+      story: "Lek doraźny jest widoczny tylko w wywiadzie rodzica; brak dawki w dokumentach demo.",
+      symptomLink: "temperatura zgłoszona przez rodzica",
+      question: "Czy leki OTC podane w domu zostały dopisane do listy do omówienia z lekarzem?"
     }
   ],
   allergies: [
@@ -960,6 +1284,47 @@ const demoState = {
         { date: "2026-03-20", value: 220, sourceRefs: ["doc:d4"] },
         { date: "2026-04-10", value: 190, sourceRefs: ["doc:d4"] }
       ]
+    },
+    {
+      id: "o6",
+      patientId: "p3",
+      name: "CRP",
+      type: "laboratorium",
+      unit: "mg/l",
+      normalMin: 0,
+      normalMax: 5,
+      values: [
+        { date: "2026-05-20", value: 18, sourceRefs: ["doc:d5"] },
+        { date: "2026-05-24", value: 7, sourceRefs: ["doc:d6"] }
+      ]
+    },
+    {
+      id: "o7",
+      patientId: "p3",
+      name: "Temperatura zgłoszona przez rodzica",
+      type: "obserwacja opiekuna",
+      unit: "°C",
+      normalMin: 36,
+      normalMax: 37.5,
+      values: [
+        { date: "2026-05-21", value: 38.1, sourceRefs: ["interview:i3", "transcript:i3"] },
+        { date: "2026-05-23", value: 37.4, sourceRefs: ["interview:i3", "transcript:i3"] },
+        { date: "2026-06-06", value: 36.8, sourceRefs: ["interview:i3", "transcript:i3"] }
+      ]
+    },
+    {
+      id: "o8",
+      patientId: "p3",
+      name: "Aktywność zgłoszona przez rodzica",
+      type: "obserwacja opiekuna",
+      unit: "skala 0-5",
+      normalMin: 0,
+      normalMax: 5,
+      values: [
+        { date: "2026-05-21", value: 2, sourceRefs: ["interview:i3"] },
+        { date: "2026-05-28", value: 3, sourceRefs: ["interview:i3"] },
+        { date: "2026-06-06", value: 4, sourceRefs: ["interview:i3"] }
+      ]
     }
   ],
   flags: [
@@ -1032,6 +1397,36 @@ const demoState = {
       evidence: "Dane demo nie zawierają nowych ostrych kontaktów medycznych ani sygnałów wymagających sprawdzenia.",
       status: "do wyjaśnienia",
       sourceRefs: ["doc:d4"]
+    },
+    {
+      id: "f8",
+      patientId: "p3",
+      color: "amber",
+      category: "Rozbieżność lekowa u dziecka",
+      question: "Czy lek A z dokumentacji został porównany z tym, co rodzic zgłasza jako faktycznie podane?",
+      evidence: "Dokument i wywiad rodzica opisują różny czas podawania leku A.",
+      status: "do wyjaśnienia",
+      sourceRefs: ["doc:d5", "interview:i3", "medication:m6"]
+    },
+    {
+      id: "f9",
+      patientId: "p3",
+      color: "blue",
+      category: "Pytanie DITL: kontrola po infekcji",
+      question: "Jakie obserwacje rodzica lekarz chce omówić podczas kontroli dziecka?",
+      evidence: "Rodzic zgłasza obserwacje temperatury, aktywności i pytanie o kaszel.",
+      status: "do wyjaśnienia",
+      sourceRefs: ["interview:i3", "observation:o7", "observation:o8", "decision:dc3"]
+    },
+    {
+      id: "f10",
+      patientId: "p3",
+      color: "green",
+      category: "Dokumenty do kontroli dostępne",
+      question: "Czy rodzic ma przygotowane dokumenty i wyniki do pokazania lekarzowi?",
+      evidence: "W danych demo są wpis z porady, wynik kontrolny i potwierdzenie wizyty.",
+      status: "dalsza kontrola",
+      sourceRefs: ["doc:d5", "doc:d6", "doc:d7"]
     }
   ],
   knownUnknowns: [
@@ -1090,6 +1485,34 @@ const demoState = {
       category: "To verify",
       description: "Czy wynik echa z kwietnia został omówiony podczas kontroli?",
       sourceRefs: ["doc:d4", "interview:i2"]
+    },
+    {
+      id: "ku9",
+      patientId: "p3",
+      category: "Known",
+      description: "Termin kontroli pediatrycznej jest zapisany na 12.06.2026.",
+      sourceRefs: ["doc:d7"]
+    },
+    {
+      id: "ku10",
+      patientId: "p3",
+      category: "Known",
+      description: "Rodzic zgłosił obserwacje temperatury i aktywności w wywiadzie demo.",
+      sourceRefs: ["interview:i3", "observation:o7", "observation:o8"]
+    },
+    {
+      id: "ku11",
+      patientId: "p3",
+      category: "Uncertain",
+      description: "Czas faktycznego podawania leku A różni się między dokumentem a relacją rodzica.",
+      sourceRefs: ["doc:d5", "interview:i3", "medication:m6"]
+    },
+    {
+      id: "ku12",
+      patientId: "p3",
+      category: "To verify",
+      description: "Do omówienia z lekarzem: które leki i obserwacje rodzica są ważne dla kontroli po infekcji.",
+      sourceRefs: ["decision:dc3", "interview:i3", "medication:m6", "medication:m7"]
     }
   ],
   reports: [
@@ -1102,6 +1525,16 @@ const demoState = {
       author: "Pacjent 360",
       status: "DITL: do oceny lekarza",
       sourceRefs: ["doc:d1", "doc:d2", "doc:d3", "interview:i1"]
+    },
+    {
+      id: "rep3",
+      patientId: "p3",
+      type: "Raport kontekstowy Pacjent 360",
+      generatedAt: "2026-06-06T16:20:00",
+      version: "1.0",
+      author: "Pacjent 360",
+      status: "DITL: do oceny lekarza",
+      sourceRefs: ["doc:d5", "doc:d6", "doc:d7", "interview:i3", "decision:dc3"]
     }
   ],
   visitChecklists: [
@@ -1128,6 +1561,20 @@ const demoState = {
         { id: "vci7", label: "Wynik ostatniego echa serca", status: "gotowe", sourceRefs: ["doc:d4"] },
         { id: "vci8", label: "Lista aktualnych leków", status: "do potwierdzenia", sourceRefs: ["interview:i2", "medication:m5"] },
         { id: "vci9", label: "Pytania do kardiologa", status: "brak", sourceRefs: ["interview:i2"] }
+      ]
+    },
+    {
+      id: "vc3",
+      patientId: "p3",
+      visitDate: "2026-06-12",
+      visitType: "Kontrola pediatryczna po infekcji",
+      items: [
+        { id: "vci10", label: "Wpis z porady po infekcji", status: "gotowe", sourceRefs: ["doc:d5"] },
+        { id: "vci11", label: "Wyniki morfologii i CRP", status: "gotowe", sourceRefs: ["doc:d6"] },
+        { id: "vci12", label: "Lista leków faktycznie podanych w domu", status: "do potwierdzenia", sourceRefs: ["interview:i3", "medication:m6", "medication:m7"] },
+        { id: "vci13", label: "Obserwacje rodzica zapisane do rozmowy", status: "gotowe", sourceRefs: ["interview:i3", "observation:o7", "observation:o8"] },
+        { id: "vci14", label: "Pytania o powrót do szkoły i kaszel", status: "do potwierdzenia", sourceRefs: ["interview:i3", "decision:dc3"] },
+        { id: "vci15", label: "Zakres dostępu drugiego rodzica", status: "do potwierdzenia", sourceRefs: ["consent:g6"] }
       ]
     }
   ],
@@ -1183,6 +1630,32 @@ const demoState = {
       validTo: "2026-06-15",
       status: "cofnięty",
       sourceRefs: ["consent:g4", "doc:d3", "decision:dc1"]
+    },
+    {
+      id: "g5",
+      patientId: "p3",
+      subject: "Rodzic A",
+      scope: "pełny zakres przygotowania wizyty dziecka: dokumenty, wyniki, leki, obserwacje, raport i zadania organizacyjne",
+      role: "rodzic",
+      caregiverId: "parent-a-p3",
+      caregiverName: "Rodzic A",
+      areas: ["documents", "results", "medications", "observations", "report", "tasks", "visits"],
+      validTo: "2026-09-30",
+      status: "aktywny",
+      sourceRefs: ["consent:g5", "doc:d7", "report:rep3"]
+    },
+    {
+      id: "g6",
+      patientId: "p3",
+      subject: "Rodzic B",
+      scope: "ograniczony zakres: terminy wizyt, dokumenty i zadania organizacyjne",
+      role: "rodzic",
+      caregiverId: "parent-b-p3",
+      caregiverName: "Rodzic B",
+      areas: ["visits", "documents", "tasks"],
+      validTo: "2026-07-15",
+      status: "aktywny",
+      sourceRefs: ["consent:g6", "doc:d7"]
     }
   ],
   audit: [
@@ -1201,6 +1674,22 @@ const demoState = {
       actor: "Pacjent",
       action: "dodano wywiad pacjenta",
       scope: "transkrypcja i odpowiedzi strukturalne"
+    },
+    {
+      id: "u3",
+      patientId: "p3",
+      date: "2026-06-06T16:20:00",
+      actor: "Rodzic A",
+      action: "dodano wywiad rodzica",
+      scope: "transkrypcja, leki faktycznie podane i obserwacje opiekuna"
+    },
+    {
+      id: "u4",
+      patientId: "p3",
+      date: "2026-06-06T16:25:00",
+      actor: "Pacjent 360",
+      action: "wygenerowano raport kontekstowy",
+      scope: "raport rep3, źródła d5-d7, wywiad i3"
     }
   ]
 };

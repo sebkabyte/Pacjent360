@@ -55,6 +55,35 @@
         "eventIds": ["te7"],
         "virtualIds": []
       }
+    },
+    "p3": {
+      "episode": {
+        "rangeStart": "2026-05-20",
+        "rangeEnd": "2026-06-12",
+        "eventIds": ["te10", "te11", "te12", "te13", "te14", "te15"],
+        "eventTracks": ["konsultacje", "leki", "badania", "obserwacje z wywiadu", "funkcjonowanie", "decyzje medyczne"],
+        "selectedId": "te10",
+        "activeTracks": [
+          { "track": "badania", "count": 1 },
+          { "track": "leki", "count": 1 },
+          { "track": "konsultacje", "count": 1 },
+          { "track": "funkcjonowanie", "count": 1 },
+          { "track": "decyzje medyczne", "count": 1 },
+          { "track": "obserwacje z wywiadu", "count": 1 }
+        ],
+        "hiddenTracks": 3,
+        "sourceMissingCount": 0,
+        "todayColumn": 5
+      },
+      "life": {
+        "eventIds": ["anchor-birth", "te10", "te11", "te12", "te13", "te14", "te15", "anchor-now"],
+        "virtualIds": ["anchor-birth", "anchor-now"]
+      },
+      "filteredTrack": {
+        "track": "badania",
+        "eventIds": ["te12"],
+        "virtualIds": []
+      }
     }
   }
 }
