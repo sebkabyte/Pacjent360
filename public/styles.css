@@ -2925,6 +2925,346 @@ dialog::backdrop {
   }
 }
 
+/* Patient map v0.3 presentation layer: stage summary, lanes and episode bands. */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.stage-film-summary {
+  display: grid;
+  gap: 14px;
+  margin: 0 0 16px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(135deg, rgba(15, 118, 110, 0.08), rgba(37, 99, 235, 0.08)),
+    var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.stage-film-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.stage-film-head h3 {
+  margin: 2px 0 0;
+}
+
+.stage-film-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(180px, 1fr));
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.stage-card {
+  min-width: 180px;
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid rgba(15, 118, 110, 0.18);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.stage-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stage-card-head > span {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--teal-soft);
+  color: var(--teal);
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.stage-points {
+  display: grid;
+  gap: 8px;
+}
+
+.stage-point {
+  display: grid;
+  gap: 7px;
+  width: 100%;
+  padding: 9px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--wash);
+  text-align: left;
+  cursor: pointer;
+}
+
+.stage-point:focus-visible {
+  outline: var(--p360-focus-width, 3px) solid var(--p360-focus, rgba(37, 99, 235, 0.35));
+  outline-offset: var(--p360-focus-offset, 3px);
+}
+
+.stage-point > span:nth-child(2) {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.stage-point small {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.semantic-zoom {
+  gap: 6px;
+}
+
+.semantic-zoom button {
+  min-width: 112px;
+  display: grid;
+  justify-items: start;
+  gap: 2px;
+  padding: 8px 10px;
+}
+
+.semantic-zoom small {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.temporal-episode-rail {
+  position: absolute;
+  left: 38px;
+  right: 38px;
+  top: 16px;
+  height: 46px;
+  pointer-events: none;
+}
+
+.episode-band {
+  position: absolute;
+  left: var(--episode-left);
+  width: var(--episode-width);
+  min-width: 168px;
+  height: 42px;
+  padding: 7px 10px;
+  border: 1px solid rgba(15, 118, 110, 0.24);
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(15, 118, 110, 0.16), rgba(37, 99, 235, 0.14));
+  color: var(--ink);
+  box-shadow: 0 8px 24px rgba(31, 41, 51, 0.08);
+  overflow: hidden;
+}
+
+.episode-band strong,
+.episode-band span {
+  display: inline-block;
+  margin-right: 8px;
+  font-size: 12px;
+}
+
+.episode-band small {
+  display: none;
+}
+
+.temporal-lane-band {
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  top: var(--lane-top);
+  height: var(--lane-height);
+  border-top: 1px solid rgba(91, 110, 126, 0.16);
+  background:
+    linear-gradient(90deg, rgba(15, 118, 110, 0.08), rgba(37, 99, 235, 0.04) 50%, rgba(15, 118, 110, 0.03)),
+    rgba(255, 255, 255, 0.55);
+}
+
+.temporal-lane-band:nth-of-type(odd) {
+  background:
+    linear-gradient(90deg, rgba(37, 99, 235, 0.07), rgba(15, 118, 110, 0.035)),
+    rgba(255, 255, 255, 0.38);
+}
+
+.lane-label {
+  position: sticky;
+  left: 10px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 245px;
+  margin: 10px 0 0 10px;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--ink);
+  font-weight: 800;
+  font-size: 12px;
+  box-shadow: 0 8px 18px rgba(31, 41, 51, 0.08);
+}
+
+.lane-label svg {
+  width: 14px;
+  height: 14px;
+  color: var(--teal);
+}
+
+.lane-label strong {
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--teal-soft);
+  color: var(--teal);
+}
+
+.temporal-map .temporal-event,
+.detail-overview .temporal-map .temporal-event,
+.detail-detail .temporal-map .temporal-event {
+  position: absolute;
+  left: clamp(calc(var(--card-width) / 2 + 28px), var(--event-left, 0%), calc(100% - var(--card-width) / 2 - 28px));
+  top: calc(var(--lane-top) + 42px);
+  width: var(--card-width);
+  height: auto;
+  min-height: 0;
+  transform: translateX(-50%);
+}
+
+.temporal-map .temporal-card,
+.temporal-map .temporal-event.above .temporal-card,
+.temporal-map .temporal-event.below .temporal-card {
+  position: relative;
+  left: auto;
+  top: auto;
+  bottom: auto;
+  width: 100%;
+  transform: none;
+  min-height: 0;
+  padding: 10px;
+}
+
+.temporal-map .temporal-card p {
+  display: none;
+}
+
+.temporal-map .temporal-branch,
+.temporal-map .temporal-event.above .temporal-branch,
+.temporal-map .temporal-event.below .temporal-branch {
+  position: absolute;
+  left: 50%;
+  top: -36px;
+  bottom: auto;
+  width: 2px;
+  height: 36px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, rgba(15, 118, 110, 0), var(--teal));
+}
+
+.temporal-map .temporal-branch::before,
+.temporal-map .temporal-event.above .temporal-branch::before,
+.temporal-map .temporal-event.below .temporal-branch::before {
+  left: 50%;
+  top: -6px;
+  bottom: auto;
+  transform: translateX(-50%);
+}
+
+.temporal-map .temporal-branch::after {
+  display: none;
+}
+
+.temporal-spine {
+  top: 74px;
+  bottom: 22px;
+  opacity: 0.42;
+}
+
+.temporal-spine span {
+  top: 8px;
+}
+
+.temporal-today-marker {
+  z-index: 4;
+}
+
+.temporal-minimap-line {
+  overflow: hidden;
+}
+
+.minimap-window {
+  position: absolute;
+  inset: 7px 10% 7px 10%;
+  border: 1px solid rgba(37, 99, 235, 0.3);
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.08);
+}
+
+@media (max-width: 760px) {
+  .stage-film-summary {
+    padding: 13px;
+  }
+
+  .stage-film-head {
+    display: grid;
+  }
+
+  .stage-film-grid {
+    grid-template-columns: 1fr;
+    overflow: visible;
+  }
+
+  .semantic-zoom {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .semantic-zoom button {
+    min-width: 0;
+  }
+
+  .temporal-episode-rail {
+    left: 24px;
+    right: 24px;
+  }
+
+  .episode-band {
+    min-width: 150px;
+  }
+
+  .lane-label {
+    max-width: 205px;
+  }
+
+  .timeline-inspector {
+    position: sticky;
+    bottom: 0;
+    z-index: 8;
+    max-height: 66vh;
+    overflow: auto;
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -18px 42px rgba(31, 41, 51, 0.16);
+  }
+}
+
 @media (max-width: 760px) {
   .app-shell {
     grid-template-columns: 1fr;

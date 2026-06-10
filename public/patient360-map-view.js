@@ -14,6 +14,14 @@
 
   const TRACKS = contract.TIMELINE_TRACKS || [];
   const TIMELINE_STATUS_META = contract.TIMELINE_STATUS_META || {};
+  const PRESENTATION_LANES = Object.freeze([
+    { id: "care", label: "Kontakty z opieką", icon: "messages-square", tracks: ["konsultacje", "hospitalizacje"] },
+    { id: "state", label: "Objawy i funkcjonowanie", icon: "activity", tracks: ["objawy", "funkcjonowanie"] },
+    { id: "tests", label: "Badania i wyniki", icon: "flask-conical", tracks: ["badania"] },
+    { id: "meds", label: "Leki", icon: "pill", tracks: ["leki"] },
+    { id: "plan", label: "Ustalenia i plan", icon: "clipboard-check", tracks: ["decyzje medyczne"] },
+    { id: "sources", label: "Źródła i wywiad", icon: "message-circle", tracks: ["obserwacje z wywiadu", "kontekst medyczny"] }
+  ]);
 
   function normalize(value) {
     return String(value || "").toLowerCase();
@@ -72,6 +80,18 @@
     }[track] || "circle";
   }
 
+  function laneForTrack(track) {
+    return PRESENTATION_LANES.find((lane) => lane.tracks.includes(track)) || PRESENTATION_LANES[PRESENTATION_LANES.length - 1];
+  }
+
+  function activePresentationLanes(events) {
+    return PRESENTATION_LANES.map((lane, index) => ({
+      ...lane,
+      index,
+      count: events.filter((event) => lane.tracks.includes(event.track)).length
+    })).filter((lane) => lane.count > 0);
+  }
+
   function statusClass(value) {
     const normalized = normalize(value);
     if (normalized.includes("do wyjaśnienia") || normalized.includes("aktywn") || normalized.includes("wysok")) return "active";
@@ -115,29 +135,49 @@
     return `<div class="empty-state">${escapeHtml(message)}</div>`;
   }
 
-  function renderTimelineControls(period, detail, zoom, periods, details, zoomConfig) {
+  function semanticLevel(periodId, detailId) {
+    if (periodId === "life") return "life";
+    if (periodId === "year") return "period";
+    if (detailId === "detail") return "visit";
+    return "episode";
+  }
+
+  function renderTimelineControls(period, detail, zoom, zoomConfig) {
+    const activeLevel = semanticLevel(period.id, detail.id);
+    const levels = [
+      { id: "life", label: "Życie", period: "life", detail: "overview", zoom: zoomConfig.fit, description: "kotwice i epizody" },
+      { id: "period", label: "Okres", period: "year", detail: "overview", zoom: 0.62, description: "ostatni rok" },
+      { id: "episode", label: "Epizod", period: "episode", detail: "standard", zoom: 0.9, description: "aktywny odcinek" },
+      { id: "visit", label: "Wizyta", period: "episode", detail: "detail", zoom: 1.18, description: "najwięcej kontekstu" }
+    ];
     return `
       <div class="temporal-controls">
         <div class="timeline-control-group">
-          <span>Zakres czasu</span>
-          <div class="segmented" role="group" aria-label="Zakres czasu mapy pacjenta">
-            ${periods.map((item) => `<button data-timeline-period="${escapeHtml(item.id)}" class="${period.id === item.id ? "active" : ""}" title="${escapeHtml(item.description)}">${escapeHtml(item.label)}</button>`).join("")}
-          </div>
-        </div>
-        <div class="timeline-control-group">
-          <span>Poziom widoku</span>
-          <div class="segmented" role="group" aria-label="Poziom szczegółowości mapy pacjenta">
-            ${details.map((item) => `<button data-timeline-detail="${escapeHtml(item.id)}" class="${detail.id === item.id ? "active" : ""}" title="${escapeHtml(item.description)}">${escapeHtml(item.label)}</button>`).join("")}
+          <span>Poziom filmu</span>
+          <div class="segmented semantic-zoom" role="group" aria-label="Poziom filmu z życia pacjenta">
+            ${levels.map((item) => `
+              <button
+                type="button"
+                data-timeline-view-level="${escapeHtml(item.id)}"
+                data-timeline-view-period="${escapeHtml(item.period)}"
+                data-timeline-view-detail="${escapeHtml(item.detail)}"
+                data-timeline-view-zoom="${escapeHtml(item.zoom)}"
+                class="${activeLevel === item.id ? "active" : ""}"
+                title="${escapeHtml(item.description)}"
+              >
+                <span>${escapeHtml(item.label)}</span>
+                <small>${escapeHtml(item.description)}</small>
+              </button>
+            `).join("")}
           </div>
         </div>
         <div class="timeline-control-group zoom-group">
-          <span>Zoom mapy</span>
+          <span>Nawigacja</span>
           <div class="temporal-zoom-control">
             <button class="icon-button compact" data-timeline-zoom-step="${escapeHtml(-zoomConfig.step)}" title="Oddal mapę" aria-label="Oddal mapę pacjenta"><i data-lucide="zoom-out"></i></button>
-            <input type="range" min="${zoomConfig.min}" max="${zoomConfig.max}" step="0.01" value="${zoom}" data-timeline-zoom-range aria-label="Zoom mapy pacjenta">
+            <input class="visually-hidden" type="range" min="${zoomConfig.min}" max="${zoomConfig.max}" step="0.01" value="${zoom}" data-timeline-zoom-range aria-label="Techniczny zoom mapy pacjenta">
             <button class="icon-button compact" data-timeline-zoom-step="${escapeHtml(zoomConfig.step)}" title="Przybliż mapę" aria-label="Przybliż mapę pacjenta"><i data-lucide="zoom-in"></i></button>
             <button class="ghost-button fit-button" data-timeline-zoom-fit title="Oddal tak, aby zobaczyć cały odcinek"><i data-lucide="scan"></i>Dopasuj</button>
-            <strong>${Math.round(zoom * 100)}%</strong>
           </div>
         </div>
       </div>
@@ -188,6 +228,46 @@
     `;
   }
 
+  function renderStageSummaries(stageSummaries, events, sourceChips) {
+    const stages = Array.isArray(stageSummaries) ? [...stageSummaries].sort((a, b) => (a.order || 0) - (b.order || 0)) : [];
+    if (!stages.length) return "";
+    const eventIndex = new Map(events.map((event, index) => [event.id, index]));
+    return `
+      <section class="stage-film-summary" aria-label="Film w skrócie">
+        <div class="stage-film-head">
+          <div>
+            <p class="eyebrow">Film w skrócie</p>
+            <h3>Najważniejsze sprawy w kolejnych etapach</h3>
+          </div>
+          <span class="p360-badge">demo · źródła widoczne</span>
+        </div>
+        <div class="stage-film-grid">
+          ${stages.map((stage) => `
+            <article class="stage-card">
+              <div class="stage-card-head">
+                <span>${String(stage.order || "").padStart(2, "0")}</span>
+                <strong>${escapeHtml(stage.title)}</strong>
+              </div>
+              <div class="stage-points">
+                ${(stage.points || []).map((point) => {
+                  const index = eventIndex.has(point.eventRef) ? eventIndex.get(point.eventRef) : "";
+                  const attrs = index !== "" ? `data-timeline-jump="${escapeHtml(index)}" data-select-timeline-event="${escapeHtml(point.eventRef)}"` : "";
+                  return `
+                    <article class="stage-point" ${attrs} tabindex="${index !== "" ? "0" : "-1"}" role="${index !== "" ? "button" : "group"}">
+                      <span class="p360-status ${statusClass(point.status)}">${escapeHtml(point.status || "do omówienia")}</span>
+                      <span>${escapeHtml(point.text)}</span>
+                      <small>${sourceChips(point.sourceRefs || [])}</small>
+                    </article>
+                  `;
+                }).join("")}
+              </div>
+            </article>
+          `).join("")}
+        </div>
+      </section>
+    `;
+  }
+
   function renderTimelineLegend(events, trackFilter) {
     return `
       <div class="temporal-legend" aria-label="Filtruj warstwy mapy pacjenta">
@@ -216,6 +296,7 @@
           <span>${formatDate(range.end)}</span>
         </div>
         <div class="temporal-minimap-line">
+          <span class="minimap-window" aria-hidden="true"></span>
           ${events.map((event, index) => `
             <button
               type="button"
@@ -234,7 +315,50 @@
     `;
   }
 
-  function renderTimelineEvent(event, index, detailId = "standard", zoom = 0.9, selectedId = "", persona = "doctor", today = "") {
+  function episodeBands(episodes, events, range) {
+    const visibleEventById = new Map(events.map((event) => [event.id, event]));
+    return (Array.isArray(episodes) ? episodes : []).map((episode) => {
+      const episodeEvents = events.filter((event) => event.episode?.id === episode.id || event.episodeId === episode.id);
+      const positions = episodeEvents.length
+        ? episodeEvents.map((event) => event.positionPercent)
+        : [timelinePositionPercent(episode.startDate, range), timelinePositionPercent(episode.endDate, range)];
+      const refs = (episode.eventRefs || []).map((id) => visibleEventById.get(id)).filter(Boolean);
+      refs.forEach((event) => positions.push(event.positionPercent));
+      const start = clampNumber(Math.min(...positions.filter(Number.isFinite)), 0, 100);
+      const end = clampNumber(Math.max(...positions.filter(Number.isFinite)), start, 100);
+      return { ...episode, start, end: Math.max(end, start + 6) };
+    }).filter((episode) => Number.isFinite(episode.start) && Number.isFinite(episode.end));
+  }
+
+  function renderEpisodeBands(episodes, events, range, sourceChips) {
+    const bands = episodeBands(episodes, events, range);
+    if (!bands.length) return "";
+    return `
+      <div class="temporal-episode-rail" aria-label="Pasma epizodów">
+        ${bands.map((episode) => `
+          <div class="episode-band" style="--episode-left: ${episode.start}%; --episode-width: ${Math.max(episode.end - episode.start, 6)}%;">
+            <strong>${escapeHtml(episode.title)}</strong>
+            <span>${escapeHtml(episode.status || "do omówienia")}</span>
+            <small>${sourceChips(episode.sourceRefs || [])}</small>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  function renderLaneBands(lanes, laneHeight, laneOffset) {
+    return lanes.map((lane) => `
+      <div class="temporal-lane-band" style="--lane-top: ${laneOffset + lane.index * laneHeight}px; --lane-height: ${laneHeight}px;">
+        <div class="lane-label">
+          <i data-lucide="${escapeHtml(lane.icon)}"></i>
+          <span>${escapeHtml(lane.label)}</span>
+          <strong>${lane.count}</strong>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function renderTimelineEvent(event, index, detailId = "standard", zoom = 0.9, selectedId = "", persona = "doctor", today = "", laneIndex = 0, laneHeight = 112, laneOffset = 86) {
     const trackIndex = Math.max(TRACKS.indexOf(event.track), 0);
     const side = index % 2 === 0 ? "above" : "below";
     const branchDepth = Math.round((82 + (trackIndex % 4) * 18) * (0.72 + zoom * 0.28));
@@ -258,7 +382,7 @@
         role="button"
         aria-pressed="${selected ? "true" : "false"}"
         aria-label="${escapeHtml(`${formatDate(event.date)}: ${event.title}. ${personaHint}`)}"
-        style="--event-left: ${eventLeft}%; --branch-depth: ${branchDepth}px;"
+        style="--event-left: ${eventLeft}%; --branch-depth: ${branchDepth}px; --lane-index: ${laneIndex}; --lane-top: ${laneOffset + laneIndex * laneHeight}px; --lane-height: ${laneHeight}px;"
       >
         <div class="temporal-branch" aria-hidden="true"></div>
         <div class="temporal-card">
@@ -372,6 +496,7 @@
     const sourceChips = typeof options.sourceChips === "function" ? options.sourceChips : fallbackSourceChips;
     const periods = Array.isArray(options.periods) ? options.periods : [];
     const details = Array.isArray(options.details) ? options.details : [];
+    const stageSummaries = Array.isArray(options.stageSummaries) ? options.stageSummaries : [];
     const zoomConfig = options.zoomConfig || { min: 0.4, max: 1.55, step: 0.1, fit: 0.42 };
     const period = mapModel.period;
     const detail = mapModel.detail;
@@ -386,6 +511,10 @@
     const selected = mapModel.selectedEvent;
     const selectedId = mapModel.selectedId;
     const todayPercent = Number.isFinite(mapModel.todayPercent) ? mapModel.todayPercent : 100;
+    const lanes = activePresentationLanes(events);
+    const laneHeight = 122;
+    const laneOffset = 88;
+    const mapHeight = Math.max(420, laneOffset + Math.max(lanes.length, 1) * laneHeight + 34);
     const mapWidth = Math.max(events.length * (geometry.eventWidth + 22) + 76, 960);
 
     if (!events.length) {
@@ -398,7 +527,7 @@
               <p class="episode-narrative">Zmień zakres czasu, filtr toru albo wyszukiwanie, aby zobaczyć historię pacjenta.</p>
             </div>
           </div>
-          ${embedded ? "" : renderTimelineControls(period, detail, zoom, periods, details, zoomConfig)}
+          ${embedded ? "" : renderTimelineControls(period, detail, zoom, zoomConfig)}
           ${renderTimelineOverview(filteredEvents, range, detail, zoom)}
           ${renderTimelineLegend(clinicalEvents, trackFilter)}
           ${emptyState("Brak zdarzeń na mapie pacjenta dla wybranego zakresu.")}
@@ -427,21 +556,28 @@
           <i data-lucide="shield-alert"></i>
           <span>Mapa pokazuje zdarzenia, źródła, luki i pytania DITL. Relacje są opisane jako powiązania czasowe lub źródłowe, nie jako przyczyna.</span>
         </section>
-        ${embedded ? "" : renderTimelineControls(period, detail, zoom, periods, details, zoomConfig)}
+        ${renderStageSummaries(stageSummaries, events, sourceChips)}
+        ${embedded ? "" : renderTimelineControls(period, detail, zoom, zoomConfig)}
         ${renderTimelineOverview(filteredEvents, range, detail, zoom)}
         ${embedded ? "" : renderTimelineLegend(clinicalEvents, trackFilter)}
         ${renderTimelineMiniMap(events, range)}
         <div class="patient-map-workbench">
           <div class="patient-map-canvas">
             <div class="temporal-scroll" aria-label="Mapa Pacjenta 360">
-              <div class="temporal-map ${zoom <= 0.58 ? "zoom-compact" : ""}" style="--event-count: ${events.length}; --event-width: ${geometry.eventWidth}px; --card-width: ${geometry.cardWidth}px; --map-width: ${mapWidth}px; --map-height: ${geometry.mapHeight}px; --event-height: ${geometry.eventHeight}px;">
+              <div class="temporal-map ${zoom <= 0.58 ? "zoom-compact" : ""}" style="--event-count: ${events.length}; --event-width: ${geometry.eventWidth}px; --card-width: ${geometry.cardWidth}px; --map-width: ${mapWidth}px; --map-height: ${mapHeight}px; --event-height: ${laneHeight}px;">
+                ${renderEpisodeBands(mapModel.episodes, events, range, sourceChips)}
+                ${renderLaneBands(lanes, laneHeight, laneOffset)}
                 <div class="temporal-spine" aria-hidden="true">
                   <span>historia</span>
                   <span>stan</span>
                   <span>sygnały</span>
                   <span>decyzja</span>
                 </div>
-                ${events.map((event, index) => renderTimelineEvent(event, index, detail.id, zoom, selectedId, safePersona, mapModel.today)).join("")}
+                ${events.map((event, index) => {
+                  const lane = laneForTrack(event.track);
+                  const laneIndex = Math.max(lanes.findIndex((item) => item.id === lane.id), 0);
+                  return renderTimelineEvent(event, index, detail.id, zoom, selectedId, safePersona, mapModel.today, laneIndex, laneHeight, laneOffset);
+                }).join("")}
                 <div class="temporal-today-marker" style="--today-left: ${todayPercent}%;" aria-label="Dziś na mapie pacjenta"><span>Dziś</span></div>
               </div>
             </div>

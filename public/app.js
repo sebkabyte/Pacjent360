@@ -43,6 +43,7 @@ const PATIENT_SCOPED_COLLECTION_KEYS = [
   "timelineEvents",
   "timelineEpisodes",
   "timelineRelations",
+  "stageSummaries",
   "conditions",
   "medications",
   "allergies",
@@ -607,6 +608,120 @@ const demoState = {
       status: "planowane",
       summary: "Epizod łączy wynik echa, wywiad i planowaną kontrolę. Pytania pozostają do omówienia z lekarzem.",
       sourceRefs: ["doc:d4", "interview:i2", "decision:dc2"]
+    }
+  ],
+  stageSummaries: [
+    {
+      id: "stage-p1-1",
+      patientId: "p1",
+      order: 1,
+      title: "Tło",
+      points: [
+        {
+          text: "w dokumencie zapisano choroby przewlekłe i listę leków do uporządkowania",
+          status: "potwierdzone",
+          eventRef: "te1",
+          sourceRefs: ["doc:d1"]
+        }
+      ]
+    },
+    {
+      id: "stage-p1-2",
+      patientId: "p1",
+      order: 2,
+      title: "Początek zmiany",
+      points: [
+        {
+          text: "pacjent zgłosił potrzebę potwierdzenia leków i dokumentów przed kwalifikacją",
+          status: "do potwierdzenia",
+          eventRef: "te2",
+          sourceRefs: ["interview:i1", "medication:m1"]
+        }
+      ]
+    },
+    {
+      id: "stage-p1-3",
+      patientId: "p1",
+      order: 3,
+      title: "Kontakty i diagnostyka",
+      points: [
+        {
+          text: "w dokumencie zapisano konsultację oraz wyniki kontrolne do interpretacji przez lekarza",
+          status: "potwierdzone",
+          eventRef: "te4",
+          sourceRefs: ["doc:d2", "doc:d3"]
+        }
+      ]
+    },
+    {
+      id: "stage-p1-4",
+      patientId: "p1",
+      order: 4,
+      title: "Stan obecny",
+      points: [
+        {
+          text: "brak potwierdzenia w dokumentach dla aktualnego EKG i planu postępowania z lekiem",
+          status: "do omówienia z lekarzem",
+          eventRef: "te6",
+          sourceRefs: ["doc:d3", "decision:dc1"]
+        }
+      ]
+    },
+    {
+      id: "stage-p1-5",
+      patientId: "p1",
+      order: 5,
+      title: "Co dalej organizacyjnie",
+      points: [
+        {
+          text: "do omówienia z lekarzem pozostaje komplet dokumentów, leków i pytań przed procedurą",
+          status: "do omówienia z lekarzem",
+          eventRef: "te6",
+          sourceRefs: ["decision:dc1", "interview:i1"]
+        }
+      ]
+    },
+    {
+      id: "stage-p2-1",
+      patientId: "p2",
+      order: 1,
+      title: "Tło",
+      points: [
+        {
+          text: "w dokumencie zapisano kontrolne echo serca jako źródło rozmowy specjalistycznej",
+          status: "potwierdzone",
+          eventRef: "te7",
+          sourceRefs: ["doc:d4"]
+        }
+      ]
+    },
+    {
+      id: "stage-p2-2",
+      patientId: "p2",
+      order: 2,
+      title: "Stan obecny",
+      points: [
+        {
+          text: "pacjent zgłosił brak nowych objawów w wywiadzie demo i pytanie o status leku",
+          status: "do potwierdzenia",
+          eventRef: "te8",
+          sourceRefs: ["interview:i2", "medication:m5"]
+        }
+      ]
+    },
+    {
+      id: "stage-p2-3",
+      patientId: "p2",
+      order: 3,
+      title: "Co dalej organizacyjnie",
+      points: [
+        {
+          text: "do omówienia z lekarzem pozostaje wynik echa i lista leków przed kontrolą",
+          status: "do omówienia z lekarzem",
+          eventRef: "te9",
+          sourceRefs: ["doc:d4", "decision:dc2"]
+        }
+      ]
     }
   ],
   timelineRelations: [
@@ -2397,6 +2512,7 @@ function renderPatientMap360({ persona = "doctor", embedded = false } = {}) {
     periods: TIMELINE_PERIODS,
     details: TIMELINE_DETAILS,
     zoomConfig: TIMELINE_ZOOM,
+    stageSummaries: byPatient(state.stageSummaries || []),
     sourceChips
   });
 }
@@ -3652,6 +3768,16 @@ function bindViewActions() {
   viewRoot.querySelectorAll("[data-timeline-detail]").forEach((button) => {
     button.addEventListener("click", () => {
       state.timelineDetail = button.dataset.timelineDetail;
+      saveState();
+      render();
+    });
+  });
+
+  viewRoot.querySelectorAll("[data-timeline-view-level]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.timelinePeriod = button.dataset.timelineViewPeriod || "episode";
+      state.timelineDetail = button.dataset.timelineViewDetail || "standard";
+      state.timelineZoom = normalizeTimelineZoom(button.dataset.timelineViewZoom || state.timelineZoom);
       saveState();
       render();
     });
