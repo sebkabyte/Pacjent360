@@ -1402,11 +1402,22 @@ function sourceLabel(ref) {
   return String(ref);
 }
 
+function evidenceClassLabel(ref) {
+  const prefix = String(ref || "").split(":")[0];
+  const type = SOURCE_REF_PREFIX_TO_TYPE[prefix];
+  const evidenceClass = PATIENT360_CONTRACT.SOURCE_TYPE_TO_EVIDENCE_CLASS[type];
+  return PATIENT360_CONTRACT.EVIDENCE_CLASS_LABELS[evidenceClass] || "";
+}
+
 function sourceChips(refs) {
   const list = Array.isArray(refs) ? refs : [refs].filter(Boolean);
   if (!list.length) return `<span class="tag">Brak źródła</span>`;
   return list
-    .map((ref) => `<span class="source-chip"><button type="button" data-source-ref="${escapeHtml(ref)}" title="Pokaż źródło">${escapeHtml(sourceLabel(ref))}</button></span>`)
+    .map((ref) => {
+      const evidence = evidenceClassLabel(ref);
+      const tooltip = evidence ? `${evidence} — pokaż źródło` : "Pokaż źródło";
+      return `<span class="source-chip"><button type="button" data-source-ref="${escapeHtml(ref)}" title="${escapeHtml(tooltip)}">${escapeHtml(sourceLabel(ref))}</button></span>`;
+    })
     .join("");
 }
 
@@ -4308,6 +4319,7 @@ function addContractSource(sources, ref, type, title, record, date = "") {
   sources.set(ref, {
     ref,
     type,
+    evidenceClass: PATIENT360_CONTRACT.SOURCE_TYPE_TO_EVIDENCE_CLASS[type] || "system_generated",
     title: title || ref,
     patientId: record?.patientId || "",
     date: date || record?.date || record?.eventDate || record?.contactDate || record?.generatedAt || "",

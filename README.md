@@ -242,6 +242,8 @@ Root repozytorium ma być czytelny. Szczegółowe dokumenty są w `docs/`, żeby
 - `docs/ROADMAP.md`, `docs/SPRINTS.md` - roadmapa i aktywny backlog rozwoju.
 - `docs/legal/` - disclaimer, prywatność i licencja dokumentacji.
 - `docs/governance/` - risk register, komunikacja kryzysowa i dostępność.
+- `docs/governance/DEFINITION_OF_HARM.md` - katalog szkód H-001..H-010 i bramki, które je blokują.
+- `docs/governance/SAFETY_CASE.md` - argumentacja bezpieczeństwa: jak architektura wymusza granicę DITL.
 - `docs/deployment/` - publikacja, rollback, GitHub i nazwa.pl.
 - `docs/validation/` - protokół walidacji, formularz feedbacku i szablon wyników.
 - `docs/adr/` - decyzje architektoniczne.

@@ -52,6 +52,26 @@
     "report"
   ];
   const SOURCE_TYPES = ["document", "interview", "transcript", "observation", "medication", "flag", "decisionContext", "report", "consent"];
+  // Klasa dowodowa: lekarz musi widziec, czy patrzy na dokument, relacje pacjenta,
+  // obserwacje opiekuna czy zapis systemu. To nie jest ocena wiarygodnosci klinicznej.
+  const EVIDENCE_CLASSES = ["official_document", "patient_reported", "caregiver_reported", "system_generated"];
+  const SOURCE_TYPE_TO_EVIDENCE_CLASS = {
+    document: "official_document",
+    observation: "official_document",
+    medication: "official_document",
+    interview: "patient_reported",
+    transcript: "patient_reported",
+    consent: "patient_reported",
+    flag: "system_generated",
+    decisionContext: "system_generated",
+    report: "system_generated"
+  };
+  const EVIDENCE_CLASS_LABELS = {
+    official_document: "dokument",
+    patient_reported: "relacja pacjenta / wywiad",
+    caregiver_reported: "obserwacja opiekuna",
+    system_generated: "zapis systemu"
+  };
   const SOURCE_REF_PREFIX_TO_TYPE = {
     doc: "document",
     interview: "interview",
@@ -99,6 +119,9 @@
     DITL_STATUSES: Object.freeze([...DITL_STATUSES]),
     CLAIM_TYPES: Object.freeze([...CLAIM_TYPES]),
     SOURCE_TYPES: Object.freeze([...SOURCE_TYPES]),
+    EVIDENCE_CLASSES: Object.freeze([...EVIDENCE_CLASSES]),
+    SOURCE_TYPE_TO_EVIDENCE_CLASS: Object.freeze({ ...SOURCE_TYPE_TO_EVIDENCE_CLASS }),
+    EVIDENCE_CLASS_LABELS: Object.freeze({ ...EVIDENCE_CLASS_LABELS }),
     SOURCE_REF_PREFIX_TO_TYPE: Object.freeze({ ...SOURCE_REF_PREFIX_TO_TYPE }),
     CLAIM_STATUSES: Object.freeze([...CLAIM_STATUSES]),
     RELATION_TYPES: Object.freeze([...RELATION_TYPES]),
