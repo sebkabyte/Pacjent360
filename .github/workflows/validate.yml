@@ -49,6 +49,9 @@ jobs:
       - name: Validate accessibility rules
         run: node tools/validate-a11y.js
 
+      - name: Validate brand contrast
+        run: node tools/validate-brand-contrast.js
+
       - name: Validate harm gates
         run: node tools/validate-harm-gates.js
 

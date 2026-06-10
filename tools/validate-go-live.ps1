@@ -48,6 +48,7 @@ $nodeCheckFiles = @(
   "tools/validate-caregiver-scope.js",
   "tools/validate-consent-draft.js",
   "tools/validate-a11y.js",
+  "tools/validate-brand-contrast.js",
   "tools/validate-validation-pack.js",
   "tools/validate-harm-gates.js",
   "tools/domain-diagnostics.js",
@@ -108,6 +109,7 @@ Invoke-External "Pre-visit workflow validation" "powershell" @("-ExecutionPolicy
 Invoke-External "Caregiver scope validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-caregiver-scope.ps1"))
 Invoke-External "Consent draft validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-consent-draft.ps1"))
 Invoke-External "Accessibility static validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-a11y.ps1"))
+Invoke-External "Brand contrast validation" "node" @("tools/validate-brand-contrast.js")
 Invoke-External "Validation pack validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-validation-pack.ps1"))
 Invoke-External "Definition of Harm gates" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-harm-gates.ps1"))
 

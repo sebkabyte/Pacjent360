@@ -2,15 +2,15 @@
   color-scheme: light;
   --ink: var(--p360-color-ink, #1f2933);
   --muted: var(--p360-color-muted, #607080);
-  --subtle: var(--p360-color-subtle, #8795a1);
+  --subtle: var(--p360-color-subtle, #6b7785);
   --line: var(--p360-color-line, #d8e0e7);
-  --line-strong: var(--p360-color-line-strong, #b8c5d0);
+  --line-strong: var(--p360-color-line-strong, #8795a1);
   --paper: var(--p360-color-paper, #ffffff);
   --wash: var(--p360-color-wash, #f5f7f9);
   --wash-strong: var(--p360-color-wash-strong, #eef3f6);
   --teal: var(--p360-color-teal, #0f766e);
   --teal-soft: var(--p360-color-teal-soft, #d9f0ee);
-  --blue: var(--p360-color-blue, #2563eb);
+  --blue: var(--p360-color-blue, #1d4ed8);
   --blue-soft: var(--p360-color-blue-soft, #dbeafe);
   --amber: var(--p360-color-amber, #b45309);
   --amber-soft: var(--p360-color-amber-soft, #fff4d6);
@@ -58,7 +58,7 @@ body {
 
 .skip-link:focus-visible {
   transform: translateY(0);
-  outline: var(--p360-focus-width, 3px) solid var(--p360-focus-color, #2563eb);
+  outline: var(--p360-focus-width, 3px) solid var(--p360-focus-color, #1d4ed8);
   outline-offset: var(--p360-focus-offset, 3px);
 }
 
@@ -74,7 +74,7 @@ button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: var(--p360-focus-width, 3px) solid var(--p360-focus-color, #2563eb);
+  outline: var(--p360-focus-width, 3px) solid var(--p360-focus-color, #1d4ed8);
   outline-offset: var(--p360-focus-offset, 3px);
 }
 
@@ -3767,9 +3767,31 @@ dialog::backdrop {
 }
 
 @media print {
+  @page {
+    size: A4;
+    margin: 14mm 12mm 16mm;
+  }
+
   body {
     padding-top: 44px;
     background: #ffffff;
+    color: #111827;
+    font-size: 10.5pt;
+  }
+
+  body::after {
+    content: "PROTOTYP — DANE FIKCYJNE — NIE UŻYWAĆ Z REALNYMI DANYMI PACJENTA";
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 4px 0 0;
+    border-top: 1px solid #111827;
+    background: #ffffff;
+    color: #111827;
+    font-size: 8.5pt;
+    font-weight: 900;
+    text-align: center;
   }
 
   .demo-watermark {
@@ -3791,16 +3813,21 @@ dialog::backdrop {
   .topbar,
   .alert-strip,
   .evidence-panel,
+  .report-actions,
   .page-intro .inline-actions,
   .filter-row,
+  .case-study-grid,
+  .case-study-disclaimer,
   dialog {
     display: none !important;
   }
 
   .app-shell,
   .content-grid,
+  .view-panel,
   .two-column,
-  .three-column {
+  .three-column,
+  .known-grid {
     display: block;
   }
 
@@ -3808,11 +3835,85 @@ dialog::backdrop {
     padding: 0;
   }
 
+  .page-intro {
+    margin-bottom: 10px;
+    padding: 0;
+  }
+
+  .page-intro h1,
+  .report-section h2 {
+    margin: 0 0 6px;
+    font-size: 18pt;
+    line-height: 1.08;
+  }
+
+  .page-intro p,
+  .record-body,
+  .plain-list,
+  .question-list {
+    font-size: 9.5pt;
+    line-height: 1.35;
+  }
+
   .section-band,
   .metric,
-  .record {
+  .record,
+  .report-section,
+  .known-card {
     box-shadow: none;
     break-inside: avoid;
+  }
+
+  .section-band,
+  .report-section,
+  .known-card {
+    margin: 0 0 8px;
+    padding: 10px 0;
+    border: 0;
+    border-bottom: 1px solid #d1d5db;
+    background: #ffffff;
+  }
+
+  .known-card {
+    page-break-inside: avoid;
+  }
+
+  .known-card strong,
+  .report-section h3 {
+    color: #111827 !important;
+    font-size: 10.5pt;
+  }
+
+  .source-line {
+    display: block;
+    margin-top: 4px;
+  }
+
+  .source-chip {
+    display: inline;
+  }
+
+  .source-chip button {
+    display: inline;
+    padding: 0;
+    border: 0;
+    background: transparent !important;
+    color: #111827 !important;
+    font: inherit;
+    text-align: left;
+  }
+
+  .source-chip button::after {
+    content: " [" attr(data-source-ref) "] ";
+    color: #4b5563;
+    font-size: 8pt;
+  }
+
+  .status-chip,
+  .tag {
+    border: 1px solid #9ca3af !important;
+    background: #ffffff !important;
+    color: #111827 !important;
   }
 
   .report-preview.context-report::before,
