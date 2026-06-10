@@ -548,6 +548,46 @@ Timeline jest gotowy do kolejnego poziomu MVP, gdy:
 - system nie sugeruje diagnozy, triage ani terapii,
 - mapa dziala od ogolu do szczegolu na desktop i mobile.
 
+## Kierunek Po Redesign v0.3
+
+Redesign v0.3 wdrozyl bezpieczna warstwe prezentacji nad obecnym kontraktem danych. Kontrakt nadal ma 9 trackow timeline, a widok mapy grupuje je w 6 lane'ow prezentacyjnych:
+
+- Kontakty z opieka,
+- Objawy i funkcjonowanie,
+- Badania i wyniki,
+- Leki,
+- Ustalenia i plan,
+- Zrodla i wywiad.
+
+Co weszlo do MVP:
+
+- semantic zoom: `Zycie / Okres / Epizod / Wizyta`,
+- domyslny aktywny epizod zamiast calego zycia,
+- panel `Film w skrocie` jako 5 etapow historii,
+- pasma epizodow jako tlo mapy,
+- krotkie karty zdarzen i inspektor szczegolow,
+- minimapa z aktualnym oknem,
+- trzeci fikcyjny case `p3`: dziecko + rodzic przygotowujacy kontrole.
+
+Co zostaje otwarte:
+
+- pelny scrubber minimapy z przeciaganiem okna czasu,
+- osobny widok `Encounter` dla pojedynczej wizyty,
+- source-aware relacje widoczne dopiero po zaznaczeniu zdarzenia,
+- osobna lista alternatywna dla timeline na potrzeby a11y i walidacji,
+- decyzja, czy lane'y maja zostac tylko prezentacja, czy wejsc do kontraktu danych.
+
+Najwazniejsza decyzja projektowa:
+
+> Na teraz lane'y sa prezentacja, nie kontrakt. Dzieki temu mapa moze wygladac jak film pacjenta bez migracji danych i bez naruszania walidatorow.
+
+No-go po v0.3:
+
+- nie zamieniac relacji czasowych w przyczynowosc,
+- nie uzywac kolorow lane'ow jako pilnosci,
+- nie ukrywac zrodel w trybie skroconym,
+- nie robic osobnej historii dla lekarza i pacjenta.
+
 ## Antywzorce
 
 - Jeden dlugi feed zdarzen bez warstw.

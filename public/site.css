@@ -6,7 +6,7 @@
   --wash: var(--p360-color-wash, #f4f7f8);
   --teal: var(--p360-color-teal, #0f766e);
   --teal-soft: var(--p360-color-teal-soft, #d9f0ee);
-  --blue: var(--p360-color-blue, #2563eb);
+  --blue: var(--p360-color-blue, #1d4ed8);
   --amber: var(--p360-color-amber, #b45309);
   --red: var(--p360-color-red, #b42318);
   --shadow: var(--p360-shadow-md, 0 16px 40px rgba(23, 33, 43, 0.1));
@@ -46,7 +46,7 @@ body {
 
 .skip-link:focus-visible {
   transform: translateY(0);
-  outline: var(--p360-focus-width, 3px) solid var(--p360-focus-color, #2563eb);
+  outline: var(--p360-focus-width, 3px) solid var(--p360-focus-color, #1d4ed8);
   outline-offset: var(--p360-focus-offset, 3px);
 }
 
@@ -57,7 +57,7 @@ a {
 
 a:focus-visible,
 button:focus-visible {
-  outline: var(--p360-focus-width, 3px) solid var(--p360-focus-color, #2563eb);
+  outline: var(--p360-focus-width, 3px) solid var(--p360-focus-color, #1d4ed8);
   outline-offset: var(--p360-focus-offset, 3px);
 }
 

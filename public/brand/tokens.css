@@ -13,9 +13,9 @@
   --p360-color-ink: #1f2933;
   --p360-color-ink-strong: #10242a;
   --p360-color-muted: #607080;
-  --p360-color-subtle: #8795a1;
+  --p360-color-subtle: #6b7785;
   --p360-color-line: #d8e0e7;
-  --p360-color-line-strong: #b8c5d0;
+  --p360-color-line-strong: #8795a1;
   --p360-color-paper: #ffffff;
   --p360-color-wash: #f5f7f9;
   --p360-color-wash-strong: #eef3f6;
@@ -24,7 +24,7 @@
   --p360-color-teal: #0f766e;
   --p360-color-teal-strong: #0f5c56;
   --p360-color-teal-soft: #d9f0ee;
-  --p360-color-blue: #2563eb;
+  --p360-color-blue: #1d4ed8;
   --p360-color-blue-soft: #dbeafe;
   --p360-color-amber: #b45309;
   --p360-color-amber-soft: #fff4d6;
@@ -75,4 +75,3 @@
   --p360-motion-normal: 180ms;
   --p360-ease-standard: cubic-bezier(0.2, 0, 0, 1);
 }
-
