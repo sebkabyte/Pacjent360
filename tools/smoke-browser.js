@@ -390,7 +390,7 @@ async function main() {
         accessCardCount: document.querySelectorAll('.caregiver-access-card').length,
         taskCount: document.querySelectorAll('.caregiver-tasks .record').length,
         revocationCount: document.querySelectorAll('.caregiver-revocation .record').length,
-        hasMedicationCaregiver: document.body.textContent.includes('opiekun lekowy'),
+        hasSupportingPerson: document.body.textContent.includes('osoba wspierająca'),
         hasRevokedCaregiver: document.body.textContent.includes('cofnięty')
       };
     })()`);
@@ -400,7 +400,7 @@ async function main() {
     assert(caregiver.accessCardCount >= 6, `Caregiver view expected access cards, got ${caregiver.accessCardCount}`);
     assert(caregiver.taskCount >= 4, `Caregiver view expected organizational tasks, got ${caregiver.taskCount}`);
     assert(caregiver.revocationCount >= 1, "Caregiver view should show revocation effect");
-    assert(caregiver.hasMedicationCaregiver && caregiver.hasRevokedCaregiver, "Caregiver view should show role and revoked access status");
+    assert(caregiver.hasSupportingPerson && caregiver.hasRevokedCaregiver, "Caregiver view should show human relation role and revoked access status");
 
     const consent = await client.evaluate(`(() => {
       document.querySelector('nav button[data-view="consent"]').click();
