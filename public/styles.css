@@ -3923,3 +3923,378 @@ dialog::backdrop {
     -webkit-print-color-adjust: exact;
   }
 }
+
+/* G2: desktop patient map uses a time ribbon plus chronological story cards. */
+.timeline-ribbon-scroll {
+  overflow-x: auto;
+  overflow-y: visible;
+  padding-bottom: 0;
+}
+
+.time-ribbon {
+  width: max(100%, var(--map-width, 960px));
+  min-width: max(100%, var(--map-width, 960px));
+  min-height: var(--map-height, 320px);
+  padding: 18px 26px 20px;
+  background:
+    linear-gradient(90deg, rgba(15, 118, 110, 0.06) 1px, transparent 1px),
+    linear-gradient(180deg, #f9fbfc, #eef5f4 52%, #f8fafb);
+  background-size: 52px 100%, 100% 100%;
+}
+
+.time-ribbon .timeline-ribbon-scale {
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  top: 26px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  height: 34px;
+  padding: 0 14px;
+  color: #314451;
+}
+
+.time-ribbon .timeline-ribbon-scale strong {
+  z-index: 1;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.86);
+  font-size: 12px;
+}
+
+.timeline-scale-start,
+.timeline-scale-end {
+  z-index: 1;
+  color: #536575;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.timeline-scale-end {
+  text-align: right;
+}
+
+.time-ribbon .temporal-lane-band {
+  left: 28px;
+  right: 28px;
+  height: 24px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.time-ribbon .temporal-episode-rail {
+  left: 28px;
+  right: 28px;
+  top: 58px;
+}
+
+.time-ribbon .lane-label {
+  top: 1px;
+  width: 190px;
+  min-height: 24px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 11px;
+}
+
+.time-ribbon .temporal-event.timeline-ribbon-point,
+.detail-overview .time-ribbon .temporal-event.timeline-ribbon-point,
+.detail-detail .time-ribbon .temporal-event.timeline-ribbon-point {
+  position: absolute;
+  top: calc(var(--lane-top) + 12px);
+  bottom: auto;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  min-height: 0;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+  background: #0f766e;
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(31, 41, 51, 0.22);
+  cursor: pointer;
+}
+
+.time-ribbon .timeline-ribbon-point:hover,
+.time-ribbon .timeline-ribbon-point.selected {
+  transform: translate(-50%, -50%) scale(1.12);
+  box-shadow: 0 0 0 5px rgba(15, 118, 110, 0.18), 0 10px 24px rgba(31, 41, 51, 0.24);
+}
+
+.time-ribbon .timeline-ribbon-point.future {
+  border-radius: 8px;
+  background: var(--blue);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.time-ribbon .timeline-ribbon-point.future:hover,
+.time-ribbon .timeline-ribbon-point.future.selected {
+  transform: translate(-50%, -50%) rotate(45deg) scale(1.1);
+}
+
+.time-ribbon .timeline-ribbon-point.future .ribbon-point-core {
+  transform: rotate(-45deg);
+}
+
+.ribbon-point-core {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.ribbon-point-core svg {
+  width: 14px;
+  height: 14px;
+}
+
+.time-ribbon .temporal-today-marker {
+  top: 20px;
+  bottom: 18px;
+}
+
+.timeline-story-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.timeline-story-card.temporal-card,
+.timeline-story-card.temporal-card.future,
+.timeline-story-card.temporal-card.virtual {
+  position: relative;
+  left: auto;
+  top: auto;
+  bottom: auto;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  width: 100%;
+  min-height: 0;
+  padding: 14px;
+  transform: none;
+  border: 1px solid #ccd7df;
+  border-left: 4px solid #a0772b;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 12px 28px rgba(31, 41, 51, 0.09);
+  cursor: pointer;
+}
+
+.timeline-story-card.temporal-card.future {
+  border-left-color: var(--blue);
+}
+
+.timeline-story-card.temporal-card.selected {
+  border-color: var(--teal);
+  border-left-color: var(--teal);
+  box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.14), 0 16px 34px rgba(31, 41, 51, 0.12);
+}
+
+.timeline-story-index {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: var(--teal-soft);
+  color: var(--teal);
+  font-weight: 950;
+}
+
+.timeline-story-card .temporal-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.timeline-story-card.temporal-card p {
+  display: block;
+  margin: 6px 0 10px;
+  color: #43515f;
+}
+
+.timeline-story-card .source-line {
+  margin-top: 10px;
+}
+
+.patient-map-workbench {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.timeline-inspector {
+  position: static;
+  max-height: none;
+}
+
+@media (max-width: 900px) {
+  .timeline-ribbon-scroll {
+    overflow-x: auto;
+  }
+
+  .time-ribbon {
+    min-width: 880px;
+  }
+
+  .timeline-story-card.temporal-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+.core-brief {
+  border-left: 4px solid var(--teal);
+}
+
+.core-priority-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+  margin-bottom: 12px;
+}
+
+.core-priority-grid .ninety-card {
+  padding: 14px;
+}
+
+.core-priority-grid .record-body,
+.core-priority-grid .plain-list {
+  font-size: 0.94rem;
+  line-height: 1.34;
+}
+
+.core-priority-grid .plain-list {
+  gap: 6px;
+}
+
+.core-priority-grid .compact-list li {
+  grid-template-columns: 10px minmax(0, 1fr);
+  gap: 6px;
+}
+
+.core-priority-grid .compact-list svg {
+  width: 13px;
+  height: 13px;
+}
+
+.core-priority-grid .source-line {
+  margin-top: 10px;
+  gap: 5px;
+}
+
+.core-priority-grid .source-chip button,
+.core-priority-grid .tag {
+  min-height: 24px;
+  padding: 3px 7px;
+  font-size: 0.76rem;
+}
+
+.core-map-shortcut {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: center;
+}
+
+.core-map-shortcut h2 {
+  margin: 0 0 8px;
+  font-size: clamp(1.35rem, 2vw, 1.85rem);
+}
+
+.core-map-rail {
+  position: relative;
+  height: 14px;
+  margin-top: 16px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #c8a94d, #74aaa4 44%, #4f7ecf 72%, #c8a94d);
+  box-shadow: inset 0 0 0 1px rgba(49, 68, 81, 0.14);
+}
+
+.core-map-rail span {
+  position: absolute;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  transform: translate(-50%, -50%);
+  border: 3px solid #ffffff;
+  border-radius: 999px;
+  background: var(--teal);
+  box-shadow: 0 6px 14px rgba(31, 41, 51, 0.18);
+}
+
+.core-map-rail span.future {
+  border-radius: 6px;
+  background: var(--blue);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.core-shortcuts {
+  padding-block: 16px;
+}
+
+.core-shortcuts .section-head {
+  margin-bottom: 12px;
+}
+
+.core-shortcut-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.patient-now-panel {
+  border-left: 4px solid var(--teal);
+}
+
+.patient-now-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 1fr;
+  gap: 14px;
+}
+
+.patient-now-grid article {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.patient-now-grid span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--teal);
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.patient-now-grid strong {
+  display: block;
+  margin-bottom: 8px;
+  line-height: 1.22;
+}
+
+@media (max-width: 900px) {
+  .core-priority-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .core-map-shortcut,
+  .patient-now-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1180px) {
+  .core-priority-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

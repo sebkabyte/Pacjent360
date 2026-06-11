@@ -649,6 +649,12 @@ function sourceChips(refs) {
     .join("");
 }
 
+function compactSourceRefs(refs, limit = 3) {
+  const list = Array.isArray(refs) ? refs : [refs].filter(Boolean);
+  const unique = [...new Set(list.filter(Boolean))];
+  return unique.slice(0, limit);
+}
+
 function render() {
   renderPatientSelect();
   renderCriticalStrip();
@@ -875,6 +881,7 @@ function renderCore() {
   const gaps = byPatient(state.knownUnknowns).filter((item) => item.category === "Unknown" || item.category === "To verify").slice(0, 3);
   const questions = [...(decision?.ditlQuestions || []), ...flags.filter((flag) => flag.color === "blue").map(flagToQuestion)].slice(0, 7);
   const decisionHeadline = decision ? decision.clinicalQuestion : patient.decisionToday;
+  const topQuestions = questions.slice(0, 3);
 
   return `
     <div class="page-intro">
@@ -901,11 +908,7 @@ function renderCore() {
       ${metric("Kompletność źródeł", `${qualityScore()}%`, "ile danych ma potwierdzone źródło", "database", "Procent elementów z potwierdzonym źródłem dokumentowym, laboratoryjnym lub z wywiadu. Nie jest oceną jakości opieki medycznej.")}
     </div>
 
-    ${renderFullDataAccess("clinician")}
-    ${renderMedReconciliation()}
-    ${renderPatientMap360({ persona: "doctor", embedded: true })}
-
-    <section class="section-band decision-hero">
+    <section class="section-band decision-hero core-brief">
       <div class="section-head">
         <div>
           <p class="eyebrow">Dzisiejszy kontekst wizyty</p>
@@ -914,35 +917,21 @@ function renderCore() {
         <span class="status-chip info">${escapeHtml(decision?.status || "DITL")}</span>
       </div>
       <p class="record-body">Kontakt: ${formatDate(decision?.contactDate)}. Lekarz oznacza każde pytanie jako wyjaśnione, odrzucone albo do dalszej kontroli.</p>
+      <p class="record-body"><strong>Największa zmiana:</strong> ${escapeHtml(patient.biggestChange)}</p>
       <div class="source-line">${sourceChips(decision?.sourceRefs || [])}</div>
     </section>
 
-    <div class="ninety-grid">
+    ${renderMedReconciliation()}
+
+    <div class="ninety-grid core-priority-grid">
       ${renderNinetyCard("Stan bazowy", patient.baselineState, "user-round-check", latestInterviewRefs)}
       ${renderNinetyCard("Aktualny problem", patient.currentProblem, "activity", decisionRefs)}
-      ${renderNinetyCard("Największa zmiana", patient.biggestChange, "trending-up", latestInterviewRefs)}
-      ${renderNinetyList("Najważniejsze pytania do sprawdzenia", redFlags.map((flag) => flag.question), "triangle-alert", redFlags.flatMap((flag) => flag.sourceRefs))}
       ${renderNinetyList("Największe braki danych", gaps.map((gap) => gap.description), "search-x", gaps.flatMap((gap) => gap.sourceRefs))}
-      ${renderNinetyCard("Pytanie decyzyjne", patient.decisionToday, "clipboard-check", decisionSelfRefs)}
+      ${renderNinetyList("Top pytania DITL", topQuestions.map((question) => question.question), "circle-help", topQuestions.flatMap((question) => question.sourceRefs || []))}
     </div>
 
-    <section class="section-band">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Doctor in the Loop</p>
-          <h2>Pytania do lekarza</h2>
-        </div>
-      </div>
-      <div class="ditl-grid">
-        ${questions.map(renderDitlQuestion).join("") || emptyState("Brak pytań DITL dla pacjenta.")}
-      </div>
-    </section>
-
-    <div class="three-column">
-      ${renderCoreColumn("Historia pacjenta", storyBullets(patient), "book-open")}
-      ${renderCoreColumn("Stan i dane", stateBullets(), "heart-pulse")}
-      ${renderCoreColumn("Sygnały i luki", riskBullets(), "radar")}
-    </div>
+    ${renderMapShortcut()}
+    ${renderClinicianShortcuts()}
   `;
 }
 
@@ -961,7 +950,7 @@ function renderNinetyCard(title, text, icon, refs) {
     <article class="section-band ninety-card">
       <p class="eyebrow"><i data-lucide="${escapeHtml(icon)}"></i>${escapeHtml(title)}</p>
       <p class="record-body">${escapeHtml(text || "Brak danych.")}</p>
-      <div class="source-line">${sourceChips(refs)}</div>
+      <div class="source-line">${sourceChips(compactSourceRefs(refs))}</div>
     </article>
   `;
 }
@@ -973,7 +962,7 @@ function renderNinetyList(title, items, icon, refs) {
       <ul class="plain-list compact-list">
         ${(items.length ? items : ["Brak danych."]).map((item) => `<li><i data-lucide="dot"></i><span>${escapeHtml(item)}</span></li>`).join("")}
       </ul>
-      <div class="source-line">${sourceChips(refs)}</div>
+      <div class="source-line">${sourceChips(compactSourceRefs(refs))}</div>
     </article>
   `;
 }
@@ -996,6 +985,63 @@ function renderDitlQuestion(question) {
       <div class="source-line">${sourceChips(question.sourceRefs)}</div>
     </article>
   `;
+}
+
+function renderMapShortcut() {
+  const events = byPatient(state.timelineEvents).slice().sort((a, b) => new Date(a.date) - new Date(b.date));
+  const first = events[0];
+  const last = events[events.length - 1];
+  const tracks = [...new Set(events.map((event) => event.track))].slice(0, 4);
+  return `
+    <section class="section-band core-map-shortcut">
+      <div>
+        <p class="eyebrow"><i data-lucide="map"></i>Mapa Pacjenta 360</p>
+        <h2>Film życia pacjenta: od osi czasu do źródeł</h2>
+        <p class="record-body">
+          ${events.length
+            ? `${formatDate(first.date)} - ${formatDate(last.date)} · ${PATIENT360_FORMAT.formatEvents(events.length)} · ${PATIENT360_FORMAT.formatTracks(tracks.length)}`
+            : "Brak zdarzeń w danych demo."}
+        </p>
+        <div class="core-map-rail" aria-hidden="true">
+          ${events.map((event) => `<span class="${event.status === "planowane" ? "future" : ""}" style="left:${timelinePreviewPosition(event, first, last)}%"></span>`).join("")}
+        </div>
+      </div>
+      <button class="primary-button" data-set-view="timeline"><i data-lucide="git-branch"></i>Otwórz Mapę Pacjenta 360</button>
+    </section>
+  `;
+}
+
+function renderClinicianShortcuts() {
+  const items = [
+    ["documents", "Źródła", "files"],
+    ["observations", "Wyniki", "activity"],
+    ["medications", "Leki", "pill"],
+    ["risks", "Sygnały", "flag"],
+    ["reports", "Raport", "file-text"]
+  ];
+  return `
+    <section class="section-band core-shortcuts">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Dalsza praca</p>
+          <h2><i data-lucide="layout-dashboard"></i>Przejdź do pełnych danych</h2>
+        </div>
+      </div>
+      <div class="core-shortcut-row">
+        ${items.map(([view, label, icon]) => `<button class="ghost-button" data-set-view="${escapeHtml(view)}"><i data-lucide="${escapeHtml(icon)}"></i>${escapeHtml(label)}</button>`).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function timelinePreviewPosition(event, first, last) {
+  if (!event || !first || !last) return 0;
+  const start = new Date(`${dateOnly(first.date)}T12:00:00`);
+  const end = new Date(`${dateOnly(last.date)}T12:00:00`);
+  const current = new Date(`${dateOnly(event.date)}T12:00:00`);
+  if ([start, end, current].some((date) => Number.isNaN(date.getTime()))) return 0;
+  const span = Math.max(end.getTime() - start.getTime(), 1);
+  return Math.round(Math.min(Math.max(((current.getTime() - start.getTime()) / span) * 100, 0), 100));
 }
 
 function renderCoreColumn(title, bullets, icon) {
@@ -1059,123 +1105,19 @@ function renderPatientPortal() {
     state,
     patientId: state.activePatientId
   });
+  const isGuardianView = patient.guardian && patient.guardian !== "brak";
 
   return `
-    ${pageHeader("Aplikacja pacjenta", "Osobisty widok Pacjent 360: mapa zdarzeń, następne kroki, leki, dokumenty i udostępnianie opiekunowi. Nie zastępuje konsultacji lekarskiej.", "smartphone")}
+    ${pageHeader(
+      isGuardianView ? "Zdrowie dziecka — widok rodzica" : "Aplikacja pacjenta",
+      isGuardianView
+        ? "Widok rodzica: co przygotować dla dziecka przed wizytą, jakie dokumenty zabrać i kto ma dostęp do danych dziecka."
+        : "Osobisty widok Pacjent 360: mapa zdarzeń, następne kroki, leki, dokumenty i udostępnianie opiekunowi. Nie zastępuje konsultacji lekarskiej.",
+      "smartphone"
+    )}
     ${renderPatientAppHome({ patient, preVisitModel, docs, observations, meds, patientQuestions, upcoming, timeline, caregiverModel })}
+    ${renderPatientNextSteps({ patient, preVisitModel, upcoming, patientQuestions, decision, isGuardianView })}
     ${renderPreVisitFlow(preVisitModel)}
-    ${renderFullDataAccess("patient")}
-    ${renderPatientMap360({ persona: "patient", embedded: true })}
-
-    <div class="patient-dashboard-grid">
-      <section class="section-band patient-wide patient-narrative">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Moja historia</p>
-            <h2><i data-lucide="book-open-text"></i> Moja sytuacja w prostych słowach</h2>
-          </div>
-        </div>
-        <p class="patient-story">${escapeHtml(patient.patientSummary || "Brak podsumowania w danych demo.")}</p>
-      </section>
-
-      <section class="section-band patient-wide">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Przed wizytą</p>
-            <h2><i data-lucide="clipboard-check"></i> Co przygotować</h2>
-          </div>
-          <button class="ghost-button" data-set-view="interview"><i data-lucide="messages-square"></i> Pytania</button>
-        </div>
-        <div class="patient-context-list">
-          <article>
-            <span>Moja sytuacja</span>
-            <p>${escapeHtml(patient.currentProblem)}</p>
-          </article>
-          <article>
-            <span>Co się zmieniło</span>
-            <p>${escapeHtml(patient.biggestChange)}</p>
-          </article>
-          <article>
-            <span>Co warto omówić z lekarzem</span>
-            <p>${escapeHtml(patient.patientQuestion || "Brak pytań do przygotowania.")}</p>
-            <div class="source-line">${sourceChips(decision?.sourceRefs || [`patient:${patient.id}`])}</div>
-          </article>
-        </div>
-      </section>
-
-      ${renderVisitChecklist()}
-
-      <section class="section-band">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Wizyty i procedury</p>
-            <h2><i data-lucide="calendar-clock"></i> Co jest przede mną</h2>
-          </div>
-        </div>
-        <div class="record-list compact-records">
-          ${upcoming.map(renderPatientUpcomingCard).join("") || emptyState("Brak zaplanowanych kontaktów w danych demo.")}
-        </div>
-      </section>
-
-      <section class="section-band">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Pytania</p>
-            <h2><i data-lucide="message-circle-question"></i> Do rozmowy z lekarzem</h2>
-          </div>
-        </div>
-        <div class="record-list compact-records">
-          ${patientQuestions.slice(0, 6).map(renderPatientQuestionCard).join("") || emptyState("Brak pytań do omówienia w danych demo.")}
-        </div>
-      </section>
-
-      <section class="section-band">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Badania</p>
-            <h2><i data-lucide="activity"></i> Ostatnie wyniki</h2>
-          </div>
-          <button class="ghost-button" data-set-view="observations"><i data-lucide="chart-no-axes-combined"></i> Wszystkie</button>
-        </div>
-        <div class="patient-result-list">
-          ${observations.slice(0, 5).map(renderPatientResultRow).join("") || emptyState("Brak wyników w danych demo.")}
-        </div>
-      </section>
-
-      <section class="section-band">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Leki</p>
-            <h2><i data-lucide="pill"></i> Co przyjmuję</h2>
-          </div>
-          <button class="ghost-button" data-set-view="medications"><i data-lucide="list-checks"></i> Pełna lista</button>
-        </div>
-        <div class="record-list compact-records">
-          ${meds.slice(0, 5).map(renderPatientMedicationCard).join("") || emptyState("Brak leków w danych demo.")}
-        </div>
-      </section>
-
-      <section class="section-band patient-wide">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Dokumenty i historia</p>
-            <h2><i data-lucide="folder-open"></i> Moje dokumenty i ostatnie zdarzenia</h2>
-          </div>
-          <div class="inline-actions">
-            <button class="ghost-button" data-set-view="documents"><i data-lucide="files"></i> Dokumenty</button>
-            <button class="ghost-button" data-set-view="timeline"><i data-lucide="git-branch"></i> Mapa</button>
-          </div>
-        </div>
-        <div class="patient-doc-timeline">
-          <div class="record-list compact-records">
-            ${docs.slice(0, 4).map(renderPatientDocumentCard).join("") || emptyState("Brak dokumentów w danych demo.")}
-          </div>
-          <div class="record-list compact-records">
-            ${timeline.slice(0, 4).map(renderPatientTimelineCard).join("") || emptyState("Brak zdarzeń na mapie pacjenta.")}
-          </div>
-        </div>
-      </section>
-    </div>
   `;
 }
 
@@ -1187,6 +1129,43 @@ function activeVisitChecklist() {
   }).checklist;
 }
 
+function renderPatientNextSteps({ patient, preVisitModel, upcoming, patientQuestions, decision, isGuardianView }) {
+  const checklistItems = (preVisitModel.checklistItems || []).slice(0, 4);
+  const nextItem = upcoming[0] || null;
+  const questions = patientQuestions.slice(0, 3);
+  return `
+    <section class="section-band patient-now-panel">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">${isGuardianView ? "Co przygotować dla dziecka" : "Co mam zrobić teraz"}</p>
+          <h2><i data-lucide="clipboard-check"></i>${isGuardianView ? "Najbliższe kroki rodzica" : "Najbliższe kroki przed wizytą"}</h2>
+        </div>
+        <button class="ghost-button" data-set-view="timeline"><i data-lucide="git-branch"></i>Mapa</button>
+      </div>
+      <div class="patient-now-grid">
+        <article>
+          <span>Najbliższy kontakt</span>
+          <strong>${escapeHtml(nextItem?.title || "Uzupełnij kontekst przed wizytą")}</strong>
+          <p>${escapeHtml(nextItem ? `${formatDate(nextItem.date)} · ${nextItem.body}` : patient.patientSummary || "Brak zaplanowanego kontaktu w danych demo.")}</p>
+          <div class="source-line">${sourceChips(nextItem?.sourceRefs || decision?.sourceRefs || [`patient:${patient.id}`])}</div>
+        </article>
+        <article>
+          <span>${isGuardianView ? "Pytania rodzica" : "Co omówić"}</span>
+          <ul class="plain-list compact-list">
+            ${(questions.length ? questions : [{ question: patient.patientQuestion || "Brak pytań do omówienia.", sourceRefs: decision?.sourceRefs || [] }]).map((item) => `<li><i data-lucide="message-circle-question"></i><span>${escapeHtml(item.question)}</span></li>`).join("")}
+          </ul>
+        </article>
+        <article>
+          <span>Checklist</span>
+          <ul class="plain-list compact-list">
+            ${(checklistItems.length ? checklistItems : []).map((item) => `<li><i data-lucide="${escapeHtml(item.state.icon)}"></i><span>${escapeHtml(item.label)} - ${escapeHtml(item.state.label)}</span></li>`).join("") || `<li><i data-lucide="circle-help"></i><span>Brak checklisty w danych demo.</span></li>`}
+          </ul>
+        </article>
+      </div>
+    </section>
+  `;
+}
+
 function renderPatientAppHome({ patient, preVisitModel, docs, observations, meds, patientQuestions, upcoming, timeline, caregiverModel }) {
   const checklistSummary = preVisitModel.checklistSummary || visitChecklistSummary(preVisitModel.checklist);
   const nextItem = upcoming[0] || null;
@@ -1196,13 +1175,14 @@ function renderPatientAppHome({ patient, preVisitModel, docs, observations, meds
   }).length;
   const activeScopes = caregiverModel?.activeScopes || [];
   const latestEvent = timeline[0] || null;
+  const isGuardianView = patient.guardian && patient.guardian !== "brak";
 
   return `
     <section class="section-band patient-app-home">
       <div class="patient-app-hero">
         <div>
-          <p class="eyebrow">Aplikacja pacjenta</p>
-          <h2>Moje zdrowie w jednej mapie</h2>
+          <p class="eyebrow">${isGuardianView ? "Widok rodzica" : "Aplikacja pacjenta"}</p>
+          <h2>${isGuardianView ? "Zdrowie dziecka w jednej mapie" : "Moje zdrowie w jednej mapie"}</h2>
           <p>
             ${escapeHtml(patient.name)} · ${formatAge(patient.birthDate)}. Ten widok porządkuje historię,
             przygotowanie do wizyty i następne kroki. Decyzje kliniczne zostają po stronie lekarza.
@@ -1270,11 +1250,11 @@ function renderPatientAppHome({ patient, preVisitModel, docs, observations, meds
         </article>
         <article class="patient-app-panel">
           <div class="patient-card-head">
-            <span>Opiekun i rodzina</span>
+            <span>${isGuardianView ? "Dostęp do danych dziecka" : "Opiekun i rodzina"}</span>
             <i data-lucide="users-round"></i>
           </div>
           <strong>${activeScopes.length ? `${activeScopes.length} aktywne zakresy dostępu` : "Brak aktywnego dostępu"}</strong>
-          <p>Pacjent decyduje, co opiekun widzi: leki, wizyty, dokumenty, zadania, obserwacje albo raport.</p>
+          <p>${isGuardianView ? "Widok pokazuje, kto ma dostęp do danych dziecka i w jakim zakresie." : "Pacjent decyduje, co opiekun widzi: leki, wizyty, dokumenty, zadania, obserwacje albo raport."}</p>
           <button class="ghost-button" data-set-view="consent"><i data-lucide="shield-check"></i>Zarządzaj zgodami</button>
         </article>
       </div>
@@ -2957,6 +2937,8 @@ function bindViewActions() {
       requestAnimationFrame(() => {
         const nextScroller = viewRoot.querySelector(".patient-map-workbench .temporal-scroll");
         if (nextScroller) nextScroller.scrollLeft = scrollLeft;
+        const storyCard = viewRoot.querySelector(`[data-temporal-story-event="${escapeHtml(state.selectedTimelineEventId)}"]`);
+        if (storyCard) storyCard.scrollIntoView({ block: "nearest", behavior: "smooth" });
       });
     };
     item.addEventListener("click", selectEvent);
