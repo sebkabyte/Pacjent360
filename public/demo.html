@@ -139,18 +139,27 @@
 
         <section class="alert-strip" id="criticalStrip" aria-live="polite"></section>
 
-        <div class="content-grid">
+        <div class="content-grid" id="contentGrid">
           <section class="view-panel" id="viewRoot" aria-live="polite"></section>
+
+          <div class="panel-splitter" id="panelSplitter" role="separator" aria-orientation="vertical" tabindex="0"
+               aria-label="Szerokość panelu źródeł — przeciągnij albo użyj strzałek; podwójne kliknięcie przywraca domyślną"
+               title="Przeciągnij, aby zmienić szerokość panelu źródeł"></div>
 
           <aside class="evidence-panel" aria-label="Indeks źródeł">
             <div class="panel-head">
-              <div>
+              <div class="panel-head-copy">
                 <p class="eyebrow">Skąd to wiemy</p>
                 <h2>Źródła demo</h2>
               </div>
-              <button class="icon-button compact" id="closeEvidence" title="Wyczyść wybór źródła" aria-label="Wyczyść wybór źródła">
-                <i data-lucide="x"></i>
-              </button>
+              <div class="panel-head-actions">
+                <button class="icon-button compact" id="toggleEvidence" title="Zwiń panel źródeł" aria-label="Zwiń panel źródeł" aria-expanded="true">
+                  <i data-lucide="chevrons-right"></i>
+                </button>
+                <button class="icon-button compact" id="closeEvidence" title="Wyczyść wybór źródła" aria-label="Wyczyść wybór źródła">
+                  <i data-lucide="x"></i>
+                </button>
+              </div>
             </div>
             <div id="evidenceRoot"></div>
           </aside>

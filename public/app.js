@@ -3895,3 +3895,90 @@ document.querySelector("#exportJson").addEventListener("click", () => {
 document.querySelector("#printReport").addEventListener("click", () => printCurrentView());
 
 render();
+
+// Preferencje UI (szerokosc/zwijanie panelu zrodel) - poza stanem danych i kontraktem
+const UI_PREFS_KEY = "pacjent360-ui-prefs-v1";
+
+function loadUiPrefs() {
+  try {
+    return JSON.parse(localStorage.getItem(UI_PREFS_KEY)) || {};
+  } catch (error) {
+    return {};
+  }
+}
+
+function saveUiPrefs(patch) {
+  const prefs = { ...loadUiPrefs(), ...patch };
+  localStorage.setItem(UI_PREFS_KEY, JSON.stringify(prefs));
+}
+
+function initPanelSplitter() {
+  const grid = document.getElementById("contentGrid");
+  const splitter = document.getElementById("panelSplitter");
+  const toggle = document.getElementById("toggleEvidence");
+  if (!grid || !splitter || !toggle) return;
+
+  const DEFAULT_W = 330;
+  const clampWidth = (value) => Math.min(620, Math.max(260, Math.round(value)));
+  const currentWidth = () => parseInt(grid.style.getPropertyValue("--evidence-w"), 10) || DEFAULT_W;
+  const applyWidth = (value) => {
+    const width = clampWidth(value);
+    grid.style.setProperty("--evidence-w", `${width}px`);
+    return width;
+  };
+
+  const setCollapsed = (collapsed) => {
+    grid.classList.toggle("evidence-collapsed", collapsed);
+    toggle.setAttribute("aria-expanded", String(!collapsed));
+    const label = collapsed ? "Rozwiń panel źródeł" : "Zwiń panel źródeł";
+    toggle.setAttribute("aria-label", label);
+    toggle.title = label;
+    const icon = toggle.querySelector("i");
+    if (icon) {
+      icon.setAttribute("data-lucide", collapsed ? "chevrons-left" : "chevrons-right");
+      refreshIcons();
+    }
+    saveUiPrefs({ evidenceCollapsed: collapsed });
+  };
+
+  const prefs = loadUiPrefs();
+  if (typeof prefs.evidenceWidth === "number") applyWidth(prefs.evidenceWidth);
+  if (prefs.evidenceCollapsed) setCollapsed(true);
+
+  toggle.addEventListener("click", () => {
+    setCollapsed(!grid.classList.contains("evidence-collapsed"));
+  });
+
+  let dragStart = null;
+  splitter.addEventListener("pointerdown", (event) => {
+    if (grid.classList.contains("evidence-collapsed")) return;
+    dragStart = { x: event.clientX, width: currentWidth() };
+    splitter.setPointerCapture(event.pointerId);
+    event.preventDefault();
+  });
+  splitter.addEventListener("pointermove", (event) => {
+    if (!dragStart) return;
+    applyWidth(dragStart.width + (dragStart.x - event.clientX));
+  });
+  const endDrag = () => {
+    if (!dragStart) return;
+    dragStart = null;
+    saveUiPrefs({ evidenceWidth: currentWidth() });
+  };
+  splitter.addEventListener("pointerup", endDrag);
+  splitter.addEventListener("pointercancel", endDrag);
+  splitter.addEventListener("dblclick", () => {
+    applyWidth(DEFAULT_W);
+    saveUiPrefs({ evidenceWidth: DEFAULT_W });
+  });
+  splitter.addEventListener("keydown", (event) => {
+    if (!["ArrowLeft", "ArrowRight", "Home"].includes(event.key)) return;
+    event.preventDefault();
+    if (event.key === "ArrowLeft") applyWidth(currentWidth() + 24);
+    if (event.key === "ArrowRight") applyWidth(currentWidth() - 24);
+    if (event.key === "Home") applyWidth(DEFAULT_W);
+    saveUiPrefs({ evidenceWidth: currentWidth() });
+  });
+}
+
+initPanelSplitter();
