@@ -226,21 +226,23 @@ async function prepareAppState(client) {
     const patientId = ${patient};
     const viewId = ${view};
     if (patientId) {
-      await waitFor(() => [...document.querySelectorAll('#patientSelect option')].some((option) => option.value === patientId));
+      const patientAvailable = await waitFor(() => [...document.querySelectorAll('#patientSelect option')].some((option) => option.value === patientId));
+      if (!patientAvailable) throw new Error('Requested patient not found for screenshot: ' + patientId);
       const select = document.querySelector('#patientSelect');
-      if (select) {
-        select.value = patientId;
-        select.dispatchEvent(new Event('change', { bubbles: true }));
-        await pause();
-      }
+      if (!select) throw new Error('Patient selector not found for screenshot');
+      select.value = patientId;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+      const patientSelected = await waitFor(() => document.querySelector('#patientSelect')?.value === patientId);
+      if (!patientSelected) throw new Error('Requested patient was not selected for screenshot: ' + patientId);
     }
     if (viewId) {
-      await waitFor(() => Boolean(document.querySelector('nav button[data-view="' + viewId + '"]')));
+      const viewAvailable = await waitFor(() => Boolean(document.querySelector('nav button[data-view="' + viewId + '"]')));
+      if (!viewAvailable) throw new Error('Requested view not found for screenshot: ' + viewId);
       const button = document.querySelector('nav button[data-view="' + viewId + '"]');
-      if (button) {
-        button.click();
-        await pause();
-      }
+      if (!button) throw new Error('Requested view button missing for screenshot: ' + viewId);
+      button.click();
+      const viewSelected = await waitFor(() => document.querySelector('nav button.active')?.dataset.view === viewId);
+      if (!viewSelected) throw new Error('Requested view was not activated for screenshot: ' + viewId);
     }
   })()`);
 }

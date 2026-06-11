@@ -38,19 +38,25 @@ $root = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $nodeCheckFiles = @(
   "public/app.js",
   "public/patient360-contract.js",
+  "public/patient360-format.js",
   "public/patient360-map-model.js",
   "public/patient360-previsit-model.js",
   "public/patient360-caregiver-model.js",
   "public/patient360-consent-model.js",
+  "public/patient360-demo-data.js",
   "tools/validate-data-contract.js",
+  "tools/validate-format.js",
+  "tools/validate-glossary.js",
   "tools/validate-map-model.js",
   "tools/validate-previsit-workflow.js",
   "tools/validate-caregiver-scope.js",
   "tools/validate-consent-draft.js",
+  "tools/validate-demo-coherence.js",
   "tools/validate-a11y.js",
   "tools/validate-brand-contrast.js",
   "tools/validate-validation-pack.js",
   "tools/validate-harm-gates.js",
+  "tools/capture-screens.js",
   "tools/domain-diagnostics.js",
   "tools/release-readiness.js",
   "tools/smoke-browser.js"
@@ -66,10 +72,13 @@ $powerShellCheckFiles = @(
   "tools/prepare-public-repo.ps1",
   "tools/verify-public-repo.ps1",
   "tools/validate-data-contract.ps1",
+  "tools/validate-format.ps1",
+  "tools/validate-glossary.ps1",
   "tools/validate-map-model.ps1",
   "tools/validate-previsit-workflow.ps1",
   "tools/validate-caregiver-scope.ps1",
   "tools/validate-consent-draft.ps1",
+  "tools/validate-demo-coherence.ps1",
   "tools/validate-a11y.ps1",
   "tools/validate-validation-pack.ps1",
   "tools/validate-harm-gates.ps1",
@@ -104,10 +113,13 @@ Invoke-External "JSON fixture and schema parse" "node" @(
 )
 
 Invoke-External "Data Contract validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-data-contract.ps1"))
+Invoke-External "Polish format validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-format.ps1"))
+Invoke-External "Public glossary validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-glossary.ps1"))
 Invoke-External "Patient map model validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-map-model.ps1"))
 Invoke-External "Pre-visit workflow validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-previsit-workflow.ps1"))
 Invoke-External "Caregiver scope validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-caregiver-scope.ps1"))
 Invoke-External "Consent draft validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-consent-draft.ps1"))
+Invoke-External "Demo coherence validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-demo-coherence.ps1"))
 Invoke-External "Accessibility static validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-a11y.ps1"))
 Invoke-External "Brand contrast validation" "node" @("tools/validate-brand-contrast.js")
 Invoke-External "Validation pack validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-validation-pack.ps1"))

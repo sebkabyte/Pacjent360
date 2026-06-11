@@ -9,6 +9,8 @@ const snapshotPath = path.join(root, "fixtures", "patient-map-model.snapshot.jso
 const edgeCasePath = path.join(root, "fixtures", "patient-map-model-edgecases.json");
 const contract = require(path.join(publicRoot, "patient360-contract.js"));
 const mapModel = require(path.join(publicRoot, "patient360-map-model.js"));
+const demoData = require(path.join(publicRoot, "patient360-demo-data.js"));
+const DEMO_VALIDATION_TODAY = process.env.P360_DEMO_TODAY || "2026-06-11";
 
 const TIMELINE_PERIODS = [
   { id: "episode", label: "Epizod" },
@@ -114,9 +116,7 @@ function extractObjectLiteral(source, marker) {
 }
 
 function readDemoState() {
-  const source = fs.readFileSync(appPath, "utf8");
-  const literal = extractObjectLiteral(source, "const demoState =");
-  return vm.runInNewContext(`(${literal})`, {}, { timeout: 1000 });
+  return demoData.buildDemoState({ today: DEMO_VALIDATION_TODAY });
 }
 
 function buildActivePatientState(demoState, patient) {
@@ -165,7 +165,7 @@ function buildModel(state, overrides = {}) {
     selectedEventId: overrides.selectedEventId || state.selectedTimelineEventId,
     trackFilter: overrides.trackFilter || null,
     searchQuery: overrides.searchQuery || "",
-    today: "2026-06-08",
+    today: DEMO_VALIDATION_TODAY,
     persona: overrides.persona || "doctor",
     embedded: Boolean(overrides.embedded),
     periods: TIMELINE_PERIODS,
@@ -299,7 +299,7 @@ function main() {
   const demoState = readDemoState();
   const snapshot = JSON.parse(fs.readFileSync(snapshotPath, "utf8"));
   assert(snapshot.snapshotVersion === 1, "Unsupported patient map snapshot version");
-  assert(snapshot.today === "2026-06-08", "Snapshot today should match validator deterministic date");
+  assert(snapshot.today === DEMO_VALIDATION_TODAY, "Snapshot today should match validator deterministic date");
   const patients = demoState.patients || [];
   assert(patients.length > 0, "No patients in demo state");
   const summaries = patients.map((patient) => validateForPatient(demoState, patient, snapshot.patients?.[patient.id]));

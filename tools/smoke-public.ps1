@@ -107,14 +107,14 @@ try {
   Assert-True ($caregiverModel.Contains("Patient360CaregiverModel")) "patient360-caregiver-model.js should expose Patient360CaregiverModel"
   Assert-True ($consentModel.Contains("Patient360ConsentModel")) "patient360-consent-model.js should expose Patient360ConsentModel"
   Assert-True ($consentModel.Contains("buildConsentDraft")) "consent model should expose consent draft builder"
-  Assert-True ($preVisitModel.Contains("Ten flow")) "pre-visit model should keep safety copy"
+  Assert-True ($preVisitModel.Contains("Ten widok")) "pre-visit model should keep safety copy"
   Assert-True ($caregiverModel.Contains("tylko zakres danych")) "caregiver model should keep scoped-access safety copy"
   Assert-True ($preVisitModel.Contains("nie diagnozuje")) "pre-visit model should state it does not diagnose"
   Assert-True ($preVisitModel.Contains("terapeutycznych")) "pre-visit model should avoid therapeutic recommendations"
 
   Assert-True ($app.Contains("Przygotowanie krok po kroku")) "app.js should contain patient pre-visit flow"
   Assert-True ($app.Contains("Raport kontekstowy")) "app.js should contain context report"
-  Assert-True ($app.Contains("Known / Unknown / Uncertain / To verify")) "app.js should contain report categories"
+  Assert-True ($app.Contains("Znane / Nieznane / Niepewne / Do weryfikacji")) "app.js should contain report categories"
   Assert-True ($app.Contains("Doctor in the Loop") -or $app.Contains("DITL")) "app.js should contain DITL language"
 
   Assert-True ($privacy.Contains("localStorage")) "privacy.html should disclose localStorage"

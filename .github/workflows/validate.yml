@@ -34,6 +34,12 @@ jobs:
       - name: Validate data contract
         run: node tools/validate-data-contract.js
 
+      - name: Validate Polish formatting
+        run: node tools/validate-format.js
+
+      - name: Validate public glossary
+        run: node tools/validate-glossary.js
+
       - name: Validate map model
         run: node tools/validate-map-model.js
 
@@ -45,6 +51,9 @@ jobs:
 
       - name: Validate consent draft
         run: node tools/validate-consent-draft.js
+
+      - name: Validate demo coherence
+        run: node tools/validate-demo-coherence.js
 
       - name: Validate accessibility rules
         run: node tools/validate-a11y.js

@@ -35,6 +35,10 @@ tools/prepare-public-repo.ps1
 tools/verify-public-repo.ps1
 tools/validate-data-contract.ps1
 tools/validate-data-contract.js
+tools/validate-format.ps1
+tools/validate-format.js
+tools/validate-glossary.ps1
+tools/validate-glossary.js
 tools/validate-map-model.ps1
 tools/validate-map-model.js
 tools/validate-previsit-workflow.ps1
@@ -43,6 +47,8 @@ tools/validate-caregiver-scope.ps1
 tools/validate-caregiver-scope.js
 tools/validate-consent-draft.ps1
 tools/validate-consent-draft.js
+tools/validate-demo-coherence.ps1
+tools/validate-demo-coherence.js
 tools/validate-a11y.ps1
 tools/validate-a11y.js
 tools/validate-validation-pack.ps1
