@@ -2,13 +2,15 @@
 
 Data: 2026-06-11
 
-Status: PROPOSED
+Status: ACCEPTED
 
 ## Kontekst
 
 Mapa Pacjenta 360 ma pokazac historie pacjenta od ogolu do szczegolu. Kontrakt danych v0.1 ma 9 trackow timeline, ktore sa dobre dla modelu i walidatorow, ale w UI sa zbyt drobne jako glowna os narracyjna.
 
 W redesignie v0.3 dodano 6 lane'ow prezentacyjnych nad istniejacymi trackami. Nie zmieniono kontraktu danych ani `patient360-map-model.js`.
+
+Po audycie demo alpha z 2026-06-11 doprecyzowano wzorzec UI: desktopowa mapa uzywa poziomego pasma czasu oraz kart opowiesci pod spodem. Pionowy storyboard etapow pozostaje warstwa podsumowania i wzorcem mobilnym, ale nie jest glowna desktopowa osia czasu.
 
 ## Mapowanie
 
@@ -62,6 +64,12 @@ Wady:
 Przyjac wariant A na etap alpha. Lane'y maja byc jezykiem prezentacji, a tracki zostaja jezykiem danych.
 
 Wariant B wrocic do decyzji dopiero po walidacji z uzytkownikami i po zebraniu dowodow, ze 6 lane'ow jest stabilniejszym modelem mentalnym niz 9 trackow.
+
+W implementacji alpha:
+
+- `patient360-map-view.js` renderuje hybryde: pasmo czasu, opowiesc, inspektor.
+- Szerokosc pasma wynika z zoomu i przewija sie wewnatrz mapy, bez poziomego scrolla calej strony.
+- Kokpit lekarza oraz aplikacja pacjenta prowadza do mapy skrotem, zamiast osadzac cala mape w pierwszym widoku.
 
 ## Konsekwencje
 

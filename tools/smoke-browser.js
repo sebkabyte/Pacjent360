@@ -236,6 +236,12 @@ async function main() {
     await client.call("Page.enable");
     await client.call("Runtime.enable");
     await client.call("Log.enable");
+    await client.call("Emulation.setDeviceMetricsOverride", {
+      width: 1366,
+      height: 900,
+      deviceScaleFactor: 1,
+      mobile: false
+    });
 
     const demoUrl = `http://127.0.0.1:${serverPort}/demo.html?browser-smoke=${Date.now()}`;
     await client.call("Page.navigate", { url: demoUrl });
@@ -244,7 +250,9 @@ async function main() {
     const initial = await client.evaluate(`(() => ({
       title: document.title,
       hasContract: Boolean(window.Patient360Contract),
+      hasFormat: Boolean(window.Patient360Format),
       hasMapModel: Boolean(window.Patient360MapModel),
+      hasDemoData: Boolean(window.Patient360DemoData),
       hasPreVisitModel: Boolean(window.Patient360PreVisitModel),
       hasCaregiverModel: Boolean(window.Patient360CaregiverModel),
       hasConsentModel: Boolean(window.Patient360ConsentModel),
@@ -253,17 +261,32 @@ async function main() {
       independence: document.body.textContent.includes('CeZ') && document.body.textContent.includes('NFZ') && document.body.textContent.includes('IKP')
     }))()`);
     assert(initial.title.includes("Pacjent 360"), "Demo title should contain Pacjent 360");
-    assert(initial.hasContract && initial.hasMapModel && initial.hasPreVisitModel && initial.hasCaregiverModel && initial.hasConsentModel, "Browser globals should expose contract, map model, pre-visit model, caregiver model and consent model");
+    assert(initial.hasContract && initial.hasFormat && initial.hasMapModel && initial.hasDemoData && initial.hasPreVisitModel && initial.hasCaregiverModel && initial.hasConsentModel, "Browser globals should expose contract, format, map model, demo data, pre-visit model, caregiver model and consent model");
     assert(initial.activeView === "core", `Expected core view, got ${initial.activeView}`);
     assert(initial.watermark, "Demo should show fictional data marker");
     assert(initial.independence, "Demo should show CeZ/NFZ/IKP independence");
+
+    const core = await client.evaluate(`(() => ({
+      activeView: document.querySelector('nav button.active')?.dataset.view || null,
+      scrollHeight: document.body.scrollHeight,
+      hasMapShortcut: Boolean(document.querySelector('.core-map-shortcut')),
+      hasEmbeddedMap: Boolean(document.querySelector('.patient-map360.embedded')),
+      hasMedReconciliation: Boolean(document.querySelector('.med-reconciliation'))
+    }))()`);
+    assert(core.activeView === "core", `Expected core view for 90-second dashboard, got ${core.activeView}`);
+    assert(core.scrollHeight <= 3000, `Core dashboard should stay within 90-second height budget, got ${core.scrollHeight}px`);
+    assert(core.hasMapShortcut && !core.hasEmbeddedMap, "Core dashboard should use a map shortcut instead of embedding the full map");
+    assert(core.hasMedReconciliation, "Core dashboard should keep medication reconciliation visible");
 
     const patient = await client.evaluate(`(() => {
       document.querySelector('nav button[data-view="patientPortal"]').click();
       const steps = [...document.querySelectorAll('.previsit-step')].map((step) => step.textContent.trim().replace(/\\s+/g, ' '));
       return {
         activeView: document.querySelector('nav button.active')?.dataset.view || null,
+        scrollHeight: document.body.scrollHeight,
         stepCount: steps.length,
+        hasNowPanel: Boolean(document.querySelector('.patient-now-panel')),
+        hasEmbeddedMap: Boolean(document.querySelector('.patient-map360.embedded')),
         hasSafetyCopy: document.body.textContent.includes('Nie ocenia pilności') && document.body.textContent.includes('nie diagnozuje'),
         hasDocumentsStep: steps.some((text) => text.includes('Dokumenty')),
         hasReportStep: steps.some((text) => text.includes('Podgląd raportu')),
@@ -271,10 +294,37 @@ async function main() {
       };
     })()`);
     assert(patient.activeView === "patientPortal", `Expected patientPortal view, got ${patient.activeView}`);
+    assert(patient.scrollHeight <= 3500, `Patient portal desktop should stay within first-screen workflow budget, got ${patient.scrollHeight}px`);
+    assert(patient.hasNowPanel && !patient.hasEmbeddedMap, "Patient portal should show next-step panel and avoid embedding full map");
     assert(patient.stepCount === 6, `Expected 6 pre-visit steps, got ${patient.stepCount}`);
     assert(patient.hasSafetyCopy, "Patient pre-visit flow should keep safety copy");
     assert(patient.hasDocumentsStep && patient.hasReportStep, "Patient pre-visit flow should include documents and report preview steps");
     assert(!patient.hasHorizontalOverflow, "Desktop patient view should not create body horizontal overflow");
+
+    const guardianPatient = await client.evaluate(`(() => {
+      const patientSelect = document.querySelector('#patientSelect');
+      if (patientSelect) {
+        patientSelect.value = 'p3';
+        patientSelect.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      document.querySelector('nav button[data-view="patientPortal"]').click();
+      const text = document.body.textContent || '';
+      const result = {
+        patient: document.querySelector('#patientSelect')?.value || '',
+        hasGuardianTitle: text.includes('Zdrowie dziecka') && text.includes('widok rodzica'),
+        hasChildAccessCopy: text.includes('danych dziecka'),
+        hasNowPanel: Boolean(document.querySelector('.patient-now-panel')),
+        hasEmbeddedMap: Boolean(document.querySelector('.patient-map360.embedded'))
+      };
+      if (patientSelect) {
+        patientSelect.value = 'p1';
+        patientSelect.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      document.querySelector('nav button[data-view="patientPortal"]').click();
+      return result;
+    })()`);
+    assert(guardianPatient.patient === "p3", "Guardian smoke should switch to p3");
+    assert(guardianPatient.hasGuardianTitle && guardianPatient.hasChildAccessCopy && guardianPatient.hasNowPanel && !guardianPatient.hasEmbeddedMap, "p3 patient portal should use parent/child copy without embedded full map");
 
     const dialog = await client.evaluate(`(() => {
       document.querySelector('.previsit-step [data-open-dialog="document"]').click();
@@ -335,7 +385,7 @@ async function main() {
       }));
       const inlineStyles = [...document.querySelectorAll('.temporal-map,.temporal-event,.mini-tick,.temporal-today-marker')]
         .map((node) => node.getAttribute('style') || '');
-      const cardRects = [...document.querySelectorAll('.temporal-card')].map((card) => {
+      const cardRects = [...document.querySelectorAll('.timeline-story-card')].map((card) => {
         const rect = card.getBoundingClientRect();
         return { width: rect.width, height: rect.height, left: rect.left, top: rect.top };
       });
@@ -364,8 +414,11 @@ async function main() {
         cardWidth: style?.getPropertyValue('--card-width').trim() || '',
         mapHeight: style?.getPropertyValue('--map-height').trim() || '',
         eventCount: document.querySelectorAll('.temporal-event').length,
-        cardCount: document.querySelectorAll('.temporal-card').length,
+        cardCount: document.querySelectorAll('.timeline-story-card').length,
         branchCount: document.querySelectorAll('.temporal-branch').length,
+        ribbonPointCount: document.querySelectorAll('.timeline-ribbon-point').length,
+        storyCardCount: document.querySelectorAll('.timeline-story-card').length,
+        hasTimeRibbon: Boolean(document.querySelector('.time-ribbon')),
         hasTodayMarker: Boolean(document.querySelector('.temporal-today-marker')),
         cardRects,
         eventRects,
@@ -382,23 +435,25 @@ async function main() {
     assert(timeline.laneCount >= 3 && timeline.laneLabelCount === timeline.laneCount, "Timeline should render labeled presentation lanes");
     assert(timeline.episodeBandCount >= 1, "Timeline should render episode background bands");
     assert(timeline.hasMinimapWindow, "Timeline minimap should render current-window indicator");
-    assert(/^\d+px$/.test(timeline.eventWidth) && /^\d+px$/.test(timeline.cardWidth) && /^\d+px$/.test(timeline.mapHeight), "Timeline geometry CSS variables should be finite px values");
-    assert(timeline.eventCount >= 1 && timeline.cardCount === timeline.eventCount && timeline.branchCount === timeline.eventCount, "Timeline events should each render a card and branch");
+    assert(/^\d+px$/.test(timeline.mapHeight), "Timeline ribbon height CSS variable should be a finite px value");
+    assert(Number.parseInt(timeline.mapHeight, 10) <= 300, `Timeline ribbon should remain compact, got ${timeline.mapHeight}`);
+    assert(timeline.hasTimeRibbon, "Timeline should render the desktop time ribbon");
+    assert(timeline.eventCount >= 1 && timeline.ribbonPointCount === timeline.eventCount && timeline.storyCardCount === timeline.eventCount, "Timeline should render one ribbon point and one story card per event");
     assert(timeline.hasTodayMarker, "Timeline should render today marker");
     assert(timeline.eventPositions.length === timeline.miniTickPositions.length, "Timeline and minimap should render the same number of dated points");
     assert(timeline.eventPositions.every((item) => item.id && Number.isFinite(item.left) && item.left >= 0 && item.left <= 100), "Timeline events should expose finite --event-left percentages");
     assert(timeline.miniTickPositions.every((item) => item.id && Number.isFinite(item.left) && item.left >= 0 && item.left <= 100), "Timeline minimap ticks should expose finite left percentages");
     const miniById = new Map(timeline.miniTickPositions.map((item) => [item.id, item.left]));
     assert(timeline.eventPositions.every((item) => miniById.has(item.id) && Math.abs(miniById.get(item.id) - item.left) <= 0.1), "Timeline minimap ticks should align with event positions");
-    assert(timeline.cardRects.every((rect) => rect.width >= 120 && Number.isFinite(rect.left) && Number.isFinite(rect.top)), "Timeline cards should have finite positions and usable width");
-    assert(timeline.eventRects.every((rect) => rect.width >= 120 && rect.height >= 40), "Timeline event cards should have stable usable dimensions");
+    assert(timeline.cardRects.every((rect) => rect.width >= 220 && Number.isFinite(rect.left) && Number.isFinite(rect.top)), "Timeline story cards should have finite positions and usable width");
+    assert(timeline.eventRects.every((rect) => rect.width >= 24 && rect.height >= 24), "Timeline ribbon points should have stable usable dimensions");
     assert(!timeline.hasHorizontalOverflow, "Timeline should scroll inside workbench, not create body horizontal overflow");
 
     const timelineInteractions = await client.evaluate(`(async () => {
       const pause = (ms = 80) => new Promise((resolve) => setTimeout(resolve, ms));
-      const eventsBefore = [...document.querySelectorAll('.temporal-event')].map((event) => ({
+      const eventsBefore = [...document.querySelectorAll('.timeline-story-card')].map((event) => ({
         id: event.dataset.selectTimelineEvent || '',
-        title: event.querySelector('.temporal-card strong')?.textContent.trim() || '',
+        title: event.querySelector('strong')?.textContent.trim() || '',
         track: event.querySelector('.temporal-track')?.textContent.trim().replace(/\\s+/g, ' ') || ''
       })).filter((event) => event.id);
       const targetEvent = eventsBefore.find((event) => !event.id.startsWith('anchor-')) || eventsBefore[0];
@@ -406,18 +461,18 @@ async function main() {
         .find((event) => event.dataset.selectTimelineEvent === targetEvent?.id);
       if (targetNode) targetNode.click();
       await pause();
-      const selectedAfterClick = document.querySelector('.temporal-event.selected')?.dataset.selectTimelineEvent || '';
+      const selectedAfterClick = document.querySelector('.timeline-ribbon-point.selected, .timeline-story-card.selected')?.dataset.selectTimelineEvent || '';
       const inspectorTitleAfterClick = document.querySelector('.timeline-inspector .inspector-head h3')?.textContent.trim() || '';
       const inspectorHasSources = Boolean(document.querySelector('.timeline-inspector [data-source-ref]'));
 
       const enabledTrackButton = [...document.querySelectorAll('[data-filter-track]')]
         .find((button) => !button.disabled && !button.classList.contains('active'));
       const selectedTrack = enabledTrackButton?.dataset.filterTrack || '';
-      const countBeforeFilter = document.querySelectorAll('.temporal-event').length;
+      const countBeforeFilter = document.querySelectorAll('.timeline-story-card').length;
       if (enabledTrackButton) enabledTrackButton.click();
       await pause();
       const activeTrack = document.querySelector('[data-filter-track].active')?.dataset.filterTrack || '';
-      const filteredEvents = [...document.querySelectorAll('.temporal-event')].map((event) => ({
+      const filteredEvents = [...document.querySelectorAll('.timeline-story-card')].map((event) => ({
         id: event.dataset.selectTimelineEvent || '',
         track: event.querySelector('.temporal-track')?.textContent.trim().replace(/\\s+/g, ' ') || ''
       }));
@@ -443,16 +498,13 @@ async function main() {
       const stagePointEventId = stagePoint?.dataset.selectTimelineEvent || '';
       if (stagePoint) stagePoint.click();
       await pause();
-      const selectedAfterStagePoint = document.querySelector('.temporal-event.selected')?.dataset.selectTimelineEvent || '';
+      const selectedAfterStagePoint = document.querySelector('.timeline-ribbon-point.selected, .timeline-story-card.selected')?.dataset.selectTimelineEvent || '';
 
-      const scroller = document.querySelector('.temporal-scroll');
       const lastTick = [...document.querySelectorAll('.mini-tick')].at(-1);
-      if (scroller) scroller.scrollLeft = 0;
-      const scrollBeforeJump = scroller?.scrollLeft || 0;
       if (lastTick) lastTick.click();
       await pause(260);
-      const scrollAfterJump = scroller?.scrollLeft || 0;
-      const minimapJumpWorked = Boolean(lastTick) && Boolean(scroller) && scrollAfterJump >= scrollBeforeJump;
+      const selectedAfterRibbonJump = document.querySelector('.timeline-ribbon-point.selected, .timeline-story-card.selected')?.dataset.selectTimelineEvent || '';
+      const minimapJumpWorked = Boolean(lastTick) && selectedAfterRibbonJump === (lastTick.dataset.selectTimelineEvent || lastTick.dataset.mapEventId || '');
 
       const patientSelect = document.querySelector('#patientSelect');
       if (patientSelect) {
@@ -460,9 +512,9 @@ async function main() {
         patientSelect.dispatchEvent(new Event('change', { bubbles: true }));
       }
       await pause();
-      const p2EventCount = document.querySelectorAll('.temporal-event').length;
+      const p2EventCount = document.querySelectorAll('.timeline-story-card').length;
       const p2PatientValue = document.querySelector('#patientSelect')?.value || '';
-      const p2FirstTitle = document.querySelector('.temporal-event .temporal-card strong')?.textContent.trim() || '';
+      const p2FirstTitle = document.querySelector('.timeline-story-card strong')?.textContent.trim() || '';
       if (patientSelect) {
         patientSelect.value = 'p1';
         patientSelect.dispatchEvent(new Event('change', { bubbles: true }));
@@ -485,8 +537,7 @@ async function main() {
         activeSemanticAfterVisit,
         stagePointEventId,
         selectedAfterStagePoint,
-        scrollBeforeJump,
-        scrollAfterJump,
+        selectedAfterRibbonJump,
         minimapJumpWorked,
         p2PatientValue,
         p2EventCount,
@@ -504,7 +555,7 @@ async function main() {
     assert(timelineInteractions.activeSemanticBeforeVisit === "episode", "Timeline should start interactions from episode semantic level");
     assert(timelineInteractions.activeSemanticAfterVisit === "visit", "Timeline semantic zoom should switch to visit level");
     assert(timelineInteractions.selectedAfterStagePoint === timelineInteractions.stagePointEventId, "Stage summary click should select the linked map event");
-    assert(timelineInteractions.minimapJumpWorked, "Timeline minimap click should keep navigator wired to the scroll area");
+    assert(timelineInteractions.minimapJumpWorked, "Timeline ribbon point click should select the linked story card");
     assert(timelineInteractions.p2PatientValue === "p2", "Patient switcher should move to p2 during timeline smoke");
     assert(timelineInteractions.p2EventCount === 3, `Switching to p2 should reload map events, got ${timelineInteractions.p2EventCount}`);
     assert(timelineInteractions.p2FirstTitle.length > 0, "Switching patient should render p2 event cards");
@@ -753,10 +804,10 @@ async function main() {
     const mobileTimeline = await client.evaluate(`(() => {
       document.querySelector('nav button[data-view="timeline"]').click();
       const map = document.querySelector('.temporal-map');
-      const event = document.querySelector('.temporal-event');
-      const card = document.querySelector('.temporal-card');
-      const scroll = document.querySelector('.temporal-scroll');
-      const eventRect = event?.getBoundingClientRect();
+      const point = document.querySelector('.timeline-ribbon-point');
+      const card = document.querySelector('.timeline-story-card');
+      const scroll = document.querySelector('.timeline-ribbon-scroll');
+      const pointRect = point?.getBoundingClientRect();
       const cardRect = card?.getBoundingClientRect();
       const bodyText = document.body.textContent || '';
       const inlineStyles = [...document.querySelectorAll('.temporal-map,.temporal-event,.mini-tick,.temporal-today-marker')]
@@ -768,8 +819,8 @@ async function main() {
         inlineHasNaN: inlineStyles.some((style) => style.includes('NaN')),
         stageCount: document.querySelectorAll('.stage-card').length,
         laneCount: document.querySelectorAll('.temporal-lane-band').length,
-        eventWidth: eventRect?.width || 0,
-        eventHeight: eventRect?.height || 0,
+        pointWidth: pointRect?.width || 0,
+        pointHeight: pointRect?.height || 0,
         cardWidth: cardRect?.width || 0,
         cardLeft: cardRect?.left || 0,
         scrollsInsideMap: scroll ? scroll.scrollWidth > scroll.clientWidth : false,
@@ -780,8 +831,8 @@ async function main() {
     assert(mobileTimeline.hasMap, "Mobile timeline should render temporal map");
     assert(!mobileTimeline.bodyHasNaN && !mobileTimeline.inlineHasNaN, "Mobile timeline must not render NaN values");
     assert(mobileTimeline.stageCount >= 1 && mobileTimeline.laneCount >= 1, "Mobile timeline should keep stage summary and lanes");
-    assert(mobileTimeline.eventWidth >= 120 && mobileTimeline.eventHeight >= 40, "Mobile timeline event cards should keep usable dimensions");
-    assert(mobileTimeline.cardWidth >= 120 && Number.isFinite(mobileTimeline.cardLeft), "Mobile timeline cards should keep finite usable dimensions");
+    assert(mobileTimeline.pointWidth >= 24 && mobileTimeline.pointHeight >= 24, "Mobile timeline ribbon points should keep tappable dimensions");
+    assert(mobileTimeline.cardWidth >= 220 && Number.isFinite(mobileTimeline.cardLeft), "Mobile timeline story cards should keep finite usable dimensions");
     assert(mobileTimeline.scrollsInsideMap, "Mobile timeline should scroll inside the temporal workbench");
     assert(!mobileTimeline.hasBodyOverflow, "Mobile timeline should not create body horizontal overflow");
 

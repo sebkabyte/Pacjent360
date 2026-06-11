@@ -315,6 +315,98 @@
     `;
   }
 
+  function renderTimelineRibbon(events, lanes, range, selectedId, todayPercent, today, episodes, sourceChips, mapWidth) {
+    const tickPosition = (event) => Number.isFinite(event.positionPercent) ? event.positionPercent : timelinePositionPercent(event.date, range);
+    const safeMapWidth = Math.max(Math.round(Number(mapWidth) || 960), 960);
+    const laneHeight = 32;
+    const laneOffset = 72;
+    const ribbonHeight = Math.max(240, laneOffset + Math.max(lanes.length, 1) * laneHeight);
+    return `
+      <div class="temporal-scroll timeline-ribbon-scroll" aria-label="Pasmo czasu pacjenta">
+        <div class="temporal-map time-ribbon" style="--map-height: ${ribbonHeight}px; --map-width: ${safeMapWidth}px;">
+          <div class="temporal-minimap-line timeline-ribbon-scale">
+            <span class="minimap-window timeline-window" aria-hidden="true"></span>
+            <span class="timeline-scale-start">${formatDate(range.start)}</span>
+            <strong>Cały wybrany zakres</strong>
+            <span class="timeline-scale-end">${formatDate(range.end)}</span>
+          </div>
+          ${renderEpisodeBands(episodes, events, range, sourceChips)}
+          ${renderLaneBands(lanes, laneHeight, laneOffset)}
+          ${events.map((event, index) => {
+            const lane = laneForTrack(event.track);
+            const laneIndex = Math.max(lanes.findIndex((item) => item.id === lane.id), 0);
+            const status = timelineEventStatus(event);
+            const statusMeta = event.statusMeta || timelineStatusMeta(status);
+            const eventDate = parseDateOnly(event.date);
+            const todayDate = parseDateOnly(today || "");
+            const isFuture = event.future || (eventDate && todayDate ? eventDate >= todayDate : false);
+            const selected = event.id === selectedId;
+            return `
+              <button
+                type="button"
+                class="mini-tick temporal-event timeline-ribbon-point ${event.virtual ? "virtual" : ""} ${isFuture ? "future" : ""} ${selected ? "selected" : ""}"
+                style="--event-left: ${tickPosition(event)}%; --lane-index: ${laneIndex}; --lane-top: ${laneOffset + laneIndex * laneHeight}px; left: ${tickPosition(event)}%;"
+                data-temporal-index="${escapeHtml(index)}"
+                data-timeline-jump="${escapeHtml(index)}"
+                data-select-timeline-event="${escapeHtml(event.id)}"
+                data-map-event-id="${escapeHtml(event.id)}"
+                title="${escapeHtml(`${formatDate(event.date)} • ${event.title}`)}"
+                aria-label="${escapeHtml(`${formatDate(event.date)}: ${event.title}`)}"
+              >
+                <span class="ribbon-point-core ${escapeHtml(statusMeta.className)}">
+                  <i data-lucide="${escapeHtml(timelineTrackIcon(event.track))}"></i>
+                </span>
+              </button>
+            `;
+          }).join("")}
+          <div class="temporal-today-marker" style="--today-left: ${todayPercent}%;" aria-label="Dziś na mapie pacjenta"><span>Dziś</span></div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderTimelineStoryList(events, detailId, selectedId, persona, sourceChips) {
+    const isOverview = detailId === "overview";
+    const personaHint = persona === "patient" ? "Kliknij, aby zobaczyć źródła i pytania do rozmowy." : "Kliknij, aby zobaczyć źródła, epizod i pytania DITL.";
+    return `
+      <div class="timeline-story-list" aria-label="Chronologiczna opowieść wybranego zakresu">
+        ${events.map((event, index) => {
+          const selected = event.id === selectedId;
+          const status = timelineEventStatus(event);
+          const statusMeta = event.statusMeta || timelineStatusMeta(status);
+          const sourceCount = (Array.isArray(event.sourceRefs) ? event.sourceRefs : [event.sourceRefs].filter(Boolean)).length;
+          return `
+            <article
+              class="timeline-story-card temporal-card ${event.virtual ? "virtual" : ""} ${event.future ? "future" : ""} ${selected ? "selected" : ""}"
+              data-temporal-story-event="${escapeHtml(event.id)}"
+              data-select-timeline-event="${escapeHtml(event.id)}"
+              tabindex="0"
+              role="button"
+              aria-pressed="${selected ? "true" : "false"}"
+              aria-label="${escapeHtml(`${formatDate(event.date)}: ${event.title}. ${personaHint}`)}"
+            >
+              <div class="timeline-story-index">${String(index + 1).padStart(2, "0")}</div>
+              <div>
+                <div class="temporal-card-head">
+                  <span class="temporal-date">${formatDate(event.date)}</span>
+                  <span class="temporal-track"><i data-lucide="${escapeHtml(timelineTrackIcon(event.track))}"></i>${escapeHtml(event.track)}</span>
+                </div>
+                <strong>${escapeHtml(event.title)}</strong>
+                ${isOverview ? "" : `<p>${escapeHtml(event.description || "")}</p>`}
+                <div class="record-meta">
+                  <span class="status-chip ${escapeHtml(statusMeta.className)}"><i data-lucide="${escapeHtml(statusMeta.icon)}"></i>${escapeHtml(isOverview ? status : statusMeta.label)}</span>
+                  <span class="tag">${sourceCount ? `${sourceCount} źr.` : "bez źródła"}</span>
+                  ${event.virtual ? `<span class="tag">kotwica czasu</span>` : ""}
+                </div>
+                <div class="source-line">${sourceChips(event.sourceRefs || [])}</div>
+              </div>
+            </article>
+          `;
+        }).join("")}
+      </div>
+    `;
+  }
+
   function episodeBands(episodes, events, range) {
     const visibleEventById = new Map(events.map((event) => [event.id, event]));
     return (Array.isArray(episodes) ? episodes : []).map((episode) => {
@@ -516,6 +608,7 @@
     const laneOffset = 88;
     const mapHeight = Math.max(420, laneOffset + Math.max(lanes.length, 1) * laneHeight + 34);
     const mapWidth = Math.max(events.length * (geometry.eventWidth + 22) + 76, 960);
+    const ribbonWidth = Math.max(960, Math.round(mapWidth * Math.max(zoom, zoomConfig.fit || 0.42)));
 
     if (!events.length) {
       return `
@@ -560,28 +653,11 @@
         ${embedded ? "" : renderTimelineControls(period, detail, zoom, zoomConfig)}
         ${renderTimelineOverview(filteredEvents, range, detail, zoom)}
         ${embedded ? "" : renderTimelineLegend(clinicalEvents, trackFilter)}
-        ${renderTimelineMiniMap(events, range)}
         <div class="patient-map-workbench">
           <div class="patient-map-canvas">
-            <div class="temporal-scroll" aria-label="Mapa Pacjenta 360">
-              <div class="temporal-map ${zoom <= 0.58 ? "zoom-compact" : ""}" style="--event-count: ${events.length}; --event-width: ${geometry.eventWidth}px; --card-width: ${geometry.cardWidth}px; --map-width: ${mapWidth}px; --map-height: ${mapHeight}px; --event-height: ${laneHeight}px;">
-                ${renderEpisodeBands(mapModel.episodes, events, range, sourceChips)}
-                ${renderLaneBands(lanes, laneHeight, laneOffset)}
-                <div class="temporal-spine" aria-hidden="true">
-                  <span>historia</span>
-                  <span>stan</span>
-                  <span>sygnały</span>
-                  <span>decyzja</span>
-                </div>
-                ${events.map((event, index) => {
-                  const lane = laneForTrack(event.track);
-                  const laneIndex = Math.max(lanes.findIndex((item) => item.id === lane.id), 0);
-                  return renderTimelineEvent(event, index, detail.id, zoom, selectedId, safePersona, mapModel.today, laneIndex, laneHeight, laneOffset);
-                }).join("")}
-                <div class="temporal-today-marker" style="--today-left: ${todayPercent}%;" aria-label="Dziś na mapie pacjenta"><span>Dziś</span></div>
-              </div>
-            </div>
-            <p class="temporal-scroll-hint"><i data-lucide="move-horizontal"></i> Oddal, aby zobaczyć cały odcinek jako jedną linię. Przybliż, żeby rozsunąć zdarzenia, przewijać je poziomo i wejść w źródła.</p>
+            ${renderTimelineRibbon(events, lanes, range, selectedId, todayPercent, mapModel.today, mapModel.episodes, sourceChips, ribbonWidth)}
+            <p class="temporal-scroll-hint"><i data-lucide="move-horizontal"></i> Pasmo pokazuje cały wybrany zakres bez utraty proporcji czasu. Kliknij punkt, aby przejść do karty zdarzenia i inspektora.</p>
+            ${renderTimelineStoryList(events, detail.id, selectedId, safePersona, sourceChips)}
           </div>
           ${renderTimelineInspector(selected, safePersona, sourceChips)}
         </div>

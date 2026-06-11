@@ -37,6 +37,19 @@ System pokazuje:
 
 System nie rozstrzyga klinicznie, nie diagnozuje, nie prowadzi triage, nie sugeruje terapii i nie zastepuje lekarza.
 
+## Stan Alpha 2026-06-11
+
+Decyzja kierunkowa po audycie demo: desktopowa Mapa Pacjenta 360 nie moze byc pionowym feedem etapow. Feed broni sie na mobile, ale na desktopie gubi percepcje czasu.
+
+W alpha przyjmujemy hybryde:
+
+- u gory: poziome pasmo czasu z proporcjami dat, lane'ami, epizodem i markerem "dzis";
+- pod pasmem: chronologiczna opowiesc w kartach, czyli "film" wybranego odcinka;
+- obok/ponizej: inspektor zdarzenia ze zrodlami, pytaniami DITL i relacjami bez przyczynowosci;
+- w kokpicie lekarza i pacjenta: tylko skrot do Mapy Pacjenta 360, bez osadzania calej mapy.
+
+Cel UX: lekarz ma zobaczyc caly odcinek czasu bez przewijania przez wielki dashboard, a pacjent/opiekun ma moc wejsc w historie warstwowo: od ogolu, przez epizod, do zdarzenia i zrodla.
+
 ## Zasada Glowna
 
 Jedna historia, wiele soczewek.
