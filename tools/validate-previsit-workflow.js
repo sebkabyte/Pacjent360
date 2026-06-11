@@ -7,6 +7,8 @@ const publicRoot = path.join(root, "public");
 const appPath = path.join(publicRoot, "app.js");
 const edgeCasePath = path.join(root, "fixtures", "previsit-workflow-edgecases.json");
 const preVisitModel = require(path.join(publicRoot, "patient360-previsit-model.js"));
+const demoData = require(path.join(publicRoot, "patient360-demo-data.js"));
+const DEMO_VALIDATION_TODAY = process.env.P360_DEMO_TODAY || "2026-06-11";
 
 const PATIENT_SCOPED_COLLECTION_KEYS = [
   "decisionContexts",
@@ -87,9 +89,7 @@ function extractObjectLiteral(source, marker) {
 }
 
 function readDemoState() {
-  const source = fs.readFileSync(appPath, "utf8");
-  const literal = extractObjectLiteral(source, "const demoState =");
-  return vm.runInNewContext(`(${literal})`, {}, { timeout: 1000 });
+  return demoData.buildDemoState({ today: DEMO_VALIDATION_TODAY });
 }
 
 function buildActivePatientState(sourceState, patient) {

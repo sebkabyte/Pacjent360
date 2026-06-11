@@ -43,11 +43,13 @@ $expectedFiles = @(
   "site.css",
   "site.js",
   "patient360-contract.js",
+  "patient360-format.js",
   "patient360-map-model.js",
   "patient360-map-view.js",
   "patient360-previsit-model.js",
   "patient360-caregiver-model.js",
   "patient360-consent-model.js",
+  "patient360-demo-data.js",
   "styles.css",
   "app.js",
   "robots.txt",
@@ -87,6 +89,8 @@ Assert-True (-not $blockedFound) ("Blocked private or working file found: " + ((
 
 & node --check (Join-Path $target "patient360-contract.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-contract.js"
+& node --check (Join-Path $target "patient360-format.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-format.js"
 & node --check (Join-Path $target "patient360-map-model.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-map-model.js"
 & node --check (Join-Path $target "patient360-map-view.js") | Out-Null
@@ -97,6 +101,8 @@ Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-pre
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-caregiver-model.js"
 & node --check (Join-Path $target "patient360-consent-model.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-consent-model.js"
+& node --check (Join-Path $target "patient360-demo-data.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-demo-data.js"
 & node --check (Join-Path $target "app.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public app.js"
 
@@ -132,13 +138,18 @@ Assert-True ($index.Contains('rel="canonical" href="https://pacjent360.com.pl/"'
 Assert-True ($privacy.Contains('rel="canonical" href="https://pacjent360.com.pl/privacy.html"')) "privacy.html should include canonical URL"
 Assert-True ($disclaimer.Contains('rel="canonical" href="https://pacjent360.com.pl/disclaimer.html"')) "disclaimer.html should include canonical URL"
 Assert-True ($demo.Contains('src="patient360-contract.js"')) "demo.html should load patient360-contract.js"
+Assert-True ($demo.Contains('src="patient360-format.js"')) "demo.html should load patient360-format.js"
 Assert-True ($demo.Contains('src="patient360-map-model.js"')) "demo.html should load patient360-map-model.js"
 Assert-True ($demo.Contains('src="patient360-map-view.js"')) "demo.html should load patient360-map-view.js"
 Assert-True ($demo.Contains('src="patient360-previsit-model.js"')) "demo.html should load patient360-previsit-model.js"
 Assert-True ($demo.Contains('src="patient360-caregiver-model.js"')) "demo.html should load patient360-caregiver-model.js"
 Assert-True ($demo.Contains('src="patient360-consent-model.js"')) "demo.html should load patient360-consent-model.js"
+Assert-True ($demo.Contains('src="patient360-demo-data.js"')) "demo.html should load patient360-demo-data.js"
 Assert-True ($demo.IndexOf('src="patient360-contract.js"') -lt $demo.IndexOf('src="app.js"')) "demo.html should load patient360-contract.js before app.js"
+Assert-True ($demo.IndexOf('src="patient360-format.js"') -lt $demo.IndexOf('src="app.js"')) "demo.html should load patient360-format.js before app.js"
+Assert-True ($demo.IndexOf('src="patient360-contract.js"') -lt $demo.IndexOf('src="patient360-format.js"')) "demo.html should load patient360-contract.js before patient360-format.js"
 Assert-True ($demo.IndexOf('src="patient360-contract.js"') -lt $demo.IndexOf('src="patient360-map-model.js"')) "demo.html should load patient360-contract.js before patient360-map-model.js"
+Assert-True ($demo.IndexOf('src="patient360-format.js"') -lt $demo.IndexOf('src="patient360-previsit-model.js"')) "demo.html should load patient360-format.js before patient360-previsit-model.js"
 Assert-True ($demo.IndexOf('src="patient360-map-model.js"') -lt $demo.IndexOf('src="app.js"')) "demo.html should load patient360-map-model.js before app.js"
 Assert-True ($demo.IndexOf('src="patient360-map-model.js"') -lt $demo.IndexOf('src="patient360-map-view.js"')) "demo.html should load patient360-map-model.js before patient360-map-view.js"
 Assert-True ($demo.IndexOf('src="patient360-map-view.js"') -lt $demo.IndexOf('src="app.js"')) "demo.html should load patient360-map-view.js before app.js"
@@ -149,6 +160,7 @@ Assert-True ($demo.IndexOf('src="patient360-previsit-model.js"') -lt $demo.Index
 Assert-True ($demo.IndexOf('src="patient360-caregiver-model.js"') -lt $demo.IndexOf('src="app.js"')) "demo.html should load patient360-caregiver-model.js before app.js"
 Assert-True ($demo.IndexOf('src="patient360-caregiver-model.js"') -lt $demo.IndexOf('src="patient360-consent-model.js"')) "demo.html should load patient360-caregiver-model.js before patient360-consent-model.js"
 Assert-True ($demo.IndexOf('src="patient360-consent-model.js"') -lt $demo.IndexOf('src="app.js"')) "demo.html should load patient360-consent-model.js before app.js"
+Assert-True ($demo.IndexOf('src="patient360-demo-data.js"') -lt $demo.IndexOf('src="app.js"')) "demo.html should load patient360-demo-data.js before app.js"
 Assert-True (-not ($index.Contains("frame-ancestors") -or $demo.Contains("frame-ancestors") -or $privacy.Contains("frame-ancestors") -or $disclaimer.Contains("frame-ancestors"))) "frame-ancestors must be configured as an HTTP header, not as a meta CSP directive"
 
 $lucidePinned = "https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"

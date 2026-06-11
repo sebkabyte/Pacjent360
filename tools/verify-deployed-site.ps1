@@ -167,10 +167,12 @@ $maintenance = Get-HttpContent $maintenanceUrl
 $health = Get-HttpContent $healthUrl
 $app = Get-HttpContent (Join-WebPath $base "app.js")
 $contract = Get-HttpContent (Join-WebPath $base "patient360-contract.js")
+$format = Get-HttpContent (Join-WebPath $base "patient360-format.js")
 $mapModel = Get-HttpContent (Join-WebPath $base "patient360-map-model.js")
 $preVisitModel = Get-HttpContent (Join-WebPath $base "patient360-previsit-model.js")
 $caregiverModel = Get-HttpContent (Join-WebPath $base "patient360-caregiver-model.js")
 $consentModel = Get-HttpContent (Join-WebPath $base "patient360-consent-model.js")
+$demoData = Get-HttpContent (Join-WebPath $base "patient360-demo-data.js")
 
 if (-not $AllowHttp) {
   $httpProbe = Get-HttpProbe ("http://$($uri.Host)/")
@@ -208,19 +210,23 @@ Assert-True ($index.Contains('rel="canonical" href="https://pacjent360.com.pl/"'
 Assert-True ($demo.Contains("DANE FIKCYJNE")) "demo.html should show fictional data marker"
 Assert-True ($demo.Contains('name="robots" content="noindex,nofollow"')) "demo.html should be noindex,nofollow"
 Assert-True ($demo.Contains("patient360-contract.js")) "demo.html should load contract model"
+Assert-True ($demo.Contains("patient360-format.js")) "demo.html should load Polish format model"
 Assert-True ($demo.Contains("patient360-map-model.js")) "demo.html should load map model"
 Assert-True ($demo.Contains("patient360-previsit-model.js")) "demo.html should load pre-visit model"
 Assert-True ($demo.Contains("patient360-caregiver-model.js")) "demo.html should load caregiver model"
 Assert-True ($demo.Contains("patient360-consent-model.js")) "demo.html should load consent model"
+Assert-True ($demo.Contains("patient360-demo-data.js")) "demo.html should load demo data"
 Assert-True ($demo.Contains("app.js")) "demo.html should load app.js"
 
 Assert-True ($contract.Contains("Patient360Contract")) "patient360-contract.js should expose Patient360Contract"
+Assert-True ($format.Contains("Patient360Format")) "patient360-format.js should expose Patient360Format"
 Assert-True ($mapModel.Contains("Patient360MapModel")) "patient360-map-model.js should expose Patient360MapModel"
 Assert-True ($preVisitModel.Contains("Patient360PreVisitModel")) "patient360-previsit-model.js should expose Patient360PreVisitModel"
 Assert-True ($caregiverModel.Contains("Patient360CaregiverModel")) "patient360-caregiver-model.js should expose Patient360CaregiverModel"
 Assert-True ($consentModel.Contains("Patient360ConsentModel")) "patient360-consent-model.js should expose Patient360ConsentModel"
+Assert-True ($demoData.Contains("Patient360DemoData")) "patient360-demo-data.js should expose Patient360DemoData"
 Assert-True ($app.Contains("Raport kontekstowy")) "app.js should contain context report"
-Assert-True ($app.Contains("Known / Unknown / Uncertain / To verify")) "app.js should contain report categories"
+Assert-True ($app.Contains("Znane / Nieznane / Niepewne / Do weryfikacji")) "app.js should contain report categories"
 Assert-True ($app.Contains("consent:g1")) "app.js should contain consent source refs"
 
 Assert-True ($privacy.Contains("localStorage")) "privacy.html should disclose localStorage"

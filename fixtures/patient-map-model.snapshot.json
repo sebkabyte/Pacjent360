@@ -1,87 +1,204 @@
 {
   "snapshotVersion": 1,
-  "today": "2026-06-08",
+  "today": "2026-06-11",
   "patients": {
     "p1": {
       "episode": {
         "rangeStart": "2026-05-12",
-        "rangeEnd": "2026-06-08",
-        "eventIds": ["te1", "te2", "te3", "te4", "te5", "te6"],
-        "eventTracks": ["konsultacje", "leki", "konsultacje", "badania", "obserwacje z wywiadu", "decyzje medyczne"],
+        "rangeEnd": "2026-06-14",
+        "eventIds": [
+          "te1",
+          "te2",
+          "te3",
+          "te4",
+          "te5",
+          "te6"
+        ],
+        "eventTracks": [
+          "konsultacje",
+          "leki",
+          "konsultacje",
+          "badania",
+          "obserwacje z wywiadu",
+          "decyzje medyczne"
+        ],
         "selectedId": "te1",
         "activeTracks": [
-          { "track": "badania", "count": 1 },
-          { "track": "leki", "count": 1 },
-          { "track": "konsultacje", "count": 2 },
-          { "track": "decyzje medyczne", "count": 1 },
-          { "track": "obserwacje z wywiadu", "count": 1 }
+          {
+            "track": "badania",
+            "count": 1
+          },
+          {
+            "track": "leki",
+            "count": 1
+          },
+          {
+            "track": "konsultacje",
+            "count": 2
+          },
+          {
+            "track": "decyzje medyczne",
+            "count": 1
+          },
+          {
+            "track": "obserwacje z wywiadu",
+            "count": 1
+          }
         ],
         "hiddenTracks": 4,
         "sourceMissingCount": 0,
         "todayColumn": 6
       },
       "life": {
-        "eventIds": ["anchor-birth", "te1", "te2", "te3", "te4", "te5", "te6", "anchor-now"],
-        "virtualIds": ["anchor-birth", "anchor-now"]
+        "eventIds": [
+          "anchor-birth",
+          "te1",
+          "te2",
+          "te3",
+          "te4",
+          "te5",
+          "te6",
+          "anchor-now"
+        ],
+        "virtualIds": [
+          "anchor-birth",
+          "anchor-now"
+        ]
       },
       "filteredTrack": {
         "track": "badania",
-        "eventIds": ["te4"],
+        "eventIds": [
+          "te4"
+        ],
         "virtualIds": []
       }
     },
     "p2": {
       "episode": {
         "rangeStart": "2026-04-10",
-        "rangeEnd": "2026-06-15",
-        "eventIds": ["te7", "te8", "te9"],
-        "eventTracks": ["badania", "obserwacje z wywiadu", "konsultacje"],
+        "rangeEnd": "2026-06-16",
+        "eventIds": [
+          "te7",
+          "te8",
+          "te9"
+        ],
+        "eventTracks": [
+          "badania",
+          "obserwacje z wywiadu",
+          "konsultacje"
+        ],
         "selectedId": "te7",
         "activeTracks": [
-          { "track": "badania", "count": 1 },
-          { "track": "konsultacje", "count": 1 },
-          { "track": "obserwacje z wywiadu", "count": 1 }
+          {
+            "track": "badania",
+            "count": 1
+          },
+          {
+            "track": "konsultacje",
+            "count": 1
+          },
+          {
+            "track": "obserwacje z wywiadu",
+            "count": 1
+          }
         ],
         "hiddenTracks": 6,
         "sourceMissingCount": 0,
         "todayColumn": 3
       },
       "life": {
-        "eventIds": ["anchor-birth", "te7", "te8", "te9", "anchor-now"],
-        "virtualIds": ["anchor-birth", "anchor-now"]
+        "eventIds": [
+          "anchor-birth",
+          "te7",
+          "te8",
+          "te9",
+          "anchor-now"
+        ],
+        "virtualIds": [
+          "anchor-birth",
+          "anchor-now"
+        ]
       },
       "filteredTrack": {
         "track": "badania",
-        "eventIds": ["te7"],
+        "eventIds": [
+          "te7"
+        ],
         "virtualIds": []
       }
     },
     "p3": {
       "episode": {
         "rangeStart": "2026-05-20",
-        "rangeEnd": "2026-06-12",
-        "eventIds": ["te10", "te11", "te12", "te13", "te14", "te15"],
-        "eventTracks": ["konsultacje", "leki", "badania", "obserwacje z wywiadu", "funkcjonowanie", "decyzje medyczne"],
+        "rangeEnd": "2026-06-13",
+        "eventIds": [
+          "te10",
+          "te12",
+          "te11",
+          "te13",
+          "te14",
+          "te15"
+        ],
+        "eventTracks": [
+          "konsultacje",
+          "badania",
+          "leki",
+          "obserwacje z wywiadu",
+          "funkcjonowanie",
+          "decyzje medyczne"
+        ],
         "selectedId": "te10",
         "activeTracks": [
-          { "track": "badania", "count": 1 },
-          { "track": "leki", "count": 1 },
-          { "track": "konsultacje", "count": 1 },
-          { "track": "funkcjonowanie", "count": 1 },
-          { "track": "decyzje medyczne", "count": 1 },
-          { "track": "obserwacje z wywiadu", "count": 1 }
+          {
+            "track": "badania",
+            "count": 1
+          },
+          {
+            "track": "leki",
+            "count": 1
+          },
+          {
+            "track": "konsultacje",
+            "count": 1
+          },
+          {
+            "track": "funkcjonowanie",
+            "count": 1
+          },
+          {
+            "track": "decyzje medyczne",
+            "count": 1
+          },
+          {
+            "track": "obserwacje z wywiadu",
+            "count": 1
+          }
         ],
         "hiddenTracks": 3,
         "sourceMissingCount": 0,
-        "todayColumn": 5
+        "todayColumn": 6
       },
       "life": {
-        "eventIds": ["anchor-birth", "te10", "te11", "te12", "te13", "te14", "te15", "anchor-now"],
-        "virtualIds": ["anchor-birth", "anchor-now"]
+        "eventIds": [
+          "anchor-birth",
+          "te10",
+          "te12",
+          "te11",
+          "te13",
+          "te14",
+          "te15",
+          "anchor-now"
+        ],
+        "virtualIds": [
+          "anchor-birth",
+          "anchor-now"
+        ]
       },
       "filteredTrack": {
         "track": "badania",
-        "eventIds": ["te12"],
+        "eventIds": [
+          "te12"
+        ],
         "virtualIds": []
       }
     }

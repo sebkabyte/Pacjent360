@@ -2,13 +2,32 @@
   const contract =
     root.Patient360Contract ||
     (typeof require === "function" ? require("./patient360-contract.js") : null);
-  const preVisitModel = factory(contract);
+  const format =
+    root.Patient360Format ||
+    (typeof require === "function" ? require("./patient360-format.js") : null);
+  const preVisitModel = factory(contract, format);
   if (typeof module !== "undefined" && module.exports) {
     module.exports = preVisitModel;
   }
   root.Patient360PreVisitModel = preVisitModel;
-})(typeof globalThis !== "undefined" ? globalThis : this, function buildPatient360PreVisitModel(contract) {
+})(typeof globalThis !== "undefined" ? globalThis : this, function buildPatient360PreVisitModel(contract, format) {
   const SOURCE_MISSING_REF = contract?.SOURCE_MISSING_REF || "source_missing";
+  const formatCount =
+    format?.formatCount ||
+    function fallbackFormatCount(count, one, few, many) {
+      const absolute = Math.abs(Number(count) || 0);
+      const mod10 = absolute % 10;
+      const mod100 = absolute % 100;
+      const noun = absolute === 1
+        ? one
+        : mod10 >= 2 && mod10 <= 4 && !(mod100 >= 12 && mod100 <= 14)
+          ? few
+          : many;
+      return `${Number(count) || 0} ${noun}`;
+    };
+  const formatDocuments = format?.formatDocuments || ((count) => formatCount(count, "dokument", "dokumenty", "dokumentów"));
+  const formatQuestions = format?.formatQuestions || ((count) => formatCount(count, "pytanie", "pytania", "pytań"));
+  const formatGaps = format?.formatGaps || ((count) => formatCount(count, "brak", "braki", "braków"));
 
   const STEP_DEFINITIONS = Object.freeze([
     { kind: "documents", title: "Dokumenty", icon: "files", action: "Dodaj dokument", openDialog: "document" },
@@ -16,7 +35,7 @@
     { kind: "interview", title: "Wywiad", icon: "messages-square", action: "Dodaj wywiad", openDialog: "interview" },
     { kind: "questions", title: "Pytania", icon: "message-circle-question", action: "Zapisz pytania", openDialog: "interview" },
     { kind: "gaps", title: "Braki", icon: "search-x", action: "Zobacz sygnały", view: "risks" },
-    { kind: "report", title: "Raport preview", icon: "clipboard-list", action: "Otwórz raport", view: "reports" }
+    { kind: "report", title: "Podgląd raportu", icon: "clipboard-list", action: "Otwórz raport", view: "reports" }
   ]);
 
   const FORBIDDEN_PREVISIT_PHRASES = Object.freeze([
@@ -121,7 +140,7 @@
   function preVisitStepState(kind, payload = {}) {
     if (kind === "documents") {
       return payload.docs.length
-        ? { key: "ready", label: `${payload.docs.length} dokumenty`, caption: "źródła są w historii demo" }
+        ? { key: "ready", label: formatDocuments(payload.docs.length), caption: "źródła są w historii demo" }
         : { key: "missing", label: "Brak dokumentów", caption: "zacznij od dodania dokumentu demo" };
     }
     if (kind === "medications") {
@@ -131,7 +150,7 @@
       if (!payload.meds.length) return { key: "missing", label: "Brak listy leków", caption: "dodaj listę leków z dokumentu lub wywiadu" };
       return uncertain.length
         ? { key: "confirm", label: `${uncertain.length} do potwierdzenia`, caption: "realne przyjmowanie wymaga sprawdzenia" }
-        : { key: "ready", label: `${payload.meds.length} leki`, caption: "lista ma źródła w demo" };
+        : { key: "ready", label: formatCount(payload.meds.length, "lek", "leki", "leków"), caption: "lista ma źródła w demo" };
     }
     if (kind === "interview") {
       return payload.interviews.length
@@ -140,18 +159,18 @@
     }
     if (kind === "questions") {
       return payload.patientQuestions.length
-        ? { key: "ready", label: `${payload.patientQuestions.length} pytania`, caption: "do omówienia podczas wizyty" }
+        ? { key: "ready", label: formatQuestions(payload.patientQuestions.length), caption: "do omówienia podczas wizyty" }
         : { key: "missing", label: "Brak pytań", caption: "zapisz pytania przed rozmową" };
     }
     if (kind === "gaps") {
       return payload.gaps.length
-        ? { key: "confirm", label: `${payload.gaps.length} braki`, caption: "Known / Unknown / To verify" }
+        ? { key: "confirm", label: formatGaps(payload.gaps.length), caption: "znane, nieznane i do weryfikacji" }
         : { key: "ready", label: "Braki uporządkowane", caption: "brak luk w danych demo" };
     }
     const summary = visitChecklistSummary(payload.checklist);
     return summary.status.key === "ready"
-      ? { key: "ready", label: "Raport gotowy", caption: "można obejrzeć preview raportu" }
-      : { key: "confirm", label: "Raport preview", caption: "najpierw sprawdź braki i potwierdzenia" };
+      ? { key: "ready", label: "Raport gotowy", caption: "można obejrzeć podgląd raportu" }
+      : { key: "confirm", label: "Podgląd raportu", caption: "najpierw sprawdź braki i potwierdzenia" };
   }
 
   function buildPreVisitModel(input = {}) {
@@ -192,7 +211,7 @@
       checklistItems,
       checklistSummary,
       steps,
-      safetyCopy: "Ten flow porządkuje dane przed rozmową z lekarzem: dokumenty, leki, wywiad, pytania, braki i podgląd raportu. Nie ocenia pilności, nie diagnozuje i nie tworzy zaleceń terapeutycznych.",
+      safetyCopy: "Ten widok porządkuje dane przed rozmową z lekarzem: dokumenty, leki, wywiad, pytania, braki i podgląd raportu. Nie ocenia pilności, nie diagnozuje i nie tworzy zaleceń terapeutycznych.",
       emptyState: {
         hasAnyData: Boolean(docs.length || meds.length || interviews.length || patientQuestions.length || gaps.length || checklistItems.length),
         message: "Zacznij od dokumentu, wywiadu albo listy pytań."

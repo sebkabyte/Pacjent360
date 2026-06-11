@@ -266,7 +266,7 @@ async function main() {
         stepCount: steps.length,
         hasSafetyCopy: document.body.textContent.includes('Nie ocenia pilności') && document.body.textContent.includes('nie diagnozuje'),
         hasDocumentsStep: steps.some((text) => text.includes('Dokumenty')),
-        hasReportStep: steps.some((text) => text.includes('Raport preview')),
+        hasReportStep: steps.some((text) => text.includes('Podgląd raportu')),
         hasHorizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
       };
     })()`);
@@ -299,15 +299,15 @@ async function main() {
       return {
         activeView: document.querySelector('nav button.active')?.dataset.view || null,
         hasReport: Boolean(document.querySelector('.context-report')),
-        hasKnownUnknown: document.body.textContent.includes('Known') &&
-          document.body.textContent.includes('Unknown') &&
-          document.body.textContent.includes('Uncertain') &&
-          document.body.textContent.includes('To verify')
+        hasKnownUnknown: document.body.textContent.includes('Znane') &&
+          document.body.textContent.includes('Nieznane') &&
+          document.body.textContent.includes('Niepewne') &&
+          document.body.textContent.includes('Do weryfikacji')
       };
     })()`);
     assert(report.activeView === "reports", `Expected reports view, got ${report.activeView}`);
     assert(report.hasReport, "Reports view should render context report");
-    assert(report.hasKnownUnknown, "Reports view should include Known / Unknown / Uncertain / To verify");
+    assert(report.hasKnownUnknown, "Reports view should include known/unknown/uncertain/to-verify categories in Polish");
 
     const timeline = await client.evaluate(`(() => {
       document.querySelector('nav button[data-view="timeline"]').click();
@@ -559,7 +559,7 @@ async function main() {
       if (caregiverField) caregiverField.value = 'Opiekun testowy';
       if (scopeField) scopeField.value = 'opis zawiera leki i wizyty, ale bez checkboxów';
       if (formDialog?.open) document.querySelector('#dialogForm').requestSubmit();
-      const storedAfterBlocked = JSON.parse(localStorage.getItem('pacjent360-state-v6') || '{}');
+      const storedAfterBlocked = JSON.parse(localStorage.getItem('pacjent360-state-v7') || '{}');
       const blockedConsentSaved = (storedAfterBlocked.consents || []).some((item) => item.subject === 'Blokada bez zakresu');
       const blockedDialogStillOpen = Boolean(formDialog?.open);
       if (subjectField) subjectField.value = 'Test zakresu zgody';
@@ -581,7 +581,7 @@ async function main() {
       const createSecondaryButton = document.querySelector('#confirmSecondaryAction');
       const createSecondaryText = createSecondaryButton?.textContent.trim() || '';
       if (createSecondaryButton) createSecondaryButton.click();
-      const storedAfterReturn = JSON.parse(localStorage.getItem('pacjent360-state-v6') || '{}');
+      const storedAfterReturn = JSON.parse(localStorage.getItem('pacjent360-state-v7') || '{}');
       const savedAfterReturn = (storedAfterReturn.consents || []).some((item) => item.subject === 'Test zakresu zgody');
       const createReturnToEdit = Boolean(document.querySelector('#entryDialog')?.open) && !document.querySelector('#confirmDialog')?.open;
       const createReturnPreservedFields =
@@ -592,7 +592,7 @@ async function main() {
       if (document.querySelector('#entryDialog')?.open) document.querySelector('#dialogForm').requestSubmit();
       const createConfirmButton = document.querySelector('#confirmAction');
       if (createConfirmButton) createConfirmButton.click();
-      const storedAfterAdd = JSON.parse(localStorage.getItem('pacjent360-state-v6') || '{}');
+      const storedAfterAdd = JSON.parse(localStorage.getItem('pacjent360-state-v7') || '{}');
       const addedConsent = (storedAfterAdd.consents || []).find((item) => item.subject === 'Test zakresu zgody');
       const secondAddButton = document.querySelector('[data-open-dialog="consent"]');
       if (secondAddButton) secondAddButton.click();
@@ -611,7 +611,7 @@ async function main() {
       const patientPreviewHasRole = patientPreviewText.includes('Pacjent') && patientPreviewText.includes('pacjent');
       const patientConfirmButton = document.querySelector('#confirmAction');
       if (patientConfirmButton) patientConfirmButton.click();
-      const storedAfterPatient = JSON.parse(localStorage.getItem('pacjent360-state-v6') || '{}');
+      const storedAfterPatient = JSON.parse(localStorage.getItem('pacjent360-state-v7') || '{}');
       const addedPatientConsent = (storedAfterPatient.consents || []).find((item) => item.scope === 'Pacjent sprawdza własny raport');
       const beforeButtons = document.querySelectorAll('[data-revoke]').length;
       const firstRevoke = document.querySelector('[data-revoke]');
@@ -630,7 +630,7 @@ async function main() {
       if (firstRevokeAfterCancel) firstRevokeAfterCancel.click();
       const confirmButton = document.querySelector('#confirmAction');
       if (confirmButton) confirmButton.click();
-      const stored = JSON.parse(localStorage.getItem('pacjent360-state-v6') || '{}');
+      const stored = JSON.parse(localStorage.getItem('pacjent360-state-v7') || '{}');
       return {
         activeView: document.querySelector('nav button.active')?.dataset.view || null,
         hasSafetyCopy: document.body.textContent.includes('tylko zakres danych') && document.body.textContent.includes('nie diagnozuje'),

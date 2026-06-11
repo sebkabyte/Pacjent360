@@ -112,6 +112,8 @@ foreach ($pattern in $privateTextPatterns) {
 
 & node --check (Join-Path $target "public/patient360-contract.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-contract.js"
+& node --check (Join-Path $target "public/patient360-format.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-format.js"
 & node --check (Join-Path $target "public/patient360-map-model.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-map-model.js"
 & node --check (Join-Path $target "public/patient360-previsit-model.js") | Out-Null
@@ -120,10 +122,16 @@ Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient36
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-caregiver-model.js"
 & node --check (Join-Path $target "public/patient360-consent-model.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-consent-model.js"
+& node --check (Join-Path $target "public/patient360-demo-data.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-demo-data.js"
 & node --check (Join-Path $target "public/app.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/app.js"
 & node --check (Join-Path $target "tools/validate-data-contract.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-data-contract.js"
+& node --check (Join-Path $target "tools/validate-format.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-format.js"
+& node --check (Join-Path $target "tools/validate-glossary.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-glossary.js"
 & node --check (Join-Path $target "tools/validate-map-model.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-map-model.js"
 & node --check (Join-Path $target "tools/validate-previsit-workflow.js") | Out-Null
@@ -132,6 +140,8 @@ Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-p
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-caregiver-scope.js"
 & node --check (Join-Path $target "tools/validate-consent-draft.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-consent-draft.js"
+& node --check (Join-Path $target "tools/validate-demo-coherence.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-demo-coherence.js"
 & node --check (Join-Path $target "tools/validate-a11y.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-a11y.js"
 & node --check (Join-Path $target "tools/validate-validation-pack.js") | Out-Null

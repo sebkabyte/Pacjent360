@@ -22,7 +22,7 @@
     results: ["results", "wyniki", "wynik", "badania"],
     observations: ["observations", "obserwacje", "wywiad", "rodzina"],
     report: ["report", "raport"],
-    tasks: ["tasks", "zadania", "przypomnienia", "checklisty"]
+    tasks: ["tasks", "zadania", "checklisty"]
   });
 
   function normalize(value) {
