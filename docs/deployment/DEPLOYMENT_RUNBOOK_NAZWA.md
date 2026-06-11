@@ -24,7 +24,7 @@ Po przejsciu gate sprawdz:
 
 Pelny gate uruchamia tez `tools\verify-release-artifacts.ps1`, ktory rozpakowuje hosting ZIP i sprawdza go tak, jak katalog gotowy do uploadu.
 
-Nie publikuj `dist/repo`, `prints`, `.git`, `CLAUDE.md`, `CODEX_*`, `HANDOVER.md`, `1.txt`, `linkedin-story.md`, `.env` ani calego katalogu projektu.
+Nie publikuj katalogow builda/repo, lokalnych zrzutow ekranu, metadanych Git, plikow `.env`, prywatnych notatek, szkicow komunikacji ani roboczych materialow AI. Na hosting trafia wylacznie zawartosc przygotowanej paczki uploadu.
 
 Nie zostawiaj tez w publicznym document root ZIP-ow, manifestow, checklist ani raportow pomocniczych: `pacjent360-public.zip`, `pacjent360-upload-root.zip`, `pacjent360-public-repo.zip`, plikow `.sha256`, `release-manifest.json`, `upload-ready-manifest.json`, `deployment-handoff.txt`, `go-live-status.txt`, `domain-diagnostics.txt` i `document-root-checklist.txt`. Sa to artefakty dla autora/reviewera, nie czesc strony.
 

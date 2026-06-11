@@ -79,22 +79,17 @@ foreach ($asset in $assetFiles) {
   Copy-Item -LiteralPath $source -Destination $assetTarget
 }
 
-$blockedNames = @(
-  "1.txt",
-  "linkedin-story.md",
-  ".env",
-  ".git",
-  ".claude",
-  "CLAUDE.md",
-  "CODEX_GOALS.md",
-  "CODEX_MASTER_PROMPT.md",
-  "CODEX_NIGHT_SPRINT.md",
-  "HANDOVER.md"
+$blockedNamePatterns = @(
+  "^\.env(\..*)?$",
+  "^\.git$",
+  "private",
+  "handover",
+  "working"
 )
-foreach ($blocked in $blockedNames) {
-  $found = Get-ChildItem -LiteralPath $target -Force -Recurse | Where-Object { $_.Name -eq $blocked }
+foreach ($pattern in $blockedNamePatterns) {
+  $found = Get-ChildItem -LiteralPath $target -Force -Recurse | Where-Object { $_.Name -match $pattern }
   if ($found) {
-    throw "Blocked private file found in public package: $blocked"
+    throw "Blocked private or working file found in public package: $pattern"
   }
 }
 

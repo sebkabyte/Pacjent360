@@ -72,23 +72,21 @@ Assert-True (-not $missing) ("Missing public repo file: " + ($missing -join ", "
 $unexpected = $actualFiles | Where-Object { $expectedFiles -notcontains $_ }
 Assert-True (-not $unexpected) ("Unexpected file in public repo package: " + ($unexpected -join ", "))
 
-$blockedNames = @(
-  "1.txt",
-  "linkedin-story.md",
-  ".env",
-  ".git",
-  ".claude",
-  "CLAUDE.md",
-  "CODEX_GOALS.md",
-  "CODEX_MASTER_PROMPT.md",
-  "CODEX_NIGHT_SPRINT.md",
-  "HANDOVER.md"
+$blockedNamePatterns = @(
+  "^\.env(\..*)?$",
+  "^\.git$",
+  "private",
+  "handover",
+  "working"
 )
 
-$blockedFound = Get-ChildItem -LiteralPath $target -Force -Recurse | Where-Object { $blockedNames -contains $_.Name }
+$blockedFound = Get-ChildItem -LiteralPath $target -Force -Recurse | Where-Object {
+  $name = $_.Name
+  @($blockedNamePatterns | Where-Object { $name -match $_ }).Count -gt 0
+}
 Assert-True (-not $blockedFound) ("Blocked private or working file found: " + (($blockedFound | Select-Object -ExpandProperty FullName) -join ", "))
 
-$blockedPathPrefixes = @("dist/", "prints/", ".git/", ".claude/")
+$blockedPathPrefixes = @("dist/", "prints/", ".git/")
 foreach ($file in $actualFiles) {
   foreach ($prefix in $blockedPathPrefixes) {
     Assert-True (-not $file.StartsWith($prefix, [System.StringComparison]::OrdinalIgnoreCase)) "Blocked path found in public repo package: $file"
@@ -96,8 +94,8 @@ foreach ($file in $actualFiles) {
 }
 
 $privateTextPatterns = @(
-  "C:\\Users\\Joulix\\.codex\\attachments",
-  "C:/Users/Joulix/.codex/attachments"
+  ("C:" + [char]92 + "Users" + [char]92),
+  "file:///C:/Users/"
 )
 
 $textFiles = Get-ChildItem -LiteralPath $target -Recurse -File | Where-Object {

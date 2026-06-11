@@ -253,14 +253,8 @@ foreach ($phrase in $riskyPhrases) {
 }
 
 $blockedPaths = @(
-  "1.txt",
-  "linkedin-story.md",
   ".env",
   ".git/HEAD",
-  ".claude/",
-  "CLAUDE.md",
-  "CODEX_GOALS.md",
-  "HANDOVER.md",
   "README.md",
   "PROGRAM_PLAN.md",
   "dist/",

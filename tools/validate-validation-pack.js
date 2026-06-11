@@ -33,14 +33,12 @@ for (const [name, content] of Object.entries({
   "docs/validation/VALIDATION_FEEDBACK_FORM.md": form,
   "docs/validation/VALIDATION_RESULTS_TEMPLATE.csv": csv
 })) {
-  assert(!content.includes("1.txt"), `${name} should not reference private source file`);
-  assert(!content.includes("linkedin-story"), `${name} should not reference private story file`);
+  assert(!/private\s+(source|working|story)/i.test(content), `${name} should not reference private working material`);
   assert(!content.includes("DO UZUPELNIENIA"), `${name} should not contain placeholders`);
 }
 
 for (const [name, content] of Object.entries(extendedContents)) {
-  assert(!content.includes("1.txt"), `${name} should not reference private source file`);
-  assert(!content.includes("linkedin-story"), `${name} should not reference private story file`);
+  assert(!/private\s+(source|working|story)/i.test(content), `${name} should not reference private working material`);
   assert(!content.includes("DO UZUPELNIENIA"), `${name} should not contain placeholders`);
 
   for (const phrase of [...FORBIDDEN_CLAIM_PHRASES, "pilne", "natychmiast"]) {

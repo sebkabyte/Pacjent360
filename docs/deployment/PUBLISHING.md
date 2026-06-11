@@ -154,10 +154,10 @@ Następnie wyślij testowe wiadomości z zewnętrznej skrzynki na oba aliasy, po
 
 Nie publikuj na hostingu:
 
-- `1.txt` - prywatny materiał roboczy.
-- `linkedin-story.md` - osobny materiał na LinkedIn, nie treść strony WWW.
+- prywatne notatki i materiały źródłowe autora.
+- szkice komunikacji, w tym osobne materiały na LinkedIn, które nie są treścią strony WWW.
 - `.git/` - repozytorium lokalne.
-- `CLAUDE.md`, `CODEX_*`, `HANDOVER.md`, `prints/`, `dist/` - robocze materiały AI, artefakty smoke testów i paczki builda; nie trafiają do publicznego GitHuba domyślnie.
+- robocze materiały AI, lokalne zrzuty, artefakty smoke testów i paczki builda; nie trafiają do publicznego GitHuba domyślnie.
 - `docs/ARCHITECTURE.md`, `README.md`, `docs/legal/DISCLAIMER.md`, `docs/deployment/PUBLISHING.md`, `docs/governance/RISKS.md` - dokumenty repozytorium; mogą trafić do publicznego GitHuba tylko zgodnie z allowlistą D-002 w `docs/PROGRAM_PLAN.md`.
 
 ## Szybka ścieżka w nazwa.pl
@@ -195,4 +195,4 @@ Po pierwszym udanym verifierze możesz potwierdzić, że domena serwuje dokładn
 8. W stopce kliknij `Disclaimer` i potwierdź, że otwiera się `disclaimer.html`.
 9. Kliknij `Prywatność` i potwierdź, że otwiera się `privacy.html`.
 10. Potwierdź, że `maintenance.html` jest dostępny, ale nigdzie nie jest linkowany jako główna strona.
-11. Potwierdź, że publicznie nie są dostępne prywatne pliki robocze, szczególnie `1.txt` i `linkedin-story.md`.
+11. Potwierdź, że publicznie nie są dostępne prywatne notatki, szkice komunikacji ani robocze pliki autora.

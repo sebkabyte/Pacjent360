@@ -398,6 +398,6 @@ Każda zmiana musi przejść Clinical Safety Checklist:
 
 ---
 
-Autor analizy: Claude (na zlecenie Sebastiana Kalisza).
+Status: publiczna analiza robocza produktu.
 Metoda: code review app.js + konfrontacja z dokumentacją projektową.
 Następny krok: decyzja autora o priorytetach i zakresie wdrożenia.

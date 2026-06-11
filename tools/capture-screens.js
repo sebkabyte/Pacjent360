@@ -9,7 +9,7 @@ const { URL } = require("node:url");
 const args = parseArgs(process.argv.slice(2));
 const root = path.resolve(__dirname, "..");
 const packageDir = path.resolve(root, args.packageDir || "public");
-const outputPath = path.resolve(root, args.out || "TEMP_REVIEW_OUTPUT/NIGHT_SCREENSHOTS/screenshot.png");
+const outputPath = path.resolve(root, args.out || "dist/screenshots/screenshot.png");
 const width = parseInteger(args.width, 1280);
 const height = parseInteger(args.height, 900);
 
