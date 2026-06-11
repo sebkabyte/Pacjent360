@@ -4298,3 +4298,177 @@ dialog::backdrop {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* V1-b: Clinical Calm + Trust OS ledger */
+body[data-register="doctor"] {
+  background: var(--p360-register-doctor-bg);
+}
+
+body[data-register="patient"] {
+  background: var(--p360-register-patient-bg);
+}
+
+body[data-register="caregiver"] {
+  background: var(--p360-register-caregiver-bg);
+}
+
+body[data-register="doctor"] .workspace,
+body[data-register="doctor"] .topbar {
+  background: linear-gradient(180deg, rgba(244, 247, 248, 0.98), rgba(250, 252, 252, 0.96));
+}
+
+body[data-register="patient"] .workspace,
+body[data-register="caregiver"] .workspace {
+  background: linear-gradient(180deg, rgba(247, 251, 250, 0.98), rgba(255, 255, 255, 0.96));
+}
+
+body[data-register="doctor"] .section-band,
+body[data-register="doctor"] .metric,
+body[data-register="doctor"] .record,
+body[data-register="doctor"] .timeline-story-card.temporal-card {
+  border-color: var(--p360-register-doctor-border);
+  border-radius: var(--p360-radius-sm);
+  box-shadow: var(--p360-shadow-clinical);
+}
+
+body[data-register="doctor"] .metric {
+  min-height: 104px;
+  padding: var(--p360-density-doctor-card-padding);
+}
+
+body[data-register="doctor"] .metric-value {
+  font-size: 26px;
+}
+
+body[data-register="doctor"] .core-brief {
+  border-left: 5px solid var(--p360-register-ledger-accent);
+  background:
+    linear-gradient(90deg, rgba(15, 118, 110, 0.08), transparent 52%),
+    var(--p360-register-doctor-panel);
+}
+
+body[data-register="doctor"] .core-brief h2,
+body[data-register="doctor"] .decision-hero h2 {
+  max-width: 980px;
+}
+
+body[data-register="doctor"] .med-reconciliation {
+  border-top: 3px solid var(--p360-register-ledger-border);
+  background: linear-gradient(180deg, #ffffff, #fbfdfd);
+}
+
+body[data-register="doctor"] .core-map-shortcut {
+  border-color: var(--p360-register-ledger-border);
+  background:
+    linear-gradient(90deg, rgba(15, 118, 110, 0.08), rgba(29, 78, 216, 0.05)),
+    #ffffff;
+}
+
+body[data-register="doctor"] .time-ribbon {
+  border: 1px solid var(--p360-register-doctor-border);
+  border-radius: var(--p360-radius-md);
+  background:
+    linear-gradient(90deg, rgba(15, 118, 110, 0.05) 1px, transparent 1px),
+    linear-gradient(180deg, #ffffff, #f1f6f6 58%, #fbfdfd);
+  box-shadow: var(--p360-shadow-clinical);
+}
+
+body[data-register="doctor"] .timeline-story-card.temporal-card {
+  border-left-color: var(--p360-register-ledger-accent);
+}
+
+body[data-register="doctor"] .timeline-story-card.temporal-card.future {
+  border-left-color: var(--blue);
+}
+
+body[data-register="patient"] .section-band,
+body[data-register="patient"] .record,
+body[data-register="caregiver"] .section-band,
+body[data-register="caregiver"] .record {
+  border-radius: var(--p360-radius-md);
+  box-shadow: var(--p360-shadow-clinical);
+}
+
+body[data-register="patient"] .patient-now-panel,
+body[data-register="caregiver"] .caregiver-overview {
+  border-left: 5px solid var(--p360-register-ledger-accent);
+  background:
+    linear-gradient(90deg, rgba(217, 240, 238, 0.72), rgba(255, 255, 255, 0.96)),
+    #ffffff;
+}
+
+body[data-register="patient"] .patient-now-grid article,
+body[data-register="patient"] .patient-app-tile,
+body[data-register="caregiver"] .caregiver-scope,
+body[data-register="caregiver"] .caregiver-access-card {
+  padding: var(--p360-density-patient-card-padding);
+  border-color: var(--p360-color-line);
+  border-radius: var(--p360-radius-md);
+  background: var(--p360-register-patient-panel);
+  box-shadow: 0 8px 24px rgba(31, 41, 51, 0.06);
+}
+
+body[data-register="caregiver"] .caregiver-scope.active,
+body[data-register="caregiver"] .caregiver-access-card.allowed,
+body[data-register="caregiver"] .consent-dashboard {
+  border-color: var(--p360-register-ledger-border);
+}
+
+.evidence-panel,
+.timeline-inspector,
+.consent-dashboard,
+.consent-scope-table,
+.audit-table {
+  border-color: var(--p360-register-ledger-border);
+  background: var(--p360-register-ledger-bg);
+  box-shadow: var(--p360-shadow-ledger);
+}
+
+.source-line {
+  align-items: center;
+}
+
+.source-chip,
+.p360-source-chip {
+  border-color: var(--p360-register-ledger-border);
+  background: var(--p360-register-ledger-bg);
+  color: var(--p360-color-teal-strong);
+  box-shadow: 0 1px 0 rgba(15, 118, 110, 0.1);
+}
+
+.source-chip button,
+.p360-source-chip button {
+  font-weight: 900;
+}
+
+.source-chip::before,
+.p360-source-chip::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--p360-register-ledger-accent);
+}
+
+.consent-scope-table tr,
+.audit-table tr {
+  border-left: 3px solid transparent;
+}
+
+.consent-scope-table tbody tr:hover,
+.audit-table tbody tr:hover {
+  border-left-color: var(--p360-register-ledger-accent);
+  background: #f7fbfa;
+}
+
+body[data-register="doctor"] .page-intro,
+body[data-register="patient"] .page-intro,
+body[data-register="caregiver"] .page-intro {
+  padding: 2px 0 6px;
+}
+
+body[data-register="patient"] .page-intro p,
+body[data-register="caregiver"] .page-intro p {
+  max-width: 760px;
+  font-size: 1rem;
+}

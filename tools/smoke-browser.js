@@ -257,12 +257,14 @@ async function main() {
       hasCaregiverModel: Boolean(window.Patient360CaregiverModel),
       hasConsentModel: Boolean(window.Patient360ConsentModel),
       activeView: document.querySelector('nav button.active')?.dataset.view || null,
+      register: document.body.dataset.register || '',
       watermark: document.body.textContent.includes('DANE FIKCYJNE'),
       independence: document.body.textContent.includes('CeZ') && document.body.textContent.includes('NFZ') && document.body.textContent.includes('IKP')
     }))()`);
     assert(initial.title.includes("Pacjent 360"), "Demo title should contain Pacjent 360");
     assert(initial.hasContract && initial.hasFormat && initial.hasMapModel && initial.hasDemoData && initial.hasPreVisitModel && initial.hasCaregiverModel && initial.hasConsentModel, "Browser globals should expose contract, format, map model, demo data, pre-visit model, caregiver model and consent model");
     assert(initial.activeView === "core", `Expected core view, got ${initial.activeView}`);
+    assert(initial.register === "doctor", `Expected doctor register on core view, got ${initial.register}`);
     assert(initial.watermark, "Demo should show fictional data marker");
     assert(initial.independence, "Demo should show CeZ/NFZ/IKP independence");
 
@@ -271,18 +273,23 @@ async function main() {
       scrollHeight: document.body.scrollHeight,
       hasMapShortcut: Boolean(document.querySelector('.core-map-shortcut')),
       hasEmbeddedMap: Boolean(document.querySelector('.patient-map360.embedded')),
-      hasMedReconciliation: Boolean(document.querySelector('.med-reconciliation'))
+      hasMedReconciliation: Boolean(document.querySelector('.med-reconciliation')),
+      register: document.body.dataset.register || '',
+      hasLedgerSourceChip: Boolean(document.querySelector('.source-chip.p360-source-chip'))
     }))()`);
     assert(core.activeView === "core", `Expected core view for 90-second dashboard, got ${core.activeView}`);
     assert(core.scrollHeight <= 3000, `Core dashboard should stay within 90-second height budget, got ${core.scrollHeight}px`);
     assert(core.hasMapShortcut && !core.hasEmbeddedMap, "Core dashboard should use a map shortcut instead of embedding the full map");
     assert(core.hasMedReconciliation, "Core dashboard should keep medication reconciliation visible");
+    assert(core.register === "doctor", `Core dashboard should use doctor visual register, got ${core.register}`);
+    assert(core.hasLedgerSourceChip, "Core dashboard should render Trust OS ledger source chips");
 
     const patient = await client.evaluate(`(() => {
       document.querySelector('nav button[data-view="patientPortal"]').click();
       const steps = [...document.querySelectorAll('.previsit-step')].map((step) => step.textContent.trim().replace(/\\s+/g, ' '));
       return {
         activeView: document.querySelector('nav button.active')?.dataset.view || null,
+        register: document.body.dataset.register || '',
         scrollHeight: document.body.scrollHeight,
         stepCount: steps.length,
         hasNowPanel: Boolean(document.querySelector('.patient-now-panel')),
@@ -294,6 +301,7 @@ async function main() {
       };
     })()`);
     assert(patient.activeView === "patientPortal", `Expected patientPortal view, got ${patient.activeView}`);
+    assert(patient.register === "patient", `Patient portal should use patient visual register, got ${patient.register}`);
     assert(patient.scrollHeight <= 3500, `Patient portal desktop should stay within first-screen workflow budget, got ${patient.scrollHeight}px`);
     assert(patient.hasNowPanel && !patient.hasEmbeddedMap, "Patient portal should show next-step panel and avoid embedding full map");
     assert(patient.stepCount === 6, `Expected 6 pre-visit steps, got ${patient.stepCount}`);
@@ -565,6 +573,7 @@ async function main() {
       document.querySelector('nav button[data-view="caregiverPortal"]').click();
       return {
         activeView: document.querySelector('nav button.active')?.dataset.view || null,
+        register: document.body.dataset.register || '',
         hasHeader: document.body.textContent.includes('Kokpit opiekuna'),
         hasSafetyCopy: document.body.textContent.includes('tylko zakres danych') && document.body.textContent.includes('nie diagnozuje'),
         scopeCount: document.querySelectorAll('.caregiver-scope').length,
@@ -576,6 +585,7 @@ async function main() {
       };
     })()`);
     assert(caregiver.activeView === "caregiverPortal", `Expected caregiverPortal view, got ${caregiver.activeView}`);
+    assert(caregiver.register === "caregiver", `Caregiver portal should use caregiver visual register, got ${caregiver.register}`);
     assert(caregiver.hasHeader && caregiver.hasSafetyCopy, "Caregiver view should show scoped-access safety copy");
     assert(caregiver.scopeCount >= 3, `Caregiver view expected at least 3 scopes, got ${caregiver.scopeCount}`);
     assert(caregiver.accessCardCount >= 6, `Caregiver view expected access cards, got ${caregiver.accessCardCount}`);

@@ -118,3 +118,39 @@
   outline-offset: var(--p360-focus-offset);
 }
 
+.p360-ledger-panel {
+  border: 1px solid var(--p360-register-ledger-border);
+  border-radius: var(--p360-radius-md);
+  background: var(--p360-register-ledger-bg);
+  box-shadow: var(--p360-shadow-ledger);
+}
+
+.p360-ledger-row,
+.p360-audit-row,
+.p360-consent-row {
+  border: 1px solid var(--p360-color-line);
+  border-left: 3px solid var(--p360-register-ledger-accent);
+  border-radius: var(--p360-radius-sm);
+  background: var(--p360-color-paper);
+}
+
+.p360-source-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--p360-space-1);
+  min-height: 24px;
+  padding: 2px 8px;
+  border: 1px solid var(--p360-register-ledger-border);
+  border-radius: var(--p360-radius-pill);
+  background: var(--p360-register-ledger-bg);
+  color: var(--p360-color-teal-strong);
+  font: 850 0.76rem/1 var(--p360-font-sans);
+}
+
+.p360-source-chip button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
