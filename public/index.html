@@ -47,32 +47,39 @@
   </div>
 </header>
 <main id="main-content">
-  <section class="hero">
-    <div class="container hero-grid">
-      <div>
-        <p class="eyebrow">Dane są. Kontekstu brakuje.</p>
-        <span class="p360-badge">Działa w demo (alpha)</span>
-        <h1>Pacjent przychodzi z historią, nie z folderem PDF-ów.</h1>
-        <p class="lead">Pacjent 360 układa dokumenty, leki, wyniki, objawy, obserwacje rodziny i pytania w jedną mapę kontekstu. Lekarz widzi to, co trzeba wyjaśnić. Pacjent i rodzic/opiekun wiedzą, co przygotować. System nie diagnozuje — pilnuje, żeby ważne rzeczy nie zginęły.</p>
-        <div class="hero-actions">
-          <a class="button primary" href="demo.html">Zobacz demo alpha</a>
-          <a class="button secondary" href="#solution">Jak to działa</a>
-        </div>
+  <section class="hero hero-photo">
+    <img class="hero-bg" src="assets/hero-clinical-context.png" alt="" />
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="container hero-inner">
+      <p class="eyebrow">Dane są. Kontekstu brakuje.</p>
+      <span class="p360-badge hero-badge">Działa w demo (alpha)</span>
+      <h1>Mapa zdarzeń pacjenta. Film z życia, nie folder z dokumentami.</h1>
+      <p class="lead">Pacjent 360 porządkuje dokumenty, wizyty, leki, objawy, obserwacje rodziny i ustalenia w jedną chronologiczną mapę. Pacjent, opiekun i lekarz widzą tę samą historię, ale pracują w widokach dopasowanych do swojej roli. System nie diagnozuje — pilnuje, żeby ważne rzeczy nie zginęły.</p>
+      <div class="hero-actions">
+        <a class="button primary light" href="demo.html">Zobacz demo alpha</a>
+        <a class="button secondary ghost-light" href="#film">Jak to działa</a>
       </div>
-      <aside class="story-card patient-movie" aria-label="Przykładowa historia pacjenta">
-        <div class="movie-header"><strong>Film z życia pacjenta</strong><span>nie folder z dokumentami</span></div>
-        <div class="timeline-line" aria-hidden="true"></div>
-        <div class="event"><span class="event-icon">1</span><div><b>Źródło: wypis / wynik / wywiad</b><small>Każda informacja ma pochodzenie, datę i status pewności.</small></div></div>
-        <div class="event warn"><span class="event-icon">2</span><div><b>Rozbieżność: lek z dokumentacji ≠ lek faktycznie brany</b><small>System nie zmienia leczenia. Tworzy pytanie do potwierdzenia.</small></div></div>
-        <div class="event"><span class="event-icon">3</span><div><b>Rodzic / opiekun dodaje obserwację</b><small>Obserwacja jest oznaczona jako obserwacja — nie fakt kliniczny.</small></div></div>
-        <div class="doctor-brief"><h3>Pacjent w 90 sekund</h3><p>Co wiadomo? Czego brakuje? Co jest niepewne? Co trzeba omówić z lekarzem?</p></div>
-      </aside>
     </div>
   </section>
 
   <div class="container trust-strip" aria-label="Granice produktu">
     <span>Nie diagnozuje</span><span>Nie prowadzi triage</span><span>Nie rekomenduje terapii</span><span>Doctor in the Loop</span><span>Źródła + zgody + audyt</span>
   </div>
+
+  <section class="container section" id="film">
+    <div class="section-head split">
+      <div><p class="eyebrow">Jak to działa</p><h2>Film z życia pacjenta — w 30 sekund.</h2></div>
+      <p>Każda informacja ma źródło, datę i status pewności. Rozbieżności stają się pytaniami do lekarza, a obserwacje bliskich są oznaczone jako obserwacje — nie fakty kliniczne.</p>
+    </div>
+    <aside class="story-card patient-movie standalone" aria-label="Przykładowa historia pacjenta">
+      <div class="movie-header"><strong>Film z życia pacjenta</strong><span>nie folder z dokumentami</span></div>
+      <div class="timeline-line" aria-hidden="true"></div>
+      <div class="event"><span class="event-icon">1</span><div><b>Źródło: wypis / wynik / wywiad</b><small>Każda informacja ma pochodzenie, datę i status pewności.</small></div></div>
+      <div class="event warn"><span class="event-icon">2</span><div><b>Rozbieżność: lek z dokumentacji ≠ lek faktycznie brany</b><small>System nie zmienia leczenia. Tworzy pytanie do potwierdzenia.</small></div></div>
+      <div class="event"><span class="event-icon">3</span><div><b>Rodzic / opiekun dodaje obserwację</b><small>Obserwacja jest oznaczona jako obserwacja — nie fakt kliniczny.</small></div></div>
+      <div class="doctor-brief"><h3>Pacjent w 90 sekund</h3><p>Co wiadomo? Czego brakuje? Co jest niepewne? Co trzeba omówić z lekarzem?</p></div>
+    </aside>
+  </section>
 
   <section class="container section" id="problem">
     <div class="section-head split">

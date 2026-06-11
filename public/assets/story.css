@@ -73,3 +73,20 @@ body[data-register="story"] .button.secondary {
 }
 
 a:focus-visible,button:focus-visible{outline:3px solid #0f766e;outline-offset:2px;border-radius:8px}
+
+/* Hero z fotografia dokumentow (przywrocone na prosbe wlasciciela) */
+.hero-photo{padding:0;background:var(--p360-ink,#10242a)}
+.hero-photo .hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%}
+.hero-photo .hero-overlay{position:absolute;inset:0;background:linear-gradient(88deg,rgba(13,28,32,.93) 10%,rgba(13,28,32,.72) 48%,rgba(13,28,32,.34) 100%)}
+.hero-photo .hero-inner{position:relative;z-index:1;padding:118px 0 88px;max-width:780px}
+.hero-photo h1{color:#fff}
+.hero-photo .lead{color:rgba(255,255,255,.9);max-width:660px}
+.hero-photo .eyebrow{color:#9be3da}
+.hero-badge{display:inline-block;margin:8px 0 16px}
+.hero-photo .p360-badge{background:rgba(255,255,255,.14);color:#d9f0ee;border:1px solid rgba(255,255,255,.34)}
+.button.primary.light{background:#fff;color:var(--p360-ink,#10242a);box-shadow:0 16px 34px rgba(0,0,0,.35)}
+.button.primary.light:hover{background:#eef6f5}
+.button.secondary.ghost-light{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.55)}
+.button.secondary.ghost-light:hover{background:rgba(255,255,255,.12)}
+.patient-movie.standalone{max-width:700px;margin:26px auto 0}
+@media (max-width:760px){.hero-photo .hero-inner{padding:84px 0 60px}}
