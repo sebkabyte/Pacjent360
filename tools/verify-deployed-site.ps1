@@ -227,7 +227,8 @@ Assert-True ($consentModel.Contains("Patient360ConsentModel")) "patient360-conse
 Assert-True ($demoData.Contains("Patient360DemoData")) "patient360-demo-data.js should expose Patient360DemoData"
 Assert-True ($app.Contains("Raport kontekstowy")) "app.js should contain context report"
 Assert-True ($app.Contains("Znane / Nieznane / Niepewne / Do weryfikacji")) "app.js should contain report categories"
-Assert-True ($app.Contains("consent:g1")) "app.js should contain consent source refs"
+Assert-True ($app.Contains("consentSourceRefsForContract")) "app.js should contain consent source ref resolver"
+Assert-True ($demoData.Contains("consent:g1")) "patient360-demo-data.js should contain consent source refs"
 
 Assert-True ($privacy.Contains("localStorage")) "privacy.html should disclose localStorage"
 Assert-True ($privacy.Contains("lucide@0.468.0")) "privacy.html should disclose pinned Lucide"
