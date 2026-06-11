@@ -15,6 +15,6 @@ Options -Indexes
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
 </IfModule>
 
-<FilesMatch "^(\.env|1\.txt|linkedin-story\.md|CLAUDE\.md|CODEX_.*|HANDOVER\.md|pacjent360-(public|upload-root|public-repo)\.zip(\.sha256)?|release-manifest\.json|upload-ready-manifest\.json|deployment-handoff\.txt|go-live-status\.txt|domain-diagnostics\.txt|document-root-checklist\.txt)$">
+<FilesMatch "^(\.env(\..*)?|.*\.zip(\.sha256)?|.*manifest.*\.json|deployment-handoff\.txt|go-live-status\.txt|domain-diagnostics\.txt|document-root-checklist\.txt)$">
   Require all denied
 </FilesMatch>

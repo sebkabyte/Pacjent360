@@ -6,8 +6,8 @@ Checklist przed aktualizacja publicznego repozytorium.
 
 - Preferowana lokalna bramka: `powershell -ExecutionPolicy Bypass -File tools\validate-go-live.ps1`.
 - Jeśli używasz pojedynczych komend zamiast pełnej bramki, przejdź przez poniższą listę.
-- Upewnij się, że `1.txt` i `linkedin-story.md` nie są śledzone przez Git.
-- Sprawdź `.gitignore`.
+- Upewnij się, że prywatne notatki, szkice komunikacji i robocze materiały AI nie są śledzone przez Git.
+- Sprawdź lokalne reguły ignorowania oraz `git status`.
 - Sprawdź, że nie ma `.env`, danych pacjentów ani prywatnych notatek.
 - Uruchom `node --check patient360-contract.js`.
 - Uruchom `node --check patient360-map-model.js`.
@@ -36,7 +36,7 @@ Checklist przed aktualizacja publicznego repozytorium.
 - Przejrzyj `docs/governance/RISKS.md`, `docs/legal/DISCLAIMER.md`, `docs/legal/PRIVACY.md` i `NOTICE`.
 - Potwierdź w checklist/handover aliasy `security@pacjent360.com.pl` i `kontakt@pacjent360.com.pl`.
 - Zastosuj allowlistę D-002 z `PROGRAM_PLAN.md`.
-- Nie publikuj domyślnie: `CLAUDE.md`, `CODEX_*`, `HANDOVER.md`, `prints/`, `dist/`, `.env`, `.git/`, prywatnych notatek ani danych pacjentów.
+- Nie publikuj domyślnie: roboczych materiałów AI, lokalnych zrzutów, katalogów builda, plików `.env`, metadanych Git, prywatnych notatek ani danych pacjentów.
 
 ## Ustawienia repo
 

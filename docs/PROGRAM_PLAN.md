@@ -4,13 +4,13 @@ Status: nadrzedny plan programu po audycie repo i councilu.
 
 Data: 2026-06-08
 
-Ten dokument spina `README.md`, `ARCHITECTURE.md`, `SSOT.md`, `TIMELINE_VISION.md`, `ROADMAP.md`, `SPRINTS.md`, `CLAUDE.md`, `CODEX_GOALS.md`, `RISKS.md`, `GO_LIVE_CHECKLIST.md` i `VALIDATION_PROTOCOL.md` w jeden plan pracy. Nie zastepuje dokumentow safety. Jesli zakres LLM/asystentow koliduje z `SSOT.md`, pierwszenstwo ma `SSOT.md`.
+Ten dokument spina `README.md`, `ARCHITECTURE.md`, `SSOT.md`, `TIMELINE_VISION.md`, `ROADMAP.md`, `SPRINTS.md`, `RISKS.md`, `GO_LIVE_CHECKLIST.md` i `VALIDATION_PROTOCOL.md` w jeden plan pracy. Nie zastepuje dokumentow safety. Jesli zakres LLM/asystentow koliduje z `SSOT.md`, pierwszenstwo ma `SSOT.md`.
 
 ## Hierarchia dokumentow
 
 `PROGRAM_PLAN.md` jest nadrzednym harmonogramem programu.
 
-FAZY 0-4 z `CLAUDE.md`, zadania `CKP-*`, `MOB-*`, `NAT-*` oraz `CODEX_GOALS.md` nie sa anulowane. Sa objete przez M0-M12 jako szczegolowy backlog wykonawczy i material historyczny. Nie powinny byc traktowane jako rownolegly, konkurencyjny harmonogram.
+Wczesniejsze prywatne backlogi AI, zadania wykonawcze i notatki historyczne nie sa anulowane. Sa objete przez M0-M12 jako szczegolowy backlog wykonawczy i material historyczny. Nie powinny byc traktowane jako rownolegly, konkurencyjny harmonogram.
 
 Hierarchia robocza (po ADR 0005, 2026-06-10):
 
@@ -19,7 +19,7 @@ PRODUCT_SSOT.md / DISCLAIMER.md / SECURITY.md / RISKS.md
   -> PROGRAM_PLAN.md
     -> ARCHITECTURE.md / TIMELINE_VISION.md / ROADMAP.md
       -> SPRINTS.md / SSOT.md (zakres: LLM/agenci)
-        -> CLAUDE.md / CODEX_GOALS.md / HANDOVER.md (prywatne, robocze)
+        -> prywatne backlogi AI i handovery (niepubliczne, robocze)
 ```
 
 Zasada:
@@ -28,11 +28,11 @@ Zasada:
 - `docs/SSOT.md` rzadzi granicami LLM/asystentow w ramach `PRODUCT_SSOT.md`.
 - `TIMELINE_VISION.md` rzadzi docelowa Mapa Pacjenta 360.
 - `PROGRAM_PLAN.md` rzadzi kolejnoscia prac.
-- `CLAUDE.md` jest kontekstem AI i szczegolowym backlogiem, ale nie nadrzednym planem programu.
+- Prywatne backlogi AI sa kontekstem wykonawczym, ale nie nadrzednym planem programu.
 
 ## Stan po sprincie nocnym
 
-Sprint FAZA 1+2 z `CLAUDE.md` zostal wykonany kierunkowo przed tym uaktualnieniem planu. Oznacza to, ze `PROGRAM_PLAN.md` startuje z repo po istotnych zmianach MVP, a nie ze stanu sprzed sprintu.
+Sprint FAZA 1+2 z prywatnego backlogu AI zostal wykonany kierunkowo przed tym uaktualnieniem planu. Oznacza to, ze `PROGRAM_PLAN.md` startuje z repo po istotnych zmianach MVP, a nie ze stanu sprzed sprintu.
 
 Zrealizowane lub czesciowo zrealizowane kierunkowo:
 
@@ -92,7 +92,7 @@ Wazne ustalenia councilu:
 
 - `dist/public` moze byc starsze niz najnowszy `public/app.js` i `public/styles.css`; przed publikacja trzeba zawsze odswiezyc paczke.
 - Publiczne repo jest no-go bez dzialajacych aliasow `security@pacjent360.com.pl` i `kontakt@pacjent360.com.pl`.
-- Materialy robocze AI, np. `CLAUDE.md`, `CODEX_*`, `HANDOVER.md`, powinny byc traktowane jako prywatne albo polprywatne do osobnego oczyszczenia.
+- Materialy robocze AI, prywatne handovery i notatki autora powinny byc traktowane jako prywatne albo polprywatne do osobnego oczyszczenia.
 - `public/app.js` jest akceptowalny dla MVP, ale nie dla dalszej architektury produktu. Kolejne milestone'y musza wydzielic kontrakty danych, walidatory, fixtures i renderery.
 
 ## Filary programu
@@ -212,7 +212,7 @@ Zakres:
 | Milestone | Status | Uwagi |
 | --- | --- | --- |
 | M0 Publication Ready | repo alpha open / go-live gated | Publiczne repo alpha zostalo otwarte z czystej allowlisty. `dist/public` przechodzi build, verifier i browser smoke, a `dist/upload-ready` przechodzi verifier oraz HTTP smoke jako katalog uploadu. Produkcyjny go-live domeny i prywatna obsluga zgloszen nadal czekaja na aliasy `security@pacjent360.com.pl` i `kontakt@pacjent360.com.pl`. |
-| M1 Program SSOT Freeze | done directionally | `PROGRAM_PLAN.md` jest nadrzednym harmonogramem. `CLAUDE.md`, `CODEX_*` i FAZY/CKP/MOB/NAT sa backlogiem wykonawczym albo historia prac. |
+| M1 Program SSOT Freeze | done directionally | `PROGRAM_PLAN.md` jest nadrzednym harmonogramem. Prywatne backlogi AI, FAZY/CKP/MOB/NAT i notatki robocze sa backlogiem wykonawczym albo historia prac. |
 | M2 Data Contract v0.1 | done vertical slice | Jest `public/patient360-contract.js`, `schema/patient360.schema.json`, eksport `schemaVersion: 7`, `sourceQuality`, typ zrodla `consent`, walidator i ADR `0004-data-contract-v7.md`. |
 | M3 Patient Map Core | done vertical slice + snapshot / needs further hardening | Dodano `public/patient360-map-model.js`, przepieto renderer mapy na czysty model, dodano walidator M3, snapshot fixture i edge-case fixture. Dalsze pasma/warstwy i pelny rozdzial renderera zostaja w kolejnych iteracjach. |
 | M4 Pre-Visit Workflow | vertical slice + model | Kokpit pacjenta ma flow "Przygotowanie krok po kroku", checklist summary, statusy `gotowe / do potwierdzenia / brak danych`, czysty model `public/patient360-previsit-model.js`, fixture no-data i walidator M4. Pelne M4 nadal wymaga wariantu opiekuna. |
@@ -235,7 +235,7 @@ Zadania:
 Definition of Done:
 
 - `node --check public/app.js` pass,
-- clean package bez `1.txt`, `linkedin-story.md`, `.git`, `.env`, `.claude`, roboczych materialow AI,
+- clean package bez prywatnych notatek, szkicow komunikacji, `.git`, `.env`, lokalnych katalogow narzedzi i roboczych materialow AI,
 - publiczne pliki maja disclaimer/privacy,
 - znany jest rollback.
 
@@ -562,7 +562,7 @@ Definition of Done:
 
 Decyzja: publiczne repo ma zawierac tylko publiczne artefakty i oczyszczona dokumentacje.
 
-Robocze dokumenty AI (`CLAUDE.md`, `CODEX_*`, `HANDOVER.md`) nie trafiaja do publicznego repo domyslnie. Moga zostac opublikowane tylko po osobnym czyszczeniu i decyzji allowlist.
+Robocze dokumenty AI, prywatne handovery i notatki autora nie trafiaja do publicznego repo domyslnie. Moga zostac opublikowane tylko po osobnym czyszczeniu i decyzji allowlist.
 
 ### D-002: minimalny public repo manifest
 
@@ -633,7 +633,7 @@ fixtures/consent-draft-edgecases.json
 schema/patient360.schema.json
 ```
 
-Poza allowlista do osobnej decyzji: `CLAUDE.md`, `CODEX_*`, `HANDOVER.md`, `prints/`, `dist/`, dokumenty z osobistym lub roboczym kontekstem.
+Poza allowlista do osobnej decyzji: robocze dokumenty AI, prywatne handovery, lokalne zrzuty, katalogi builda oraz dokumenty z osobistym lub roboczym kontekstem.
 
 ### D-003: paczka publikacyjna
 
@@ -671,9 +671,9 @@ Decyzja domyslna: Pacjent 360 pozostaje narzedziem kontekstu, zrodel, pytan i za
 
 Formalna decyzja o potencjalnym wejsciu w CDSS/MDR moze zapasc dopiero na M12 albo pozniej, po walidacji, review prawnym/regulacyjnym i osobnym ADR. Do tego czasu kazda funkcja, ktora sugeruje diagnoze, pilnosc, terapie, ranking ryzyka albo decyzje kliniczna, jest no-go.
 
-### D-007: relacja M0-M12 do FAZ z CLAUDE.md
+### D-007: relacja M0-M12 do wczesniejszych faz roboczych
 
-Decyzja: M0-M12 nie kasuje FAZ 0-4 z `CLAUDE.md`, ale je obejmuje i porzadkuje. FAZY/CKP/MOB/NAT nie sa drugim harmonogramem. Sa backlogiem wykonawczym, lista historycznych ustalen i zbiorem taskow, ktore trzeba mapowac do aktualnego milestone'u programu.
+Decyzja: M0-M12 nie kasuje wczesniejszych faz roboczych, ale je obejmuje i porzadkuje. FAZY/CKP/MOB/NAT nie sa drugim harmonogramem. Sa backlogiem wykonawczym, lista historycznych ustalen i zbiorem taskow, ktore trzeba mapowac do aktualnego milestone'u programu.
 
 Praktyczna zasada:
 
@@ -733,20 +733,20 @@ Praktyczna zasada:
 - pliki `dist/pacjent360-public.zip.sha256` i `dist/pacjent360-public-repo.zip.sha256` pomagaja potwierdzic, ktory artefakt zostal wrzucony na hosting albo do repo,
 - manifest release nie trafia domyslnie do public repo; jest dowodem lokalnym dla autora/reviewera.
 
-### D-012: historyczne prompty i GOALe Codex
+### D-012: historyczne prompty i prywatne backlogi AI
 
-Decyzja: `CODEX_MASTER_PROMPT.md`, `CODEX_GOALS.md` i `CODEX_NIGHT_SPRINT.md` sa materialami historycznymi oraz backlogiem pomocniczym, nie aktywnym harmonogramem programu.
+Decyzja: historyczne prompty i prywatne backlogi AI sa materialami historycznymi oraz backlogiem pomocniczym, nie aktywnym harmonogramem programu.
 
 Praktyczna zasada:
 
-- nie uruchamiamy `CODEX_MASTER_PROMPT.md` jako "wykonaj wszystko" bez decyzji autora,
-- zadania z `CODEX_GOALS.md` albo `CODEX_NIGHT_SPRINT.md` mozna wykonywac tylko po mapowaniu do aktualnego milestone M0-M12,
+- nie uruchamiamy historycznych master promptow jako "wykonaj wszystko" bez decyzji autora,
+- zadania z prywatnych backlogow AI mozna wykonywac tylko po mapowaniu do aktualnego milestone M0-M12,
 - jesli stary prompt koliduje z `PROGRAM_PLAN.md`, wygrywa `PROGRAM_PLAN.md`,
 - jesli stary prompt koliduje z safety/privacy/security, wygrywaja `SSOT.md`, `DISCLAIMER.md`, `SECURITY.md` i `RISKS.md`.
 
-## Materialy zewnetrzne GPT (TEMP/) - status adopcji 2026-06-10
+## Materialy zewnetrzne GPT - status adopcji 2026-06-10
 
-Autor dostarczyl w `TEMP/` materialy koncepcyjne z rozmow z GPT PRO: notatki, paczki plikow (v1, v2, Program Foundation, Repo Alignment v5), warianty stron WWW i master prompty wykonawcze. Decyzja autora: pliki GPT sa wylacznie ideami; kierunek okresla ten plan. Master prompty z TEMP nie sa harmonogramem i nie wolno ich wykonywac wprost.
+Autor dostarczyl prywatne materialy koncepcyjne z rozmow z GPT PRO: notatki, paczki plikow, warianty stron WWW i master prompty wykonawcze. Decyzja autora: materialy GPT sa wylacznie ideami; kierunek okresla ten plan. Master prompty z prywatnego katalogu koncepcyjnego nie sa harmonogramem i nie wolno ich wykonywac wprost.
 
 ### Przyjete (zmapowane do planu)
 
@@ -765,7 +765,7 @@ Autor dostarczyl w `TEMP/` materialy koncepcyjne z rozmow z GPT PRO: notatki, pa
 - Threat model prompt injection -> wlaczyc do istniejacego M9 Agent Safety A0, nie dublowac.
 - Polityka retencji/usuwania danych -> dokument przed jakimikolwiek realnymi danymi; MVP ich nie ma.
 
-### Odrzucone jako plan (zostaja w TEMP jako referencja)
+### Odrzucone jako plan (zostaja prywatna referencja)
 
 - Program Foundation Pack (fazy P0-P5, 14 rol, budzety 1,5-4 mln PLN na 90 dni, 400 mln-1,2 mld PLN rollout) - scenariusz finansowania, nie plan pracy jednoosobowego projektu alpha.
 - Architektura komorkowa 38M, Temporal/LangGraph, SLO/observability, model organizacji, kodowanie ICD/SNOMED/LOINC, break-glass - horyzont po walidacji i po decyzji M12.

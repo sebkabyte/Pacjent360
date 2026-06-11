@@ -25,7 +25,7 @@ Ostatni lokalny release candidate po audycie council:
 
 | Obszar | Kryterium Go | Status |
 | --- | --- | --- |
-| Prywatność | Na hosting trafia wyłącznie czysta paczka publiczna, bez `1.txt`, `linkedin-story.md`, `.git/`, `.env` i dokumentów roboczych | ✅ OK lokalnie — `tools/verify-public.ps1` pass (2026-06-08) |
+| Prywatność | Na hosting trafia wyłącznie czysta paczka publiczna, bez prywatnych notatek, szkiców komunikacji, metadanych Git, plików `.env` i dokumentów roboczych | ✅ OK lokalnie — `tools/verify-public.ps1` pass (2026-06-08) |
 | Granice kliniczne | Strona i demo nie sugerują diagnozy, triage, pilności, terapii ani decyzji klinicznej | ✅ OK lokalnie — neutralne DITL, raport kontekstowy, brak starych fraz w `dist/public` (2026-06-08) |
 | Niezależność | Widać komunikat, że projekt nie jest usługą CeZ, NFZ, IKP ani e-Profilem Pacjenta | ✅ OK lokalnie — `index.html` i `demo.html` (2026-06-08) |
 | Prawo i zaufanie | Działają `disclaimer.html` i `privacy.html` | ✅ OK lokalnie — link check i browser smoke (2026-06-08) |
@@ -181,7 +181,7 @@ Poniższe kroki są rozbiciem tej samej bramki na pojedyncze komendy.
 1. `node --check app.js` — ✅ pass.
 2. `node --check dist/public/app.js` — ✅ pass.
 3. `tools/prepare-public.ps1 -Zip` — ✅ utworzone `dist/public` i `dist/pacjent360-public.zip`.
-4. Skan `dist/public` — ✅ 12 plików publicznych, brak `1.txt`, `linkedin-story.md`, `.env`, `.git`, `.claude`.
+4. Skan paczki publicznej — ✅ 12 plików publicznych, brak prywatnych notatek, szkiców komunikacji, `.env`, metadanych Git i lokalnych katalogów AI.
 5. Skan starych fraz w `dist/public` — ✅ brak: `Risk / Flag Radar`, `Red flag`, `Amber flag`, `Green flag`, `Blue flag`, `Główne ryzyka`, `Decyzja dziś`, `Dzisiejsza decyzja`, `Jakość kontekstu`, `Generuj wersję`, `Evidence-first`, `public-system friendly`, `NFZ one-pager`, `HITL`, `poza normą`, `w normie`, `pilnej oceny`, `Clinical Decision Context`, `Patient Story`, `Decision Context`.
 6. Serwer `http://127.0.0.1:4176` z `dist/public`:
    - `index.html` — ✅ tytuł „Kontekst wizyty i pytań”, neutralne „Sygnały i pytania DITL”, independence-band.
@@ -231,7 +231,7 @@ Poniższe kroki są rozbiciem tej samej bramki na pojedyncze komendy.
 1. `powershell -ExecutionPolicy Bypass -File tools\prepare-public-repo.ps1 -Zip` - pass.
 2. `powershell -ExecutionPolicy Bypass -File tools\verify-public-repo.ps1` - pass.
 3. Utworzono `dist/repo` i `dist/pacjent360-public-repo.zip`.
-4. Repo package korzysta z `tools/public-repo-manifest.txt`, zawiera `.github/` issue templates i blokuje `CLAUDE.md`, `CODEX_*`, `HANDOVER.md`, `prints/`, `dist/`, `.env`, `.git/`, `.claude/`, `1.txt`, `linkedin-story.md`.
+4. Repo package korzysta z `tools/public-repo-manifest.txt`, zawiera `.github/` issue templates i blokuje robocze materiały AI, lokalne zrzuty, katalogi builda, `.env`, metadane Git, lokalne katalogi narzędzi, prywatne notatki i szkice komunikacji.
 5. Pelna sekwencja po dodaniu repo package - pass: `validate-data-contract`, `validate-map-model`, `validate-previsit-workflow`, `prepare-public`, `verify-public`, `smoke-public`, `smoke-browser`.
 
 ## Smoke Test Log - 2026-06-08 M7 Caregiver Scope

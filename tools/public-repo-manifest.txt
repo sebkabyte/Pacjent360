@@ -2,7 +2,6 @@
 # This file is executable documentation for docs/PROGRAM_PLAN.md D-002.
 .github/
 .gitattributes
-.gitignore
 README.md
 LICENSE
 NOTICE

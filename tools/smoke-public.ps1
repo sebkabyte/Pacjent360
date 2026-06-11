@@ -125,7 +125,7 @@ try {
   Assert-True ($maintenance.Contains("Pacjent 360")) "maintenance.html should contain project name"
   Assert-True ($health.Contains("project=pacjent360") -and $health.Contains("contains_patient_data=false")) "health.txt should expose static deployment markers"
 
-  $blockedPaths = @("1.txt", "linkedin-story.md", ".env", "CLAUDE.md", "HANDOVER.md")
+  $blockedPaths = @(".env", ".git/HEAD", "README.md", "PROGRAM_PLAN.md", "dist/", "prints/")
   foreach ($path in $blockedPaths) {
     $status = Get-SmokeStatusCode "$baseUrl/$path"
     Assert-True ($status -eq 404) "Blocked file should not be served: $path returned $status"

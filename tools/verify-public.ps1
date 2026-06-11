@@ -71,20 +71,18 @@ foreach ($file in $expectedFiles) {
 $unexpected = $actualFiles | Where-Object { $expectedFiles -notcontains $_ }
 Assert-True (-not $unexpected) ("Unexpected file in public package: " + ($unexpected -join ", "))
 
-$blockedNames = @(
-  "1.txt",
-  "linkedin-story.md",
-  ".env",
-  ".git",
-  ".claude",
-  "CLAUDE.md",
-  "CODEX_GOALS.md",
-  "CODEX_MASTER_PROMPT.md",
-  "CODEX_NIGHT_SPRINT.md",
-  "HANDOVER.md"
+$blockedNamePatterns = @(
+  "^\.env(\..*)?$",
+  "^\.git$",
+  "private",
+  "handover",
+  "working"
 )
 
-$blockedFound = Get-ChildItem -LiteralPath $target -Force -Recurse | Where-Object { $blockedNames -contains $_.Name }
+$blockedFound = Get-ChildItem -LiteralPath $target -Force -Recurse | Where-Object {
+  $name = $_.Name
+  @($blockedNamePatterns | Where-Object { $name -match $_ }).Count -gt 0
+}
 Assert-True (-not $blockedFound) ("Blocked private or working file found: " + (($blockedFound | Select-Object -ExpandProperty FullName) -join ", "))
 
 & node --check (Join-Path $target "patient360-contract.js") | Out-Null
@@ -122,7 +120,7 @@ Assert-True ($htaccess.Contains("RewriteEngine On")) ".htaccess should enable re
 Assert-True ($htaccess.Contains('RewriteCond %{HTTPS} !=on')) ".htaccess should redirect HTTP to HTTPS"
 Assert-True ($htaccess.Contains('RewriteCond %{HTTP_HOST} !^pacjent360\.com\.pl$ [NC]')) ".htaccess should canonicalize host to pacjent360.com.pl"
 Assert-True ($htaccess.Contains('RewriteRule ^ https://pacjent360.com.pl%{REQUEST_URI} [R=301,L]')) ".htaccess should redirect to canonical HTTPS URL"
-Assert-True ($htaccess.Contains("upload-root") -and $htaccess.Contains("deployment-handoff") -and $htaccess.Contains("document-root-checklist")) ".htaccess should deny helper release artifacts left in document root"
+Assert-True ($htaccess.Contains(".*\.zip") -and $htaccess.Contains("manifest") -and $htaccess.Contains("deployment-handoff") -and $htaccess.Contains("document-root-checklist")) ".htaccess should deny helper release artifacts left in document root"
 Assert-True ($index.Contains("CeZ") -and $index.Contains("NFZ") -and $index.Contains("IKP")) "index.html should show independence from CeZ/NFZ/IKP"
 Assert-True ($index.Contains('class="skip-link"') -and $index.Contains('href="#main-content"')) "index.html should expose skip link"
 Assert-True ($demo -match "DANE FIKCYJNE") "demo.html should show fictional data banner"

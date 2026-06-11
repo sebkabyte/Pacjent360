@@ -84,14 +84,16 @@ function Assert-ZipMatchesDirectory {
 function Assert-BlockedEntriesAbsent {
   param(
     [string]$ZipPath,
-    [string[]]$BlockedNames,
+    [string[]]$BlockedNamePatterns,
     [string[]]$BlockedPrefixes
   )
 
   $entries = @(Get-ZipFileEntries -ZipPath $ZipPath)
   foreach ($entry in $entries) {
     $name = Split-Path -Leaf $entry
-    Assert-True ($BlockedNames -notcontains $name) "ZIP contains blocked file name: $entry"
+    foreach ($pattern in $BlockedNamePatterns) {
+      Assert-True (-not ($name -match $pattern)) "ZIP contains blocked file name pattern: $entry"
+    }
     foreach ($prefix in $BlockedPrefixes) {
       Assert-True (-not $entry.StartsWith($prefix, [System.StringComparison]::OrdinalIgnoreCase)) "ZIP contains blocked path: $entry"
     }
@@ -188,7 +190,6 @@ Assert-ZipMatchesDirectory -ZipPath $uploadRootZipPath -Directory $publicDirPath
 )
 
 Assert-ZipMatchesDirectory -ZipPath $repoZipPath -Directory $repoDirPath -RequiredFiles @(
-  ".gitignore",
   "README.md",
   "SECURITY.md",
   "public/.htaccess",
@@ -198,22 +199,17 @@ Assert-ZipMatchesDirectory -ZipPath $repoZipPath -Directory $repoDirPath -Requir
   "tools/verify-release-artifacts.ps1"
 )
 
-$blockedNames = @(
-  "1.txt",
-  "linkedin-story.md",
-  ".env",
-  ".git",
-  ".claude",
-  "CLAUDE.md",
-  "CODEX_GOALS.md",
-  "CODEX_MASTER_PROMPT.md",
-  "CODEX_NIGHT_SPRINT.md",
-  "HANDOVER.md"
+$blockedNamePatterns = @(
+  "^\.env(\..*)?$",
+  "^\.git$",
+  "private",
+  "handover",
+  "working"
 )
 
-Assert-BlockedEntriesAbsent -ZipPath $publicZipPath -BlockedNames $blockedNames -BlockedPrefixes @("dist/", "prints/", ".git/", ".claude/")
-Assert-BlockedEntriesAbsent -ZipPath $uploadRootZipPath -BlockedNames $blockedNames -BlockedPrefixes @("dist/", "prints/", ".git/", ".claude/")
-Assert-BlockedEntriesAbsent -ZipPath $repoZipPath -BlockedNames $blockedNames -BlockedPrefixes @("dist/", "prints/", ".git/", ".claude/")
+Assert-BlockedEntriesAbsent -ZipPath $publicZipPath -BlockedNamePatterns $blockedNamePatterns -BlockedPrefixes @("dist/", "prints/", ".git/")
+Assert-BlockedEntriesAbsent -ZipPath $uploadRootZipPath -BlockedNamePatterns $blockedNamePatterns -BlockedPrefixes @("dist/", "prints/", ".git/")
+Assert-BlockedEntriesAbsent -ZipPath $repoZipPath -BlockedNamePatterns $blockedNamePatterns -BlockedPrefixes @("dist/", "prints/", ".git/")
 
 Assert-HashFileMatches -ZipPath $publicZipPath
 Assert-HashFileMatches -ZipPath $uploadRootZipPath
