@@ -64,6 +64,21 @@ const PATIENT_SCOPED_COLLECTION_KEYS = [
   "audit"
 ];
 
+const VIEW_REGISTER = Object.freeze({
+  core: "doctor",
+  interview: "doctor",
+  documents: "doctor",
+  timeline: "doctor",
+  medications: "doctor",
+  observations: "doctor",
+  risks: "doctor",
+  reports: "doctor",
+  patientPortal: "patient",
+  caregiverPortal: "caregiver",
+  consent: "caregiver",
+  audit: "caregiver"
+});
+
 const TRACKS = PATIENT360_CONTRACT.TIMELINE_TRACKS;
 
 const TIMELINE_PERIODS = [
@@ -644,7 +659,7 @@ function sourceChips(refs) {
       }
       const evidence = evidenceClassLabel(ref);
       const tooltip = evidence ? `${evidence} — pokaż źródło` : "Pokaż źródło";
-      return `<span class="source-chip"><button type="button" data-source-ref="${escapeHtml(ref)}" title="${escapeHtml(tooltip)}">${escapeHtml(sourceLabel(ref))}</button></span>`;
+      return `<span class="source-chip p360-source-chip"><button type="button" data-source-ref="${escapeHtml(ref)}" title="${escapeHtml(tooltip)}">${escapeHtml(sourceLabel(ref))}</button></span>`;
     })
     .join("");
 }
@@ -705,6 +720,7 @@ function renderView() {
     button.classList.toggle("active", button.dataset.view === state.activeView);
   });
 
+  document.body.dataset.register = VIEW_REGISTER[state.activeView] || "doctor";
   viewRoot.innerHTML = (renderers[state.activeView] || renderCore)();
   bindViewActions();
   bindSourceButtons();

@@ -128,7 +128,7 @@
   function fallbackSourceChips(refs) {
     const list = Array.isArray(refs) ? refs : [refs].filter(Boolean);
     if (!list.length) return `<span class="tag">Brak źródła</span>`;
-    return list.map((ref) => `<span class="source-chip"><button type="button" data-source-ref="${escapeHtml(ref)}">${escapeHtml(ref)}</button></span>`).join("");
+    return list.map((ref) => `<span class="source-chip p360-source-chip"><button type="button" data-source-ref="${escapeHtml(ref)}">${escapeHtml(ref)}</button></span>`).join("");
   }
 
   function emptyState(message) {
