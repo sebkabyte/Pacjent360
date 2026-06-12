@@ -96,6 +96,17 @@
   line-height: 1.35;
 }
 
+.collab-note {
+  margin: 4px 0 0;
+  padding: 14px 16px;
+  border: 1px dashed rgba(15, 118, 110, 0.28);
+  border-radius: 8px;
+  background: #f7fbfa;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
 @media(max-width:900px){
   .collab-panel {
     grid-template-columns: 1fr;
