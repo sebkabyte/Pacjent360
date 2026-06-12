@@ -1,7 +1,5 @@
 # Pacjent 360
 
-> Narzedzia publikacyjne: `tools/smoke-public.ps1` sprawdza paczke `dist/public` oraz `dist/upload-ready` przez lokalny HTTP, a `tools/smoke-browser.ps1` wykonuje klikalny smoke test demo w headless Chrome/Edge.
-
 Pacjent przychodzi do systemu ochrony zdrowia z historią, nie z tabelą danych.
 
 Ma wyniki badań, wypisy, listę leków, skierowania, objawy, wspomnienia z poprzednich wizyt, obserwacje rodziny i rzeczy, których sam nie potrafi dobrze nazwać. Lekarz ma kilka minut, przeciążony system i decyzję do podjęcia tu i teraz.
@@ -12,12 +10,15 @@ Problemem bardzo często nie jest brak danych. Problemem jest brak kontekstu.
 
 > Co trzeba wyjaśnić przed dzisiejszą decyzją medyczną?
 
-## Project status
+## Status projektu
 
 - Status projektu: **alpha / v0.2.2-alpha**.
+- Strona projektu: https://pacjent360.com.pl/
+- Demo MVP: https://pacjent360.com.pl/demo.html
 - To jest statyczny prototyp koncepcyjny i demonstracyjny, nie system gotowy do użycia klinicznego.
 - Demo korzysta z fikcyjnych, kompozytowych przypadków i nie powinno przyjmować realnych danych pacjentów.
-- Przed go-live domeny wymagane są osobne bramki: bezpieczeństwo, prywatność, clinical safety, dostępność, działające kanały kontaktu i publikacja czystej paczki hostingowej.
+- Publiczna wersja domeny przeszła bramki publikacyjne: czysta paczka hostingowa, kontakt mailowy, blokada artefaktów pomocniczych i porównanie wdrożenia z `dist/upload-ready`.
+- Kod i dokumentacja pozostają w fazie alpha: projekt wymaga walidacji z lekarzami, pacjentami, opiekunami, ekspertami prawa, prywatności i bezpieczeństwa.
 
 ## O co chodzi
 
@@ -194,18 +195,23 @@ Szukamy rozmowy i współpracy z osobami, które mogą pomóc odpowiedzieć na p
 
 ## Kontakt
 
-Kanały kontaktu dla projektu nie są jeszcze potwierdzone jako skonfigurowane.
-
-**Przed prywatną obsługą zgłoszeń:** trzeba skonfigurować, przetestować i opisać działające aliasy kontaktowe:
+Kanały kontaktu dla projektu są skonfigurowane i monitorowane:
 
 - `security@pacjent360.com.pl` - prywatne zgłoszenia podatności, incydentów prywatności i ryzyk clinical safety.
 - `kontakt@pacjent360.com.pl` - ogólny kontakt projektowy, współpraca i pytania organizacyjne.
 
-Te adresy są proponowanym modelem kontaktu; ten dokument nie deklaruje, że skrzynki już działają. Do czasu potwierdzenia kanałów nie publikuj szczegółów podatności, danych pacjentów ani ryzyk prywatności w publicznych issue.
+Nie publikuj szczegółów podatności, danych pacjentów, dokumentacji medycznej ani ryzyk prywatności w publicznych issue. W takich sprawach użyj `security@pacjent360.com.pl`.
 
-Po skonfigurowaniu poczty użyj `tools/verify-contact-gate.ps1`: najpierw `-DnsOnly`, a po ręcznym teście wysyłka-odbiór-odpowiedź `-ReceiptConfirmed -MonitorOwner "..."`.
+Ostatnia bramka kontaktowa została potwierdzona przez `tools/verify-contact-gate.ps1 -ReceiptConfirmed -MonitorOwner "Sebastian Kalisz"`.
 
 ## Quick start
+
+Najprostsza ścieżka:
+
+- strona publiczna: https://pacjent360.com.pl/
+- demo MVP: https://pacjent360.com.pl/demo.html
+
+Lokalnie:
 
 1. Otwórz `public/index.html` w przeglądarce.
 2. Opcjonalnie uruchom lokalny serwer:

@@ -14,8 +14,26 @@ Dziękuję za zainteresowanie Pacjent 360. Projekt dotyczy danych i kontekstu me
 
 1. Otwórz zgłoszenie z celem, użytkownikiem i ryzykiem.
 2. Opisz, czy zmiana dotyczy strony, demo, modelu danych, dokumentacji czy procesu.
-3. Przed PR uruchom `node --check app.js`.
+3. Przed PR uruchom co najmniej `node --check public/app.js` oraz testy właściwe dla zmienianego obszaru.
 4. W PR opisz: co zmieniono, jak testowano, czy zmiana przechodzi Clinical Safety Checklist.
+
+## Bramki techniczne
+
+Szczegółowy runbook publikacji jest w `docs/deployment/PUBLISHING.md`. Najważniejsze komendy:
+
+```powershell
+.\tools\validate-go-live.ps1
+```
+
+```powershell
+.\tools\smoke-public.ps1 -PackageDir "dist/upload-ready"
+```
+
+```powershell
+.\tools\smoke-browser.ps1
+```
+
+`dist/upload-ready` jest paczką wdrożeniową dla hostingu. Nie publikuj całego katalogu projektu, folderu `dist`, prywatnych notatek, `TEMP`, `.git`, ani artefaktów pomocniczych.
 
 ## Licencjonowanie wkładu
 

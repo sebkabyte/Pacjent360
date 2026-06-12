@@ -12,20 +12,22 @@ Zgłoszenia podatności, ryzyk prywatności i problemów bezpieczeństwa klinicz
 
 Aktualny status: projekt jest publicznym prototypem alpha. Nie przyjmuje zgłoszeń zawierających realne dane pacjentów, dokumentację medyczną ani dane możliwe do identyfikacji.
 
-Docelowy kanał prywatny po konfiguracji poczty:
+Kanały prywatne:
 
 - `security@pacjent360.com.pl`
 - alternatywnie `kontakt@pacjent360.com.pl` z tematem `[SECURITY]`
 
-Do czasu potwierdzenia tych aliasów:
+Kanały zostały potwierdzone testem odbioru i bramką `tools/verify-contact-gate.ps1 -ReceiptConfirmed -MonitorOwner "Sebastian Kalisz"`.
+
+Zasady zgłoszeń:
 
 - nie publikuj szczegółów podatności ani danych wrażliwych w publicznym zgłoszeniu,
 - użyj GitHub Security Advisory / private vulnerability reporting, jeśli jest dostępne w repozytorium,
 - jeśli musisz użyć publicznego zgłoszenia, przekaż wyłącznie krótki sygnał bez szczegółów technicznych i bez danych pacjenta.
 
-Po konfiguracji poczty techniczny precheck wykonaj przez `tools/verify-contact-gate.ps1 -DnsOnly`. Status kontaktu można oznaczyć jako gotowy dopiero po ręcznym teście wysyłka-odbiór-odpowiedź dla obu aliasów i uruchomieniu `tools/verify-contact-gate.ps1 -ReceiptConfirmed -MonitorOwner "..."`.
+Po większej zmianie konfiguracji poczty powtórz techniczny precheck przez `tools/verify-contact-gate.ps1 -DnsOnly`, ręczny test wysyłka-odbiór-odpowiedź dla obu adresów oraz `tools/verify-contact-gate.ps1 -ReceiptConfirmed -MonitorOwner "..."`.
 
-Oczekiwany czas odpowiedzi po uruchomieniu kanału prywatnego: 72 godziny.
+Oczekiwany czas odpowiedzi: 72 godziny.
 
 W zgłoszeniu podaj:
 
