@@ -14,7 +14,7 @@ Problemem bardzo często nie jest brak danych. Problemem jest brak kontekstu.
 
 ## Project status
 
-- Status projektu: **alpha / v0.2.0-alpha**.
+- Status projektu: **alpha / v0.2.2-alpha**.
 - To jest statyczny prototyp koncepcyjny i demonstracyjny, nie system gotowy do użycia klinicznego.
 - Demo korzysta z fikcyjnych, kompozytowych przypadków i nie powinno przyjmować realnych danych pacjentów.
 - Przed go-live domeny wymagane są osobne bramki: bezpieczeństwo, prywatność, clinical safety, dostępność, działające kanały kontaktu i publikacja czystej paczki hostingowej.
@@ -81,7 +81,7 @@ W tej wizji jest też miejsce na asystentów operacyjnych: asystenta lekowego i 
 
 Prototyp jest lokalny i demonstracyjny. Pokazuje kierunek produktu:
 
-- dwa kokpity oparte o te same dane: **Lekarz** i **Pacjent**,
+- trzy kokpity oparte o te same dane: **Lekarz**, **Pacjent** i **Opiekun**,
 - widok lekarza **Pacjent w 90 sekund**,
 - widok pacjenta **Mój Pacjent 360**,
 - wywiad i transkrypcję rozmowy jako ważne źródło danych,

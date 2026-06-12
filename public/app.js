@@ -902,7 +902,7 @@ function renderCore() {
   return `
     <div class="page-intro">
       <div>
-        <p class="eyebrow">Kontekst wizyty i pytań DITL</p>
+        <p class="eyebrow">Kontekst wizyty i pytania do decyzji lekarza (DITL)</p>
         <h1>Pacjent w 90 sekund</h1>
         <p>${escapeHtml(patient.name)}, ${formatAge(patient.birthDate)}. System pokazuje pytania i luki do wyjaśnienia, bez automatycznej decyzji po stronie systemu.</p>
       </div>
@@ -1012,7 +1012,7 @@ function renderMapShortcut() {
     <section class="section-band core-map-shortcut">
       <div>
         <p class="eyebrow"><i data-lucide="map"></i>Mapa Pacjenta 360</p>
-        <h2>Film życia pacjenta: od osi czasu do źródeł</h2>
+        <h2>Film z życia pacjenta: od osi czasu do źródeł</h2>
         <p class="record-body">
           ${events.length
             ? `${formatDate(first.date)} - ${formatDate(last.date)} · ${PATIENT360_FORMAT.formatEvents(events.length)} · ${PATIENT360_FORMAT.formatTracks(tracks.length)}`
@@ -1172,7 +1172,7 @@ function renderPatientNextSteps({ patient, preVisitModel, upcoming, patientQuest
           </ul>
         </article>
         <article>
-          <span>Checklist</span>
+          <span>Checklista</span>
           <ul class="plain-list compact-list">
             ${(checklistItems.length ? checklistItems : []).map((item) => `<li><i data-lucide="${escapeHtml(item.state.icon)}"></i><span>${escapeHtml(item.label)} - ${escapeHtml(item.state.label)}</span></li>`).join("") || `<li><i data-lucide="circle-help"></i><span>Brak checklisty w danych demo.</span></li>`}
           </ul>
@@ -2255,7 +2255,7 @@ function renderReportsV2() {
   return `
     <div class="page-intro">
       <div>
-        <p class="eyebrow">Raport kontekstowy</p>
+        <p class="eyebrow">Raporty</p>
         <h1>Raport kontekstowy</h1>
         <p>Krótki podgląd demonstracyjny, dopasowany do fikcyjnej soczewki case study: ${escapeHtml(caseStudy.label)}.</p>
       </div>
@@ -2782,7 +2782,7 @@ function renderEvidence() {
   const docs = byPatient(state.documents).slice(0, 3).map((doc) => `doc:${doc.id}`);
   const interviews = byPatient(state.interviews).slice(0, 2).map((interview) => `interview:${interview.id}`);
   evidenceRoot.innerHTML = `
-    <div class="evidence-empty">Kliknij chip źródła, aby sprawdzić, czy informacja pochodzi z dokumentu, wywiadu, transkrypcji, wyniku, leku, zgody czy decyzji DITL.</div>
+    <div class="evidence-empty">Kliknij etykietę źródła, aby sprawdzić, czy informacja pochodzi z dokumentu, wywiadu, transkrypcji, wyniku, leku, zgody czy decyzji DITL.</div>
     <div class="record-list">
       ${[...docs, ...interviews].map((ref) => {
         const { parsed, record } = sourceRecord(ref);
@@ -3111,7 +3111,7 @@ function dialogConfig(type) {
       ]
     },
     decision: {
-      title: "Dodaj decyzję DITL",
+      title: "Dodaj kontekst decyzji (DITL)",
       fields: [
         { name: "type", label: "Typ decyzji", kind: "select", options: ["Pre-Op / decyzja zabiegowa", "Wizyta kontrolna", "Zmiana leków", "Wypis", "Konsultacja kardiologiczna", "Konsultacja neurologiczna", "Druga opinia"] },
         { name: "contactDate", label: "Data kontaktu", kind: "date", value: today, required: true },
@@ -3884,7 +3884,7 @@ document.querySelector("#closeEvidence").addEventListener("click", () => {
 document.querySelector("#resetDemo").addEventListener("click", () => {
   state = clone(demoState);
   saveState();
-  showToast("Przywrócono dane demo v0.2.");
+  showToast("Przywrócono dane demo.");
   render();
 });
 
