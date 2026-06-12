@@ -6,7 +6,7 @@ Data: 2026-06-08
 
 ## Kontekst
 
-MVP Pacjent 360 działa jako statyczna aplikacja lokalna. Stan demo jest przechowywany w `localStorage` pod kluczem `pacjent360-state-v6` i nadal używa płaskich tablic w `app.js`, takich jak `documents[]`, `interviews[]`, `timelineEvents[]`, `medications[]`, `flags[]`, `knownUnknowns[]` i `audit[]`.
+MVP Pacjent 360 działa jako statyczna aplikacja lokalna. Stan demo jest przechowywany w `localStorage` pod kluczem `pacjent360-state-v7` i nadal używa płaskich tablic w `app.js`, takich jak `documents[]`, `interviews[]`, `timelineEvents[]`, `medications[]`, `flags[]`, `knownUnknowns[]` i `audit[]`.
 
 Plan programu wymaga jednak stabilnego kontraktu eksportu, zanim projekt zacznie rozwijać Mapę Pacjenta 360, walidację raportu, zgody opiekuna i asystentów operacyjnych.
 

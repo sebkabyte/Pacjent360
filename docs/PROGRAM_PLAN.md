@@ -81,7 +81,7 @@ Repo jest dojrzalym prototypem alpha, ale nadal lokalnym i statycznym.
 | --- | --- |
 | Strona publiczna | `public/index.html`, `public/site.css`, `public/site.js`, `public/assets/` |
 | Demo MVP | `public/demo.html`, `public/app.js`, `public/styles.css` |
-| Model lokalny | `localStorage`, `pacjent360-state-v6`, dane fikcyjne |
+| Model lokalny | `localStorage`, `pacjent360-state-v7`, dane fikcyjne |
 | Mapa Pacjenta 360 | wspolny komponent lekarz/pacjent, zdarzenia, epizody, relacje, inspektor |
 | Dokumentacja safety | `DISCLAIMER.md`, `PRIVACY.md`, `SECURITY.md`, `RISKS.md`, `GO_LIVE_CHECKLIST.md` |
 | Architektura | `ARCHITECTURE.md`, `TIMELINE_VISION.md`, `SSOT.md` |

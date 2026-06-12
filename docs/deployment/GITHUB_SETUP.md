@@ -44,7 +44,7 @@ Checklist przed aktualizacja publicznego repozytorium.
 - Branch protection na `main`.
 - Wymagany pull request przed merge.
 - Wymagany co najmniej jeden reviewer, gdy pojawi się zewnętrzny zespół.
-- Dodać tag `v0.2.0-alpha` po pierwszej bezpiecznej publikacji.
+- Dodać tag `v0.2.2-alpha` po pierwszej bezpiecznej publikacji.
 - Dodać link do repo na stronie WWW po utworzeniu repo.
 
 ## Minimalny pierwszy release

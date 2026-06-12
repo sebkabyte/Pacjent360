@@ -194,7 +194,7 @@ Szukamy rozmowy i współpracy z osobami, które mogą pomóc odpowiedzieć na p
 
 Kanały kontaktu dla projektu nie są jeszcze potwierdzone jako skonfigurowane.
 
-**DO UZUPEŁNIENIA PRZED GO-LIVE DOMENY I PRYWATNYM OBSŁUGIWANIEM ZGŁOSZEŃ:** trzeba skonfigurować, przetestować i opisać działające aliasy:
+**Przed prywatną obsługą zgłoszeń:** trzeba skonfigurować, przetestować i opisać działające aliasy kontaktowe:
 
 - `security@pacjent360.com.pl` - prywatne zgłoszenia podatności, incydentów prywatności i ryzyk clinical safety.
 - `kontakt@pacjent360.com.pl` - ogólny kontakt projektowy, współpraca i pytania organizacyjne.
