@@ -41,7 +41,6 @@ $expectedFiles = @(
   "brand/tokens.css",
   "brand/components.css",
   "site.css",
-  "site.js",
   "patient360-contract.js",
   "patient360-format.js",
   "patient360-map-model.js",

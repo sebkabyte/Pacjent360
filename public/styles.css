@@ -431,8 +431,8 @@ textarea {
 
 .content-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 330px;
-  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) 6px var(--evidence-w, 330px);
+  gap: 14px;
   align-items: start;
   padding: 18px;
 }
@@ -4473,12 +4473,8 @@ body[data-register="caregiver"] .page-intro p {
   font-size: 1rem;
 }
 
-/* Suwak panelu zrodel (jak chat/preview): przeciagnij, strzalki, dblclick=reset, zwijanie do szyny */
-.content-grid {
-  grid-template-columns: minmax(0, 1fr) 6px var(--evidence-w, 330px);
-  gap: 14px;
-}
-
+/* Suwak panelu zrodel (jak chat/preview): przeciagnij, strzalki, dblclick=reset, zwijanie do szyny.
+   Bazowa siatka 3 kolumn jest w glownej definicji .content-grid wyzej. */
 .panel-splitter {
   align-self: stretch;
   min-height: 220px;

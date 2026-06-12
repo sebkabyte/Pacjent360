@@ -72,7 +72,7 @@
       "biggestChange": "W dokumentacji pojawiła się potrzeba potwierdzenia aktualnej listy leków oraz brakujących danych przed procedurą.",
       "decisionToday": "Czy komplet danych wymaganych przed planową procedurą został potwierdzony przez lekarza?",
       "patientSummary": "Masz zaplanowaną procedurę jednodniową. Masz 4 leki, a 3 wymagają potwierdzenia z lekarzem. Masz aktualne wyniki laboratoryjne. Brakuje aktualnego EKG w danych demo.",
-      "patientQuestion": "Co warto omówić z lekarzem: potwierdź listę leków, zapytaj o przygotowanie do procedury, sprawdź czy wyniki są kompletne.",
+      "patientQuestion": "Co warto omówić z lekarzem: potwierdź listę leków, zapytaj o przygotowanie do procedury, sprawdź, czy wyniki są kompletne.",
       "consentScope": "pełny widok 360 do 2026-06-20"
     },
     {
