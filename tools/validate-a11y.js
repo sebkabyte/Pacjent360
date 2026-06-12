@@ -39,6 +39,7 @@ for (const file of htmlFiles) {
 assert(html["index.html"].includes('class="skip-link"') && html["index.html"].includes('href="#main-content"'), "index.html should expose a skip link to main content");
 assert(html["index.html"].includes('<main id="main-content">'), "index.html skip link target should exist");
 assert(/<nav\b[^>]*aria-label="Sekcje strony"/.test(html["index.html"]), "index.html nav should have an accessible label");
+assert(/data-nav-toggle[^>]*aria-expanded="false"[^>]*aria-controls="mainNav"/.test(html["index.html"]), "index.html mobile nav toggle should expose aria-expanded and aria-controls");
 
 assert(html["demo.html"].includes('class="skip-link"') && html["demo.html"].includes('href="#viewRoot"'), "demo.html should expose a skip link to the rendered view");
 assert(html["demo.html"].includes('id="viewRoot"'), "demo.html skip link target should exist");
@@ -46,6 +47,12 @@ assert(html["demo.html"].includes('aria-label="Widoki demo"'), "demo.html nav sh
 assert(html["demo.html"].includes('id="searchInput"') && html["demo.html"].includes('aria-label="Szukaj w danych demo"'), "demo search input should have an explicit aria-label");
 assert(html["demo.html"].includes('<dialog id="entryDialog" aria-labelledby="dialogTitle">'), "entry dialog should be labelled by dialogTitle");
 assert(html["demo.html"].includes('<dialog id="confirmDialog" aria-labelledby="confirmTitle">'), "confirm dialog should be labelled by confirmTitle");
+assert(/id="panelSplitter"[^>]*role="separator"[^>]*aria-valuemin="260"[^>]*aria-valuemax="620"[^>]*aria-valuenow="330"/.test(html["demo.html"]), "demo evidence splitter should expose range semantics");
+
+for (const legalFile of ["disclaimer.html", "privacy.html"]) {
+  assert(html[legalFile].includes('class="skip-link"') && html[legalFile].includes('href="#main-content"'), `${legalFile} should expose a skip link to main content`);
+  assert(html[legalFile].includes('id="main-content"') && html[legalFile].includes('tabindex="-1"'), `${legalFile} skip link target should exist and be focusable`);
+}
 
 const siteCss = read("site.css");
 const stylesCss = read("styles.css");

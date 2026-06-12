@@ -72,6 +72,11 @@ body[data-register="story"] .button.secondary {
   border-color: var(--p360-register-ledger-border, #b8cfcb);
 }
 
+body[data-register="story"] .button.primary.light {
+  background: #ffffff;
+  color: var(--p360-color-ink-strong, #10242a);
+}
+
 a:focus-visible,button:focus-visible{outline:3px solid #0f766e;outline-offset:2px;border-radius:8px}
 
 /* Hero z fotografia dokumentow (przywrocone na prosbe wlasciciela) */
@@ -89,4 +94,4 @@ a:focus-visible,button:focus-visible{outline:3px solid #0f766e;outline-offset:2p
 .button.secondary.ghost-light{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.55)}
 .button.secondary.ghost-light:hover{background:rgba(255,255,255,.12)}
 .patient-movie.standalone{max-width:700px;margin:26px auto 0}
-@media (max-width:760px){.hero-photo .hero-inner{padding:84px 0 60px}}
+@media (max-width:760px){.hero-photo .hero-inner{padding:84px 24px 60px}}

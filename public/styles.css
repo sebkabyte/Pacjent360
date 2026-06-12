@@ -4126,16 +4126,16 @@ dialog::backdrop {
   margin-top: 10px;
 }
 
-.patient-map-workbench {
-  grid-template-columns: minmax(0, 1fr);
-}
-
-.timeline-inspector {
-  position: static;
-  max-height: none;
-}
-
 @media (max-width: 900px) {
+  .patient-map-workbench {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .timeline-inspector {
+    position: static;
+    max-height: none;
+  }
+
   .timeline-ribbon-scroll {
     overflow-x: auto;
   }

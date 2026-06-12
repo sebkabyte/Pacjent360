@@ -33,6 +33,26 @@ const PATIENTS = [
   { id: "p3", label: "p3" }
 ];
 
+const PATIENT_SCOPED_EXPORT_KEYS = [
+  "decisionContexts",
+  "documents",
+  "interviews",
+  "timelineEvents",
+  "timelineEpisodes",
+  "timelineRelations",
+  "stageSummaries",
+  "conditions",
+  "medications",
+  "allergies",
+  "observations",
+  "flags",
+  "knownUnknowns",
+  "visitChecklists",
+  "reports",
+  "consents",
+  "audit"
+];
+
 const VIEW_SENTINELS = {
   core: {
     p1: ["procedur", "lek wymagajacy"],
@@ -446,7 +466,7 @@ async function checkSourceChips(client, view, patientId) {
     const refs = [...new Set([...document.querySelectorAll('#viewRoot [data-source-ref]')]
       .map((button) => button.dataset.sourceRef)
       .filter(Boolean)
-      .filter((ref) => ref !== 'source_missing'))].slice(0, 8);
+      .filter((ref) => ref !== 'source_missing'))];
     return refs.map((ref) => {
       const result = typeof sourceRecord === 'function' ? sourceRecord(ref) : { record: null };
       return {
@@ -657,7 +677,7 @@ async function checkSearchResetExport(client) {
       const data = typeof buildActivePatientExport === 'function' ? buildActivePatientExport() : null;
       return {
         patientId: data?.patient?.id || null,
-        mismatches: data ? ['documents','interviews','timelineEvents','medications','observations','flags','decisionContexts','consents']
+        mismatches: data ? ${JSON.stringify(PATIENT_SCOPED_EXPORT_KEYS)}
           .flatMap((key) => (data[key] || []).filter((item) => item.patientId && item.patientId !== data.patient.id).map((item) => key + ':' + item.id + ':' + item.patientId)) : ['no-export']
       };
     })()`);

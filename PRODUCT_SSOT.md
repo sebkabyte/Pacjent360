@@ -11,7 +11,7 @@ Pacjent 360 jest warstwą kontekstu pacjenta, która pomaga pacjentowi, rodzicow
 ## 2. Czym Pacjent 360 nie jest
 
 - systemem diagnozującym;
-- systemem triage ani oceny pilności;
+- systemem oceny pilności;
 - rekomendatorem terapii, dawkowania ani postępowania medycznego;
 - zamiennikiem IKP/P1/EDM/HIS ani usługą CeZ/NFZ;
 - miejscem przechowywania loginów do IKP ani kanałem scrapingu systemów państwowych;
@@ -33,6 +33,8 @@ Identity + Authority -> Consent / Access Policy -> [model powyżej] -> Report Ve
 UI jest soczewką nad modelem, nie źródłem prawdy. Implementacja modelu: `public/patient360-contract.js`, `schema/patient360.schema.json`, walidatory w `tools/`.
 
 ## 4. Perspektywy użytkowników
+
+Główny użytkownik MVP: pacjent, rodzic albo opiekun przygotowujący kontekst przed wizytą. Lekarz jest głównym odbiorcą i osobą weryfikującą raport kontekstowy. Szerszy produkt nadal obejmuje trzy perspektywy, ale walidacja wersji alfa zaczyna się od pętli przygotowania wizyty.
 
 ### Lekarz (desktop)
 Szybki, źródłowy kontekst przed decyzją: „Pacjent w 90 sekund", oś czasu, leki do potwierdzenia, braki, rozbieżności i pytania DITL. Źródło zawsze obok twierdzenia. Lekarz pozostaje decydentem.
@@ -59,7 +61,7 @@ Agent nigdy nie jest właścicielem decyzji, nie sprawuje opieki i nie występuj
 
 ## 6. DITL jako zasada architektoniczna
 
-DITL = Doctor in the Loop. Każda informacja klinicznie istotna pozostaje pytaniem, kontekstem, brakiem danych, rozbieżnością albo draftem do weryfikacji, dopóki nie oceni jej lekarz lub inny właściwy profesjonalista.
+DITL = lekarz w procesie decyzyjnym. Każda informacja klinicznie istotna pozostaje pytaniem, kontekstem, brakiem danych, rozbieżnością albo szkicem do weryfikacji, dopóki nie oceni jej lekarz lub inny właściwy profesjonalista.
 
 Konsekwencje techniczne:
 
@@ -91,7 +93,7 @@ Przy konflikcie zakresu LLM/agentów rozstrzyga `docs/SSOT.md` w ramach granic t
 ## 9. No-go produktu
 
 - realne dane pacjentów w demo, fixtures, promptach lub walidacji publicznej;
-- output brzmiący jak diagnoza, triage, ocena pilności albo zalecenie;
+- output brzmiący jak diagnoza, ocena pilności albo zalecenie;
 - agent występujący jako osoba sprawująca opiekę;
 - dostęp poza zakresem zgody (w UI, eksporcie, raporcie lub komunikacie błędu);
 - claim bez źródła prezentowany jak fakt;

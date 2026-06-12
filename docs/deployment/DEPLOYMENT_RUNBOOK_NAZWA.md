@@ -51,27 +51,15 @@ Jesli po uploadzie `https://pacjent360.com.pl/index.html` zwraca 404, najczestsz
 
 ## 3. Co dokladnie wgrac
 
-Wgraj wszystkie pliki i katalogi z `dist/upload-ready`, w tym:
+Wgraj cala zawartosc katalogu `dist/upload-ready` do document root domeny.
+Nie odtwarzaj listy plikow recznie i nie wybieraj pojedynczych plikow z repo.
+Aktualna lista wymaganych plikow powstaje automatycznie po walidacji w:
 
-- `.htaccess`,
-- `index.html`,
-- `demo.html`,
-- `disclaimer.html`,
-- `privacy.html`,
-- `maintenance.html`,
-- `health.txt`,
-- `site.css`,
-- `site.js`,
-- `styles.css`,
-- `app.js`,
-- `patient360-contract.js`,
-- `patient360-map-model.js`,
-- `patient360-previsit-model.js`,
-- `patient360-caregiver-model.js`,
-- `patient360-consent-model.js`,
-- `robots.txt`,
-- `sitemap.xml`,
-- `assets/`.
+- `dist/document-root-checklist.txt`,
+- `dist/upload-ready-manifest.json`.
+
+Jesli pliku nie ma w `dist/upload-ready`, nie powinien trafiac na hosting.
+Jesli plik jest w `dist/upload-ready`, powinien zostac wgrany razem z katalogami, np. `brand/` i `assets/`.
 
 Alternatywa, jesli panel hostingu pozwala rozpakowac ZIP na serwerze:
 

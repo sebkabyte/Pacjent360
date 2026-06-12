@@ -60,6 +60,20 @@
     return String(value || "").toLowerCase();
   }
 
+  function pluralPl(count, one, few, many) {
+    const absolute = Math.abs(Number(count) || 0);
+    const mod10 = absolute % 10;
+    const mod100 = absolute % 100;
+    if (absolute === 1) return one;
+    if (mod10 >= 2 && mod10 <= 4 && !(mod100 >= 12 && mod100 <= 14)) return few;
+    return many;
+  }
+
+  function formatCount(count, one, few, many) {
+    const value = Number(count) || 0;
+    return `${value} ${pluralPl(value, one, few, many)}`;
+  }
+
   function byPatient(collection, patientId) {
     return (Array.isArray(collection) ? collection : []).filter((item) => item.patientId === patientId);
   }
@@ -204,7 +218,7 @@
       allowed: canView.has(area.key),
       count: counts[area.key] || 0,
       caption: canView.has(area.key)
-        ? `${counts[area.key] || 0} elementów w zakresie zgody`
+        ? `${formatCount(counts[area.key] || 0, "element", "elementy", "elementów")} w zakresie zgody`
         : "Brak aktywnej zgody na ten obszar"
     }));
   }

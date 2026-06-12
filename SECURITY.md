@@ -4,11 +4,11 @@ Pacjent 360 jest prototypem koncepcyjnym przeznaczonym wyłącznie do pracy z fi
 
 ## Zgłaszanie problemów
 
-Jeśli znajdziesz podatność, ryzyko ujawnienia danych, problem z prywatnością albo możliwość użycia demo w sposób wykraczający poza pytanie, zadanie, status albo brak danych, nie publikuj szczegółów w publicznym issue.
+Jeśli znajdziesz podatność, ryzyko ujawnienia danych, problem z prywatnością albo możliwość użycia demo w sposób wykraczający poza pytanie, zadanie, status albo brak danych, nie publikuj szczegółów w publicznym zgłoszeniu.
 
 ## Bezpieczny kontakt
 
-Zgłoszenia podatności, ryzyk prywatności i problemów clinical safety powinny być obsługiwane prywatnie.
+Zgłoszenia podatności, ryzyk prywatności i problemów bezpieczeństwa klinicznego powinny być obsługiwane prywatnie.
 
 Aktualny status: projekt jest publicznym prototypem alpha. Nie przyjmuje zgłoszeń zawierających realne dane pacjentów, dokumentację medyczną ani dane możliwe do identyfikacji.
 
@@ -19,9 +19,9 @@ Docelowy kanał prywatny po konfiguracji poczty:
 
 Do czasu potwierdzenia tych aliasów:
 
-- nie publikuj szczegółów podatności ani danych wrażliwych w publicznym issue,
+- nie publikuj szczegółów podatności ani danych wrażliwych w publicznym zgłoszeniu,
 - użyj GitHub Security Advisory / private vulnerability reporting, jeśli jest dostępne w repozytorium,
-- jeśli musisz użyć publicznego issue, zgłoś wyłącznie krótki sygnał bez szczegółów technicznych i bez danych pacjenta.
+- jeśli musisz użyć publicznego zgłoszenia, przekaż wyłącznie krótki sygnał bez szczegółów technicznych i bez danych pacjenta.
 
 Po konfiguracji poczty techniczny precheck wykonaj przez `tools/verify-contact-gate.ps1 -DnsOnly`. Status kontaktu można oznaczyć jako gotowy dopiero po ręcznym teście wysyłka-odbiór-odpowiedź dla obu aliasów i uruchomieniu `tools/verify-contact-gate.ps1 -ReceiptConfirmed -MonitorOwner "..."`.
 
@@ -49,7 +49,7 @@ Priorytetowe obszary:
 
 Do czasu osobnej walidacji Pacjent 360 nie wysyła realnych danych pacjentów do zewnętrznych modeli LLM. Prompt, fixture, dry-run, eksport testowy i log agenta mogą używać wyłącznie danych fikcyjnych, kompozytowych albo syntetycznych.
 
-Każda przyszła funkcja LLM musi przejść przez `docs/SSOT.md`, Sprint A0 Safety & Contracts, review prywatności i review bezpieczeństwa. Szczególne ryzyka security/privacy:
+Każda przyszła funkcja LLM musi przejść przez `docs/SSOT.md`, Sprint A0 Safety & Contracts, przegląd prywatności i przegląd bezpieczeństwa. Szczególne ryzyka bezpieczeństwa i prywatności:
 
 - prompt injection w dokumentach, transkrypcjach, wynikach lub notatkach;
 - leakage danych przez podsumowanie, błąd walidatora, log, eksport albo telemetrykę;

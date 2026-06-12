@@ -8,12 +8,12 @@
   />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#10242a" />
-  <title>Pacjent 360 | Historia pacjenta, której nie gubi system</title>
+  <title>Pacjent 360 | Mapa kontekstu pacjenta</title>
   <meta
     name="description"
     content="Pacjent 360 to niezależny prototyp open source: warstwa kontekstu pacjenta dla lekarza, pacjenta i rodzica/opiekuna. Nie diagnozuje — porządkuje historię, źródła i pytania."
   />
-  <meta property="og:title" content="Pacjent 360 | Historia pacjenta, której nie gubi system" />
+  <meta property="og:title" content="Pacjent 360 | Mapa kontekstu pacjenta" />
   <meta
     property="og:description"
     content="Pacjent przychodzi z historią, nie z folderem PDF-ów. Jedna mapa kontekstu, trzy perspektywy, źródła obok twierdzeń."
@@ -35,8 +35,8 @@
       <span class="brand-mark">360</span>
       <span><strong>Pacjent 360</strong><small>Warstwa kontekstu pacjenta</small></span>
     </a>
-    <button class="nav-toggle" data-nav-toggle aria-label="Otwórz menu">☰</button>
-    <nav class="main-nav" data-nav aria-label="Sekcje strony">
+    <button class="nav-toggle" data-nav-toggle aria-label="Otwórz menu" aria-expanded="false" aria-controls="mainNav">☰</button>
+    <nav class="main-nav" data-nav id="mainNav" aria-label="Sekcje strony">
       <a href="#problem">Problem</a>
       <a href="#solution">Rozwiązanie</a>
       <a href="#wedge">Pierwszy krok</a>
@@ -54,7 +54,7 @@
       <p class="eyebrow">Dane są. Kontekstu brakuje.</p>
       <span class="p360-badge hero-badge">Działa w demo (alpha)</span>
       <h1>Mapa zdarzeń pacjenta. Film z życia, nie folder z dokumentami.</h1>
-      <p class="lead">Pacjent 360 porządkuje dokumenty, wizyty, leki, objawy, obserwacje rodziny i ustalenia w jedną chronologiczną mapę. Pacjent, opiekun i lekarz widzą tę samą historię, ale pracują w widokach dopasowanych do swojej roli. System nie diagnozuje — pilnuje, żeby nic ważnego się nie zgubiło.</p>
+      <p class="lead">Pacjent 360 porządkuje dokumenty, wizyty, leki, objawy, obserwacje rodziny i ustalenia w jedną chronologiczną mapę. Pacjent i lekarz pracują na wspólnym modelu historii, a opiekun widzi tylko udostępnione obszary. System nie diagnozuje — pomaga zauważyć braki, rozbieżności i pytania do omówienia.</p>
       <div class="hero-actions">
         <a class="button primary light" href="demo.html">Zobacz demo alpha</a>
         <a class="button secondary ghost-light" href="#film">Jak to działa</a>
@@ -63,18 +63,18 @@
   </section>
 
   <div class="container trust-strip" aria-label="Granice produktu">
-    <span>Nie diagnozuje</span><span>Nie prowadzi triage</span><span>Nie rekomenduje terapii</span><span>Doctor in the Loop</span><span>Źródła + zgody + audyt</span>
+    <span>Nie diagnozuje</span><span>Nie ocenia pilności</span><span>Nie rekomenduje terapii</span><span>Lekarz w procesie decyzyjnym (DITL)</span><span>Źródła + zgody + audyt</span>
   </div>
 
   <section class="container section" id="film">
     <div class="section-head split">
       <div><p class="eyebrow">Jak to działa</p><h2>Film z życia pacjenta w trzech krokach.</h2></div>
-      <p>Każda informacja ma źródło, datę i status pewności. Rozbieżności stają się pytaniami do lekarza, a obserwacje bliskich są oznaczone jako obserwacje — nie fakty kliniczne.</p>
+      <p>Każda informacja ma źródło, datę i status weryfikacji. Rozbieżności stają się pytaniami do lekarza, a obserwacje bliskich są oznaczone jako obserwacje — nie fakty kliniczne.</p>
     </div>
     <aside class="story-card patient-movie standalone" aria-label="Przykładowa historia pacjenta">
       <div class="movie-header"><strong>Film z życia pacjenta</strong><span>nie folder z dokumentami</span></div>
       <div class="timeline-line" aria-hidden="true"></div>
-      <div class="event"><span class="event-icon">1</span><div><b>Źródło: wypis / wynik / wywiad</b><small>Każda informacja ma pochodzenie, datę i status pewności.</small></div></div>
+      <div class="event"><span class="event-icon">1</span><div><b>Źródło: wypis / wynik / wywiad</b><small>Każda informacja ma pochodzenie, datę i status weryfikacji.</small></div></div>
       <div class="event warn"><span class="event-icon">2</span><div><b>Rozbieżność: lek z dokumentacji ≠ lek faktycznie brany</b><small>System nie zmienia leczenia. Tworzy pytanie do potwierdzenia.</small></div></div>
       <div class="event"><span class="event-icon">3</span><div><b>Rodzic / opiekun dodaje obserwację</b><small>Obserwacja jest oznaczona jako obserwacja — nie fakt kliniczny.</small></div></div>
       <div class="doctor-brief"><h3>Pacjent w 90 sekund</h3><p>Co wiadomo? Czego brakuje? Co jest niepewne? Co trzeba omówić z lekarzem?</p></div>
@@ -100,10 +100,10 @@
         <p>Pacjent 360 jest warstwą kontekstu nad danymi pacjenta: źródła, twierdzenia, zdarzenia, epizody, pytania do lekarza, raporty, zgody i audyt. Decyzja kliniczna zawsze zostaje u człowieka.</p>
       </div>
       <div class="possibility-grid">
-        <article class="possibility-card"><h3>Dla lekarza</h3><p>Desktopowy widok „Pacjent w 90 sekund": ostatnia zmiana, leki do potwierdzenia, braki danych, rozbieżności i źródła obok każdego twierdzenia.</p></article>
+        <article class="possibility-card"><h3>Dla lekarza</h3><p>Widok dla lekarza na komputerze: ostatnia zmiana, leki do potwierdzenia, braki danych, rozbieżności i źródła obok każdego twierdzenia.</p></article>
         <article class="possibility-card"><h3>Dla pacjenta</h3><p>Mobilne przygotowanie wizyty: dokumenty, objawy, lista leków faktycznie przyjmowanych, pytania do omówienia i zadania po wizycie.</p></article>
         <article class="possibility-card"><h3>Dla rodzica / opiekuna</h3><p>Krąg opieki to ludzie: rodzic, opiekun prawny, osoba wspierająca. Każdy z własną podstawą dostępu i zakresem zgody. Obserwacja opiekuna jest oznaczona jako obserwacja — nie fakt kliniczny.</p></article>
-        <article class="possibility-card"><h3>Dla zaufania</h3><p>Źródło, zgoda i audyt w każdym widoku. Brak źródła jest jawny, a nie ukryty. To fundament zaufania, nie tylko dashboard.</p></article>
+        <article class="possibility-card"><h3>Dla zaufania</h3><p>Źródło, zgoda i audyt w każdym widoku. Brak źródła jest jawny, a nie ukryty. To fundament zaufania, nie tylko kokpit.</p></article>
       </div>
     </div>
   </section>
@@ -115,7 +115,7 @@
     </div>
     <div class="wedge-flow">
       <article><span>Telefon</span><h3>Pacjent / rodzic zbiera kontekst</h3><p>Cel wizyty, dokumenty, leki, objawy, obserwacje, pytania i zgody.</p></article>
-      <article><span>Desktop</span><h3>Lekarz widzi źródłowy brief</h3><p>Znane, nieznane, niepewne i do weryfikacji, historia leków oraz pytania do wyjaśnienia.</p></article>
+      <article><span>Komputer</span><h3>Lekarz widzi krótkie podsumowanie ze źródłami</h3><p>Znane, nieznane, niepewne i do weryfikacji, historia leków oraz pytania do wyjaśnienia.</p></article>
       <article><span>Po wizycie</span><h3>Wiadomo, co dalej</h3><p>Zadania organizacyjne jako szkic do akceptacji: dokument do uzupełnienia, badanie do umówienia, pytanie na kontrolę.</p></article>
     </div>
   </section>
@@ -178,7 +178,7 @@
 <footer class="footer">
   <div class="container footer-grid">
     <div><strong>Pacjent 360</strong><br><span>Niezależny prototyp open source. Nie zastępuje lekarza, IKP, P1 ani dokumentacji medycznej. Nie jest usługą CeZ, NFZ, IKP ani żadnego innego publicznego systemu e-zdrowia. Demo używa wyłącznie danych fikcyjnych.</span></div>
-    <nav aria-label="Stopka"><a href="demo.html">Demo alpha</a><a href="https://github.com/sebkabyte/Pacjent360">GitHub</a><a href="disclaimer.html">Disclaimer medyczny</a><a href="privacy.html">Prywatność</a></nav>
+    <nav aria-label="Stopka"><a href="demo.html">Demo alpha</a><a href="https://github.com/sebkabyte/Pacjent360">GitHub</a><a href="disclaimer.html">Zastrzeżenie medyczne</a><a href="privacy.html">Prywatność</a></nav>
   </div>
 </footer>
 <script src="assets/story.js"></script>

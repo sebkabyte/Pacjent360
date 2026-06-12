@@ -465,7 +465,7 @@ async function main() {
     "2. Confirm https://pacjent360.com.pl/health.txt returns project=pacjent360.",
     `3. Run: powershell -ExecutionPolicy Bypass -File tools\\verify-deployed-site.ps1 -BaseUrl "${options.baseUrl}" -CompareLocalPackage -LocalPublicPath "${options.localPublicPath}"`,
     "4. Test security@pacjent360.com.pl and kontakt@pacjent360.com.pl: external send, receive, reply.",
-    "5. Re-run: node tools\\release-readiness.js -ReceiptConfirmed -MonitorOwner \"Name\"",
+    "5. Re-run final strict gate: node tools\\release-readiness.js -Strict -ReceiptConfirmed -MonitorOwner \"Name\"",
   ] : [];
 
   if (nextActions.length > 0) {

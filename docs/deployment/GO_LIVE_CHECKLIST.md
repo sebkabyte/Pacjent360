@@ -65,7 +65,7 @@ node tools\release-readiness.js -ReportPath "dist/go-live-status.txt"
 Po ręcznym potwierdzeniu aliasów można dopisać:
 
 ```powershell
-node tools\release-readiness.js -ReceiptConfirmed -MonitorOwner "..."
+node tools\release-readiness.js -Strict -ReceiptConfirmed -MonitorOwner "..."
 ```
 
 Przed sama rozmowa z reviewerem mozna uruchomic read-only gate bez budowania paczek:
@@ -110,8 +110,9 @@ Poniższe kroki są rozbiciem tej samej bramki na pojedyncze komendy.
 32. Po ręcznym teście wysyłka-odbiór-odpowiedź dla obu aliasów uruchom `powershell -ExecutionPolicy Bypass -File tools\verify-contact-gate.ps1 -ReceiptConfirmed -MonitorOwner "..."`.
 33. Po publikacji uruchom `powershell -ExecutionPolicy Bypass -File tools\verify-deployed-site.ps1 -BaseUrl "https://pacjent360.com.pl"`.
 34. Po pierwszym sukcesie uruchom `powershell -ExecutionPolicy Bypass -File tools\verify-deployed-site.ps1 -BaseUrl "https://pacjent360.com.pl" -CompareLocalPackage -LocalPublicPath "dist/upload-ready"`.
-35. Jeśli verifier domeny nadal zwraca 404 albo `www` zachowuje się inaczej, uruchom `node tools\domain-diagnostics.js -ReportPath "dist/domain-diagnostics.txt"`.
-36. Potwierdź, że verifier domeny nie zgłasza publicznie dostepnych ZIP-ow, `.sha256`, manifestow, handoffu ani raportow statusu/diagnostyki.
+35. Po uploadzie, poprawnym verifierze domeny i potwierdzeniu aliasów uruchom finalnie `node tools\release-readiness.js -Strict -ReceiptConfirmed -MonitorOwner "..."`.
+36. Jeśli verifier domeny nadal zwraca 404 albo `www` zachowuje się inaczej, uruchom `node tools\domain-diagnostics.js -ReportPath "dist/domain-diagnostics.txt"`.
+37. Potwierdź, że verifier domeny nie zgłasza publicznie dostepnych ZIP-ow, `.sha256`, manifestow, handoffu ani raportow statusu/diagnostyki.
 37. Potwierdź, że verifier domeny nie zgłasza brakujących nagłówków `.htaccess`, a diagnostyka nie zgłasza braku przekierowania HTTP -> HTTPS.
 38. Po publikacji powtórz ręczny test na `https://pacjent360.com.pl`.
 

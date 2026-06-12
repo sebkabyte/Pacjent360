@@ -43,6 +43,8 @@ Pacjent 360 ma ułożyć tę historię w formę przydatną dla trzech stron:
 - dla lekarza, który potrzebuje krótkiego kontekstu decyzyjnego,
 - dla rodziny lub opiekuna, jeśli pacjent świadomie udzieli im dostępu.
 
+W obecnej wersji alfa pierwszy proces jest węższy: pacjent, rodzic albo opiekun przygotowuje kontekst przed wizytą, a lekarz ocenia krótki raport i pytania DITL.
+
 ## Dlaczego teraz
 
 Tak. Pacjent 360 powinien iść z duchem aktualnych publikacji, ale bez udawania, że jest częścią państwowego systemu, certyfikowanym wyrobem medycznym albo narzędziem podejmującym decyzje kliniczne.
@@ -60,7 +62,7 @@ Wniosek dla projektu jest prosty: Pacjent 360 nie powinien budować "AI lekarza"
 - oś czasu i epizody opieki,
 - leki przepisane, wykupione i faktycznie przyjmowane,
 - zgody pacjenta i krąg wsparcia,
-- `Known / Unknown / Uncertain / To verify`,
+- `Znane / Nieznane / Niepewne / Do weryfikacji`,
 - pytania DITL,
 - raport kontekstowy przed wizytą,
 - asystenci operacyjni jako wsparcie organizacyjne, nie kliniczne.
@@ -69,7 +71,7 @@ To oznacza, że roadmapa powinna być inspirowana aktualnymi standardami i publi
 
 ## Wizja
 
-Docelowo Pacjent 360 powinien działać jak **open source companion dla IKP/P1**.
+Docelowo Pacjent 360 powinien działać jak **otwarty, niezależny towarzysz kontekstu dla IKP/P1**.
 
 Nie zastępuje IKP. Nie obchodzi IKP. Nie przechowuje loginów pacjenta. Nie udaje systemu państwowego.
 
@@ -85,10 +87,10 @@ Prototyp jest lokalny i demonstracyjny. Pokazuje kierunek produktu:
 - widok lekarza **Pacjent w 90 sekund**,
 - widok pacjenta **Mój Pacjent 360**,
 - wywiad i transkrypcję rozmowy jako ważne źródło danych,
-- multi-track timeline od ogółu do szczegółu,
-- Medication Story: leki przepisane vs faktycznie przyjmowane,
-- flagi red, amber, green i blue jako sygnały do wyjaśnienia,
-- raport one-pager w stylu `Known / Unknown / Uncertain / To verify`,
+- wielotorowa oś czasu od ogółu do szczegółu,
+- historia leków: leki przepisane vs faktycznie przyjmowane,
+- statusy danych, braki, rozbieżności i pytania DITL jako sygnały do wyjaśnienia,
+- jednostronicowy raport w stylu `Znane / Nieznane / Niepewne / Do weryfikacji`,
 - zgody, audyt i eksport JSON.
 
 MVP używa fikcyjnych, kompozytowych przypadków. Nie opisuje historii choroby żadnej konkretnej osoby.
@@ -103,12 +105,12 @@ Najbliższy rozwój projektu powinien odpowiadać na potrzeby trzech osób patrz
    - raport nie daje zaleceń, tylko porządkuje pytania DITL.
 
 2. **W trakcie wizyty: krótki raport dla lekarza**
-   - lekarz widzi `Known / Unknown / Uncertain / To verify`,
+   - lekarz widzi `Znane / Nieznane / Niepewne / Do weryfikacji`,
    - każde pytanie ma źródło: dokument, wynik, wywiad, lek albo transkrypcja,
    - lekarz może oznaczyć pytania i flagi jako wyjaśnione, odrzucone albo wymagające kontroli.
 
 3. **Po wizycie: zamknięcie pętli**
-   - system zapisuje, co lekarz rozstrzygnął,
+   - system zapisuje statusy DITL i źródłowo opisane zadania organizacyjne,
    - pacjent widzi, co ma przygotować, sprawdzić lub omówić przy kolejnym kontakcie,
    - opiekun może pilnować tylko tych zadań, do których pacjent dał mu dostęp.
 
@@ -133,7 +135,7 @@ Najbliższy rozwój projektu powinien odpowiadać na potrzeby trzech osób patrz
    - potem model gotowy na oficjalne standardy,
    - dopiero na końcu legalna, oficjalna integracja z IKP/P1/e-Profilem Pacjenta, bez scrapingu i bez przechowywania loginów.
 
-Pierwsza hipoteza do walidacji jest prosta: **czy taki one-pager pomaga lekarzowi szybciej zobaczyć, co trzeba wyjaśnić, a pacjentowi i opiekunowi lepiej przygotować się do wizyty.**
+Pierwsza hipoteza do walidacji jest prosta: **czy taki jednostronicowy raport pomaga lekarzowi szybciej zobaczyć, co trzeba wyjaśnić, a pacjentowi i opiekunowi lepiej przygotować się do wizyty.**
 
 ## Czego ten projekt nie robi
 
@@ -149,14 +151,14 @@ Ale nie powinien powiedzieć:
 
 > Odstaw lek X albo zastosuj leczenie Y.
 
-Każda decyzja kliniczna musi pozostać po stronie uprawnionego profesjonalisty medycznego. To jest zasada **DITL: Doctor in the Loop**.
+Każda decyzja kliniczna musi pozostać po stronie uprawnionego profesjonalisty medycznego. To jest zasada **DITL: lekarz w procesie decyzyjnym**.
 
 ## Clinical Safety Checklist
 
 Ta lista jest obowiązkową bramką dla zmian publicznych i PR, zgodnie z `CONTRIBUTING.md`.
 
 - Czy zmiana nie dodaje realnych danych pacjentów, dokumentacji medycznej ani danych możliwych do identyfikacji?
-- Czy zmiana nie diagnozuje, nie rekomenduje leczenia, nie ocenia pilności, nie robi triage i nie zastępuje decyzji lekarza?
+- Czy zmiana nie diagnozuje, nie rekomenduje leczenia, nie ocenia pilności i nie zastępuje decyzji lekarza?
 - Czy każda flaga, pytanie, automatyzacja i informacja wyjściowa ma źródło oraz jawny status DITL?
 - Czy UI używa języka: pytanie, brak danych, zadanie, status, kontekst, do wyjaśnienia?
 - Czy UI unika języka: diagnoza, zalecenie, wskazanie, pilne, należy, leczenie, terapia, w normie, poza normą?
@@ -245,7 +247,7 @@ Root repozytorium ma być czytelny. Szczegółowe dokumenty są w `docs/`, żeby
 - `docs/governance/DEFINITION_OF_HARM.md` - katalog szkód H-001..H-010 i bramki, które je blokują.
 - `docs/governance/SAFETY_CASE.md` - argumentacja bezpieczeństwa: jak architektura wymusza granicę DITL.
 - `docs/deployment/` - publikacja, rollback, GitHub i nazwa.pl.
-- `docs/validation/` - protokół walidacji, formularz feedbacku i szablon wyników.
+- `docs/validation/` - protokół walidacji, formularz opinii i szablon wyników.
 - `docs/adr/` - decyzje architektoniczne.
 - `tools/` - walidatory, smoke testy i skrypty budowania czystych paczek.
 

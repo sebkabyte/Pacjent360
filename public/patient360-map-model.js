@@ -16,6 +16,10 @@
   const TIMELINE_STATUS_META = contract.TIMELINE_STATUS_META || {};
   const DEFAULT_ZOOM = Object.freeze({ min: 0.4, max: 1.55, step: 0.1, fit: 0.42 });
   const SOURCE_MISSING_REF = contract.SOURCE_MISSING_REF || "source_missing";
+  const format =
+    (typeof globalThis !== "undefined" && globalThis.Patient360Format) ||
+    (typeof require === "function" ? require("./patient360-format.js") : null) ||
+    {};
 
   function normalize(value) {
     return String(value || "").toLowerCase();
@@ -265,7 +269,10 @@
       count: sorted.filter((event) => event.track === track).length
     })).filter((item) => item.count);
     const leadingTrack = trackCounts.sort((a, b) => b.count - a.count)[0];
-    return `Ten odcinek łączy ${sorted.length} zdarzeń od ${formatDate(first.date)} do ${formatDate(last.date)}. Najwięcej wpisów dotyczy toru "${leadingTrack?.track || "brak danych"}". Przewiń linię, oddal do całej historii albo wybierz jeden tor, aby zobaczyć szczegóły i źródła.`;
+    const eventCount = format.formatEvents
+      ? format.formatEvents(sorted.length)
+      : `${sorted.length} ${sorted.length === 1 ? "zdarzenie" : "zdarzeń"}`;
+    return `Ten odcinek łączy ${eventCount} od ${formatDate(first.date)} do ${formatDate(last.date)}. Najwięcej wpisów dotyczy toru "${leadingTrack?.track || "brak danych"}". Przewiń linię, oddal do całej historii albo wybierz jeden tor, aby zobaczyć szczegóły i źródła.`;
   }
 
   function buildTrackLayers(events, activeTrackId = null) {

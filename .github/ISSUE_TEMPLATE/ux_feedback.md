@@ -5,6 +5,8 @@ title: "[UX] "
 labels: ux
 ---
 
+> Nie podawaj realnych danych pacjenta, danych osobowych, PESEL, prywatnych transkrypcji ani szczegolow podatnosci security. Jesli sprawa dotyczy podatnosci, prywatnosci albo mozliwego ujawnienia danych, uzyj prywatnego kontaktu z `SECURITY.md` zamiast publicznego issue.
+
 ## Dla kogo jest feedback?
 
 - [ ] pacjent
@@ -15,3 +17,7 @@ labels: ux
 ## Co jest niezrozumiałe albo zbędne?
 
 ## Co działa dobrze?
+
+## Potwierdzenie
+
+- [ ] Potwierdzam, ze opis nie zawiera realnych danych pacjenta ani prywatnych materialow.

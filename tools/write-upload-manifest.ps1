@@ -175,8 +175,8 @@ if (-not $SkipDeploymentHandoff) {
   $handoffLines.Add("   powershell -ExecutionPolicy Bypass -File tools\verify-deployed-site.ps1 -BaseUrl `"$BaseUrl`" -CompareLocalPackage -LocalPublicPath `"$UploadDir`"") | Out-Null
   $handoffLines.Add("2. Run go-live status:") | Out-Null
   $handoffLines.Add("   node tools\release-readiness.js -ReportPath `"dist/go-live-status.txt`"") | Out-Null
-  $handoffLines.Add("3. After manual email receipt/reply tests, run:") | Out-Null
-  $handoffLines.Add("   node tools\release-readiness.js -ReceiptConfirmed -MonitorOwner `"Name`" -ReportPath `"dist/go-live-status.txt`"") | Out-Null
+  $handoffLines.Add("3. After manual email receipt/reply tests, run the final strict gate:") | Out-Null
+  $handoffLines.Add("   node tools\release-readiness.js -Strict -ReceiptConfirmed -MonitorOwner `"Name`" -ReportPath `"dist/go-live-status.txt`"") | Out-Null
   $handoffLines.Add("4. If the domain still returns 404 or www behaves differently, run:") | Out-Null
   $handoffLines.Add("   node tools\domain-diagnostics.js -ReportPath `"dist/domain-diagnostics.txt`"") | Out-Null
   $handoffLines.Add("") | Out-Null
