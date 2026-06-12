@@ -53,7 +53,13 @@ Aktualny lokalny release candidate po audycie council:
 - public repo: `dist/pacjent360-public-repo.zip`; aktualny SHA256 jest w `dist/release-manifest.json` i `dist/pacjent360-public-repo.zip.sha256`;
 - `dist/release-manifest.json` musi zaczynać się od `{` i parsować jako JSON.
 
-Status domeny przed uploadem: `tools\verify-deployed-site.ps1 -BaseUrl "https://pacjent360.com.pl"` zwraca 404 dla `index.html`. To oznacza, że trzeba wgrać zawartość `dist/upload-ready` do katalogu dokumentów domeny albo poprawić mapowanie katalogu w hostingu.
+Po pierwszym wdrożeniu domena `https://pacjent360.com.pl` powinna przechodzić pełną bramkę:
+
+```powershell
+.\tools\verify-deployed-site.ps1 -BaseUrl "https://pacjent360.com.pl" -CompareLocalPackage -LocalPublicPath "dist/upload-ready"
+```
+
+Jeśli verifier zwraca 404 dla `index.html` albo `health.txt`, sprawdź, czy domena wskazuje na właściwy katalog dokumentów i czy na hosting trafiła zawartość `dist/upload-ready`, a nie sam folder `upload-ready`, całe repo lub ZIP pozostawiony bez rozpakowania.
 
 Jeśli po uploadzie nadal widzisz 404 albo inne zachowanie dla `www`, uruchom diagnostykę domeny. Raport sprawdzi też `health.txt` oraz publiczne artefakty pomocnicze zostawione przypadkiem w document root:
 
@@ -114,16 +120,16 @@ Nie utrzymujemy recznej listy plikow do uploadu w tym dokumencie. Zawsze wgrywaj
 
 `index.html` jest publiczną stroną projektu. `demo.html` jest działającym prototypem MVP. `disclaimer.html` jest publicznym ograniczeniem medycznym prototypu. `privacy.html` opisuje prywatność i lokalne działanie demo. `maintenance.html` służy do szybkiego rollbacku. `health.txt` jest neutralnym plikiem kontrolnym do potwierdzenia poprawnego document root po uploadzie.
 
-## Warunki przed aktualizacja repo i go-live
+## Warunki przed aktualizacją repo i publikacją
 
-Nie aktualizuj repozytorium publicznego ani nie publikuj domeny produkcyjnie, jeśli w `README.md` lub `SECURITY.md` tekst sugeruje, że nieskonfigurowane skrzynki kontaktowe już działają.
+Nie aktualizuj repozytorium publicznego ani nie publikuj domeny produkcyjnie, jeśli w `README.md` lub `SECURITY.md` tekst sugeruje stan, którego nie potrafisz potwierdzić testem.
 
-Przed go-live trzeba skonfigurować i przetestować wymagane aliasy:
+Wymagane kanały kontaktu:
 
 - `security@pacjent360.com.pl` - prywatne zgłoszenia podatności, incydentów prywatności i ryzyk clinical safety.
 - `kontakt@pacjent360.com.pl` - ogólny kontakt projektowy i współpraca.
 
-Do czasu potwierdzenia skrzynek te adresy są propozycją modelu kontaktu, nie deklaracją działającej obsługi.
+Po każdej większej zmianie konfiguracji poczty potwierdź, że te adresy nadal działają.
 
 Po skonfigurowaniu poczty wykonaj najpierw techniczny precheck DNS:
 
