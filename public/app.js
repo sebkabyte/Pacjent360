@@ -299,6 +299,13 @@ const REPORT_CASE_STUDIES = [
   }
 ];
 
+const DIALOG_TYPES = new Set(["document", "decision", "interview", "medication", "observation", "flag", "consent"]);
+const DEFAULT_CASE_STUDY_BY_PATIENT = {
+  p1: "procedure-readiness",
+  p2: "specialist-consult",
+  p3: "acute-change"
+};
+
 function demoToday() {
   return PATIENT360_DEMO_DATA.localToday ? PATIENT360_DEMO_DATA.localToday() : new Date().toISOString().slice(0, 10);
 }
@@ -423,6 +430,10 @@ function activeDecision() {
 
 function activeCaseStudy() {
   return REPORT_CASE_STUDIES.find((caseStudy) => caseStudy.id === state.activeCaseStudy) || REPORT_CASE_STUDIES[0];
+}
+
+function defaultCaseStudyForPatient(patientId) {
+  return DEFAULT_CASE_STUDY_BY_PATIENT[patientId] || REPORT_CASE_STUDIES[0].id;
 }
 
 function normalize(value) {
@@ -762,6 +773,7 @@ function renderReportDemoBadge(lensLabel = "kontekst demo") {
 }
 
 function pageHeader(title, description, dialogType) {
+  const hasDialogAction = dialogType && DIALOG_TYPES.has(dialogType);
   return `
     <div class="page-intro">
       <div>
@@ -769,7 +781,7 @@ function pageHeader(title, description, dialogType) {
         <h1>${escapeHtml(title)}</h1>
         <p>${escapeHtml(description)}</p>
       </div>
-      ${dialogType ? `<div class="inline-actions"><button class="primary-button" data-open-dialog="${escapeHtml(dialogType)}"><i data-lucide="plus"></i>Dodaj</button></div>` : ""}
+      ${hasDialogAction ? `<div class="inline-actions"><button class="primary-button" data-open-dialog="${escapeHtml(dialogType)}"><i data-lucide="plus"></i>Dodaj</button></div>` : ""}
     </div>
   `;
 }
@@ -3023,6 +3035,10 @@ function setDitlStatus(type, id, status) {
 
 function openEntryDialog(type) {
   const config = dialogConfig(type);
+  if (!config) {
+    showToast("Ten widok nie ma formularza dodawania.");
+    return;
+  }
   dialogTitle.textContent = config.title;
   dialogFields.innerHTML = renderSafetyNote(DEMO_FORM_WARNING, "compact") + config.fields.map(renderField).join("");
   dialogForm.dataset.type = type;
@@ -3193,7 +3209,7 @@ function dialogConfig(type) {
       ]
     }
   };
-  return configs[type] || configs.document;
+  return configs[type] || null;
 }
 
 dialogForm.addEventListener("submit", (event) => {
@@ -3861,6 +3877,7 @@ document.querySelectorAll(".nav-item").forEach((button) => {
 
 patientSelect.addEventListener("change", () => {
   state.activePatientId = patientSelect.value;
+  state.activeCaseStudy = defaultCaseStudyForPatient(state.activePatientId);
   state.selectedSourceRef = null;
   state.selectedTimelineEventId = null;
   saveState();
