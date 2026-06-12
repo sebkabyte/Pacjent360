@@ -284,6 +284,29 @@ async function main() {
     assert(core.register === "doctor", `Core dashboard should use doctor visual register, got ${core.register}`);
     assert(core.hasLedgerSourceChip, "Core dashboard should render Trust OS ledger source chips");
 
+    const patientSwitch = await client.evaluate(`(() => {
+      const setPatient = (patientId) => {
+        const select = document.querySelector('#patientSelect');
+        if (!select) return '';
+        select.value = patientId;
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+        document.querySelector('nav button[data-view="core"]')?.click();
+        return document.querySelector('#viewRoot')?.textContent || '';
+      };
+      const p2Core = setPatient('p2');
+      document.querySelector('nav button[data-view="patientPortal"]')?.click();
+      const p2Patient = document.querySelector('#viewRoot')?.textContent || '';
+      const p3Core = setPatient('p3');
+      document.querySelector('nav button[data-view="timeline"]')?.click();
+      const p3Timeline = document.querySelector('#viewRoot')?.textContent || '';
+      setPatient('p1');
+      return { p2Core, p2Patient, p3Core, p3Timeline };
+    })()`);
+    assert(patientSwitch.p2Core.includes("Atorwastatyna") && !patientSwitch.p2Core.includes("Lek wymagajÄ…cy decyzji przed procedurÄ…"), "Switching to patient p2 should refresh doctor cockpit content");
+    assert(patientSwitch.p2Patient.includes("Demo B") && patientSwitch.p2Patient.includes("kardiologiczna"), "Switching to patient p2 should refresh patient portal content");
+    assert(patientSwitch.p3Core.includes("Demo C") && patientSwitch.p3Core.includes("infekcji"), "Switching to patient p3 should refresh doctor cockpit content");
+    assert(patientSwitch.p3Timeline.includes("Porada pediatryczna") && !patientSwitch.p3Timeline.includes("Atorwastatyna"), "Switching to patient p3 should refresh timeline content");
+
     const patient = await client.evaluate(`(() => {
       document.querySelector('nav button[data-view="patientPortal"]').click();
       const steps = [...document.querySelectorAll('.previsit-step')].map((step) => step.textContent.trim().replace(/\\s+/g, ' '));
