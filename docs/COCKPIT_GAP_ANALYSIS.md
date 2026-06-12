@@ -1,6 +1,6 @@
 # Analiza luk: Kokpity i Oś czasu
 
-Status: wynik deep research — do decyzji autora.
+Status: archiwalny wynik deep research z 2026-06-07 — część luk została już zaadresowana; dokument służy jako historyczny backlog, nie aktualny opis MVP.
 Data: 2026-06-07.
 Metoda: code review `app.js` (renderCore, renderPatientPortal, renderTimeline, renderFullDataAccess, demo data) + konfrontacja z ARCHITECTURE.md, SSOT.md, ROADMAP.md.
 

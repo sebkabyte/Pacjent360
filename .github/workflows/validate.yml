@@ -31,6 +31,9 @@ jobs:
             node --check "$file"
           done
 
+      - name: Run unit tests
+        run: node --test tests/
+
       - name: Validate data contract
         run: node tools/validate-data-contract.js
 
@@ -66,3 +69,9 @@ jobs:
 
       - name: Validate M5 pack
         run: node tools/validate-validation-pack.js
+
+      - name: Validate demo reactivity
+        run: node tools/verify-reactivity.js --packageDir public
+
+      - name: Browser smoke demo
+        run: node tools/smoke-browser.js --packageDir public

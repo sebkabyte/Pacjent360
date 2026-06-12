@@ -34,7 +34,7 @@ Ostatni lokalny release candidate po audycie council:
 | Supply chain | Zewnętrzny CDN jest jawny w privacy, Lucide ma pinned version i SRI, brak `lucide@latest` | ✅ OK — `unpkg.com/lucide@0.468.0` + SRI w `index.html` i `demo.html` |
 | Nagłówki i przekierowania hostingu | Hosting wysyła CSP z `frame-ancestors 'none'`, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy` oraz przekierowuje HTTP/`www` do kanonicznego HTTPS | ⏳ gotowe w `.htaccess`; potwierdzić po uploadzie przez `tools\verify-deployed-site.ps1` i `tools\domain-diagnostics.js` |
 | Artefakty pomocnicze | Po uploadzie publicznie dostepne sa tylko pliki strony; ZIP-y, `.sha256`, manifesty, checklisty, handoff i raporty statusu/diagnostyki zwracaja 403 albo 404 | ⏳ gotowe w verifierze domeny; potwierdzic po uploadzie |
-| Dokumentacja publiczna | README zawiera status alpha, Quick start i Clinical Safety Checklist zgodną z `CONTRIBUTING.md` | ✅ OK — uzupełnione dla `v0.2.0-alpha` |
+| Dokumentacja publiczna | README zawiera status alpha, Quick start i Clinical Safety Checklist zgodną z `CONTRIBUTING.md` | ✅ OK — uzupełnione dla `v0.2.2-alpha` |
 | Demo | Działa `demo.html`, raport kontekstowy i sekcje `Known / Unknown / Uncertain / To verify` | ✅ OK lokalnie — widoki Lekarz, Pacjent, Sygnały, Wyniki, Raporty mają watermark i neutralne copy (2026-06-08) |
 | LLM / asystenci operacyjni | Runtime LLM nie jest publikowany; `SSOT.md`, `SPRINTS.md` i `ROADMAP.md` definiują tylko bezpieczny backlog dry-run/preview/review | ✅ OK jako dokumentacja roadmapy — funkcje LLM pozostają NO-GO do Sprint A0/A1 i review safety/privacy/security |
 | Rollback | Działa `maintenance.html`, a procedura z `ROLLBACK.md` jest jasna | ✅ OK lokalnie — plik w `dist/public`, `ROLLBACK.md` opisuje 5-krokową procedurę (2026-06-08) |
@@ -190,7 +190,7 @@ Poniższe kroki są rozbiciem tej samej bramki na pojedyncze komendy.
    - `demo.html` Sygnały — ✅ „Mapa pytań i sygnałów DITL”, brak `red flag`.
    - `demo.html` Wyniki — ✅ „zakresy podane przez źródła”, brak interpretacji klinicznej.
    - `demo.html` Raporty — ✅ badge „FIKCYJNA SOCZEWKA DEMO / DANE PACJENTA DEMO”, Known / Unknown / Uncertain / To verify.
-   - `privacy.html` — ✅ `localStorage`, klucz `pacjent360-state-v6`, CDN `unpkg.com/lucide@0.468.0`, pinned version i SRI.
+   - `privacy.html` — ✅ `localStorage`, klucz `pacjent360-state-v7`, CDN `unpkg.com/lucide@0.468.0`, pinned version i SRI.
 7. Browser DOM smoke — ✅ brak błędów konsoli, watermark obecny w testowanych widokach.
 8. Printy/screenshoty — ✅ zapisane w `prints/`: desktop `index`, `Lekarz`, `Pacjent`, `Sygnały`, `Wyniki`, `Raporty`, `Privacy`; mobile `index`, `Lekarz`.
 
@@ -262,7 +262,7 @@ Poniższe kroki są rozbiciem tej samej bramki na pojedyncze komendy.
 
 Publikację domeny albo aktualizację publicznego repo trzeba zatrzymać, jeśli wystąpi którekolwiek z P0:
 
-- README nie pokazuje statusu **alpha / v0.2.0-alpha**, Quick start albo Clinical Safety Checklist zgodnej z `CONTRIBUTING.md`.
+- README nie pokazuje statusu **alpha / v0.2.2-alpha**, Quick start albo Clinical Safety Checklist zgodnej z `CONTRIBUTING.md`.
 - W `SECURITY.md` lub README brakuje jawnego modelu kontaktu albo tekst sugeruje, że nieskonfigurowane skrzynki już działają.
 - Aliasy `security@pacjent360.com.pl` i `kontakt@pacjent360.com.pl` nie są skonfigurowane, przetestowane i monitorowane przed produkcyjnym go-live domeny albo prywatną obsługą zgłoszeń.
 - `PRIVACY.md` albo `privacy.html` nie ujawnia `localStorage` oraz zewnętrznego CDN `unpkg.com/lucide@0.468.0` z pinned version i SRI.

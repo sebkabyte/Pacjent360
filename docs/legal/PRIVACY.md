@@ -16,7 +16,7 @@ Podstawą prawną ewentualnego przetwarzania danych technicznych jest Art. 6(1)(
 
 Strona publiczna nie zbiera danych osobowych przez formularze, konta użytkowników, cookies analityczne ani tracking.
 
-Demo MVP działa lokalnie w przeglądarce i korzysta z fikcyjnych danych. Dane wpisane w demo mogą zostać zapisane w `localStorage` przeglądarki, obecnie pod kluczem `pacjent360-state-v6`. Pozostają lokalne dla przeglądarki do czasu resetu demo albo wyczyszczenia danych strony.
+Demo MVP działa lokalnie w przeglądarce i korzysta z fikcyjnych danych. Dane wpisane w demo mogą zostać zapisane w `localStorage` przeglądarki, obecnie pod kluczem `pacjent360-state-v7`. Pozostają lokalne dla przeglądarki do czasu resetu demo albo wyczyszczenia danych strony.
 
 ## Zewnętrzny CDN
 
