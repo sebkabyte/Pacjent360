@@ -59,7 +59,8 @@ $nodeCheckFiles = @(
   "tools/capture-screens.js",
   "tools/domain-diagnostics.js",
   "tools/release-readiness.js",
-  "tools/smoke-browser.js"
+  "tools/smoke-browser.js",
+  "tools/verify-reactivity.js"
 )
 
 $powerShellCheckFiles = @(
@@ -82,6 +83,7 @@ $powerShellCheckFiles = @(
   "tools/validate-a11y.ps1",
   "tools/validate-validation-pack.ps1",
   "tools/validate-harm-gates.ps1",
+  "tools/verify-reactivity.ps1",
   "tools/validate-pre-show.ps1",
   "tools/validate-go-live.ps1",
   "tools/verify-contact-gate.ps1",
@@ -131,9 +133,10 @@ Invoke-External "HTTP smoke public package" "powershell" @("-ExecutionPolicy", "
 
 if ($SkipBrowser) {
   Write-Host ""
-  Write-Host "SKIP: Browser smoke public package (-SkipBrowser)"
+  Write-Host "SKIP: Browser smoke and reactivity public package (-SkipBrowser)"
 } else {
   Invoke-External "Browser smoke public package" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/smoke-browser.ps1"))
+  Invoke-External "Demo reactivity validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/verify-reactivity.ps1"), "-PackageDir", "dist/public")
 }
 
 if ($SkipRepoPackage) {

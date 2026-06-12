@@ -28,6 +28,8 @@ tools/smoke-public.ps1
 tools/smoke-deployed-compare.ps1
 tools/smoke-browser.ps1
 tools/smoke-browser.js
+tools/verify-reactivity.ps1
+tools/verify-reactivity.js
 tools/domain-diagnostics.js
 tools/release-readiness.js
 tools/prepare-public-repo.ps1
