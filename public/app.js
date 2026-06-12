@@ -245,7 +245,7 @@ const REPORT_CASE_STUDIES = [
     flags: [
       { color: "red", title: "Nowa zmiana", question: "Czy nowa zmiana stanu została potraktowana jako sygnał do wyjaśnienia?", sourceRefs: [SOURCE_MISSING_REF] },
       { color: "amber", title: "Niepewność przyczyn", question: "Czy przyczyna zmiany nie została założona zbyt wcześnie?", sourceRefs: [SOURCE_MISSING_REF] },
-      { color: "blue", title: "Pytanie DITL", question: "Jakie pytanie lekarz musi rozstrzygnąć jako pierwsze?", sourceRefs: [SOURCE_MISSING_REF] }
+      { color: "blue", title: "Pytanie DITL", question: "Które pytania lekarz chce omówić w kontekście tej zmiany?", sourceRefs: [SOURCE_MISSING_REF] }
     ],
     questions: [
       "Kiedy dokładnie zaczęła się zmiana?",
@@ -262,7 +262,7 @@ const REPORT_CASE_STUDIES = [
     keyChange: "Najważniejsze jest ustalenie, co pacjent faktycznie bierze teraz, a nie tylko co widnieje w dokumentacji.",
     known: ["Są leki widoczne w dokumentacji.", "Wywiad może wskazać realne przyjmowanie lub pomijanie leków."],
     unknown: ["Brak pełnej listy leków doraźnych, OTC i suplementów."],
-    uncertain: ["Objaw po zmianie leku może być działaniem niepożądanym, interakcją albo przypadkową zbieżnością czasową."],
+    uncertain: ["Objaw zgłoszony po zmianie leku wymaga omówienia bez zakładania przyczyny; związek czasowy nie oznacza przyczynowości."],
     verify: ["Czy lekarz lub farmaceuta oznaczył listę leków jako uzgodnioną?"],
     flags: [
       { color: "amber", title: "Rozbieżność lekowa", question: "Czy dokumentacja zgadza się z realnym przyjmowaniem leków?", sourceRefs: [SOURCE_MISSING_REF] },
@@ -708,7 +708,7 @@ function renderCriticalStrip() {
     return;
   }
   criticalStrip.classList.add("visible");
-  criticalStrip.innerHTML = `<i data-lucide="triangle-alert"></i><strong>${redFlags.length} sygnał DITL do sprawdzenia:</strong> ${escapeHtml(redFlags[0].question)}`;
+  criticalStrip.innerHTML = `<i data-lucide="triangle-alert"></i><strong>${formatCount(redFlags.length, "sygnał DITL", "sygnały DITL", "sygnałów DITL")} do sprawdzenia:</strong> ${escapeHtml(redFlags[0].question)}`;
 }
 
 function renderView() {
@@ -1748,7 +1748,7 @@ function generateEpisodeNarrative(events) {
     count: sorted.filter((event) => event.track === track).length
   })).filter((item) => item.count);
   const leadingTrack = trackCounts.sort((a, b) => b.count - a.count)[0];
-  return `Ten odcinek łączy ${sorted.length} zdarzeń od ${formatDate(first.date)} do ${formatDate(last.date)}. Najwięcej wpisów dotyczy toru „${leadingTrack?.track || "brak danych"}”. Przewiń linię, oddal do całej historii albo wybierz jeden tor, aby zobaczyć szczegóły i źródła.`;
+  return `Ten odcinek łączy ${PATIENT360_FORMAT.formatEvents(sorted.length)} od ${formatDate(first.date)} do ${formatDate(last.date)}. Najwięcej wpisów dotyczy toru „${leadingTrack?.track || "brak danych"}”. Przewiń linię, oddal do całej historii albo wybierz jeden tor, aby zobaczyć szczegóły i źródła.`;
 }
 
 function activeTimelinePeriod() {
@@ -2269,25 +2269,25 @@ function renderReportsV2() {
       <div>
         <p class="eyebrow">Raporty</p>
         <h1>Raport kontekstowy</h1>
-        <p>Krótki podgląd demonstracyjny, dopasowany do fikcyjnej soczewki case study: ${escapeHtml(caseStudy.label)}.</p>
+        <p>Krótki podgląd demonstracyjny, dopasowany do fikcyjnego scenariusza demonstracyjnego: ${escapeHtml(caseStudy.label)}.</p>
       </div>
       <div class="report-actions">
         <button class="primary-button" data-generate-report><i data-lucide="sparkles"></i>Utwórz podgląd demo</button>
         <button class="ghost-button" data-print><i data-lucide="printer"></i>Podgląd wydruku demo</button>
       </div>
     </div>
-    ${renderSafetyNote("Raport jest publicznym podglądem demo. Soczewka case study i dane pacjenta są fikcyjne; nie używaj tu realnych danych pacjenta.")}
+    ${renderSafetyNote("Raport jest publicznym podglądem demo. Scenariusz demonstracyjny i dane pacjenta są fikcyjne; nie używaj tu realnych danych pacjenta.")}
     <section class="section-band">
       <div class="section-head">
         <div>
-          <p class="eyebrow">Case studies</p>
+          <p class="eyebrow">Przypadki demonstracyjne</p>
           <h2>Wybierz soczewkę raportu</h2>
         </div>
       </div>
       <div class="case-study-grid">
         ${REPORT_CASE_STUDIES.map(renderCaseStudyButton).join("")}
       </div>
-      <p class="record-body case-study-disclaimer">Case studies są fikcyjnymi kompozytami projektowymi. Nie są oparte na historii choroby żadnej konkretnej osoby ani rodziny. Soczewki specjalistyczne są planowane do walidacji i nie są częścią obecnego MVP.</p>
+      <p class="record-body case-study-disclaimer">Przypadki demonstracyjne są fikcyjnymi kompozytami projektowymi. Nie są oparte na historii choroby żadnej konkretnej osoby ani rodziny. Soczewki specjalistyczne są planowane do walidacji i nie są częścią obecnego MVP.</p>
     </section>
     <section class="section-band">
       <div class="filter-row">
@@ -2335,10 +2335,10 @@ function renderOnePagerV2(type) {
       ${renderReportDemoBadge(caseStudy.label)}
       <p class="eyebrow">Status: DITL, do oceny lekarza</p>
       <h2>${escapeHtml(typeLabel(type))} / ${escapeHtml(caseStudy.label)}</h2>
-      <p class="record-body">${escapeHtml(patient.name)}, ${formatAge(patient.birthDate)}. Case study: ${escapeHtml(caseStudy.decision)}</p>
+      <p class="record-body">${escapeHtml(patient.name)}, ${formatAge(patient.birthDate)}. Scenariusz demonstracyjny: ${escapeHtml(caseStudy.decision)}</p>
     </article>
     <article class="report-section case-study-summary">
-      <h3>Soczewka case study</h3>
+      <h3>Scenariusz demonstracyjny</h3>
       <p class="record-body">${escapeHtml(caseStudy.lens)}</p>
       <ul class="plain-list">
         <li><i data-lucide="user-round-check"></i><span><strong>Profil:</strong> ${escapeHtml(caseStudy.patientSnapshot)}</span></li>
@@ -2357,14 +2357,14 @@ function renderOnePagerV2(type) {
     <article class="report-section">
       <h3>Znane / Nieznane / Niepewne / Do weryfikacji</h3>
       <div class="known-grid">
-        ${renderCaseKnownGroup("Znane (Known)", caseStudy.known, "known")}
-        ${renderCaseKnownGroup("Nieznane (Unknown)", caseStudy.unknown, "unknown")}
-        ${renderCaseKnownGroup("Niepewne (Uncertain)", caseStudy.uncertain, "uncertain")}
-        ${renderCaseKnownGroup("Do weryfikacji (To verify)", caseStudy.verify, "verify")}
+        ${renderCaseKnownGroup("Znane", caseStudy.known, "known")}
+        ${renderCaseKnownGroup("Nieznane", caseStudy.unknown, "unknown")}
+        ${renderCaseKnownGroup("Niepewne", caseStudy.uncertain, "uncertain")}
+        ${renderCaseKnownGroup("Do weryfikacji", caseStudy.verify, "verify")}
       </div>
     </article>
     <article class="report-section alert">
-      <h3>Sygnały case study</h3>
+      <h3>Sygnały scenariusza demonstracyjnego</h3>
       <p class="record-body">Fikcyjny przykład poglądowy: poniższe sygnały pokazują format raportu, nie dane aktywnego pacjenta.</p>
       <ul class="plain-list">
         ${caseStudy.flags.map((flag) => `<li><i data-lucide="${escapeHtml(FLAG_META[flag.color].icon)}"></i><span><strong>${escapeHtml(flag.title)}:</strong> ${escapeHtml(flag.question)} ${sourceChips(flag.sourceRefs)}</span></li>`).join("")}
@@ -2399,7 +2399,7 @@ function typeLabel(type) {
     context: "Pacjent 360: raport kontekstowy",
     internist: "Internista",
     cardiology: "Kardiolog",
-    preop: "Pre-Op",
+    preop: "Przed zabiegiem",
     neurology: "Neurolog",
     patient: "Pacjent"
   }[type] || "Pacjent 360: raport kontekstowy";
@@ -2412,16 +2412,17 @@ function renderCaregiverPortal() {
   });
   const validation = PATIENT360_CAREGIVER_MODEL.validateCaregiverModel(model);
   return `
-    ${pageHeader("Kokpit opiekuna", "Widok zakresu udostępnienia dla rodziny lub opiekuna. Pokazuje zadania organizacyjne i status dostępu, bez decyzji klinicznych.", "consent")}
+    ${pageHeader("Kokpit opiekuna", "Podgląd zgód pacjenta i zakresów udostępnienia. Nie symuluje jeszcze widoku jednej konkretnej osoby; pokazuje zadania organizacyjne i status dostępu bez decyzji klinicznych.", "consent")}
     <section class="section-band caregiver-overview">
       <div class="section-head">
         <div>
           <p class="eyebrow">Zakres zgody</p>
           <h2><i data-lucide="users-round"></i> Kto co widzi</h2>
         </div>
-        <span class="status-chip ${model.activeScopes.length ? "done" : "pending"}">${model.activeScopes.length ? `${model.activeScopes.length} aktywne zakresy` : "Brak aktywnego zakresu"}</span>
+        <span class="status-chip ${model.activeScopes.length ? "done" : "pending"}">${model.activeScopes.length ? formatCount(model.activeScopes.length, "aktywny zakres dostępu", "aktywne zakresy dostępu", "aktywnych zakresów dostępu") : "Brak aktywnego zakresu"}</span>
       </div>
       <p class="record-body">${escapeHtml(model.safetyCopy)}</p>
+      <p class="safety-note inline-note"><i data-lucide="info"></i>Ten widok pokazuje przegląd zgód pacjenta. Docelowo opiekun zobaczy tylko zakres przypisany do swojej zgody.</p>
       ${validation.valid ? "" : `<p class="form-warning">Model opiekuna wymaga sprawdzenia: ${escapeHtml(validation.errors.join("; "))}</p>`}
       <div class="caregiver-scope-list">
         ${model.scopes.map(renderCaregiverScope).join("") || emptyState("Brak zgód opiekuna w danych demo.")}
@@ -3129,7 +3130,7 @@ function dialogConfig(type) {
     decision: {
       title: "Dodaj kontekst decyzji (DITL)",
       fields: [
-        { name: "type", label: "Typ decyzji", kind: "select", options: ["Pre-Op / decyzja zabiegowa", "Wizyta kontrolna", "Zmiana leków", "Wypis", "Konsultacja kardiologiczna", "Konsultacja neurologiczna", "Druga opinia"] },
+        { name: "type", label: "Typ decyzji", kind: "select", options: ["Decyzja przed zabiegiem", "Wizyta kontrolna", "Zmiana leków", "Wypis", "Konsultacja kardiologiczna", "Konsultacja neurologiczna", "Druga opinia"] },
         { name: "contactDate", label: "Data kontaktu", kind: "date", value: today, required: true },
         { name: "contextQuestion", label: "Pytanie kontekstowe na dziś", kind: "textarea", required: true },
         { name: "ditlQuestions", label: "Pytania DITL, po jednym w linii", kind: "textarea" }
@@ -3176,7 +3177,7 @@ function dialogConfig(type) {
         { name: "color", label: "Kategoria sygnału", kind: "select", options: FLAG_COLOR_OPTIONS },
         { name: "category", label: "Kategoria", required: true },
         { name: "question", label: "Pytanie do lekarza", kind: "textarea", required: true },
-        { name: "evidence", label: "Dane wspierające", kind: "textarea" }
+        { name: "evidence", label: "Informacje ze źródeł", kind: "textarea" }
       ]
     },
     consent: {
@@ -3724,7 +3725,7 @@ function buildDataContractExport(exportState) {
     schemaVersion: DATA_SCHEMA_VERSION,
     contractVersion: DATA_CONTRACT_VERSION,
     exportedAt: new Date().toISOString(),
-    intendedUse: "Kontekst, źródła, pytania DITL i zadania organizacyjne. Nie diagnoza, triage ani rekomendacja terapeutyczna.",
+    intendedUse: "Kontekst, źródła, pytania DITL i zadania organizacyjne. Nie diagnoza, ocena pilności ani rekomendacja terapeutyczna.",
     patient: exportState.patients?.[0] || null,
     sources: buildContractSources(exportState),
     claims: buildContractClaims(exportState),
@@ -3936,11 +3937,16 @@ function initPanelSplitter() {
   if (!grid || !splitter || !toggle) return;
 
   const DEFAULT_W = 330;
-  const clampWidth = (value) => Math.min(620, Math.max(260, Math.round(value)));
+  const MIN_W = 260;
+  const MAX_W = 620;
+  splitter.setAttribute("aria-valuemin", String(MIN_W));
+  splitter.setAttribute("aria-valuemax", String(MAX_W));
+  const clampWidth = (value) => Math.min(MAX_W, Math.max(MIN_W, Math.round(value)));
   const currentWidth = () => parseInt(grid.style.getPropertyValue("--evidence-w"), 10) || DEFAULT_W;
   const applyWidth = (value) => {
     const width = clampWidth(value);
     grid.style.setProperty("--evidence-w", `${width}px`);
+    splitter.setAttribute("aria-valuenow", String(width));
     return width;
   };
 

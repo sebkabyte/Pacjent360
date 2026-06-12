@@ -6,16 +6,16 @@ Nadrzedny plan programu po audycie repo i council: `PROGRAM_PLAN.md`.
 
 FAZY 0-4, CKP/MOB/NAT i sprinty asystentow opisane nizej sa teraz szczegolowym backlogiem wykonawczym mapowanym do M0-M12 z `PROGRAM_PLAN.md`. Nie stanowia rownoleglego harmonogramu. Status 2026-06-08: M0 Publication Ready i M2 Data Contract v0.1 sa wykonane lokalnie jako powtarzalny vertical slice. Publiczne repo alpha jest otwarte z czystej allowlisty; produkcyjny go-live domeny i prywatna obsluga zgloszen nadal czekaja na potwierdzone aliasy kontaktowe.
 
-Normatywne zrodlo: `SSOT.md`. Obowiazuja tez `docs/legal/DISCLAIMER.md`, `SECURITY.md`, `docs/deployment/GO_LIVE_CHECKLIST.md`, `docs/governance/RISKS.md` i `SPRINTS.md`.
+Zrodla prawdy: `PRODUCT_SSOT.md` dla produktu, `PROGRAM_PLAN.md` dla harmonogramu, `docs/SSOT.md` dla LLM/asystentow operacyjnych. Obowiazuja tez `docs/legal/DISCLAIMER.md`, `SECURITY.md`, `docs/deployment/GO_LIVE_CHECKLIST.md`, `docs/governance/RISKS.md` i `SPRINTS.md`.
 Archiwalna analiza luk kokpitow: `docs/COCKPIT_GAP_ANALYSIS.md`.
 
 Asystenci LLM w tym projekcie sa narzedziami operacyjnymi. Ich zadaniem jest porzadkowanie kontekstu, wskazywanie brakow, pilnowanie zrodel, przygotowanie checklist i tworzenie draftow do weryfikacji. Nie diagnozuja, nie triazuja, nie rekomenduja terapii i nie pracuja na realnych danych pacjentow.
 
 ## Teraz
 
-**Najwyzszy priorytet: M3 Patient Map Core, bez szerokich nowych funkcji.**
+**Najwyzszy priorytet: hardening release candidate, traceability i bezpieczne przygotowanie publikacji.**
 
-M0 i M2 sa lokalnie zamkniete. Najblizszy techniczny krok to wydzielenie czystego modelu Mapy Pacjenta 360, z zachowaniem obecnego UI i bez zmiany eksportu poza testami regresji.
+M0, M2, M3 i M4 maja lokalne vertical slice'y. Najblizszy techniczny krok to utrzymanie tych slice'ow jako bramek regresji, usuniecie rozjazdow dokumentacji i przygotowanie publikacji domeny bez nowych funkcji klinicznych.
 
 - Status FAZA 0: wykonane kierunkowo, utrzymac jako safety gate przy kazdej publikacji.
 - Status FAZA 1: wykonane kierunkowo w sprincie nocnym, teraz `done / needs QA / needs hardening`.
@@ -34,6 +34,7 @@ M0 i M2 sa lokalnie zamkniete. Najblizszy techniczny krok to wydzielenie czysteg
 - Filtrowanie po trackach na osi czasu + ukrywanie pustych trackow.
 - M3 hardening: ograniczenie duplikacji helperow w `app.js`, source coverage, neutralne relacje, statusy `planowane` i `virtual`; snapshot i edge-case fixtures sa juz aktywna bramka regresji.
 - M4 hardening: wariant opiekuna i dalszy test, ze flow przed wizyta nie brzmi jak zalecenie kliniczne; no-data fixture i walidator M4 sa juz aktywne.
+- M5 hardening zgód: rozdzielić przegląd zgód pacjenta od widoku jednej konkretnej osoby z dostępem (`selectedCaregiverId` / recipient context), uwzględnić wygaśnięcie zgody i osobną podstawę dostępu rodzica/opiekuna prawnego.
 
 ## 6 tygodni
 

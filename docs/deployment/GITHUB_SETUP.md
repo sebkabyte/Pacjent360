@@ -32,7 +32,7 @@ Checklist przed aktualizacja publicznego repozytorium.
 - Uruchom `powershell -ExecutionPolicy Bypass -File tools\verify-contact-gate.ps1 -DnsOnly` po konfiguracji poczty.
 - Po ręcznym teście wysyłka-odbiór-odpowiedź uruchom `powershell -ExecutionPolicy Bypass -File tools\verify-contact-gate.ps1 -ReceiptConfirmed -MonitorOwner "..."`.
 - Po publikacji domeny uruchom `powershell -ExecutionPolicy Bypass -File tools\verify-deployed-site.ps1 -BaseUrl "https://pacjent360.com.pl" -CompareLocalPackage -LocalPublicPath "dist/upload-ready"`.
-- Uruchom status publikacji: `node tools\release-readiness.js`; po potwierdzeniu aliasów dodaj `-ReceiptConfirmed -MonitorOwner "..."`.
+- Uruchom status publikacji: `node tools\release-readiness.js`; po potwierdzeniu uploadu i aliasów uruchom twardą bramkę `node tools\release-readiness.js -Strict -ReceiptConfirmed -MonitorOwner "..."`.
 - Przejrzyj `docs/governance/RISKS.md`, `docs/legal/DISCLAIMER.md`, `docs/legal/PRIVACY.md` i `NOTICE`.
 - Potwierdź w checklist/handover aliasy `security@pacjent360.com.pl` i `kontakt@pacjent360.com.pl`.
 - Zastosuj allowlistę D-002 z `PROGRAM_PLAN.md`.

@@ -1,2 +1,2 @@
-const toggle=document.querySelector('[data-nav-toggle]');const nav=document.querySelector('[data-nav]');if(toggle&&nav){toggle.addEventListener('click',()=>nav.classList.toggle('open'))}
+const toggle=document.querySelector('[data-nav-toggle]');const nav=document.querySelector('[data-nav]');if(toggle&&nav){toggle.addEventListener('click',()=>{const open=!nav.classList.contains('open');nav.classList.toggle('open',open);toggle.setAttribute('aria-expanded',String(open))})}
 const filter=document.querySelector('[data-doc-filter]');if(filter){const cards=[...document.querySelectorAll('[data-doc-card]')];filter.addEventListener('input',()=>{const q=filter.value.toLowerCase();cards.forEach(c=>{c.style.display=c.textContent.toLowerCase().includes(q)?'block':'none'})})}

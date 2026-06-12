@@ -194,7 +194,7 @@ TimelineEvent
 MedicationOrder
 MedicationIntakePlan
 MedicationActualUse
-MedicationReminder
+MedicationSourceTask
 VisitReminder
 CareTask
 CareTaskExecution
@@ -224,7 +224,7 @@ Najwazniejsze relacje:
 - `CareTask` opisuje krok do wykonania po wizycie, np. potwierdzic dokument, sprawdzic e-recepte, umowic badanie, znalezc termin, przygotowac pytanie.
 - `MedicationOrder` opisuje lek przepisany.
 - `MedicationActualUse` opisuje lek realnie przyjmowany.
-- `MedicationReminder` przypomina o planie, ale nie zmienia dawki i nie interpretuje terapii.
+- `MedicationSourceTask` przypomina o sprawdzeniu źródła zadania lekowego, ale nie zmienia dawki i nie interpretuje terapii.
 - `AgentTask` opisuje zadanie operacyjne asystenta, np. przypomnienie, sprawdzenie kompletu dokumentow albo eskalacje pytania do lekarza.
 - `AgentPolicy` okresla, czego asystentowi wolno i czego nie wolno zrobic dla danej roli, pacjenta i zakresu zgody.
 - `AgentRun` zapisuje kazde uruchomienie asystenta, wynik, zrodla i ewentualna eskalacje.
@@ -285,15 +285,16 @@ Kazda akcja osoby wspierajacej tworzy wpis w audycie.
 
 Asystent dziala tylko w zakresie zgody pacjenta. Jesli pacjent dal opiekunowi dostep tylko do wizyt, asystent wizyt nie ma prawa analizowac lekow ani wynikow badan. Jesli pacjent cofa zgode, asystent traci dostep i tworzy wpis w audycie.
 
-### 6. Warstwa przypomnien
+### 6. Warstwa zadan i przypomnien organizacyjnych
 
-Przypomnienia musza miec zrodlo:
+Zadania zwiazane z lekami musza miec zrodlo i nie moga zmieniac dawki ani interpretowac terapii:
 
 ```text
-MedicationReminder
+MedicationSourceTask
 - medicationId
 - sourceId
-- schedule
+- dueAt
+- taskStatus
 - createdBy
 - assignedTo
 - status: planned | reminded | taken | skipped | needs_verification

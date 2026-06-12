@@ -14,3 +14,7 @@ labels: clinical-safety
 ## Czy output sugeruje diagnozę, pilność, zalecenie lub terapię?
 
 ## Proponowana bezpieczniejsza wersja
+
+## Potwierdzenie
+
+- [ ] Potwierdzam, ze opis nie zawiera realnych danych pacjenta ani prywatnych materialow.

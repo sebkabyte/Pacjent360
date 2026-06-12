@@ -5,6 +5,8 @@ title: "[Bug] "
 labels: bug
 ---
 
+> Nie podawaj realnych danych pacjenta, danych osobowych, PESEL, prywatnych transkrypcji ani szczegolow podatnosci security. Jesli sprawa dotyczy podatnosci, prywatnosci albo mozliwego ujawnienia danych, uzyj prywatnego kontaktu z `SECURITY.md` zamiast publicznego issue.
+
 ## Co się stało?
 
 ## Jak odtworzyć?
@@ -14,3 +16,5 @@ labels: bug
 ## Przeglądarka / system
 
 ## Czy problem dotyczy danych medycznych lub prywatności?
+
+- [ ] Potwierdzam, ze opis nie zawiera realnych danych pacjenta ani prywatnych materialow.

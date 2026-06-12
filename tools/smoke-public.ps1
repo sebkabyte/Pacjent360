@@ -118,6 +118,7 @@ try {
   Assert-True ($app.Contains("Doctor in the Loop") -or $app.Contains("DITL")) "app.js should contain DITL language"
 
   Assert-True ($privacy.Contains("localStorage")) "privacy.html should disclose localStorage"
+  Assert-True ($privacy.Contains("pacjent360-state-v7")) "privacy.html should disclose the current demo localStorage key"
   Assert-True ($privacy.Contains("lucide@0.468.0")) "privacy.html should disclose pinned Lucide"
   Assert-True ($privacy.Contains('rel="canonical" href="https://pacjent360.com.pl/privacy.html"')) "privacy.html should include canonical URL"
   Assert-True ($disclaimer.Contains("Pacjent 360")) "disclaimer.html should contain project name"

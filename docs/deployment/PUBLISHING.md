@@ -107,25 +107,10 @@ Ten test wykonuje JavaScript w przegladarce, przechodzi przez kokpit pacjenta, d
 
 Uwaga CSP: dyrektywa `frame-ancestors` nie dziala z poziomu meta tagu. Paczka zawiera `.htaccess` dla Apache/nazwa.pl, ktory ustawia CSP, `X-Frame-Options`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, wylacza listing katalogow oraz przekierowuje HTTP i `www` do `https://pacjent360.com.pl`. Jesli hosting nie respektuje `.htaccess`, skonfiguruj te naglowki i przekierowania w panelu hostingu lub inna metoda.
 
-- `index.html`
-- `.htaccess`
-- `disclaimer.html`
-- `privacy.html`
-- `maintenance.html`
-- `health.txt`
-- `demo.html`
-- `site.css`
-- `site.js`
-- `patient360-contract.js`
-- `patient360-map-model.js`
-- `patient360-previsit-model.js`
-- `patient360-caregiver-model.js`
-- `patient360-consent-model.js`
-- `styles.css`
-- `app.js`
-- `robots.txt`
-- `sitemap.xml`
-- `assets/hero-clinical-context.png`
+Nie utrzymujemy recznej listy plikow do uploadu w tym dokumencie. Zawsze wgrywaj cala zawartosc `dist/upload-ready` i porownuj hosting z automatycznie wygenerowanymi plikami:
+
+- `dist/document-root-checklist.txt`,
+- `dist/upload-ready-manifest.json`.
 
 `index.html` jest publiczną stroną projektu. `demo.html` jest działającym prototypem MVP. `disclaimer.html` jest publicznym ograniczeniem medycznym prototypu. `privacy.html` opisuje prywatność i lokalne działanie demo. `maintenance.html` służy do szybkiego rollbacku. `health.txt` jest neutralnym plikiem kontrolnym do potwierdzenia poprawnego document root po uploadzie.
 

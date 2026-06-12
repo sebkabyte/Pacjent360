@@ -5,6 +5,9 @@ const root = path.resolve(__dirname, "..");
 
 const FILES = [
   "public/index.html",
+  "public/demo.html",
+  "public/disclaimer.html",
+  "public/privacy.html",
   "public/app.js",
   "public/patient360-previsit-model.js",
   "public/patient360-consent-model.js",
@@ -21,17 +24,34 @@ const FORBIDDEN_EXACT = [
   "Ten flow",
   "Medication Story",
   "Known / Unknown / Uncertain / To verify",
-  "Known / Unknown / To verify"
+  "Known / Unknown / To verify",
+  "Disclaimer medyczny",
+  ">Disclaimer<",
+  "Case studies",
+  "case study",
+  "Doctor in the Loop",
+  "Pre-Op",
+  "Dane wspierające",
+  "Znane (Known)",
+  "Nieznane (Unknown)",
+  "Niepewne (Uncertain)",
+  "Do weryfikacji (To verify)",
+  "tracking",
+  "feedbacku",
+  "workflow"
 ];
 
 const REQUIRED = [
   { file: "public/app.js", text: "Znane / Nieznane / Niepewne / Do weryfikacji" },
   { file: "public/app.js", text: "Historia leków" },
+  { file: "public/app.js", text: "Przypadki demonstracyjne" },
   { file: "public/app.js", text: "Scenariusz rozmowy kontekstowej" },
   { file: "public/app.js", text: "poza zakresem referencyjnym" },
   { file: "public/patient360-previsit-model.js", text: "Podgląd raportu" },
   { file: "public/patient360-previsit-model.js", text: "Ten widok porządkuje dane" },
-  { file: "public/index.html", text: "Znane, nieznane, niepewne i do weryfikacji" }
+  { file: "public/index.html", text: "Znane, nieznane, niepewne i do weryfikacji" },
+  { file: "public/disclaimer.html", text: "Zastrzeżenie medyczne" },
+  { file: "public/privacy.html", text: "narzędzia śledzące" }
 ];
 
 function read(file) {

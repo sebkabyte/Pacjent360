@@ -131,6 +131,7 @@ Assert-True ($demo.Contains("CeZ") -and $demo.Contains("NFZ") -and $demo.Contain
 Assert-True ($health.Contains("project=pacjent360") -and $health.Contains("contains_patient_data=false")) "health.txt should expose static deployment markers without patient data"
 Assert-True ($health.Contains("medical_device=false") -and $health.Contains("clinical_decision_support=false")) "health.txt should expose safety boundary markers"
 Assert-True ($privacy -match "localStorage") "privacy.html should disclose localStorage"
+Assert-True ($privacy.Contains("pacjent360-state-v7")) "privacy.html should disclose the current demo localStorage key"
 Assert-True ($index.Contains('rel="canonical" href="https://pacjent360.com.pl/"')) "index.html should include canonical URL"
 Assert-True ($privacy.Contains('rel="canonical" href="https://pacjent360.com.pl/privacy.html"')) "privacy.html should include canonical URL"
 Assert-True ($disclaimer.Contains('rel="canonical" href="https://pacjent360.com.pl/disclaimer.html"')) "disclaimer.html should include canonical URL"

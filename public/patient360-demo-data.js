@@ -136,7 +136,7 @@
         },
         {
           "id": "hq2",
-          "question": "Czy plan postępowania z lekiem wymagającym przerwy przed procedurą jest udokumentowany?",
+          "question": "Czy źródła jasno wskazują, kto ma potwierdzić informację o leku przed procedurą?",
           "status": "do wyjaśnienia",
           "sourceRefs": [
             "doc:d3",
@@ -290,7 +290,7 @@
       "extractionStatus": "wymaga weryfikacji",
       "trust": "średni",
       "source": "zdjęcie dokumentu",
-      "summary": "Zalecono aktualne EKG, potwierdzenie listy leków i decyzję lekarza dotyczącą przygotowania do procedury."
+      "summary": "Dokument zawiera informację o EKG do sprawdzenia, potwierdzeniu listy leków i przygotowaniu do procedury."
     },
     {
       "id": "d4",
@@ -1114,9 +1114,9 @@
         "doc:d1",
         "interview:i1"
       ],
-      "story": "Lek widoczny w dokumentacji i deklarowany przez pacjenta. Brak jednoznacznego planu przygotowania przed procedurą.",
+      "story": "Lek widoczny w dokumentacji i deklarowany przez pacjenta. Brak jednoznacznego źródła potwierdzenia informacji o leku przed procedurą.",
       "symptomLink": "",
-      "question": "Czy plan postępowania z tym lekiem przed procedurą został potwierdzony przez lekarza?"
+      "question": "Czy źródła jasno wskazują, kto ma potwierdzić informację o tym leku przed procedurą?"
     },
     {
       "id": "m2",
@@ -1139,7 +1139,7 @@
       ],
       "story": "Lek przewlekły widoczny w dokumentacji i potwierdzony w wywiadzie pacjenta.",
       "symptomLink": "",
-      "question": "Czy dawka i kontrola kreatyniny/potasu są adekwatne do aktualnego stanu nerek?"
+      "question": "Czy w źródłach jest jasno wskazane, kto ma potwierdzić dawkę i wymagane kontrole?"
     },
     {
       "id": "m3",
@@ -1564,8 +1564,8 @@
       "patientId": "p1",
       "color": "red",
       "category": "Lek wymagający planu przed procedurą",
-      "question": "Czy istnieje indywidualny plan postępowania z lekiem wymagającym decyzji przed procedurą?",
-      "evidence": "Planowana procedura i aktywny lek przewlekły; dokument kwalifikacyjny wymaga weryfikacji.",
+      "question": "Czy źródła jasno wskazują, kto ma potwierdzić informację o leku przed procedurą?",
+      "evidence": "Planowana procedura i aktywny lek przewlekły; dokument kwalifikacyjny wymaga weryfikacji źródła.",
       "status": "do wyjaśnienia",
       "sourceRefs": [
         "doc:d3",
@@ -1750,7 +1750,7 @@
       "id": "ku6",
       "patientId": "p1",
       "category": "To verify",
-      "description": "Do potwierdzenia z lekarzem: plan przed procedurą dla leku wymagającego decyzji.",
+      "description": "Do potwierdzenia z lekarzem: informacja o leku przed procedurą i źródło jej potwierdzenia.",
       "sourceRefs": [
         "medication:m1",
         "doc:d3"

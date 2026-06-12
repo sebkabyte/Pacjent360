@@ -231,6 +231,7 @@ Assert-True ($app.Contains("consentSourceRefsForContract")) "app.js should conta
 Assert-True ($demoData.Contains("consent:g1")) "patient360-demo-data.js should contain consent source refs"
 
 Assert-True ($privacy.Contains("localStorage")) "privacy.html should disclose localStorage"
+Assert-True ($privacy.Contains("pacjent360-state-v7")) "privacy.html should disclose the current demo localStorage key"
 Assert-True ($privacy.Contains("lucide@0.468.0")) "privacy.html should disclose pinned Lucide"
 Assert-True ($privacy.Contains('rel="canonical" href="https://pacjent360.com.pl/privacy.html"')) "privacy.html should include canonical URL"
 Assert-True ($disclaimer.Contains("Pacjent 360")) "disclaimer.html should contain project name"
@@ -255,10 +256,18 @@ foreach ($phrase in $riskyPhrases) {
 $blockedPaths = @(
   ".env",
   ".git/HEAD",
+  ".git/config",
   "README.md",
   "PROGRAM_PLAN.md",
   "dist/",
+  "dist/public/index.html",
+  "dist/repo-push/.git/config",
+  "docs/deployment/PUBLISHING.md",
+  "tools/prepare-public.ps1",
   "prints/",
+  "repo-push/.git/config",
+  "TEMP/",
+  "TEMP_REVIEW_OUTPUT/",
   "pacjent360-public.zip",
   "pacjent360-upload-root.zip",
   "pacjent360-public-repo.zip",

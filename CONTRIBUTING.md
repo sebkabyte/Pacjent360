@@ -10,9 +10,9 @@ Dziękuję za zainteresowanie Pacjent 360. Projekt dotyczy danych i kontekstu me
 - W UI używaj języka: pytanie, brak danych, zadanie, status. Unikaj: diagnoza, zalecenie, wskazanie, pilne, należy.
 - Dla funkcji publicznych sprawdź `docs/governance/RISKS.md` i Clinical Safety Checklist z README.
 
-## Workflow
+## Proces pracy
 
-1. Otwórz issue z celem, użytkownikiem i ryzykiem.
+1. Otwórz zgłoszenie z celem, użytkownikiem i ryzykiem.
 2. Opisz, czy zmiana dotyczy strony, demo, modelu danych, dokumentacji czy procesu.
 3. Przed PR uruchom `node --check app.js`.
 4. W PR opisz: co zmieniono, jak testowano, czy zmiana przechodzi Clinical Safety Checklist.
