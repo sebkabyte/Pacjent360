@@ -27,6 +27,14 @@ function Join-WebPath {
   return "$($Base.TrimEnd('/'))/$($Path.TrimStart('/'))"
 }
 
+function Add-PageSpeedOff {
+  param([string]$Url)
+  if ($Url.Contains("?")) {
+    return "${Url}&PageSpeed=off"
+  }
+  return "${Url}?PageSpeed=off"
+}
+
 function Get-HttpStatus {
   param([string]$Url)
   try {
@@ -36,7 +44,7 @@ function Get-HttpStatus {
     if ($_.Exception.Response -and $_.Exception.Response.StatusCode) {
       return [int]$_.Exception.Response.StatusCode
     }
-    return 0
+    return (Get-CurlHttpProbe -Url $Url).Status
   }
 }
 
@@ -55,10 +63,52 @@ function Get-HttpProbe {
         Location = Get-HeaderValue -Headers $_.Exception.Response.Headers -Name "Location"
       }
     }
+    return Get-CurlHttpProbe -Url $Url
+  }
+}
+
+function Get-CurlHttpProbe {
+  param([string]$Url)
+
+  $curl = Get-Command curl.exe -ErrorAction SilentlyContinue
+  if (-not $curl) {
     return [pscustomobject]@{
       Status = 0
       Location = ""
     }
+  }
+
+  $tempHeaders = Join-Path ([System.IO.Path]::GetTempPath()) ("pacjent360-curl-headers-" + [System.Guid]::NewGuid().ToString("N") + ".txt")
+  $escapedCurl = $curl.Source.Replace('"', '""')
+  $escapedUrl = $Url.Replace('"', '""')
+  $escapedTemp = $tempHeaders.Replace('"', '""')
+  & cmd.exe /d /c "`"$escapedCurl`" -sS -I --max-time 15 `"$escapedUrl`" 1>`"$escapedTemp`" 2>NUL" | Out-Null
+  $output = @()
+  if (Test-Path $tempHeaders) {
+    $output = Get-Content -LiteralPath $tempHeaders
+    Remove-Item -LiteralPath $tempHeaders -Force -ErrorAction SilentlyContinue
+  }
+  if (-not $output) {
+    return [pscustomobject]@{
+      Status = 0
+      Location = ""
+    }
+  }
+
+  $statusLine = $output | Where-Object { $_ -match '^HTTP/' } | Select-Object -First 1
+  $locationLine = $output | Where-Object { $_ -match '^Location:\s*' } | Select-Object -First 1
+  $status = 0
+  if ($statusLine -match '^HTTP/\S+\s+(\d{3})') {
+    $status = [int]$Matches[1]
+  }
+  $location = ""
+  if ($locationLine -match '^Location:\s*(.+)$') {
+    $location = $Matches[1].Trim()
+  }
+
+  return [pscustomobject]@{
+    Status = $status
+    Location = $location
   }
 }
 
@@ -120,10 +170,11 @@ function Compare-DeployedFilesWithLocalPackage {
 
       $localFile = Join-Path $localRoot $relative
       $remoteUrl = Join-WebPath $Base $relative
+      $compareUrl = Add-PageSpeedOff -Url $remoteUrl
       $tempFile = Join-Path $tempRoot ($relative -replace '[\\/:*?"<>|]', "_")
-      $status = Get-HttpStatus $remoteUrl
+      $status = Get-HttpStatus $compareUrl
       Assert-True ($status -eq 200) "Expected 200 for deployed file $remoteUrl, got $status"
-      Invoke-WebRequest -Uri $remoteUrl -UseBasicParsing -TimeoutSec 20 -OutFile $tempFile | Out-Null
+      Invoke-WebRequest -Uri $compareUrl -UseBasicParsing -TimeoutSec 20 -OutFile $tempFile | Out-Null
 
       $localHash = (Get-FileHash -LiteralPath $localFile -Algorithm SHA256).Hash.ToLowerInvariant()
       $remoteHash = (Get-FileHash -LiteralPath $tempFile -Algorithm SHA256).Hash.ToLowerInvariant()
