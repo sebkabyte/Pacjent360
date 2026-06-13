@@ -34,8 +34,8 @@
     { kind: "medications", title: "Leki", icon: "pill", action: "Sprawdź leki", view: "medications" },
     { kind: "interview", title: "Wywiad", icon: "messages-square", action: "Dodaj wywiad", openDialog: "interview" },
     { kind: "questions", title: "Pytania", icon: "message-circle-question", action: "Zapisz pytania", openDialog: "interview" },
-    { kind: "gaps", title: "Braki", icon: "search-x", action: "Zobacz sygnały", view: "risks" },
-    { kind: "report", title: "Podgląd raportu", icon: "clipboard-list", action: "Otwórz raport", view: "reports" }
+    { kind: "gaps", title: "Braki", icon: "search-x", action: "Zobacz braki", view: "interview" },
+    { kind: "sharing", title: "Zgody", icon: "shield-check", action: "Sprawdź zgody", view: "consent" }
   ]);
 
   const FORBIDDEN_PREVISIT_PHRASES = Object.freeze([
@@ -167,10 +167,15 @@
         ? { key: "confirm", label: formatGaps(payload.gaps.length), caption: "znane, nieznane i do weryfikacji" }
         : { key: "ready", label: "Braki uporządkowane", caption: "brak luk w danych demo" };
     }
+    if (kind === "sharing") {
+      return payload.consents.length
+        ? { key: "ready", label: formatCount(payload.consents.length, "zgoda", "zgody", "zgód"), caption: "sprawdź, kto ma dostęp do danych" }
+        : { key: "confirm", label: "Brak aktywnych zgód", caption: "pacjent decyduje, komu udostępnia dane" };
+    }
     const summary = visitChecklistSummary(payload.checklist);
     return summary.status.key === "ready"
-      ? { key: "ready", label: "Raport gotowy", caption: "można obejrzeć podgląd raportu" }
-      : { key: "confirm", label: "Podgląd raportu", caption: "najpierw sprawdź braki i potwierdzenia" };
+      ? { key: "ready", label: "Przygotowanie gotowe", caption: "dane są uporządkowane przed rozmową" }
+      : { key: "confirm", label: "Sprawdź przygotowanie", caption: "najpierw sprawdź braki i potwierdzenia" };
   }
 
   function buildPreVisitModel(input = {}) {
@@ -183,12 +188,13 @@
     const meds = byPatient(state.medications, patientId).filter((item) => matchesSearchValue(item, searchQuery));
     const interviews = byPatient(state.interviews, patientId).filter((item) => matchesSearchValue(item, searchQuery));
     const gaps = byPatient(state.knownUnknowns, patientId).filter((item) => item.category === "Unknown" || item.category === "To verify");
+    const consents = byPatient(state.consents, patientId);
     const decisions = byPatient(state.decisionContexts, patientId).slice().sort((a, b) => new Date(b.contactDate) - new Date(a.contactDate));
     const decision = decisions[0] || null;
     const patientQuestions = patientPortalQuestions(state, patientId, decision);
     const checklist = activeVisitChecklist(state, patientId);
     const checklistSummary = visitChecklistSummary(checklist);
-    const payload = { docs, meds, interviews, patientQuestions, gaps, checklist };
+    const payload = { docs, meds, interviews, patientQuestions, gaps, consents, checklist };
     const steps = STEP_DEFINITIONS.map((step) => ({ ...step, state: preVisitStepState(step.kind, payload) }));
     const checklistItems = (checklist?.items || []).map((item) => ({
       ...item,
@@ -204,6 +210,7 @@
       meds,
       interviews,
       gaps,
+      consents,
       decisions,
       decision,
       patientQuestions,
@@ -211,7 +218,7 @@
       checklistItems,
       checklistSummary,
       steps,
-      safetyCopy: "Ten widok porządkuje dane przed rozmową z lekarzem: dokumenty, leki, wywiad, pytania, braki i podgląd raportu. Nie ocenia pilności, nie diagnozuje i nie tworzy zaleceń terapeutycznych.",
+      safetyCopy: "Ten widok porządkuje dane przed rozmową z lekarzem: dokumenty, leki, wywiad, pytania, braki i zgody. Nie ocenia pilności, nie diagnozuje i nie tworzy zaleceń terapeutycznych.",
       emptyState: {
         hasAnyData: Boolean(docs.length || meds.length || interviews.length || patientQuestions.length || gaps.length || checklistItems.length),
         message: "Zacznij od dokumentu, wywiadu albo listy pytań."

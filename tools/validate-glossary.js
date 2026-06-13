@@ -47,7 +47,7 @@ const REQUIRED = [
   { file: "public/app.js", text: "Przypadki demonstracyjne" },
   { file: "public/app.js", text: "Scenariusz rozmowy kontekstowej" },
   { file: "public/app.js", text: "poza zakresem referencyjnym" },
-  { file: "public/patient360-previsit-model.js", text: "Podgląd raportu" },
+  { file: "public/patient360-previsit-model.js", text: "Zgody" },
   { file: "public/patient360-previsit-model.js", text: "Ten widok porządkuje dane" },
   { file: "public/index.html", text: "Znane, nieznane, niepewne i do weryfikacji" },
   { file: "public/disclaimer.html", text: "Zastrzeżenie medyczne" },

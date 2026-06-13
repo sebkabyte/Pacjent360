@@ -1,4 +1,4 @@
-# Pacjent 360 public repository allowlist.
+# Pacjent360 public repository allowlist.
 # This file is executable documentation for docs/PROGRAM_PLAN.md D-002.
 .github/
 .gitattributes
@@ -28,6 +28,7 @@ tools/smoke-public.ps1
 tools/smoke-deployed-compare.ps1
 tools/smoke-browser.ps1
 tools/smoke-browser.js
+tools/verify-click-routes.js
 tools/verify-reactivity.ps1
 tools/verify-reactivity.js
 tools/domain-diagnostics.js

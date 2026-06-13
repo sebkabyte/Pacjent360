@@ -146,6 +146,8 @@ Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-a
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-validation-pack.js"
 & node --check (Join-Path $target "tools/smoke-browser.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/smoke-browser.js"
+& node --check (Join-Path $target "tools/verify-click-routes.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/verify-click-routes.js"
 & node --check (Join-Path $target "tools/verify-reactivity.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/verify-reactivity.js"
 

@@ -89,6 +89,21 @@
       ]
     }
   ],
+  "consents": [
+    {
+      "id": "pv-consent1",
+      "patientId": "previsit-ready",
+      "subject": "Opiekun demo",
+      "scope": "dokumenty i pytania organizacyjne przed wizyta",
+      "role": "osoba wspierajaca",
+      "caregiverId": "pv-caregiver1",
+      "caregiverName": "Opiekun demo",
+      "areas": ["documents", "tasks"],
+      "validTo": "2026-07-09",
+      "status": "aktywny",
+      "sourceRefs": ["consent:pv-consent1"]
+    }
+  ],
   "visitChecklists": [
     {
       "id": "pv-vc1",

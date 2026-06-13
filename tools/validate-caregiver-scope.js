@@ -14,6 +14,9 @@ const PATIENT_SCOPED_COLLECTION_KEYS = [
   "decisionContexts",
   "documents",
   "interviews",
+  "roleNarratives",
+  "roleGoals",
+  "roleVisibleSections",
   "timelineEvents",
   "timelineEpisodes",
   "timelineRelations",
@@ -26,6 +29,7 @@ const PATIENT_SCOPED_COLLECTION_KEYS = [
   "visitChecklists",
   "reports",
   "consents",
+  "careContracts",
   "audit"
 ];
 
@@ -143,11 +147,10 @@ function validateDemoState() {
   const p1 = (demoState.patients || []).find((patient) => patient.id === "p1");
   assert(p1, "Demo state should include p1");
   return [validateModelForPatient(demoState, p1, {
-    activeScopes: 2,
+    activeScopes: 1,
     inactiveScopes: 1,
-    activeAreas: ["medications", "documents", "report"],
-    deniedAreas: ["visits", "results"],
-    taskCount: 4
+    activeAreas: ["documents", "results", "medications", "observations", "report", "visits", "tasks"],
+    taskCount: 7
   })];
 }
 
