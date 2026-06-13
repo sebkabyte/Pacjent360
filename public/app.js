@@ -1,4 +1,4 @@
-const STORAGE_KEY = "pacjent360-state-v7";
+const STORAGE_KEY = "pacjent360-state-v11";
 const PATIENT360_CONTRACT = globalThis.Patient360Contract;
 if (!PATIENT360_CONTRACT) {
   throw new Error("Missing patient360-contract.js");
@@ -48,6 +48,9 @@ const PATIENT_SCOPED_COLLECTION_KEYS = [
   "decisionContexts",
   "documents",
   "interviews",
+  "roleNarratives",
+  "roleGoals",
+  "roleVisibleSections",
   "timelineEvents",
   "timelineEpisodes",
   "timelineRelations",
@@ -61,10 +64,12 @@ const PATIENT_SCOPED_COLLECTION_KEYS = [
   "visitChecklists",
   "reports",
   "consents",
+  "careContracts",
   "audit"
 ];
 
 const VIEW_REGISTER = Object.freeze({
+  roleStart: "app",
   core: "doctor",
   interview: "doctor",
   documents: "doctor",
@@ -77,6 +82,137 @@ const VIEW_REGISTER = Object.freeze({
   caregiverPortal: "caregiver",
   consent: "caregiver",
   audit: "caregiver"
+});
+
+const ROLE_ORDER = ["doctor", "patient", "caregiver"];
+const ROLE_META = Object.freeze({
+  doctor: {
+    label: "Lekarz360",
+    icon: "stethoscope",
+    view: "core",
+    promise: "Mam 90 sekund, żeby zobaczyć, co trzeba wyjaśnić.",
+    cta: "Wejdź do Lekarz360"
+  },
+  patient: {
+    label: "Pacjent360",
+    icon: "user-round",
+    view: "patientPortal",
+    promise: "Chcę wiedzieć, co przygotować i co dalej.",
+    cta: "Wejdź do Pacjent360"
+  },
+  caregiver: {
+    label: "Opiekun360",
+    icon: "users-round",
+    view: "caregiverPortal",
+    promise: "Chcę pomóc bliskiej osobie w lekach, dokumentach i wizytach.",
+    cta: "Wejdź do Opiekun360"
+  }
+});
+
+const VIEW_ROLE_HINT = Object.freeze({
+  core: "doctor",
+  patientPortal: "patient",
+  caregiverPortal: "caregiver"
+});
+
+const ROLE_VIEW_ACCESS = Object.freeze({
+  doctor: new Set(["roleStart", "core", "interview", "documents", "timeline", "medications", "observations", "risks", "reports", "consent"]),
+  patient: new Set(["roleStart", "patientPortal", "interview", "documents", "timeline", "medications", "observations", "consent"]),
+  caregiver: new Set(["roleStart", "caregiverPortal", "interview", "documents", "timeline", "medications", "observations", "consent"])
+});
+
+const ROLE_HOME_VIEW = Object.freeze({
+  doctor: "core",
+  patient: "patientPortal",
+  caregiver: "caregiverPortal"
+});
+
+const DEMO_JOURNEY_STEPS = Object.freeze([
+  { id: "role", label: "Perspektywa", caption: "czyj widok" },
+  { id: "scenario", label: "Scenariusz", caption: "który pacjent" },
+  { id: "cockpit", label: "Kokpit", caption: "co teraz" },
+  { id: "map", label: "Oś historii", caption: "skrót historii" },
+  { id: "data", label: "Dane / źródła", caption: "skąd to wiemy" },
+  { id: "summary", label: "Podsumowanie", caption: "co zabrać dalej" }
+]);
+
+const VIEW_JOURNEY_STAGE = Object.freeze({
+  core: "cockpit",
+  patientPortal: "cockpit",
+  caregiverPortal: "cockpit",
+  timeline: "map",
+  interview: "data",
+  documents: "data",
+  medications: "data",
+  observations: "data",
+  risks: "data",
+  consent: "data",
+  reports: "summary",
+  audit: "data"
+});
+
+const ROLE_DATA_VISIBILITY = Object.freeze({
+  doctor: [
+    ["interview", "Wywiad", "messages-square", "pacjent, rodzina lub opiekun jako źródło rozmowy"],
+    ["documents", "Dokumenty", "files", "wypisy, skierowania i źródła"],
+    ["timeline", "Oś historii", "git-branch", "skrót historii, źródła i pytania"],
+    ["medications", "Leki", "pill", "przepisane vs faktycznie przyjmowane"],
+    ["observations", "Wyniki", "activity", "wartości i zakresy ze źródła"],
+    ["risks", "Pytania DITL", "shield-alert", "pytania i luki do wyjaśnienia"],
+    ["reports", "Podsumowanie kontekstu", "clipboard-list", "co wiadomo, czego brakuje i co potwierdzić"],
+    ["consent", "Zgody", "shield-check", "kto widzi dane i dlaczego"]
+  ],
+  patient: [
+    ["documents", "Moje dokumenty", "files", "wypisy, skierowania, wyniki PDF"],
+    ["timeline", "Oś historii", "git-branch", "wizyty i zdarzenia w jednej historii"],
+    ["interview", "Opis wywiadu", "messages-square", "rozmowa i pytania do omówienia"],
+    ["medications", "Moje leki", "pill", "lista z dokumentów i wywiadu"],
+    ["observations", "Moje wyniki", "activity", "badania i zakresy ze źródła"],
+    ["consent", "Zgody", "shield-check", "komu udostępniam dane"]
+  ],
+  caregiver: [
+    ["caregiverPortal", "Opiekun360", "users-round", "kto udostępnił opiekę i nad kim ją sprawuję"],
+    ["documents", "Dokumenty", "files", "widoczne w zakresie zgody"],
+    ["timeline", "Oś historii", "git-branch", "historia osoby pod opieką"],
+    ["interview", "Gotowy wywiad", "messages-square", "informacje z rozmowy i obserwacji"],
+    ["medications", "Leki", "pill", "lista do organizacyjnego dopilnowania"],
+    ["observations", "Wyniki", "activity", "badania widoczne w zgodzie"],
+    ["consent", "Zakres zgody", "shield-check", "kto co widzi i do kiedy"]
+  ]
+});
+
+const ROLE_SOURCE_VIEW = Object.freeze({
+  doctor: "documents",
+  patient: "documents",
+  caregiver: "documents"
+});
+
+const ROLE_SUMMARY_VIEW = Object.freeze({
+  doctor: "reports",
+  patient: "patientPortal",
+  caregiver: "caregiverPortal"
+});
+
+const LIBRARY_HEADING = "Dane i źródła";
+
+const SIDEBAR_LIBRARY_LABELS = Object.freeze({
+  interview: "Wywiad",
+  documents: "Dokumenty",
+  timeline: "Oś historii",
+  medications: "Leki",
+  observations: "Wyniki",
+  risks: "Pytania",
+  reports: "Podsumowanie",
+  consent: "Zgody"
+});
+
+const CAREGIVER_VIEW_AREAS = Object.freeze({
+  interview: ["observations", "report"],
+  documents: ["documents"],
+  timeline: ["documents", "results", "medications", "observations", "visits", "tasks", "report"],
+  medications: ["medications"],
+  observations: ["results", "observations"],
+  consent: ["documents", "results", "medications", "observations", "visits", "tasks", "report"]
 });
 
 const TRACKS = PATIENT360_CONTRACT.TIMELINE_TRACKS;
@@ -317,6 +453,7 @@ let state = loadState();
 const viewRoot = document.querySelector("#viewRoot");
 const evidenceRoot = document.querySelector("#evidenceRoot");
 const patientSelect = document.querySelector("#patientSelect");
+const roleSwitcher = document.querySelector("#roleSwitcher");
 const searchInput = document.querySelector("#searchInput");
 const criticalStrip = document.querySelector("#criticalStrip");
 const entryDialog = document.querySelector("#entryDialog");
@@ -382,13 +519,48 @@ function sanitizeLegacyStateCopy(value) {
   return Object.fromEntries(Object.entries(value).map(([key, entry]) => [key, sanitizeLegacyStateCopy(entry)]));
 }
 
+function shouldStartDemoFresh() {
+  try {
+    return new URLSearchParams(globalThis.location?.search || "").get("start") === "1";
+  } catch {
+    return false;
+  }
+}
+
+function freshDemoStartState() {
+  const fresh = clone(demoState);
+  fresh.activeView = "roleStart";
+  fresh.activeRole = "doctor";
+  fresh.roleSelectionConfirmed = false;
+  fresh.selectedSourceRef = null;
+  fresh.selectedTimelineEventId = null;
+  fresh.search = "";
+  return fresh;
+}
+
 function loadState() {
   try {
+    if (shouldStartDemoFresh()) {
+      const fresh = freshDemoStartState();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(fresh));
+      return fresh;
+    }
     const stored = localStorage.getItem(STORAGE_KEY);
     const parsed = stored ? JSON.parse(stored) : null;
     const loaded = sanitizeLegacyStateCopy(parsed && parsed.demoDate === demoState.demoDate ? mergeStateWithDemoDefaults(parsed) : clone(demoState));
     if (!REPORT_CASE_STUDIES.some((caseStudy) => caseStudy.id === loaded.activeCaseStudy)) {
       loaded.activeCaseStudy = REPORT_CASE_STUDIES[0].id;
+    }
+    if (!ROLE_META[loaded.activeRole]) {
+      loaded.activeRole = "doctor";
+    }
+    loaded.roleSelectionConfirmed = Boolean(loaded.roleSelectionConfirmed);
+    const renderableViews = new Set(["roleStart", "core", "patientPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "reports", "caregiverPortal", "consent", "audit"]);
+    if (!renderableViews.has(loaded.activeView)) {
+      loaded.activeView = "roleStart";
+    }
+    if (loaded.activeView === "roleStart") {
+      loaded.roleSelectionConfirmed = false;
     }
     if (!TIMELINE_PERIODS.some((period) => period.id === loaded.timelinePeriod)) {
       loaded.timelinePeriod = "episode";
@@ -420,12 +592,195 @@ function activePatient() {
   return state.patients.find((patient) => patient.id === state.activePatientId) || state.patients[0];
 }
 
+function patientDisplayName(patient = activePatient()) {
+  return String(patient?.name || "Pacjent").split(" — ")[0];
+}
+
 function byPatient(collection) {
   return collection.filter((item) => item.patientId === state.activePatientId);
 }
 
 function activeDecision() {
   return byPatient(state.decisionContexts).sort((a, b) => new Date(b.contactDate) - new Date(a.contactDate))[0];
+}
+
+function activeCareContract() {
+  return byPatient(state.careContracts || [])[0] || null;
+}
+
+function activeRole() {
+  return ROLE_META[state.activeRole] ? state.activeRole : "doctor";
+}
+
+function activeRoleMeta(role = activeRole()) {
+  return ROLE_META[role] || ROLE_META.doctor;
+}
+
+function viewForRole(role = activeRole()) {
+  return activeRoleMeta(role).view;
+}
+
+function allowedViewsForRole(role = activeRole()) {
+  return ROLE_VIEW_ACCESS[role] || ROLE_VIEW_ACCESS.doctor;
+}
+
+function canAccessViewForRole(view, role = activeRole()) {
+  return allowedViewsForRole(role).has(view);
+}
+
+function fallbackViewForRole(role = activeRole()) {
+  return ROLE_HOME_VIEW[role] || "core";
+}
+
+function switchActiveRole(role, view = null) {
+  const nextRole = ROLE_META[role] ? role : "doctor";
+  state.activeRole = nextRole;
+  state.roleSelectionConfirmed = true;
+  state.activeView = view || viewForRole(nextRole);
+  state.selectedSourceRef = null;
+  state.selectedTimelineEventId = null;
+  state.search = "";
+}
+
+function activeRoleNarrative(role = activeRole(), patientId = state.activePatientId) {
+  return (state.roleNarratives || []).find((item) => item.patientId === patientId && item.role === role) || null;
+}
+
+function activeRoleGoal(role = activeRole(), patientId = state.activePatientId) {
+  return (state.roleGoals || []).find((item) => item.patientId === patientId && item.role === role) || null;
+}
+
+function activeRoleSections(role = activeRole(), patientId = state.activePatientId) {
+  return (state.roleVisibleSections || []).find((item) => item.patientId === patientId && item.role === role)?.sections || [];
+}
+
+function roleDataVisibility(role = activeRole()) {
+  return (ROLE_DATA_VISIBILITY[role] || ROLE_DATA_VISIBILITY.doctor)
+    .filter(([view]) => canAccessViewForRole(view, role));
+}
+
+function activeCaregiverAreas() {
+  if (activeRole() !== "caregiver") return new Set();
+  const model = PATIENT360_CAREGIVER_MODEL.buildCaregiverModel({
+    state,
+    patientId: state.activePatientId
+  });
+  return new Set(model.activeAreas || []);
+}
+
+function caregiverModelForActivePatient() {
+  return PATIENT360_CAREGIVER_MODEL.buildCaregiverModel({
+    state,
+    patientId: state.activePatientId
+  });
+}
+
+function caregiverHasActiveScope() {
+  return Boolean(caregiverModelForActivePatient().activeScopes.length);
+}
+
+function isCaregiverProtectedDataView(view) {
+  return ["interview", "documents", "timeline", "medications", "observations"].includes(view);
+}
+
+function caregiverCannotOpenDataView(view, role = activeRole()) {
+  return role === "caregiver" && isCaregiverProtectedDataView(view) && !caregiverHasActiveScope();
+}
+
+function canShowSidebarLibraryView(view, role = activeRole()) {
+  if (!view || view === "roleStart" || VIEW_ROLE_HINT[view] || view === "audit") return false;
+  if (!canAccessViewForRole(view, role)) return false;
+  if (role !== "caregiver") return true;
+  if (view === "consent") return true;
+  const activeAreas = activeCaregiverAreas();
+  if (!activeAreas.size) return false;
+  const requiredAreas = CAREGIVER_VIEW_AREAS[view] || [];
+  return requiredAreas.some((area) => activeAreas.has(area));
+}
+
+function sidebarLibraryItem(view, role = activeRole()) {
+  return roleDataVisibility(role).find(([itemView]) => itemView === view) || null;
+}
+
+function journeyStageForView(view = state.activeView) {
+  if (view === "roleStart") {
+    return state.roleSelectionConfirmed ? "scenario" : "role";
+  }
+  return VIEW_JOURNEY_STAGE[view] || "cockpit";
+}
+
+function viewForJourneyStep(stepId, role = activeRole()) {
+  if (stepId === "role" || stepId === "scenario") return "roleStart";
+  if (stepId === "cockpit") return viewForRole(role);
+  if (role === "caregiver" && !caregiverHasActiveScope() && ["map", "data", "summary"].includes(stepId)) {
+    return "consent";
+  }
+  if (stepId === "map") return "timeline";
+  if (stepId === "data") {
+    const preferred = ROLE_SOURCE_VIEW[role] || "documents";
+    return canAccessViewForRole(preferred, role) ? preferred : fallbackViewForRole(role);
+  }
+  if (stepId === "summary") {
+    const preferred = ROLE_SUMMARY_VIEW[role] || fallbackViewForRole(role);
+    return canAccessViewForRole(preferred, role) ? preferred : fallbackViewForRole(role);
+  }
+  return fallbackViewForRole(role);
+}
+
+function setJourneyStep(stepId) {
+  if (stepId === "role") {
+    state.activeView = "roleStart";
+    state.roleSelectionConfirmed = false;
+  } else if (stepId === "scenario") {
+    state.activeView = "roleStart";
+    state.roleSelectionConfirmed = true;
+  } else {
+    setActiveView(viewForJourneyStep(stepId));
+  }
+  state.selectedSourceRef = null;
+  state.selectedTimelineEventId = null;
+  state.search = "";
+}
+
+function journeyStepIndex(stepId = journeyStageForView()) {
+  return Math.max(DEMO_JOURNEY_STEPS.findIndex((step) => step.id === stepId), 0);
+}
+
+function journeyStepByOffset(offset) {
+  const nextIndex = journeyStepIndex() + offset;
+  return DEMO_JOURNEY_STEPS[nextIndex] || null;
+}
+
+function setActiveView(view) {
+  if (VIEW_ROLE_HINT[view]) {
+    switchActiveRole(VIEW_ROLE_HINT[view], view);
+    return;
+  }
+  if (caregiverCannotOpenDataView(view)) {
+    state.activeView = "consent";
+    state.selectedSourceRef = null;
+    state.selectedTimelineEventId = null;
+    state.search = "";
+    return;
+  }
+  if (!canAccessViewForRole(view, activeRole())) {
+    state.activeView = fallbackViewForRole(activeRole());
+    return;
+  }
+  state.activeView = view;
+  if (view === "roleStart") state.roleSelectionConfirmed = false;
+}
+
+function startRoleScenario(role, patientId) {
+  state.activeRole = ROLE_META[role] ? role : "doctor";
+  state.roleSelectionConfirmed = true;
+  state.activePatientId = patientId || state.activePatientId;
+  state.activeView = viewForRole(state.activeRole);
+  state.activeCaseStudy = defaultCaseStudyForPatient(state.activePatientId);
+  state.selectedSourceRef = null;
+  state.selectedTimelineEventId = null;
+  saveState();
+  render();
 }
 
 function activeCaseStudy() {
@@ -682,6 +1037,7 @@ function compactSourceRefs(refs, limit = 3) {
 }
 
 function render() {
+  renderRoleSwitcher();
   renderPatientSelect();
   renderCriticalStrip();
   renderView();
@@ -694,13 +1050,48 @@ function refreshIcons() {
 }
 
 function renderPatientSelect() {
+  const patientSwitcher = patientSelect?.closest(".patient-switcher");
+  const globalSearch = searchInput?.closest(".global-search");
+  if (patientSwitcher) patientSwitcher.hidden = state.activeView === "roleStart";
+  if (globalSearch) globalSearch.hidden = state.activeView === "roleStart";
   patientSelect.innerHTML = state.patients
     .map((patient) => `<option value="${escapeHtml(patient.id)}" ${patient.id === state.activePatientId ? "selected" : ""}>${escapeHtml(patient.name)}</option>`)
     .join("");
   searchInput.value = state.search;
 }
 
+function renderRoleSwitcher() {
+  if (!roleSwitcher) return;
+  roleSwitcher.hidden = state.activeView === "roleStart";
+  if (state.activeView === "roleStart") {
+    roleSwitcher.innerHTML = "";
+    return;
+  }
+  const currentRole = activeRole();
+  roleSwitcher.innerHTML = ROLE_ORDER.map((role) => {
+    const meta = activeRoleMeta(role);
+    return `
+      <button type="button" class="role-switch ${role === currentRole ? "active" : ""}" data-role-switch="${escapeHtml(role)}" title="${escapeHtml(meta.promise)}">
+        <i data-lucide="${escapeHtml(meta.icon)}"></i>
+        <span>${escapeHtml(meta.label)}</span>
+      </button>
+    `;
+  }).join("");
+  roleSwitcher.querySelectorAll("[data-role-switch]").forEach((button) => {
+    button.addEventListener("click", () => {
+      switchActiveRole(button.dataset.roleSwitch);
+      saveState();
+      render();
+    });
+  });
+}
+
 function renderCriticalStrip() {
+  if (state.activeView === "roleStart") {
+    criticalStrip.classList.remove("visible");
+    criticalStrip.innerHTML = "";
+    return;
+  }
   const redFlags = byPatient(state.flags).filter((flag) => flag.color === "red" && flag.status !== "wyjaśnione" && flag.status !== "odrzucone");
   if (!redFlags.length) {
     criticalStrip.classList.remove("visible");
@@ -711,8 +1102,55 @@ function renderCriticalStrip() {
   criticalStrip.innerHTML = `<i data-lucide="triangle-alert"></i><strong>${formatCount(redFlags.length, "sygnał DITL", "sygnały DITL", "sygnałów DITL")} do sprawdzenia:</strong> ${escapeHtml(redFlags[0].question)}`;
 }
 
+function isCaregiverRestrictedView(view = state.activeView) {
+  if (activeRole() !== "caregiver") return false;
+  if (!["interview", "documents", "timeline", "medications", "observations"].includes(view)) return false;
+  const model = PATIENT360_CAREGIVER_MODEL.buildCaregiverModel({
+    state,
+    patientId: state.activePatientId
+  });
+  return !model.activeScopes.length;
+}
+
+function renderCaregiverRestrictedData(view = state.activeView) {
+  const patient = activePatient();
+  const model = PATIENT360_CAREGIVER_MODEL.buildCaregiverModel({
+    state,
+    patientId: state.activePatientId
+  });
+  const label = {
+    interview: "wywiady i transkrypcje",
+    documents: "dokumenty",
+    timeline: "oś historii",
+    medications: "leki",
+    observations: "wyniki",
+  }[view] || "dane";
+  return `
+    ${pageHeader("Brak aktywnej zgody", "Ten widok wymaga aktywnego udostępnienia opiekunowi. Bez zgody system pokazuje tylko informację o braku dostępu.", "shield-check")}
+    ${renderRoleContextBanner("caregiver")}
+    <section class="section-band caregiver-guard">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Dostęp opiekuna</p>
+          <h2>${escapeHtml(patient.name)} · ${escapeHtml(label)}</h2>
+        </div>
+        <span class="status-chip ${model.activeScopes.length ? "done" : "pending"}">${model.activeScopes.length ? "Zakres aktywny" : "Brak aktywnego zakresu"}</span>
+      </div>
+      <p class="record-body">${escapeHtml(model.safetyCopy)}</p>
+      <div class="caregiver-access-grid">
+        ${model.accessCards.map(renderCaregiverAccessCard).join("")}
+      </div>
+      <div class="inline-actions">
+        <button class="primary-button" data-set-view="caregiverPortal"><i data-lucide="users-round"></i>Wróć do kokpitu opiekuna</button>
+        <button class="ghost-button" data-set-view="consent"><i data-lucide="shield-check"></i>Kto może udostępnić dane</button>
+      </div>
+    </section>
+  `;
+}
+
 function renderView() {
   const renderers = {
+    roleStart: renderRoleStart,
     core: renderCore,
     patientPortal: renderPatientPortal,
     interview: renderInterview,
@@ -727,14 +1165,101 @@ function renderView() {
     audit: renderAudit
   };
 
+  if (!canAccessViewForRole(state.activeView, activeRole())) {
+    state.activeView = fallbackViewForRole(activeRole());
+    saveState();
+  }
+
+  const role = activeRole();
+  const libraryLabel = document.querySelector('[data-nav-section="library"]');
+  if (libraryLabel) {
+    libraryLabel.textContent = LIBRARY_HEADING;
+  }
+  const navList = document.querySelector(".nav-list");
+  if (navList) {
+    navList.setAttribute("aria-label", `Widoki demo: ${activeRoleMeta(role).label}`);
+  }
+
   document.querySelectorAll(".nav-item").forEach((button) => {
-    button.classList.toggle("active", button.dataset.view === state.activeView);
+    const view = button.dataset.view;
+    const isStart = view === "roleStart";
+    const isCockpitSwitch = button.classList.contains("cockpit-nav") || Boolean(VIEW_ROLE_HINT[view]);
+    const isLibraryItem = !isStart && !isCockpitSwitch;
+    const allowed = isStart || isCockpitSwitch || canShowSidebarLibraryView(view, role);
+    const item = isLibraryItem ? sidebarLibraryItem(view, role) : null;
+    if (isLibraryItem) {
+      const label = SIDEBAR_LIBRARY_LABELS[view] || item?.[1] || "";
+      const caption = item?.[3] || button.title;
+      const labelNode = button.querySelector("span");
+      if (labelNode) labelNode.textContent = label;
+      button.title = caption;
+    }
+    button.hidden = !allowed;
+    button.disabled = !allowed;
+    button.setAttribute("aria-hidden", allowed ? "false" : "true");
+    button.classList.toggle("is-hidden", !allowed);
+    button.classList.toggle("active", allowed && view === state.activeView);
   });
 
-  document.body.dataset.register = VIEW_REGISTER[state.activeView] || "doctor";
-  viewRoot.innerHTML = (renderers[state.activeView] || renderCore)();
+  document.body.dataset.register = state.activeView === "roleStart"
+    ? "app"
+    : activeRole() || VIEW_REGISTER[state.activeView] || "doctor";
+  const renderedView = isCaregiverRestrictedView()
+    ? renderCaregiverRestrictedData()
+    : (renderers[state.activeView] || renderCore)();
+  viewRoot.innerHTML = state.activeView === "roleStart"
+    ? renderedView
+    : `${renderDemoJourney()}${renderedView}`;
   bindViewActions();
   bindSourceButtons();
+}
+
+function renderDemoJourney() {
+  const currentStepId = journeyStageForView();
+  const currentIndex = journeyStepIndex(currentStepId);
+  const role = activeRole();
+  const meta = activeRoleMeta(role);
+  const patient = activePatient();
+  const caregiverNoAccess = role === "caregiver" && !caregiverHasActiveScope();
+  const previous = journeyStepByOffset(-1);
+  const next = caregiverNoAccess ? null : journeyStepByOffset(1);
+  const summaryTarget = viewForJourneyStep("summary", role);
+  const dataTarget = viewForJourneyStep("data", role);
+
+  return `
+    <section class="demo-journey section-band" aria-label="Ścieżka demo Pacjent360">
+      <div class="demo-journey-head">
+        <div>
+          <p class="eyebrow"><i data-lucide="route"></i>Ścieżka demo</p>
+          <h2>${escapeHtml(meta.label)} · ${escapeHtml(patientDisplayName(patient))}</h2>
+          <p>Ten sam pacjent, ta sama historia, inny zakres dostępu. Przechodzisz przez demo krok po kroku.</p>
+        </div>
+        <span class="status-chip info">${escapeHtml(DEMO_JOURNEY_STEPS[currentIndex]?.label || "Kokpit")}</span>
+      </div>
+      <div class="demo-journey-steps">
+        ${DEMO_JOURNEY_STEPS.map((step, index) => `
+          <button
+            type="button"
+            class="demo-journey-step ${index < currentIndex ? "done" : ""} ${step.id === currentStepId ? "active" : ""}"
+            data-journey-step="${escapeHtml(step.id)}"
+            aria-current="${step.id === currentStepId ? "step" : "false"}"
+          >
+            <span>${String(index + 1).padStart(2, "0")}</span>
+            <strong>${escapeHtml(step.label)}</strong>
+            <small>${escapeHtml(step.caption)}</small>
+          </button>
+        `).join("")}
+      </div>
+      <div class="demo-journey-actions" aria-label="Następne kroki demo">
+        ${previous ? `<button class="ghost-button" data-journey-step="${escapeHtml(previous.id)}"><i data-lucide="arrow-left"></i>Wróć: ${escapeHtml(previous.label)}</button>` : ""}
+        ${next ? `<button class="primary-button" data-journey-step="${escapeHtml(next.id)}"><i data-lucide="arrow-right"></i>Dalej: ${escapeHtml(next.label)}</button>` : ""}
+        ${caregiverNoAccess && state.activeView !== "consent" ? `<button class="primary-button" data-set-view="consent"><i data-lucide="shield-check"></i>Zobacz zakres zgody</button>` : ""}
+        ${!caregiverNoAccess && state.activeView !== "timeline" ? `<button class="ghost-button" data-set-view="timeline"><i data-lucide="git-branch"></i>${role === "caregiver" ? "Zobacz historię w zakresie zgody" : role === "patient" ? "Zobacz moją historię" : "Zobacz zdarzenia i źródła"}</button>` : ""}
+        ${!caregiverNoAccess && state.activeView !== dataTarget ? `<button class="ghost-button" data-set-view="${escapeHtml(dataTarget)}"><i data-lucide="files"></i>Pokaż źródła</button>` : ""}
+        ${!caregiverNoAccess && state.activeView !== summaryTarget ? `<button class="ghost-button" data-set-view="${escapeHtml(summaryTarget)}"><i data-lucide="clipboard-check"></i>Zakończ podsumowaniem</button>` : ""}
+      </div>
+    </section>
+  `;
 }
 
 function metric(title, value, caption, icon, tooltip = "") {
@@ -777,7 +1302,7 @@ function pageHeader(title, description, dialogType) {
   return `
     <div class="page-intro">
       <div>
-        <p class="eyebrow">Pacjent 360</p>
+        <p class="eyebrow">Pacjent360™</p>
         <h1>${escapeHtml(title)}</h1>
         <p>${escapeHtml(description)}</p>
       </div>
@@ -789,44 +1314,38 @@ function pageHeader(title, description, dialogType) {
 function renderFullDataAccess(context = "clinician") {
   const configs = {
     clinician: {
-      intro: "Kontekst lekarza korzysta z pełnej warstwy danych pacjenta.",
-      title: "Dane pacjenta",
-      items: [
-        ["risks", "Sygnały", "shield-alert", "pytania i luki do wyjaśnienia"],
-        ["medications", "Uzgodnienie leków", "pill", "przepisane vs faktycznie brane"],
-        ["observations", "Wyniki do interpretacji", "activity", "wartości i zakresy ze źródła"],
-        ["documents", "Źródła i dokumenty", "files", "jakość, zaufanie, braki"],
-        ["reports", "Raport kontekstowy", "clipboard-list", "znane, nieznane i do weryfikacji"],
-        ["timeline", "Mapa Pacjenta 360", "git-branch", "warstwowa historia i DITL"]
-      ]
+      role: "doctor",
+      eyebrow: "Pełny kontekst",
+      intro: "Lekarz360 pokazuje pełny kontekst udostępniony w demo: wywiad, dokumenty, oś historii, leki, wyniki, pytania DITL, podsumowanie i zgody.",
+      title: "Dane dostępne w Lekarz360"
     },
     patient: {
-      intro: "Twoje dane w jednym miejscu: dokumenty, wyniki, leki i pytania.",
-      title: "Moje dane",
-      items: [
-        ["documents", "Moje dokumenty", "files", "wypisy, skierowania, wyniki PDF"],
-        ["timeline", "Mapa Pacjenta 360", "git-branch", "wizyty i zdarzenia w jednej historii"],
-        ["medications", "Moje leki", "pill", "co przyjmuję i co potwierdzić"],
-        ["observations", "Moje wyniki", "activity", "badania i zakresy"],
-        ["interview", "Moje pytania", "message-circle-question", "do rozmowy z lekarzem"],
-        ["caregiverPortal", "Kokpit opiekuna", "users-round", "zakres dostępu rodziny i opiekuna"],
-        ["consent", "Kto ma dostęp", "shield-check", "zarządzanie zgodami"]
-      ]
+      role: "patient",
+      eyebrow: "Moje dane",
+      intro: "Pacjent360 pokazuje dokumenty, mapę, wywiad opisany prostym językiem, leki, wyniki oraz zgody udzielone innym osobom.",
+      title: "Co widzę w Pacjent360"
+    },
+    caregiver: {
+      role: "caregiver",
+      eyebrow: "Dane osoby pod opieką",
+      intro: "Opiekun360 pokazuje dane osoby, która udostępniła opiekę, albo dziecka/osoby bliskiej w zakresie aktywnej zgody: dokumenty, mapę, leki, wyniki, zgody i gotowy wywiad.",
+      title: "Co widzę w Opiekun360"
     }
   };
   const config = configs[context] || configs.clinician;
+  const visibleItems = roleDataVisibility(config.role);
 
   return `
     <section class="section-band full-data-hub">
       <div class="section-head">
         <div>
-          <p class="eyebrow">Pełne dane</p>
+          <p class="eyebrow">${escapeHtml(config.eyebrow)}</p>
           <h2><i data-lucide="database"></i> ${escapeHtml(config.title)}</h2>
         </div>
       </div>
       <p class="record-body">${escapeHtml(config.intro)}</p>
       <div class="full-data-grid">
-        ${config.items.map(([view, label, icon, caption]) => `
+        ${visibleItems.map(([view, label, icon, caption]) => `
           <button class="full-data-tile" data-set-view="${escapeHtml(view)}">
             <i data-lucide="${escapeHtml(icon)}"></i>
             <span>
@@ -915,7 +1434,7 @@ function renderCore() {
     <div class="page-intro">
       <div>
         <p class="eyebrow">Kontekst wizyty i pytania do decyzji lekarza (DITL)</p>
-        <h1>Pacjent w 90 sekund</h1>
+        <h1>Lekarz360: kontekst w 90 sekund</h1>
         <p>${escapeHtml(patient.name)}, ${formatAge(patient.birthDate)}. System pokazuje pytania i luki do wyjaśnienia, bez automatycznej decyzji po stronie systemu.</p>
       </div>
       <div class="inline-actions">
@@ -925,41 +1444,144 @@ function renderCore() {
       </div>
     </div>
 
-    <section class="context-chain" aria-label="Model kontekstu wizyty">
-      ${["Historia pacjenta", "Stan", "Sygnały i luki", "Pytania do omówienia"].map((step) => `<span>${escapeHtml(step)}</span>`).join("<i data-lucide=\"chevron-right\"></i>")}
+    ${renderRoleContextBanner("doctor")}
+    ${renderDashboardOrchestrator({
+      persona: "Lekarz360",
+      icon: "stethoscope",
+      title: "Najpierw kontekst, potem pełne dane",
+      lead: `${patient.name} · ${formatAge(patient.birthDate)}. ${decisionHeadline}`,
+      status: `${formatCount(questions.filter((q) => q.status === "do wyjaśnienia").length, "pytanie do wyjaśnienia", "pytania do wyjaśnienia", "pytań do wyjaśnienia")} · ${formatCount(redFlags.length, "sygnał do sprawdzenia", "sygnały do sprawdzenia", "sygnałów do sprawdzenia")}`,
+      steps: [
+        ["1", "Powód wizyty", patient.currentProblem || "Brak opisu aktualnego problemu."],
+        ["2", "Niepewności", gaps[0]?.description || "Brak jawnych braków danych w demo."],
+        ["3", "Pytania", topQuestions[0]?.question || "Brak pytań DITL dla tego pacjenta."]
+      ],
+      actions: [
+        { label: "Raport", icon: "file-text", view: "reports", primary: true },
+        { label: "Oś historii", icon: "git-branch", view: "timeline" },
+        { label: "Leki", icon: "pill", view: "medications" }
+      ]
+    })}
+    ${renderFullDataAccess("clinician")}
+    ${renderCareContractPanel("doctor")}
+
+    ${renderCockpitDetails("Pełne dane Lekarz360: leki, źródła, karta 90 sekund, oś historii i skróty", `
+      <section class="section-band decision-hero core-brief">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Dzisiejszy kontekst wizyty</p>
+            <h2>${escapeHtml(decisionHeadline)}</h2>
+          </div>
+          <span class="status-chip info">${escapeHtml(decision?.status || "DITL")}</span>
+        </div>
+        <p class="record-body">Kontakt: ${formatDate(decision?.contactDate)}. Lekarz oznacza każde pytanie jako wyjaśnione, odrzucone albo do dalszej kontroli.</p>
+        <p class="record-body"><strong>Największa zmiana:</strong> ${escapeHtml(patient.biggestChange)}</p>
+        <div class="source-line">${sourceChips(decision?.sourceRefs || [])}</div>
+      </section>
+
+      ${renderMedReconciliation()}
+
+      <div class="ninety-grid core-priority-grid">
+        ${renderNinetyCard("Stan bazowy", patient.baselineState, "user-round-check", latestInterviewRefs)}
+        ${renderNinetyCard("Aktualny problem", patient.currentProblem, "activity", decisionRefs)}
+        ${renderNinetyList("Największe braki danych", gaps.map((gap) => gap.description), "search-x", gaps.flatMap((gap) => gap.sourceRefs))}
+        ${renderNinetyList("Top pytania DITL", topQuestions.map((question) => question.question), "circle-help", topQuestions.flatMap((question) => question.sourceRefs || []))}
+      </div>
+
+      ${renderMapShortcut()}
+      ${renderClinicianShortcuts()}
+    `)}
+  `;
+}
+
+function renderDashboardOrchestrator({ persona, icon, title, lead, status, steps, actions }) {
+  return `
+    <section class="section-band dashboard-orchestrator" aria-label="Widok perspektywy">
+      <div class="orchestrator-main">
+        <p class="eyebrow"><i data-lucide="${escapeHtml(icon)}"></i>Widok perspektywy · ${escapeHtml(persona)}</p>
+        <h2>${escapeHtml(title)}</h2>
+        <p>${escapeHtml(lead)}</p>
+        <div class="orchestrator-actions">
+          ${actions.map((action) => `
+            <button class="${action.primary ? "primary-button" : "ghost-button"}" data-set-view="${escapeHtml(action.view)}">
+              <i data-lucide="${escapeHtml(action.icon)}"></i>${escapeHtml(action.label)}
+            </button>
+          `).join("")}
+        </div>
+      </div>
+      <div class="orchestrator-panel">
+        <span class="status-chip info">${escapeHtml(status)}</span>
+        <div class="orchestrator-steps">
+          ${steps.map(([number, label, body]) => `
+            <article>
+              <b>${escapeHtml(number)}</b>
+              <div>
+                <strong>${escapeHtml(label)}</strong>
+                <small>${escapeHtml(body)}</small>
+              </div>
+            </article>
+          `).join("")}
+        </div>
+      </div>
     </section>
+  `;
+}
 
-    <div class="metric-grid">
-      ${metric("Kontekst na dziś", decision?.type || "brak", decision?.status || "DITL", "stethoscope")}
-      ${metric("Pytania DITL", questions.length, `${questions.filter((q) => q.status === "do wyjaśnienia").length} do wyjaśnienia`, "circle-help")}
-      ${metric("Sygnały", flags.length, `${redFlags.length} do sprawdzenia`, "flag")}
-      ${metric("Kompletność źródeł", `${qualityScore()}%`, "ile danych ma potwierdzone źródło", "database", "Procent elementów z potwierdzonym źródłem dokumentowym, laboratoryjnym lub z wywiadu. Nie jest oceną jakości opieki medycznej.")}
-    </div>
+function renderCockpitDetails(summary, content) {
+  return `
+    <details class="cockpit-details">
+      <summary><i data-lucide="layers"></i>${escapeHtml(summary)}</summary>
+      <div class="cockpit-detail-body">${content}</div>
+    </details>
+  `;
+}
 
-    <section class="section-band decision-hero core-brief">
+function renderCareContractPanel(persona = "doctor") {
+  const contract = activeCareContract();
+  if (!contract) return "";
+  const personaIntro = {
+    doctor: "Lekarz widzi dokumenty, źródła, pytania i zakres zgód. Obserwacje opiekuna pozostają oznaczone jako wywiad.",
+    patient: "Pacjent albo rodzic widzi, co jest zbierane przed wizytą i co zostało udostępnione innym osobom.",
+    caregiver: "Opiekun widzi tylko zakres zgody i może dopisać informacje organizacyjne lub obserwacje opiekuna."
+  }[persona] || "Ten widok pokazuje, kto wnosi informacje i kto co widzi.";
+  const groups = [
+    ["Lekarz dostaje", contract.doctorGets || [], "stethoscope"],
+    ["Pacjent widzi", contract.patientGets || [], "user-round"],
+    ["Opiekun wnosi / widzi", [...(contract.caregiverGets || []), ...(contract.caregiverAdds || [])].slice(0, 5), "users-round"]
+  ];
+  return `
+    <section class="section-band care-contract-panel">
       <div class="section-head">
         <div>
-          <p class="eyebrow">Dzisiejszy kontekst wizyty</p>
-          <h2>${escapeHtml(decisionHeadline)}</h2>
+          <p class="eyebrow"><i data-lucide="handshake"></i>Kto co widzi i dlaczego</p>
+          <h2>${escapeHtml(contract.scenario)}</h2>
         </div>
-        <span class="status-chip info">${escapeHtml(decision?.status || "DITL")}</span>
+        <span class="status-chip info">${escapeHtml(contract.relationship)}</span>
       </div>
-      <p class="record-body">Kontakt: ${formatDate(decision?.contactDate)}. Lekarz oznacza każde pytanie jako wyjaśnione, odrzucone albo do dalszej kontroli.</p>
-      <p class="record-body"><strong>Największa zmiana:</strong> ${escapeHtml(patient.biggestChange)}</p>
-      <div class="source-line">${sourceChips(decision?.sourceRefs || [])}</div>
+      <p class="record-body">${escapeHtml(personaIntro)}</p>
+      <div class="care-contract-roles">
+        <article>
+          <span>Pacjent</span>
+          <strong>${escapeHtml(contract.patientRole)}</strong>
+        </article>
+        <article>
+          <span>Główne źródło informacji</span>
+          <strong>${escapeHtml(contract.primaryInformant)}</strong>
+        </article>
+      </div>
+      <div class="care-contract-grid">
+        ${groups.map(([title, items, icon]) => `
+          <article>
+            <h3><i data-lucide="${escapeHtml(icon)}"></i>${escapeHtml(title)}</h3>
+            <ul class="plain-list compact-list">
+              ${(items.length ? items : ["Brak danych w tym scenariuszu."]).map((item) => `<li><i data-lucide="dot"></i><span>${escapeHtml(item)}</span></li>`).join("")}
+            </ul>
+          </article>
+        `).join("")}
+      </div>
+      <p class="safety-note inline-note"><i data-lucide="shield-alert"></i>${escapeHtml(contract.safetyBoundary)}</p>
+      <div class="source-line">${sourceChips(contract.sourceRefs || [])}</div>
     </section>
-
-    ${renderMedReconciliation()}
-
-    <div class="ninety-grid core-priority-grid">
-      ${renderNinetyCard("Stan bazowy", patient.baselineState, "user-round-check", latestInterviewRefs)}
-      ${renderNinetyCard("Aktualny problem", patient.currentProblem, "activity", decisionRefs)}
-      ${renderNinetyList("Największe braki danych", gaps.map((gap) => gap.description), "search-x", gaps.flatMap((gap) => gap.sourceRefs))}
-      ${renderNinetyList("Top pytania DITL", topQuestions.map((question) => question.question), "circle-help", topQuestions.flatMap((question) => question.sourceRefs || []))}
-    </div>
-
-    ${renderMapShortcut()}
-    ${renderClinicianShortcuts()}
   `;
 }
 
@@ -1023,8 +1645,8 @@ function renderMapShortcut() {
   return `
     <section class="section-band core-map-shortcut">
       <div>
-        <p class="eyebrow"><i data-lucide="map"></i>Mapa Pacjenta 360</p>
-        <h2>Film z życia pacjenta: od osi czasu do źródeł</h2>
+        <p class="eyebrow"><i data-lucide="map"></i>Oś historii pacjenta</p>
+        <h2>Skrót historii pacjenta: od osi czasu do źródeł</h2>
         <p class="record-body">
           ${events.length
             ? `${formatDate(first.date)} - ${formatDate(last.date)} · ${PATIENT360_FORMAT.formatEvents(events.length)} · ${PATIENT360_FORMAT.formatTracks(tracks.length)}`
@@ -1034,7 +1656,7 @@ function renderMapShortcut() {
           ${events.map((event) => `<span class="${event.status === "planowane" ? "future" : ""}" style="left:${timelinePreviewPosition(event, first, last)}%"></span>`).join("")}
         </div>
       </div>
-      <button class="primary-button" data-set-view="timeline"><i data-lucide="git-branch"></i>Otwórz Mapę Pacjenta 360</button>
+      <button class="primary-button" data-set-view="timeline"><i data-lucide="git-branch"></i>Otwórz oś historii</button>
     </section>
   `;
 }
@@ -1044,7 +1666,7 @@ function renderClinicianShortcuts() {
     ["documents", "Źródła", "files"],
     ["observations", "Wyniki", "activity"],
     ["medications", "Leki", "pill"],
-    ["risks", "Sygnały", "flag"],
+    ["risks", "Pytania", "flag"],
     ["reports", "Raport", "file-text"]
   ];
   return `
@@ -1084,6 +1706,132 @@ function renderCoreColumn(title, bullets, icon) {
       <ul class="plain-list">
         ${bullets.map((bullet) => `<li><i data-lucide="check-circle-2"></i><span>${escapeHtml(bullet)}</span></li>`).join("")}
       </ul>
+    </section>
+  `;
+}
+
+function renderRoleStart() {
+  const selectedRole = activeRole();
+  const roleConfirmed = Boolean(state.roleSelectionConfirmed);
+  if (roleConfirmed) return renderRoleScenarioSubpage(selectedRole);
+  return `
+    <section class="role-game-hero">
+      <div>
+        <p class="eyebrow"><i data-lucide="play-circle"></i>Jedna historia, trzy perspektywy</p>
+        <h1>Wybierz perspektywę 360° i zobacz tę samą historię pacjenta</h1>
+        <p>Pacjent360™ pokazuje jedną historię w trzech soczewkach: Lekarz360 dla szybkiego kontekstu, Pacjent360 dla przygotowania wizyty i Opiekun360 dla pomocy bliskiej osobie w zakresie zgody.</p>
+      </div>
+      <div class="role-game-current">
+        <span>Zacznij tutaj</span>
+        <strong><i data-lucide="mouse-pointer-click"></i>Wybierz perspektywę</strong>
+        <p>Po wyborze perspektywy przejdziesz do osobnego ekranu z historiami pacjentów.</p>
+      </div>
+    </section>
+
+    <section class="section-band role-picker-band">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Krok 1</p>
+          <h2>Z jakiej perspektywy oglądasz historię?</h2>
+        </div>
+      </div>
+      <div class="role-card-grid">
+        ${ROLE_ORDER.map((role) => {
+          const meta = activeRoleMeta(role);
+          return `
+            <button type="button" class="role-card" data-select-role="${escapeHtml(role)}">
+              <i data-lucide="${escapeHtml(meta.icon)}"></i>
+              <strong>${escapeHtml(meta.label)}</strong>
+              <span>${escapeHtml(meta.promise)}</span>
+            </button>
+          `;
+        }).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderRoleScenarioSubpage(role) {
+  const meta = activeRoleMeta(role);
+  return `
+    <section class="role-step-breadcrumb" aria-label="Postęp wyboru demo">
+      <span><i data-lucide="check-circle-2"></i>Krok 1: ${escapeHtml(meta.label)}</span>
+      <i data-lucide="chevron-right"></i>
+      <strong>Krok 2: wybierz pacjenta</strong>
+      <button type="button" class="ghost-button" data-reset-role-selection>
+        <i data-lucide="arrow-left"></i>Zmień perspektywę
+      </button>
+    </section>
+
+    <section class="role-game-hero role-scenario-hero">
+      <div>
+        <p class="eyebrow"><i data-lucide="${escapeHtml(meta.icon)}"></i>Krok 2 · ${escapeHtml(meta.label)}</p>
+        <h1>Wybierz historię, którą chcesz zobaczyć w ${escapeHtml(meta.label)}</h1>
+        <p>${escapeHtml(meta.promise)} Każdy scenariusz prowadzi do innego kokpitu, ale korzysta z tej samej mapy zdarzeń pacjenta.</p>
+      </div>
+      <div class="role-game-current">
+        <span>Wybrana perspektywa</span>
+        <strong><i data-lucide="${escapeHtml(meta.icon)}"></i>${escapeHtml(meta.label)}</strong>
+        <p>To osobny ekran po wyborze perspektywy. Teraz wybierasz pacjenta demonstracyjnego.</p>
+      </div>
+    </section>
+
+    <section class="section-band scenario-picker-band role-subpage-panel">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Pacjenci demonstracyjni</p>
+        <h2>Trzy historie, trzy kokpity 360°</h2>
+        </div>
+        <span class="status-chip info">${escapeHtml(meta.label)}</span>
+      </div>
+      <div class="scenario-card-grid">
+        ${state.patients.map((patient) => renderScenarioCard(patient, role)).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderScenarioCard(patient, role) {
+  const meta = activeRoleMeta(role);
+  const narrative = activeRoleNarrative(role, patient.id);
+  const goal = activeRoleGoal(role, patient.id);
+  const sections = activeRoleSections(role, patient.id);
+  return `
+    <article class="scenario-card ${patient.id === state.activePatientId ? "selected" : ""}">
+      <div class="scenario-card-head">
+        <span>${escapeHtml(formatAge(patient.birthDate))}</span>
+        <strong>${escapeHtml(patient.name)}</strong>
+      </div>
+      <p>${escapeHtml(narrative?.summary || patient.patientSummary || patient.currentProblem)}</p>
+      <div class="scenario-goal">
+        <span>Cel tej perspektywy</span>
+        <strong>${escapeHtml(goal?.goal || meta.promise)}</strong>
+      </div>
+      <ul class="plain-list compact-list">
+        ${(sections.length ? sections : ["Kokpit 360°", "Oś historii", "Następny krok"]).slice(0, 4).map((item) => `<li><i data-lucide="check-circle-2"></i><span>${escapeHtml(item)}</span></li>`).join("")}
+      </ul>
+      <button class="primary-button" data-start-role="${escapeHtml(role)}" data-start-patient="${escapeHtml(patient.id)}">
+        <i data-lucide="${escapeHtml(meta.icon)}"></i>${escapeHtml(meta.cta)}
+      </button>
+    </article>
+  `;
+}
+
+function renderRoleContextBanner(role = activeRole()) {
+  const meta = activeRoleMeta(role);
+  const narrative = activeRoleNarrative(role);
+  const goal = activeRoleGoal(role);
+  return `
+    <section class="section-band role-context-banner">
+      <div>
+        <p class="eyebrow"><i data-lucide="${escapeHtml(meta.icon)}"></i>${escapeHtml(meta.label)}</p>
+        <h2>${escapeHtml(narrative?.title || "Ten sam film życia, inna soczewka")}</h2>
+        <p>${escapeHtml(narrative?.summary || meta.promise)}</p>
+      </div>
+      <article>
+        <span>Cel teraz</span>
+        <strong>${escapeHtml(goal?.goal || meta.promise)}</strong>
+      </article>
     </section>
   `;
 }
@@ -1134,18 +1882,46 @@ function renderPatientPortal() {
     patientId: state.activePatientId
   });
   const isGuardianView = patient.guardian && patient.guardian !== "brak";
+  const checklistSummary = preVisitModel.checklistSummary || visitChecklistSummary(preVisitModel.checklist);
+  const nextItem = upcoming[0] || null;
+  const medConfirmCount = meds.filter((med) => {
+    const actual = normalize(med.actualStatus || "");
+    return actual.includes("niepotwierd") || actual.includes("deklarow") || actual.includes("otc");
+  }).length;
 
   return `
     ${pageHeader(
-      isGuardianView ? "Zdrowie dziecka — widok rodzica" : "Aplikacja pacjenta",
+      isGuardianView ? "Pacjent360: widok rodzica" : "Pacjent360",
       isGuardianView
         ? "Widok rodzica: co przygotować dla dziecka przed wizytą, jakie dokumenty zabrać i kto ma dostęp do danych dziecka."
-        : "Osobisty widok Pacjent 360: mapa zdarzeń, następne kroki, leki, dokumenty i udostępnianie opiekunowi. Nie zastępuje konsultacji lekarskiej.",
+        : "Osobisty widok Pacjent360™: oś historii, następne kroki, leki, dokumenty i udostępnianie opiekunowi. Nie zastępuje konsultacji lekarskiej.",
       "smartphone"
     )}
-    ${renderPatientAppHome({ patient, preVisitModel, docs, observations, meds, patientQuestions, upcoming, timeline, caregiverModel })}
+    ${renderRoleContextBanner("patient")}
+    ${renderDashboardOrchestrator({
+      persona: isGuardianView ? "Rodzic w Pacjent360" : "Pacjent360",
+      icon: isGuardianView ? "users-round" : "smartphone",
+      title: isGuardianView ? "Przygotuj wizytę dziecka bez chaosu" : "Przygotuj wizytę bez chaosu",
+      lead: `${patient.name} · ${formatAge(patient.birthDate)}. ${nextItem ? `${formatDate(nextItem.date)} · ${nextItem.title}` : "Zacznij od dokumentów, leków, objawów i pytań."}`,
+      status: `${checklistSummary.ready} gotowe · ${formatCount(checklistSummary.confirm, "element do potwierdzenia", "elementy do potwierdzenia", "elementów do potwierdzenia")} · ${formatCount(medConfirmCount, "lek do sprawdzenia", "leki do sprawdzenia", "leków do sprawdzenia")}`,
+      steps: [
+        ["1", "Dodaj to, co masz", `${PATIENT360_FORMAT.formatDocuments(docs.length)} · ${PATIENT360_FORMAT.formatResults(observations.length)}`],
+        ["2", "Zaznacz niepewne", formatCount(checklistSummary.confirm, "element do potwierdzenia", "elementy do potwierdzenia", "elementów do potwierdzenia")],
+        ["3", "Zabierz pytania", formatCount(patientQuestions.length, "pytanie do rozmowy z lekarzem", "pytania do rozmowy z lekarzem", "pytań do rozmowy z lekarzem")]
+      ],
+      actions: [
+        { label: "Dokumenty", icon: "files", view: "documents", primary: true },
+        { label: "Leki", icon: "pill", view: "medications" },
+        { label: "Oś historii", icon: "git-branch", view: "timeline" }
+      ]
+    })}
+    ${renderFullDataAccess("patient")}
+    ${renderCareContractPanel("patient")}
     ${renderPatientNextSteps({ patient, preVisitModel, upcoming, patientQuestions, decision, isGuardianView })}
-    ${renderPreVisitFlow(preVisitModel)}
+    ${renderCockpitDetails("Pełne przygotowanie: kafle, checklista, pytania, dokumenty i zgody", `
+      ${renderPatientAppHome({ patient, preVisitModel, docs, observations, meds, patientQuestions, upcoming, timeline, caregiverModel })}
+      ${renderPreVisitFlow(preVisitModel)}
+    `)}
   `;
 }
 
@@ -1168,7 +1944,7 @@ function renderPatientNextSteps({ patient, preVisitModel, upcoming, patientQuest
           <p class="eyebrow">${isGuardianView ? "Co przygotować dla dziecka" : "Co mam zrobić teraz"}</p>
           <h2><i data-lucide="clipboard-check"></i>${isGuardianView ? "Najbliższe kroki rodzica" : "Najbliższe kroki przed wizytą"}</h2>
         </div>
-        <button class="ghost-button" data-set-view="timeline"><i data-lucide="git-branch"></i>Mapa</button>
+        <button class="ghost-button" data-set-view="timeline"><i data-lucide="git-branch"></i>Oś historii</button>
       </div>
       <div class="patient-now-grid">
         <article>
@@ -1209,7 +1985,7 @@ function renderPatientAppHome({ patient, preVisitModel, docs, observations, meds
     <section class="section-band patient-app-home">
       <div class="patient-app-hero">
         <div>
-          <p class="eyebrow">${isGuardianView ? "Widok rodzica" : "Aplikacja pacjenta"}</p>
+          <p class="eyebrow">${isGuardianView ? "Pacjent360 · widok rodzica" : "Pacjent360"}</p>
           <h2>${isGuardianView ? "Zdrowie dziecka w jednej mapie" : "Moje zdrowie w jednej mapie"}</h2>
           <p>
             ${escapeHtml(patient.name)} · ${formatAge(patient.birthDate)}. Ten widok porządkuje historię,
@@ -1217,7 +1993,7 @@ function renderPatientAppHome({ patient, preVisitModel, docs, observations, meds
           </p>
           <div class="patient-app-actions" aria-label="Skróty aplikacji pacjenta">
             <button class="patient-app-tab active" data-set-view="patientPortal"><i data-lucide="home"></i>Start</button>
-            <button class="patient-app-tab" data-set-view="timeline"><i data-lucide="git-branch"></i>Mapa</button>
+            <button class="patient-app-tab" data-set-view="timeline"><i data-lucide="git-branch"></i>Oś historii</button>
             <button class="patient-app-tab" data-set-view="medications"><i data-lucide="pill"></i>Leki</button>
             <button class="patient-app-tab" data-set-view="documents"><i data-lucide="files"></i>Dokumenty</button>
             <button class="patient-app-tab" data-set-view="consent"><i data-lucide="shield-check"></i>Udostępnianie</button>
@@ -1241,7 +2017,7 @@ function renderPatientAppHome({ patient, preVisitModel, docs, observations, meds
           view: "patientPortal"
         })}
         ${renderPatientAppTile({
-          label: "Mapa zdarzeń",
+          label: "Oś historii",
           title: latestEvent ? latestEvent.title : "Brak zdarzeń",
           body: latestEvent ? `${formatDate(latestEvent.date)} · ${latestEvent.track}` : "Dodaj dokument lub wywiad demo, aby zbudować mapę.",
           icon: "map",
@@ -1521,8 +2297,92 @@ function renderPatientTimelineCard(event) {
   `;
 }
 
+function renderInterviewSummaryPanel(interviews, role = activeRole()) {
+  const patient = activePatient();
+  const latest = interviews[0] || null;
+  const meds = byPatient(state.medications).slice(0, 5);
+  const decision = activeDecision();
+  const refs = compactSourceRefs([
+    latest ? `interview:${latest.id}` : null,
+    latest ? `transcript:${latest.id}` : null,
+    ...(latest?.sourceRefs || []),
+    ...(decision?.sourceRefs || [])
+  ]);
+  const isCaregiver = role === "caregiver";
+  const answerKeys = ["baseline", "current", "function", "medications", "family"];
+
+  return `
+    <section class="section-band interview-summary-panel">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">${isCaregiver ? "Gotowy wywiad" : "Opis rozmowy"}</p>
+          <h2><i data-lucide="messages-square"></i>${isCaregiver ? "Co wiadomo z rozmowy i obserwacji" : "Co zostało zebrane przed wizytą"}</h2>
+        </div>
+        <button class="ghost-button" data-set-view="medications"><i data-lucide="pill"></i>Leki</button>
+      </div>
+      <p class="record-body">
+        ${escapeHtml(isCaregiver
+          ? "Opiekun widzi gotowy opis wywiadu osoby pod opieką w zakresie aktywnej zgody. To źródło rozmowy z lekarzem, nie wynik badania."
+          : "Pacjent widzi prosty opis rozmowy, pytania do omówienia oraz listę leków zebraną z dokumentów i wywiadu. System nie zastępuje rozmowy z lekarzem.")}
+      </p>
+      <div class="patient-now-grid">
+        <article>
+          <span>Osoba, której dotyczy wywiad</span>
+          <strong>${escapeHtml(patient.name)}</strong>
+          <p>${escapeHtml(latest ? `${formatDate(latest.date)} · rozmówca: ${latest.speaker}` : "Brak zapisanego wywiadu w danych demo.")}</p>
+        </article>
+        <article>
+          <span>Cel rozmowy</span>
+          <strong>${escapeHtml(decision?.clinicalQuestion || patient.currentProblem || "Przygotowanie kontekstu")}</strong>
+          <p>${escapeHtml(patient.patientQuestion || "Brak pytania pacjenta w danych demo.")}</p>
+        </article>
+        <article>
+          <span>Leki w kontekście rozmowy</span>
+          <ul class="plain-list compact-list">
+            ${meds.map((med) => `<li><i data-lucide="pill"></i><span>${escapeHtml(med.name)} · ${escapeHtml(med.actualStatus || med.status || "status do sprawdzenia")}</span></li>`).join("") || `<li><i data-lucide="circle-help"></i><span>Brak leków w danych demo.</span></li>`}
+          </ul>
+        </article>
+      </div>
+      <div class="answer-grid">
+        ${answerKeys.map((key) => `<div><strong>${escapeHtml(INTERVIEW_SCRIPT.find((section) => section.key === key)?.title || key)}</strong><p>${escapeHtml(latest?.answers?.[key] || "Brak odpowiedzi w tej sekcji.")}</p></div>`).join("")}
+      </div>
+      <div class="source-line">${sourceChips(refs)}</div>
+    </section>
+  `;
+}
+
 function renderInterview() {
   const interviews = byPatient(state.interviews).filter(matchesSearch).sort((a, b) => new Date(b.date) - new Date(a.date));
+  const role = activeRole();
+  if (role !== "doctor") {
+    const isCaregiver = role === "caregiver";
+    return `
+      ${pageHeader(
+        isCaregiver ? "Gotowy wywiad osoby pod opieką" : "Opis wywiadu i rozmowy",
+        isCaregiver
+          ? "Widok opiekuna pokazuje zebrany wywiad w zakresie udzielonego dostępu. Informacje z rozmowy są źródłem, nie faktem laboratoryjnym."
+          : "Widok pacjenta pokazuje opis rozmowy, pytania do omówienia, leki i źródła w prostym języku.",
+        "interview"
+      )}
+      <section class="safety-note">
+        <i data-lucide="shield-alert"></i>
+        <span>Wywiad porządkuje relację pacjenta, opiekuna lub rodziny. Odpowiedzi są źródłem typu wywiad i wymagają rozmowy z lekarzem.</span>
+      </section>
+      ${renderInterviewSummaryPanel(interviews, role)}
+      <section class="section-band">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Źródło: wywiad / transkrypcja</p>
+            <h2>Zapis rozmowy</h2>
+          </div>
+        </div>
+        <div class="record-list">
+          ${interviews.map(renderInterviewCard).join("") || emptyState("Brak wywiadów dla wybranego pacjenta.")}
+        </div>
+      </section>
+    `;
+  }
+
   return `
     ${pageHeader("Wywiad pacjenta i źródła rozmowy", "Scenariusz rozmowy kontekstowej. Służy do zebrania pytań, źródeł i obserwacji przed rozmową z lekarzem.", "interview")}
     <section class="safety-note">
@@ -1617,15 +2477,81 @@ function renderDocuments() {
 }
 
 function renderTimeline() {
+  const role = activeRole();
   return `
-    ${pageHeader("Mapa Pacjenta 360", "Wspólna mapa historii pacjenta: wizyty, badania, leki, wywiady, dokumenty, zgody i pytania DITL. Pokazuje kontekst, źródła i luki, ale nie rozstrzyga decyzji klinicznych.", "git-branch")}
-    ${renderPatientMap360({ persona: "doctor" })}
+    ${pageHeader("Oś historii pacjenta", "Publiczne demo pokazuje uproszczony skrót historii: wizyty, badania, leki, wywiady, dokumenty, zgody i pytania DITL. Pełna mapa wielowarstwowa jest kierunkiem rozwoju.", "git-branch")}
+    ${renderTimelineNarrator(role)}
+    ${renderPatientMap360({ persona: role })}
   `;
 }
 
-function renderPatientMap360({ persona = "doctor", embedded = false } = {}) {
-  const mapModel = PATIENT360_MAP_MODEL.buildPatientMapModel({
+function renderTimelineNarrator(role = activeRole()) {
+  const meta = activeRoleMeta(role);
+  const narrative = activeRoleNarrative(role);
+  const sections = activeRoleSections(role).slice(0, 4);
+  const events = byPatient(state.timelineEvents).slice().sort((a, b) => new Date(a.date) - new Date(b.date));
+  const first = events[0];
+  const last = events[events.length - 1];
+  return `
+    <section class="section-band timeline-narrator">
+      <div>
+        <p class="eyebrow"><i data-lucide="${escapeHtml(meta.icon)}"></i>Film życia · ${escapeHtml(meta.label)}</p>
+        <h2>${escapeHtml(narrative?.mapTitle || narrative?.title || "Ta sama historia, inna soczewka")}</h2>
+        <p>${escapeHtml(narrative?.mapSummary || narrative?.summary || "Oś historii porządkuje zdarzenia w czasie i pokazuje, co warto omówić w kolejnym kontakcie.")}</p>
+      </div>
+      <div class="timeline-narrator-facts">
+        <article>
+          <span>Odcinek</span>
+          <strong>${events.length ? `${formatDate(first.date)} - ${formatDate(last.date)}` : "Brak zdarzeń"}</strong>
+        </article>
+        <article>
+          <span>W tej perspektywie widzisz</span>
+          <strong>${escapeHtml(sections.length ? sections.join(" · ") : "historię, pytania i źródła")}</strong>
+        </article>
+      </div>
+    </section>
+  `;
+}
+
+function stateForMapPersona(persona = activeRole()) {
+  if (persona !== "caregiver") return state;
+  const model = PATIENT360_CAREGIVER_MODEL.buildCaregiverModel({
     state,
+    patientId: state.activePatientId
+  });
+  if (!model.activeScopes.length) {
+    return {
+      ...state,
+      timelineEvents: state.timelineEvents.filter((event) => event.patientId !== state.activePatientId),
+      stageSummaries: (state.stageSummaries || []).filter((item) => item.patientId !== state.activePatientId)
+    };
+  }
+  const allowedAreas = new Set(model.activeAreas || []);
+  const trackAreaMap = {
+    leki: "medications",
+    konsultacje: "visits",
+    "decyzje medyczne": "visits",
+    badania: "results",
+    "kontekst medyczny": "documents",
+    objawy: "observations",
+    "obserwacje z wywiadu": "observations",
+    funkcjonowanie: "observations",
+    hospitalizacje: "documents"
+  };
+  const timelineEvents = state.timelineEvents.filter((event) => {
+    if (event.patientId !== state.activePatientId) return true;
+    const area = trackAreaMap[event.track] || "documents";
+    return allowedAreas.has(area) || (allowedAreas.has("tasks") && ["decyzje medyczne", "konsultacje"].includes(event.track));
+  });
+  const stageSummaries = (state.stageSummaries || []).filter((item) => item.patientId !== state.activePatientId || timelineEvents.some((event) => event.patientId === item.patientId && event.stage === item.stage));
+  return { ...state, timelineEvents, stageSummaries };
+}
+
+function renderPatientMap360({ persona = "doctor", embedded = false } = {}) {
+  const mapState = stateForMapPersona(persona);
+  const mapPersona = persona === "caregiver" ? "patient" : persona;
+  const mapModel = PATIENT360_MAP_MODEL.buildPatientMapModel({
+    state: mapState,
     patientId: state.activePatientId,
     periodId: state.timelinePeriod,
     detailId: state.timelineDetail,
@@ -1634,7 +2560,7 @@ function renderPatientMap360({ persona = "doctor", embedded = false } = {}) {
     trackFilter: state.timelineFilterTrack,
     searchQuery: state.search,
     today: todayInputValue(),
-    persona,
+    persona: mapPersona,
     embedded,
     periods: TIMELINE_PERIODS,
     details: TIMELINE_DETAILS,
@@ -1646,7 +2572,7 @@ function renderPatientMap360({ persona = "doctor", embedded = false } = {}) {
     periods: TIMELINE_PERIODS,
     details: TIMELINE_DETAILS,
     zoomConfig: TIMELINE_ZOOM,
-    stageSummaries: byPatient(state.stageSummaries || []),
+    stageSummaries: (mapState.stageSummaries || []).filter((item) => item.patientId === state.activePatientId),
     sourceChips
   });
 }
@@ -2210,7 +3136,7 @@ function renderRisks() {
   const flags = byPatient(state.flags).filter(matchesSearch);
   const grouped = ["red", "amber", "green", "blue"];
   return `
-    ${pageHeader("Mapa pytań i sygnałów DITL", "Sygnały są wizualnym skrótem do pytań i luk w kontekście. Nie są gotową oceną ani decyzją po stronie systemu i nie zastępują lekarza.", "flag")}
+    ${pageHeader("Pytania i luki DITL", "Ten widok jest skrótem do pytań i luk w kontekście. Nie jest gotową oceną ani decyzją po stronie systemu i nie zastępuje lekarza.", "flag")}
     <section class="flag-legend">
       ${grouped.map((color) => `<span class="flag-badge ${FLAG_META[color].className}"><i data-lucide="${escapeHtml(FLAG_META[color].icon)}"></i>${escapeHtml(FLAG_META[color].label)}</span>`).join("")}
     </section>
@@ -2261,14 +3187,14 @@ function renderFlagCard(flag) {
 
 function renderReportsV2() {
   const reportTypes = [
-    ["context", "Raport kontekstowy"]
+    ["context", "Podsumowanie kontekstu"]
   ];
   const caseStudy = activeCaseStudy();
   return `
     <div class="page-intro">
       <div>
-        <p class="eyebrow">Raporty</p>
-        <h1>Raport kontekstowy</h1>
+        <p class="eyebrow">Podsumowanie</p>
+        <h1>Podsumowanie kontekstu</h1>
         <p>Krótki podgląd demonstracyjny, dopasowany do fikcyjnego scenariusza demonstracyjnego: ${escapeHtml(caseStudy.label)}.</p>
       </div>
       <div class="report-actions">
@@ -2281,13 +3207,13 @@ function renderReportsV2() {
       <div class="section-head">
         <div>
           <p class="eyebrow">Przypadki demonstracyjne</p>
-          <h2>Wybierz soczewkę raportu</h2>
+          <h2>Wybierz wersję podsumowania</h2>
         </div>
       </div>
       <div class="case-study-grid">
         ${REPORT_CASE_STUDIES.map(renderCaseStudyButton).join("")}
       </div>
-      <p class="record-body case-study-disclaimer">Przypadki demonstracyjne są fikcyjnymi kompozytami projektowymi. Nie są oparte na historii choroby żadnej konkretnej osoby ani rodziny. Soczewki specjalistyczne są planowane do walidacji i nie są częścią obecnego MVP.</p>
+      <p class="record-body case-study-disclaimer">Przypadki demonstracyjne są fikcyjnymi kompozytami projektowymi. Nie są oparte na historii choroby żadnej konkretnej osoby ani rodziny. Soczewki specjalistyczne są planowane do walidacji i nie są częścią obecnego demo.</p>
     </section>
     <section class="section-band">
       <div class="filter-row">
@@ -2347,7 +3273,7 @@ function renderOnePagerV2(type) {
       </ul>
     </article>
     <article class="report-section">
-      <h3>Pacjent w 90 sekund</h3>
+      <h3>Kontekst w 90 sekund</h3>
       <ul class="plain-list">
         <li><i data-lucide="user-round-check"></i><span><strong>Stan bazowy:</strong> ${escapeHtml(patient.baselineState)}</span></li>
         <li><i data-lucide="activity"></i><span><strong>Aktualny problem:</strong> ${escapeHtml(patient.currentProblem)}</span></li>
@@ -2364,8 +3290,8 @@ function renderOnePagerV2(type) {
       </div>
     </article>
     <article class="report-section alert">
-      <h3>Sygnały scenariusza demonstracyjnego</h3>
-      <p class="record-body">Fikcyjny przykład poglądowy: poniższe sygnały pokazują format raportu, nie dane aktywnego pacjenta.</p>
+      <h3>Pytania scenariusza demonstracyjnego</h3>
+      <p class="record-body">Fikcyjny przykład poglądowy: poniższe pytania pokazują format podsumowania, nie dane aktywnego pacjenta.</p>
       <ul class="plain-list">
         ${caseStudy.flags.map((flag) => `<li><i data-lucide="${escapeHtml(FLAG_META[flag.color].icon)}"></i><span><strong>${escapeHtml(flag.title)}:</strong> ${escapeHtml(flag.question)} ${sourceChips(flag.sourceRefs)}</span></li>`).join("")}
       </ul>
@@ -2396,13 +3322,91 @@ function renderCaseKnownGroup(title, items, className) {
 
 function typeLabel(type) {
   return {
-    context: "Pacjent 360: raport kontekstowy",
+    context: "Pacjent360™: raport kontekstowy",
     internist: "Internista",
     cardiology: "Kardiolog",
     preop: "Przed zabiegiem",
     neurology: "Neurolog",
     patient: "Pacjent"
-  }[type] || "Pacjent 360: raport kontekstowy";
+  }[type] || "Pacjent360™: raport kontekstowy";
+}
+
+function renderCaregiverAssignmentPanel(model) {
+  const patient = model.patient || activePatient();
+  const patientName = patientDisplayName(patient);
+  const activeScopes = model.activeScopes || [];
+  const inactiveScopes = model.inactiveScopes || [];
+  const visibleAreas = [...new Set(activeScopes.flatMap((scope) => scope.areas || []))]
+    .map(caregiverAreaLabel)
+    .filter(Boolean);
+  const grantor = patient.guardian && patient.guardian !== "brak" ? patient.guardian : patientName;
+
+  if (!activeScopes.length) {
+    return `
+      <section class="section-band caregiver-assignment-panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Relacja opieki</p>
+            <h2><i data-lucide="users-round"></i>Brak aktywnego udostępnienia</h2>
+          </div>
+          <span class="status-chip pending">Brak dostępu</span>
+        </div>
+        <div class="care-contract-roles">
+          <article>
+            <span>Osoba, której dotyczy historia</span>
+            <strong>${escapeHtml(patientName)}</strong>
+          </article>
+          <article>
+            <span>Widoczność danych</span>
+            <strong>Opiekun nie widzi danych bez aktywnej zgody.</strong>
+          </article>
+        </div>
+        ${inactiveScopes.length ? `<p class="record-body">W danych demo są cofnięte lub wygasłe zakresy: ${escapeHtml(inactiveScopes.map((scope) => scope.subject).join(", "))}.</p>` : ""}
+      </section>
+    `;
+  }
+
+  return `
+    <section class="section-band caregiver-assignment-panel">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Relacja opieki</p>
+          <h2><i data-lucide="users-round"></i>Kto udostępnił opiekę i nad kim</h2>
+        </div>
+        <span class="status-chip done">${formatCount(activeScopes.length, "aktywny zakres", "aktywne zakresy", "aktywnych zakresów")}</span>
+      </div>
+      <div class="care-contract-roles">
+        <article>
+          <span>Osoba pod opieką</span>
+          <strong>${escapeHtml(patientName)}</strong>
+        </article>
+        <article>
+          <span>Dostęp udostępniony przez</span>
+          <strong>${escapeHtml(grantor)}</strong>
+        </article>
+        <article>
+          <span>Widoczne obszary</span>
+          <strong>${escapeHtml(visibleAreas.join(", ") || "brak obszarów")}</strong>
+        </article>
+      </div>
+      <div class="caregiver-scope-list compact-list">
+        ${activeScopes.map((scope) => `
+          <article class="caregiver-scope active">
+            <div>
+              <strong>${escapeHtml(scope.caregiverName || scope.subject)}</strong>
+              <small>${escapeHtml(PATIENT360_CAREGIVER_MODEL.displayRole(scope.role))} · do ${escapeHtml(formatDate(scope.validTo))}</small>
+            </div>
+            <span class="status-chip done">${escapeHtml(scope.status)}</span>
+            <p>${escapeHtml(scope.scope)}</p>
+            <div class="record-meta">
+              ${(scope.areas || []).map((area) => `<span class="tag">${escapeHtml(caregiverAreaLabel(area))}</span>`).join("") || `<span class="tag">brak zakresu</span>`}
+            </div>
+            <div class="source-line">${sourceChips(scope.sourceRefs || [])}</div>
+          </article>
+        `).join("")}
+      </div>
+    </section>
+  `;
 }
 
 function renderCaregiverPortal() {
@@ -2411,61 +3415,108 @@ function renderCaregiverPortal() {
     patientId: state.activePatientId
   });
   const validation = PATIENT360_CAREGIVER_MODEL.validateCaregiverModel(model);
+  const patient = activePatient();
+  const nextTask = model.tasks[0] || null;
+  if (!model.activeScopes.length) {
+    return `
+      ${pageHeader("Opiekun360", "Widok pomocy organizacyjnej działa wyłącznie w zakresie aktywnej zgody. W tym scenariuszu opiekun nie ma dostępu do danych.")}
+      ${renderRoleContextBanner("caregiver")}
+      ${renderDashboardOrchestrator({
+        persona: "Opiekun360",
+        icon: "users-round",
+        title: "Brak aktywnego dostępu do danych",
+        lead: `${patient.name} · ${model.safetyCopy}`,
+        status: "Brak aktywnego zakresu",
+        steps: [
+          ["1", "Zakres zgody", "Brak aktywnej zgody w danych demo."],
+          ["2", "Widoczność danych", "Opiekun nie widzi dokumentów, leków, wyników, wywiadu ani mapy."],
+          ["3", "Następny krok", "Możesz zobaczyć, jak opisany jest zakres zgody."]
+        ],
+        actions: [
+          { label: "Zobacz zakres zgody", icon: "shield-check", view: "consent", primary: true }
+        ]
+      })}
+      ${renderCaregiverAssignmentPanel(model)}
+    `;
+  }
   return `
-    ${pageHeader("Kokpit opiekuna", "Podgląd zgód pacjenta i zakresów udostępnienia. Nie symuluje jeszcze widoku jednej konkretnej osoby; pokazuje zadania organizacyjne i status dostępu bez decyzji klinicznych.", "consent")}
-    <section class="section-band caregiver-overview">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Zakres zgody</p>
-          <h2><i data-lucide="users-round"></i> Kto co widzi</h2>
+    ${pageHeader("Opiekun360", "Widok pomocy organizacyjnej: zakres zgody, zadania, dokumenty, wizyty i obserwacje opiekuna. Nie pokazuje danych poza zakresem udostępnienia.", "consent")}
+    ${renderRoleContextBanner("caregiver")}
+    ${renderDashboardOrchestrator({
+      persona: "Opiekun360",
+      icon: "users-round",
+      title: "Dopilnuj tylko tego, do czego masz dostęp",
+      lead: `${patient.name} · ${model.safetyCopy}`,
+      status: model.activeScopes.length ? formatCount(model.activeScopes.length, "aktywny zakres dostępu", "aktywne zakresy dostępu", "aktywnych zakresów dostępu") : "Brak aktywnego zakresu",
+      steps: [
+        ["1", "Zakres zgody", model.activeScopes.length ? "Sprawdź, które obszary są widoczne." : "Brak aktywnej zgody w danych demo."],
+        ["2", "Najbliższe zadanie", nextTask ? nextTask.title : "Brak zadań w aktywnym zakresie zgody."],
+        ["3", "Po cofnięciu", model.revocationEffects[0]?.description || "Brak cofniętych zakresów w danych demo."]
+      ],
+      actions: [
+        { label: "Zgody", icon: "shield-check", view: "consent", primary: true },
+        { label: "Leki", icon: "pill", view: "medications" },
+        { label: "Oś historii", icon: "git-branch", view: "timeline" }
+      ]
+    })}
+    ${renderCaregiverAssignmentPanel(model)}
+    ${renderFullDataAccess("caregiver")}
+    ${renderCareContractPanel("caregiver")}
+    ${renderCockpitDetails("Pełne dane Opiekun360: zakresy, obszary, zadania i cofnięcia zgód", `
+      <section class="section-band caregiver-overview">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Zakres zgody</p>
+            <h2><i data-lucide="users-round"></i> Kto co widzi</h2>
+          </div>
+          <span class="status-chip ${model.activeScopes.length ? "done" : "pending"}">${model.activeScopes.length ? formatCount(model.activeScopes.length, "aktywny zakres dostępu", "aktywne zakresy dostępu", "aktywnych zakresów dostępu") : "Brak aktywnego zakresu"}</span>
         </div>
-        <span class="status-chip ${model.activeScopes.length ? "done" : "pending"}">${model.activeScopes.length ? formatCount(model.activeScopes.length, "aktywny zakres dostępu", "aktywne zakresy dostępu", "aktywnych zakresów dostępu") : "Brak aktywnego zakresu"}</span>
-      </div>
-      <p class="record-body">${escapeHtml(model.safetyCopy)}</p>
-      <p class="safety-note inline-note"><i data-lucide="info"></i>Ten widok pokazuje przegląd zgód pacjenta. Docelowo opiekun zobaczy tylko zakres przypisany do swojej zgody.</p>
-      ${validation.valid ? "" : `<p class="form-warning">Model opiekuna wymaga sprawdzenia: ${escapeHtml(validation.errors.join("; "))}</p>`}
-      <div class="caregiver-scope-list">
-        ${model.scopes.map(renderCaregiverScope).join("") || emptyState("Brak zgód opiekuna w danych demo.")}
-      </div>
-    </section>
-    <section class="section-band caregiver-access">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Dostęp granularny</p>
-          <h2><i data-lucide="shield-check"></i> Obszary widoczne dla opiekuna</h2>
+        <p class="record-body">${escapeHtml(model.safetyCopy)}</p>
+        <p class="safety-note inline-note"><i data-lucide="info"></i>Ten widok pokazuje przegląd zgód pacjenta. Docelowo opiekun zobaczy tylko zakres przypisany do swojej zgody.</p>
+        ${validation.valid ? "" : `<p class="form-warning">Model opiekuna wymaga sprawdzenia: ${escapeHtml(validation.errors.join("; "))}</p>`}
+        <div class="caregiver-scope-list">
+          ${model.scopes.map(renderCaregiverScope).join("") || emptyState("Brak zgód opiekuna w danych demo.")}
         </div>
-      </div>
-      <div class="caregiver-access-grid">
-        ${model.accessCards.map(renderCaregiverAccessCard).join("")}
-      </div>
-    </section>
-    <section class="section-band caregiver-tasks">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Zadania organizacyjne</p>
-          <h2><i data-lucide="list-checks"></i> Co opiekun może pomóc dopilnować</h2>
+      </section>
+      <section class="section-band caregiver-access">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Dostęp granularny</p>
+            <h2><i data-lucide="shield-check"></i> Obszary widoczne dla opiekuna</h2>
+          </div>
         </div>
-      </div>
-      <div class="record-list">
-        ${model.tasks.map(renderCaregiverTask).join("") || emptyState("Brak zadań w aktywnym zakresie zgody.")}
-      </div>
-    </section>
-    <section class="section-band caregiver-revocation">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Cofnięcie zgody</p>
-          <h2><i data-lucide="shield-x"></i> Efekt cofnięcia dostępu</h2>
+        <div class="caregiver-access-grid">
+          ${model.accessCards.map(renderCaregiverAccessCard).join("")}
         </div>
-      </div>
-      <div class="record-list">
-        ${model.revocationEffects.map((effect) => `
-          <article class="record">
-            <p class="record-title">${escapeHtml(effect.subject)}</p>
-            <p class="record-body">${escapeHtml(effect.description)}</p>
-          </article>
-        `).join("") || emptyState("Brak cofniętych lub wygasłych zakresów w danych demo.")}
-      </div>
-    </section>
+      </section>
+      <section class="section-band caregiver-tasks">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Zadania organizacyjne</p>
+            <h2><i data-lucide="list-checks"></i> Co opiekun może pomóc dopilnować</h2>
+          </div>
+        </div>
+        <div class="record-list">
+          ${model.tasks.map(renderCaregiverTask).join("") || emptyState("Brak zadań w aktywnym zakresie zgody.")}
+        </div>
+      </section>
+      <section class="section-band caregiver-revocation">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Cofnięcie zgody</p>
+            <h2><i data-lucide="shield-x"></i> Efekt cofnięcia dostępu</h2>
+          </div>
+        </div>
+        <div class="record-list">
+          ${model.revocationEffects.map((effect) => `
+            <article class="record">
+              <p class="record-title">${escapeHtml(effect.subject)}</p>
+              <p class="record-body">${escapeHtml(effect.description)}</p>
+            </article>
+          `).join("") || emptyState("Brak cofniętych lub wygasłych zakresów w danych demo.")}
+        </div>
+      </section>
+    `)}
   `;
 }
 
@@ -2867,9 +3918,40 @@ function bindViewActions() {
 
   viewRoot.querySelectorAll("[data-set-view]").forEach((button) => {
     button.addEventListener("click", () => {
-      state.activeView = button.dataset.setView;
+      setActiveView(button.dataset.setView);
       saveState();
       render();
+    });
+  });
+
+  viewRoot.querySelectorAll("[data-journey-step]").forEach((button) => {
+    button.addEventListener("click", () => {
+      setJourneyStep(button.dataset.journeyStep);
+      saveState();
+      render();
+    });
+  });
+
+  viewRoot.querySelectorAll("[data-select-role]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.activeRole = button.dataset.selectRole;
+      state.roleSelectionConfirmed = true;
+      saveState();
+      render();
+    });
+  });
+
+  viewRoot.querySelectorAll("[data-reset-role-selection]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.roleSelectionConfirmed = false;
+      saveState();
+      render();
+    });
+  });
+
+  viewRoot.querySelectorAll("[data-start-patient]").forEach((button) => {
+    button.addEventListener("click", () => {
+      startRoleScenario(button.dataset.startRole || activeRole(), button.dataset.startPatient);
     });
   });
 
@@ -3460,7 +4542,7 @@ function generateReport() {
     type: label,
     generatedAt: new Date().toISOString(),
     version: `${byPatient(state.reports).length + 1}.0`,
-    author: "Pacjent 360",
+    author: "Pacjent360™",
     status: "DITL: do oceny lekarza",
     caseStudyId: caseStudy.id,
     sourceRefs: patientRefs
@@ -3870,7 +4952,7 @@ function printCurrentView(scope = "bieżący widok demo") {
 
 document.querySelectorAll(".nav-item").forEach((button) => {
   button.addEventListener("click", () => {
-    state.activeView = button.dataset.view;
+    setActiveView(button.dataset.view);
     saveState();
     render();
   });

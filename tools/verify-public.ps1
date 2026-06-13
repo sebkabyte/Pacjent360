@@ -25,6 +25,27 @@ function Get-RelativePath {
   return $relative.Replace("\", "/")
 }
 
+function Get-ScriptRefIndex {
+  param(
+    [string]$Html,
+    [string]$File
+  )
+  $pattern = 'src="' + [regex]::Escape($File) + '(?:\?[^"]*)?"'
+  $match = [regex]::Match($Html, $pattern)
+  if ($match.Success) {
+    return $match.Index
+  }
+  return -1
+}
+
+function Assert-ScriptLoaded {
+  param(
+    [string]$Html,
+    [string]$File
+  )
+  Assert-True ((Get-ScriptRefIndex -Html $Html -File $File) -ge 0) "demo.html should load $File"
+}
+
 $root = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $target = Join-Path $root $PackageDir
 Assert-True (Test-Path $target) "Public package does not exist: $target"
@@ -34,6 +55,10 @@ $expectedFiles = @(
   ".htaccess",
   "index.html",
   "demo.html",
+  "engineering.html",
+  "ditl.html",
+  "agents.html",
+  "investors.html",
   "disclaimer.html",
   "privacy.html",
   "maintenance.html",
@@ -110,7 +135,7 @@ $privacy = Get-Content -LiteralPath (Join-Path $target "privacy.html") -Raw
 $disclaimer = Get-Content -LiteralPath (Join-Path $target "disclaimer.html") -Raw
 $health = Get-Content -LiteralPath (Join-Path $target "health.txt") -Raw
 
-Assert-True ($index.Contains("zast") -and $index.Contains("lekarza")) "index.html should state that Pacjent 360 does not replace the doctor"
+Assert-True ($index.Contains("zast") -and $index.Contains("lekarza")) "index.html should state that Pacjent360 does not replace the doctor"
 Assert-True ($htaccess.Contains("Content-Security-Policy") -and $htaccess.Contains("frame-ancestors 'none'")) ".htaccess should configure CSP with frame-ancestors"
 Assert-True ($htaccess.Contains("X-Frame-Options") -and $htaccess.Contains("DENY")) ".htaccess should configure X-Frame-Options DENY"
 Assert-True ($htaccess.Contains("X-Content-Type-Options") -and $htaccess.Contains("nosniff")) ".htaccess should configure nosniff"
@@ -131,34 +156,46 @@ Assert-True ($demo.Contains("CeZ") -and $demo.Contains("NFZ") -and $demo.Contain
 Assert-True ($health.Contains("project=pacjent360") -and $health.Contains("contains_patient_data=false")) "health.txt should expose static deployment markers without patient data"
 Assert-True ($health.Contains("medical_device=false") -and $health.Contains("clinical_decision_support=false")) "health.txt should expose safety boundary markers"
 Assert-True ($privacy -match "localStorage") "privacy.html should disclose localStorage"
-Assert-True ($privacy.Contains("pacjent360-state-v7")) "privacy.html should disclose the current demo localStorage key"
+Assert-True ($privacy.Contains("pacjent360-state-v11")) "privacy.html should disclose the current demo localStorage key"
 Assert-True ($index.Contains('rel="canonical" href="https://pacjent360.com.pl/"')) "index.html should include canonical URL"
 Assert-True ($privacy.Contains('rel="canonical" href="https://pacjent360.com.pl/privacy.html"')) "privacy.html should include canonical URL"
 Assert-True ($disclaimer.Contains('rel="canonical" href="https://pacjent360.com.pl/disclaimer.html"')) "disclaimer.html should include canonical URL"
-Assert-True ($demo.Contains('src="patient360-contract.js"')) "demo.html should load patient360-contract.js"
-Assert-True ($demo.Contains('src="patient360-format.js"')) "demo.html should load patient360-format.js"
-Assert-True ($demo.Contains('src="patient360-map-model.js"')) "demo.html should load patient360-map-model.js"
-Assert-True ($demo.Contains('src="patient360-map-view.js"')) "demo.html should load patient360-map-view.js"
-Assert-True ($demo.Contains('src="patient360-previsit-model.js"')) "demo.html should load patient360-previsit-model.js"
-Assert-True ($demo.Contains('src="patient360-caregiver-model.js"')) "demo.html should load patient360-caregiver-model.js"
-Assert-True ($demo.Contains('src="patient360-consent-model.js"')) "demo.html should load patient360-consent-model.js"
-Assert-True ($demo.Contains('src="patient360-demo-data.js"')) "demo.html should load patient360-demo-data.js"
-Assert-True ($demo.IndexOf('src="patient360-contract.js"') -lt $demo.IndexOf('src="app.js"')) "demo.html should load patient360-contract.js before app.js"
-Assert-True ($demo.IndexOf('src="patient360-format.js"') -lt $demo.IndexOf('src="app.js"')) "demo.html should load patient360-format.js before app.js"
-Assert-True ($demo.IndexOf('src="patient360-contract.js"') -lt $demo.IndexOf('src="patient360-format.js"')) "demo.html should load patient360-contract.js before patient360-format.js"
-Assert-True ($demo.IndexOf('src="patient360-contract.js"') -lt $demo.IndexOf('src="patient360-map-model.js"')) "demo.html should load patient360-contract.js before patient360-map-model.js"
-Assert-True ($demo.IndexOf('src="patient360-format.js"') -lt $demo.IndexOf('src="patient360-previsit-model.js"')) "demo.html should load patient360-format.js before patient360-previsit-model.js"
-Assert-True ($demo.IndexOf('src="patient360-map-model.js"') -lt $demo.IndexOf('src="app.js"')) "demo.html should load patient360-map-model.js before app.js"
-Assert-True ($demo.IndexOf('src="patient360-map-model.js"') -lt $demo.IndexOf('src="patient360-map-view.js"')) "demo.html should load patient360-map-model.js before patient360-map-view.js"
-Assert-True ($demo.IndexOf('src="patient360-map-view.js"') -lt $demo.IndexOf('src="app.js"')) "demo.html should load patient360-map-view.js before app.js"
-Assert-True ($demo.IndexOf('src="patient360-map-view.js"') -lt $demo.IndexOf('src="patient360-previsit-model.js"')) "demo.html should load patient360-map-view.js before patient360-previsit-model.js"
-Assert-True ($demo.IndexOf('src="patient360-map-model.js"') -lt $demo.IndexOf('src="patient360-previsit-model.js"')) "demo.html should load patient360-map-model.js before patient360-previsit-model.js"
-Assert-True ($demo.IndexOf('src="patient360-previsit-model.js"') -lt $demo.IndexOf('src="app.js"')) "demo.html should load patient360-previsit-model.js before app.js"
-Assert-True ($demo.IndexOf('src="patient360-previsit-model.js"') -lt $demo.IndexOf('src="patient360-caregiver-model.js"')) "demo.html should load patient360-previsit-model.js before patient360-caregiver-model.js"
-Assert-True ($demo.IndexOf('src="patient360-caregiver-model.js"') -lt $demo.IndexOf('src="app.js"')) "demo.html should load patient360-caregiver-model.js before app.js"
-Assert-True ($demo.IndexOf('src="patient360-caregiver-model.js"') -lt $demo.IndexOf('src="patient360-consent-model.js"')) "demo.html should load patient360-caregiver-model.js before patient360-consent-model.js"
-Assert-True ($demo.IndexOf('src="patient360-consent-model.js"') -lt $demo.IndexOf('src="app.js"')) "demo.html should load patient360-consent-model.js before app.js"
-Assert-True ($demo.IndexOf('src="patient360-demo-data.js"') -lt $demo.IndexOf('src="app.js"')) "demo.html should load patient360-demo-data.js before app.js"
+Assert-ScriptLoaded -Html $demo -File "patient360-contract.js"
+Assert-ScriptLoaded -Html $demo -File "patient360-format.js"
+Assert-ScriptLoaded -Html $demo -File "patient360-map-model.js"
+Assert-ScriptLoaded -Html $demo -File "patient360-map-view.js"
+Assert-ScriptLoaded -Html $demo -File "patient360-previsit-model.js"
+Assert-ScriptLoaded -Html $demo -File "patient360-caregiver-model.js"
+Assert-ScriptLoaded -Html $demo -File "patient360-consent-model.js"
+Assert-ScriptLoaded -Html $demo -File "patient360-demo-data.js"
+Assert-ScriptLoaded -Html $demo -File "app.js"
+$scriptIndex = @{
+  contract = Get-ScriptRefIndex -Html $demo -File "patient360-contract.js"
+  format = Get-ScriptRefIndex -Html $demo -File "patient360-format.js"
+  mapModel = Get-ScriptRefIndex -Html $demo -File "patient360-map-model.js"
+  mapView = Get-ScriptRefIndex -Html $demo -File "patient360-map-view.js"
+  previsit = Get-ScriptRefIndex -Html $demo -File "patient360-previsit-model.js"
+  caregiver = Get-ScriptRefIndex -Html $demo -File "patient360-caregiver-model.js"
+  consent = Get-ScriptRefIndex -Html $demo -File "patient360-consent-model.js"
+  demoData = Get-ScriptRefIndex -Html $demo -File "patient360-demo-data.js"
+  app = Get-ScriptRefIndex -Html $demo -File "app.js"
+}
+Assert-True ($scriptIndex.contract -lt $scriptIndex.app) "demo.html should load patient360-contract.js before app.js"
+Assert-True ($scriptIndex.format -lt $scriptIndex.app) "demo.html should load patient360-format.js before app.js"
+Assert-True ($scriptIndex.contract -lt $scriptIndex.format) "demo.html should load patient360-contract.js before patient360-format.js"
+Assert-True ($scriptIndex.contract -lt $scriptIndex.mapModel) "demo.html should load patient360-contract.js before patient360-map-model.js"
+Assert-True ($scriptIndex.format -lt $scriptIndex.previsit) "demo.html should load patient360-format.js before patient360-previsit-model.js"
+Assert-True ($scriptIndex.mapModel -lt $scriptIndex.app) "demo.html should load patient360-map-model.js before app.js"
+Assert-True ($scriptIndex.mapModel -lt $scriptIndex.mapView) "demo.html should load patient360-map-model.js before patient360-map-view.js"
+Assert-True ($scriptIndex.mapView -lt $scriptIndex.app) "demo.html should load patient360-map-view.js before app.js"
+Assert-True ($scriptIndex.mapView -lt $scriptIndex.previsit) "demo.html should load patient360-map-view.js before patient360-previsit-model.js"
+Assert-True ($scriptIndex.mapModel -lt $scriptIndex.previsit) "demo.html should load patient360-map-model.js before patient360-previsit-model.js"
+Assert-True ($scriptIndex.previsit -lt $scriptIndex.app) "demo.html should load patient360-previsit-model.js before app.js"
+Assert-True ($scriptIndex.previsit -lt $scriptIndex.caregiver) "demo.html should load patient360-previsit-model.js before patient360-caregiver-model.js"
+Assert-True ($scriptIndex.caregiver -lt $scriptIndex.app) "demo.html should load patient360-caregiver-model.js before app.js"
+Assert-True ($scriptIndex.caregiver -lt $scriptIndex.consent) "demo.html should load patient360-caregiver-model.js before patient360-consent-model.js"
+Assert-True ($scriptIndex.consent -lt $scriptIndex.app) "demo.html should load patient360-consent-model.js before app.js"
+Assert-True ($scriptIndex.demoData -lt $scriptIndex.app) "demo.html should load patient360-demo-data.js before app.js"
 Assert-True (-not ($index.Contains("frame-ancestors") -or $demo.Contains("frame-ancestors") -or $privacy.Contains("frame-ancestors") -or $disclaimer.Contains("frame-ancestors"))) "frame-ancestors must be configured as an HTTP header, not as a meta CSP directive"
 
 $lucidePinned = "https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"
