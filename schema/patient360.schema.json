@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://pacjent360.com.pl/schema/patient360.schema.json",
-  "title": "Pacjent 360 Data Contract v0.1",
+  "title": "Pacjent360™ Data Contract v0.1",
   "type": "object",
   "additionalProperties": true,
   "required": [

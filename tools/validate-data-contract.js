@@ -29,6 +29,9 @@ const PATIENT_SCOPED_COLLECTION_KEYS = [
   "decisionContexts",
   "documents",
   "interviews",
+  "roleNarratives",
+  "roleGoals",
+  "roleVisibleSections",
   "timelineEvents",
   "timelineEpisodes",
   "timelineRelations",
@@ -42,6 +45,7 @@ const PATIENT_SCOPED_COLLECTION_KEYS = [
   "visitChecklists",
   "reports",
   "consents",
+  "careContracts",
   "audit"
 ];
 

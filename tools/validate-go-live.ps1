@@ -60,6 +60,7 @@ $nodeCheckFiles = @(
   "tools/domain-diagnostics.js",
   "tools/release-readiness.js",
   "tools/smoke-browser.js",
+  "tools/verify-click-routes.js",
   "tools/verify-reactivity.js"
 )
 
@@ -136,6 +137,7 @@ if ($SkipBrowser) {
   Write-Host "SKIP: Browser smoke and reactivity public package (-SkipBrowser)"
 } else {
   Invoke-External "Browser smoke public package" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/smoke-browser.ps1"))
+  Invoke-External "Click route validation" "node" @("tools/verify-click-routes.js", "--packageDir", "dist/public")
   Invoke-External "Demo reactivity validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/verify-reactivity.ps1"), "-PackageDir", "dist/public")
 }
 

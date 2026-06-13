@@ -23,8 +23,7 @@ const VIEWS = [
   "observations",
   "risks",
   "reports",
-  "consent",
-  "audit"
+  "consent"
 ];
 
 const PATIENTS = [
@@ -37,6 +36,9 @@ const PATIENT_SCOPED_EXPORT_KEYS = [
   "decisionContexts",
   "documents",
   "interviews",
+  "roleNarratives",
+  "roleGoals",
+  "roleVisibleSections",
   "timelineEvents",
   "timelineEpisodes",
   "timelineRelations",
@@ -50,6 +52,7 @@ const PATIENT_SCOPED_EXPORT_KEYS = [
   "visitChecklists",
   "reports",
   "consents",
+  "careContracts",
   "audit"
 ];
 
@@ -65,14 +68,14 @@ const VIEW_SENTINELS = {
     p3: ["danych dziecka", "infekcj"]
   },
   caregiverPortal: {
-    p1: ["poradnia kwalifikacyjna", "osoba wspierajaca"],
+    p1: ["madeline", "corka"],
     p2: ["brak aktywnego zakresu"],
-    p3: ["rodzic", "drugi rodzic"]
+    p3: ["marta", "pawel"]
   },
   interview: {
     p1: ["procedur", "opiekun"],
     p2: ["kontrola kardiologiczn", "atorwastatyn"],
-    p3: ["kontrola dziecka", "rodzic"]
+    p3: ["kontrola mai", "mama"]
   },
   documents: {
     p1: ["panel laboratoryjny", "ankieta kwalifikacyjna"],
@@ -87,7 +90,7 @@ const VIEW_SENTINELS = {
   medications: {
     p1: ["lek wymagajacy", "preparat magnezu"],
     p2: ["atorwastatyn", "przyjmowany"],
-    p3: ["lek a po infekcji", "otc dla dziecka"]
+    p3: ["lek a po infekcji", "lek dorazny otc"]
   },
   observations: {
     p1: ["glukoza"],
@@ -105,21 +108,21 @@ const VIEW_SENTINELS = {
     p3: ["infekcj", "dziecko"]
   },
   consent: {
-    p1: ["poradnia kwalifikacyjna", "osoba wspierajaca"],
+    p1: ["madeline", "tomasz"],
     p2: ["brak zgod", "brak aktywnego"],
-    p3: ["rodzic", "drugi rodzic"]
+    p3: ["marta", "pawel"]
   },
   audit: {
     p1: ["zrodla d1-d3", "wywiad i1"],
     p2: ["brak wpisow audytu"],
-    p3: ["rodzic a", "rep3"]
+    p3: ["marta", "rep3"]
   }
 };
 
 const LEAK_SENTINELS = {
   p1: ["lek wymagajacy", "panel laboratoryjny", "ankieta kwalifikacyjna"],
   p2: ["atorwastatyn", "nt-probnp", "echo serca kontrolne"],
-  p3: ["lek a po infekcji", "potwierdzenie kontroli pediatrycznej", "rodzic a"]
+  p3: ["lek a po infekcji", "potwierdzenie kontroli pediatrycznej", "marta"]
 };
 
 const ALLOWED_DIALOG_TYPES = new Set([
@@ -390,6 +393,10 @@ async function capture(client, name) {
 
 async function setPatientAndView(client, patientId, viewId) {
   await client.evaluate(`(() => {
+    const roleByView = { core: 'doctor', patientPortal: 'patient', caregiverPortal: 'caregiver' };
+    if (typeof state === 'object') {
+      state.activeRole = roleByView[${JSON.stringify(viewId)}] || 'doctor';
+    }
     const select = document.querySelector('#patientSelect');
     if (select && select.value !== ${JSON.stringify(patientId)}) {
       select.value = ${JSON.stringify(patientId)};
@@ -614,7 +621,7 @@ async function checkTimelineControls(client) {
   })()`);
   await pause(90);
   const selected = await client.evaluate(`(() => {
-    const current = JSON.parse(localStorage.getItem('pacjent360-state-v7') || '{}').selectedTimelineEventId || '';
+    const current = JSON.parse(localStorage.getItem('pacjent360-state-v11') || '{}').selectedTimelineEventId || '';
     const items = [...document.querySelectorAll('[data-select-timeline-event]')];
     const item = current
       ? items.find((candidate) => candidate.dataset.selectTimelineEvent !== current)
@@ -636,13 +643,13 @@ async function checkTimelineControls(client) {
 async function checkDitlStatus(client) {
   await setPatientAndView(client, "p1", "risks");
   const result = await client.evaluate(`(() => {
-    const beforeAudit = JSON.parse(localStorage.getItem('pacjent360-state-v7') || '{}').audit?.length || 0;
+    const beforeAudit = JSON.parse(localStorage.getItem('pacjent360-state-v11') || '{}').audit?.length || 0;
     const selected = document.querySelector('[data-ditl-status].selected');
     const target = [...document.querySelectorAll('[data-ditl-status]')].find((button) => button !== selected);
     const beforeText = document.querySelector('#viewRoot')?.textContent || '';
     if (target) target.click();
     const afterText = document.querySelector('#viewRoot')?.textContent || '';
-    const afterAudit = JSON.parse(localStorage.getItem('pacjent360-state-v7') || '{}').audit?.length || 0;
+    const afterAudit = JSON.parse(localStorage.getItem('pacjent360-state-v11') || '{}').audit?.length || 0;
     return { found: Boolean(target), status: target?.dataset.ditlStatus || null, changed: beforeText !== afterText, beforeAudit, afterAudit };
   })()`);
   await pause(90);
@@ -699,7 +706,7 @@ async function checkSearchResetExport(client) {
   })()`);
   await pause(90);
   counters.controlChecks += 1;
-  if (!reset.found || reset.patientId !== "p1" || reset.search !== "" || reset.activeView !== "core") {
+  if (!reset.found || reset.patientId !== "p1" || reset.search !== "" || reset.activeView !== "roleStart") {
     reportFailure("R1-5", "Reset does not restore default render state", reset);
   }
 }

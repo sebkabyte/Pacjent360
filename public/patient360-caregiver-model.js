@@ -230,7 +230,7 @@
     const patient = patients.find((item) => item.id === patientId) || patients[0] || null;
     const scopes = byPatient(state.consents, patientId)
       .map(consentToScope)
-      .filter((scope) => scope.role !== "pacjent");
+      .filter((scope) => scope.role !== "pacjent" && !String(scope.caregiverId || "").startsWith("facility-"));
     const canView = activeAreaSet(scopes);
     const counts = visibleCounts(state, patientId, canView);
     const tasks = [
