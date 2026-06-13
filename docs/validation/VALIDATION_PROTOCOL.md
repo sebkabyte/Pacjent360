@@ -1,6 +1,6 @@
 # Protokół walidacji raportu kontekstowego
 
-Cel: sprawdzić, czy raport Pacjent 360 pomaga lekarzowi szybciej zobaczyć, co trzeba wyjaśnić, a pacjentowi lub opiekunowi lepiej przygotować się do wizyty.
+Cel: sprawdzić, czy raport Pacjent360™ pomaga lekarzowi szybciej zobaczyć, co trzeba wyjaśnić, a pacjentowi lub opiekunowi lepiej przygotować się do wizyty.
 
 ## Uczestnicy
 
@@ -44,6 +44,8 @@ Cel: sprawdzić, czy raport Pacjent 360 pomaga lekarzowi szybciej zobaczyć, co 
 
 - Formularz sesji: `VALIDATION_FEEDBACK_FORM.md`.
 - Tabela wynikow bez danych osobowych: `VALIDATION_RESULTS_TEMPLATE.csv`.
+- Test klikalnego prototypu, pierwszego klikniecia i sciezek: `CLICKABLE_PROTOTYPE_TEST.md`.
+- Tabela wynikow dla testu klikalnosci: `CLICKABLE_PROTOTYPE_RESULTS_TEMPLATE.csv`.
 - Jeden wiersz wynikow na jedna sesje walidacyjna.
 - Osobny wpis safety concern, jesli reviewer zglasza diagnoze, triage, zalecenie albo ryzyko uzycia realnych danych.
 

@@ -1,4 +1,4 @@
-# Pacjent 360: formularz walidacji MVP
+# Pacjent360™: formularz walidacji MVP
 
 Status: szablon do rozmow z reviewerami. Uzywaj tylko na fikcyjnych case studies. Nie zapisuj realnych danych pacjentow.
 
@@ -8,7 +8,7 @@ Cel sesji: sprawdzic, czy raport kontekstowy pomaga szybciej zobaczyc, co trzeba
 
 - Nie wprowadzamy realnych danych medycznych ani danych osobowych.
 - Reviewer ocenia format, workflow i jasnosc, nie realny przypadek kliniczny.
-- Pacjent 360 nie diagnozuje, nie ustala pilnosci, nie zaleca terapii i nie zastepuje lekarza.
+- Pacjent360™ nie diagnozuje, nie ustala pilnosci, nie zaleca terapii i nie zastepuje lekarza.
 - Jesli reviewer mowi "to wyglada jak diagnoza / triage / zalecenie", zapisujemy to jako safety concern.
 
 ## Metadane sesji
