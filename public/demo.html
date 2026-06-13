@@ -12,26 +12,26 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <title>Pacjent 360 | Demo kontekstu wizyty</title>
+    <title>Pacjent360™ | Demo kontekstu wizyty</title>
     <link rel="icon" href="assets/hero-clinical-context.png" />
-    <link rel="stylesheet" href="brand/tokens.css" />
-    <link rel="stylesheet" href="brand/components.css" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="brand/tokens.css?v=20260613-role-data" />
+    <link rel="stylesheet" href="brand/components.css?v=20260613-role-data" />
+    <link rel="stylesheet" href="styles.css?v=20260613-role-data" />
     <script
       src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"
       integrity="sha384-uTYyvsSSUZeaPhb5RbKlQa0zY/WpX/QHfvg2mczXyBQOpkWPEDy9lczyp+w7SKXu"
       crossorigin="anonymous"
       defer
     ></script>
-    <script src="patient360-contract.js" defer></script>
-    <script src="patient360-format.js" defer></script>
-    <script src="patient360-map-model.js" defer></script>
-    <script src="patient360-map-view.js" defer></script>
-    <script src="patient360-previsit-model.js" defer></script>
-    <script src="patient360-caregiver-model.js" defer></script>
-    <script src="patient360-consent-model.js" defer></script>
-    <script src="patient360-demo-data.js" defer></script>
-    <script src="app.js" defer></script>
+    <script src="patient360-contract.js?v=20260613-role-data" defer></script>
+    <script src="patient360-format.js?v=20260613-role-data" defer></script>
+    <script src="patient360-map-model.js?v=20260613-role-data" defer></script>
+    <script src="patient360-map-view.js?v=20260613-role-data" defer></script>
+    <script src="patient360-previsit-model.js?v=20260613-role-data" defer></script>
+    <script src="patient360-caregiver-model.js?v=20260613-role-data" defer></script>
+    <script src="patient360-consent-model.js?v=20260613-role-data" defer></script>
+    <script src="patient360-demo-data.js?v=20260613-role-data" defer></script>
+    <script src="app.js?v=20260613-role-data" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#viewRoot">Przejdź do treści demo</a>
@@ -41,28 +41,33 @@
     <div class="app-shell">
       <aside class="sidebar" aria-label="Nawigacja modułów">
         <div class="brand">
-          <div class="brand-mark" aria-hidden="true">360</div>
+          <div class="brand-mark" aria-hidden="true">360°</div>
           <div>
-            <strong>Pacjent 360</strong>
+            <strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong>
             <span>Kontekst wizyty i pytań</span>
           </div>
         </div>
 
         <nav class="nav-list" aria-label="Widoki demo">
+          <div class="nav-section-label">Start</div>
+          <button class="nav-item active" data-view="roleStart" title="Wybierz perspektywę i scenariusz">
+            <i data-lucide="play-circle"></i>
+            <span>Start demo</span>
+          </button>
           <div class="nav-section-label">Kokpity</div>
-          <button class="nav-item cockpit-nav active" data-view="core" title="Kokpit lekarza">
+          <button class="nav-item cockpit-nav" data-view="core" title="Kokpit Lekarz360">
             <i data-lucide="layout-dashboard"></i>
-            <span>Lekarz</span>
+            <span>Lekarz360</span>
           </button>
-          <button class="nav-item cockpit-nav" data-view="patientPortal" title="Kokpit pacjenta">
+          <button class="nav-item cockpit-nav" data-view="patientPortal" title="Kokpit Pacjent360">
             <i data-lucide="user-round"></i>
-            <span>Pacjent</span>
+            <span>Pacjent360</span>
           </button>
-          <button class="nav-item cockpit-nav" data-view="caregiverPortal" title="Kokpit opiekuna">
+          <button class="nav-item cockpit-nav" data-view="caregiverPortal" title="Kokpit Opiekun360">
             <i data-lucide="users-round"></i>
-            <span>Opiekun</span>
+            <span>Opiekun360</span>
           </button>
-          <div class="nav-section-label">Pełne dane</div>
+          <div class="nav-section-label" data-nav-section="library">Dane i źródła</div>
           <button class="nav-item" data-view="interview" title="Wywiad pacjenta i opiekuna">
             <i data-lucide="messages-square"></i>
             <span>Wywiad</span>
@@ -71,9 +76,9 @@
             <i data-lucide="files"></i>
             <span>Dokumenty</span>
           </button>
-          <button class="nav-item" data-view="timeline" title="Mapa Pacjenta 360">
+          <button class="nav-item" data-view="timeline" title="Oś historii pacjenta">
             <i data-lucide="git-branch"></i>
-            <span>Mapa</span>
+            <span>Oś historii</span>
           </button>
           <button class="nav-item" data-view="medications" title="Leki i alergie">
             <i data-lucide="pill"></i>
@@ -83,19 +88,19 @@
             <i data-lucide="activity"></i>
             <span>Wyniki</span>
           </button>
-          <button class="nav-item" data-view="risks" title="Sygnały i pytania do decyzji lekarza (DITL)">
+          <button class="nav-item" data-view="risks" title="Pytania i luki do omówienia z lekarzem">
             <i data-lucide="flag"></i>
-            <span>Sygnały</span>
+            <span>Pytania</span>
           </button>
-          <button class="nav-item" data-view="reports" title="Raport kontekstowy">
+          <button class="nav-item" data-view="reports" title="Podsumowanie kontekstu">
             <i data-lucide="clipboard-list"></i>
-            <span>Raporty</span>
+            <span>Podsumowanie</span>
           </button>
           <button class="nav-item" data-view="consent" title="Zgody i dostęp">
             <i data-lucide="shield-check"></i>
             <span>Zgody</span>
           </button>
-          <button class="nav-item" data-view="audit" title="Audyt">
+          <button class="nav-item debug-only" data-view="audit" title="Audyt techniczny">
             <i data-lucide="scroll-text"></i>
             <span>Audyt</span>
           </button>
@@ -115,9 +120,11 @@
       <main class="workspace">
         <header class="topbar">
           <div class="patient-switcher">
-            <label for="patientSelect">Pacjent</label>
+            <label for="patientSelect">Scenariusz</label>
             <select id="patientSelect"></select>
           </div>
+
+          <div class="role-switcher" id="roleSwitcher" aria-label="Wybierz perspektywę w demo"></div>
 
           <div class="global-search">
             <i data-lucide="search"></i>

@@ -258,15 +258,41 @@ async function main() {
       hasConsentModel: Boolean(window.Patient360ConsentModel),
       activeView: document.querySelector('nav button.active')?.dataset.view || null,
       register: document.body.dataset.register || '',
+      hasPerspectiveDemo: document.body.textContent.includes('Jedna historia, trzy perspektywy') && document.querySelectorAll('[data-select-role]').length === 3,
+      scenarioChoicesVisible: document.querySelectorAll('[data-start-patient]').length,
+      hasPerspectiveOnlyPage: document.body.textContent.includes('Z jakiej perspektywy oglądasz historię?') && !document.body.textContent.includes('Pacjenci demonstracyjni'),
       watermark: document.body.textContent.includes('DANE FIKCYJNE'),
       independence: document.body.textContent.includes('CeZ') && document.body.textContent.includes('NFZ') && document.body.textContent.includes('IKP')
     }))()`);
-    assert(initial.title.includes("Pacjent 360"), "Demo title should contain Pacjent 360");
+    assert(initial.title.includes("Pacjent360"), "Demo title should contain Pacjent360");
     assert(initial.hasContract && initial.hasFormat && initial.hasMapModel && initial.hasDemoData && initial.hasPreVisitModel && initial.hasCaregiverModel && initial.hasConsentModel, "Browser globals should expose contract, format, map model, demo data, pre-visit model, caregiver model and consent model");
-    assert(initial.activeView === "core", `Expected core view, got ${initial.activeView}`);
-    assert(initial.register === "doctor", `Expected doctor register on core view, got ${initial.register}`);
+    assert(initial.activeView === "roleStart", `Expected roleStart view, got ${initial.activeView}`);
+    assert(initial.register === "app", `Expected neutral app register on role start, got ${initial.register}`);
+    assert(initial.hasPerspectiveDemo && initial.hasPerspectiveOnlyPage && initial.scenarioChoicesVisible === 0, "Demo should start with a perspective-only page and no patient choices");
     assert(initial.watermark, "Demo should show fictional data marker");
     assert(initial.independence, "Demo should show CeZ/NFZ/IKP independence");
+
+    const roleStart = await client.evaluate(`(() => {
+      const doctorRole = document.querySelector('[data-select-role="doctor"]');
+      if (doctorRole) doctorRole.click();
+      const scenarioCount = document.querySelectorAll('[data-start-patient]').length;
+      const roleChoiceCount = document.querySelectorAll('[data-select-role]').length;
+      const hasSubpage = document.body.textContent.includes('Krok 2: wybierz pacjenta') && document.body.textContent.includes('Zmień perspektywę');
+      const doctorJan = document.querySelector('[data-start-role="doctor"][data-start-patient="p1"]');
+      if (doctorJan) doctorJan.click();
+      return {
+        roleFound: Boolean(doctorRole),
+        scenarioCount,
+        roleChoiceCount,
+        hasSubpage,
+        found: Boolean(doctorJan),
+        activeView: document.querySelector('nav button.active')?.dataset.view || null,
+        role: JSON.parse(localStorage.getItem('pacjent360-state-v11') || '{}').activeRole || '',
+        patient: document.querySelector('#patientSelect')?.value || '',
+        hasDoctorBrief: (document.querySelector('#viewRoot')?.textContent || '').toLowerCase().includes('kontekst w 90 sekund') || false
+      };
+    })()`);
+    assert(roleStart.roleFound && roleStart.hasSubpage && roleStart.scenarioCount === 3 && roleStart.roleChoiceCount === 0 && roleStart.found && roleStart.activeView === "core" && roleStart.role === "doctor" && roleStart.patient === "p1" && roleStart.hasDoctorBrief, `Guided perspective demo should show a step-2 subpage before entering doctor cockpit for Jan: ${JSON.stringify(roleStart)}`);
 
     const core = await client.evaluate(`(() => ({
       activeView: document.querySelector('nav button.active')?.dataset.view || null,
@@ -275,7 +301,12 @@ async function main() {
       hasEmbeddedMap: Boolean(document.querySelector('.patient-map360.embedded')),
       hasMedReconciliation: Boolean(document.querySelector('.med-reconciliation')),
       register: document.body.dataset.register || '',
-      hasLedgerSourceChip: Boolean(document.querySelector('.source-chip.p360-source-chip'))
+      hasLedgerSourceChip: Boolean(document.querySelector('.source-chip.p360-source-chip')),
+      journeyStepCount: document.querySelectorAll('.demo-journey-step').length,
+      activeJourneyStep: document.querySelector('.demo-journey-step.active strong')?.textContent.trim() || '',
+      hasJourneyBack: [...document.querySelectorAll('.demo-journey-actions button')].some((button) => button.textContent.includes('Wróć')),
+      hasJourneyNext: [...document.querySelectorAll('.demo-journey-actions button')].some((button) => button.textContent.includes('Dalej: Oś historii')),
+      hasMapAction: [...document.querySelectorAll('.demo-journey-actions button')].some((button) => button.textContent.includes('Zobacz zdarzenia'))
     }))()`);
     assert(core.activeView === "core", `Expected core view for 90-second dashboard, got ${core.activeView}`);
     assert(core.scrollHeight <= 3000, `Core dashboard should stay within 90-second height budget, got ${core.scrollHeight}px`);
@@ -283,6 +314,113 @@ async function main() {
     assert(core.hasMedReconciliation, "Core dashboard should keep medication reconciliation visible");
     assert(core.register === "doctor", `Core dashboard should use doctor visual register, got ${core.register}`);
     assert(core.hasLedgerSourceChip, "Core dashboard should render Trust OS ledger source chips");
+    assert(core.journeyStepCount === 6 && core.activeJourneyStep === "Kokpit" && core.hasJourneyBack && core.hasJourneyNext && core.hasMapAction, `Core dashboard should expose guided demo journey: ${JSON.stringify(core)}`);
+
+    const journey = await client.evaluate(`(() => {
+      const stateFromStorage = () => JSON.parse(localStorage.getItem('pacjent360-state-v11') || '{}');
+      const click = (selector) => {
+        const node = document.querySelector(selector);
+        if (!node) return false;
+        node.click();
+        return true;
+      };
+      const nextMapClicked = click('.demo-journey-actions [data-journey-step="map"]');
+      const afterMap = {
+        activeView: stateFromStorage().activeView || '',
+        activeStep: document.querySelector('.demo-journey-step.active strong')?.textContent.trim() || '',
+        hasTimeline: Boolean(document.querySelector('.temporal-map'))
+      };
+      const nextDataClicked = click('.demo-journey-actions [data-journey-step="data"]');
+      const afterData = {
+        activeView: stateFromStorage().activeView || '',
+        activeStep: document.querySelector('.demo-journey-step.active strong')?.textContent.trim() || '',
+        hasDocuments: (document.querySelector('#viewRoot')?.textContent || '').includes('Rejestr dokumentów')
+      };
+      const scenarioClicked = click('.demo-journey-step[data-journey-step="scenario"]');
+      const afterScenario = {
+        activeView: stateFromStorage().activeView || '',
+        roleSelectionConfirmed: Boolean(stateFromStorage().roleSelectionConfirmed),
+        hasScenarioCards: document.querySelectorAll('[data-start-patient]').length === 3
+      };
+      const backToCoreClicked = click('[data-start-role="doctor"][data-start-patient="p1"]');
+      const afterReturn = {
+        activeView: stateFromStorage().activeView || '',
+        role: stateFromStorage().activeRole || '',
+        patient: stateFromStorage().activePatientId || '',
+        activeStep: document.querySelector('.demo-journey-step.active strong')?.textContent.trim() || ''
+      };
+      return { nextMapClicked, afterMap, nextDataClicked, afterData, scenarioClicked, afterScenario, backToCoreClicked, afterReturn };
+    })()`);
+    assert(journey.nextMapClicked && journey.afterMap.activeView === "timeline" && journey.afterMap.activeStep === "Oś historii" && journey.afterMap.hasTimeline, `Journey next should open story axis: ${JSON.stringify(journey.afterMap)}`);
+    assert(journey.nextDataClicked && journey.afterData.activeView === "documents" && journey.afterData.activeStep === "Dane / źródła" && journey.afterData.hasDocuments, `Journey data step should open sources/documents: ${JSON.stringify(journey.afterData)}`);
+    assert(journey.scenarioClicked && journey.afterScenario.activeView === "roleStart" && journey.afterScenario.roleSelectionConfirmed && journey.afterScenario.hasScenarioCards, `Journey scenario step should return to patient scenario subpage: ${JSON.stringify(journey.afterScenario)}`);
+    assert(journey.backToCoreClicked && journey.afterReturn.activeView === "core" && journey.afterReturn.role === "doctor" && journey.afterReturn.patient === "p1" && journey.afterReturn.activeStep === "Kokpit", `Journey return should restore doctor cockpit for smoke checks: ${JSON.stringify(journey.afterReturn)}`);
+
+    const cockpitSidebar = await client.evaluate(`(() => {
+      const setPatient = (patientId) => {
+        const select = document.querySelector('#patientSelect');
+        if (!select) return;
+        select.value = patientId;
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+      };
+      const stateFromStorage = () => JSON.parse(localStorage.getItem('pacjent360-state-v11') || '{}');
+      const snapshot = () => ({
+        activeView: document.querySelector('nav button.active')?.dataset.view || null,
+        activeNav: document.querySelector('nav button.active span')?.textContent.trim() || '',
+        role: stateFromStorage().activeRole || '',
+        patient: document.querySelector('#patientSelect')?.value || '',
+        h1: document.querySelector('#viewRoot h1')?.textContent.trim() || '',
+        text: (document.querySelector('#viewRoot')?.textContent || '').replace(/\\s+/g, ' ').trim().slice(0, 700),
+        search: document.querySelector('#searchInput')?.value || '',
+        libraryHeading: document.querySelector('[data-nav-section="library"]')?.textContent.trim() || '',
+        libraryLabels: [...document.querySelectorAll('nav .nav-item:not(.cockpit-nav):not([data-view="roleStart"])')]
+          .filter((button) => !button.hidden && button.getAttribute('aria-hidden') !== 'true')
+          .map((button) => button.querySelector('span')?.textContent.trim() || '')
+      });
+      setPatient('p1');
+      document.querySelector('nav button[data-view="core"]')?.click();
+      const doctor = snapshot();
+      const input = document.querySelector('#searchInput');
+      if (input) {
+        input.value = 'ator';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+      document.querySelector('nav button[data-view="patientPortal"]')?.click();
+      const patient = snapshot();
+      document.querySelector('nav button[data-view="caregiverPortal"]')?.click();
+      const caregiver = snapshot();
+      document.querySelector('nav button[data-view="core"]')?.click();
+      const finalDoctor = snapshot();
+      return { doctor, patient, caregiver, finalDoctor };
+    })()`);
+    assert(cockpitSidebar.doctor.role === "doctor" && cockpitSidebar.doctor.activeView === "core" && cockpitSidebar.doctor.h1.includes("Lekarz360"), `Sidebar Lekarz360 should open doctor cockpit: ${JSON.stringify(cockpitSidebar.doctor)}`);
+    assert(cockpitSidebar.patient.role === "patient" && cockpitSidebar.patient.activeView === "patientPortal" && cockpitSidebar.patient.patient === "p1" && cockpitSidebar.patient.h1.includes("Pacjent360"), `Sidebar Pacjent360 should switch role and preserve patient: ${JSON.stringify(cockpitSidebar.patient)}`);
+    assert(cockpitSidebar.patient.search === "", "Switching cockpit should clear active search so the next cockpit is not accidentally filtered");
+    assert(cockpitSidebar.caregiver.role === "caregiver" && cockpitSidebar.caregiver.activeView === "caregiverPortal" && cockpitSidebar.caregiver.patient === "p1" && cockpitSidebar.caregiver.h1.includes("Opiekun360"), `Sidebar Opiekun360 should switch role and preserve patient: ${JSON.stringify(cockpitSidebar.caregiver)}`);
+    assert(cockpitSidebar.doctor.text !== cockpitSidebar.patient.text && cockpitSidebar.patient.text !== cockpitSidebar.caregiver.text, "Sidebar cockpit switches should visibly change cockpit content");
+    assert(cockpitSidebar.finalDoctor.role === "doctor" && cockpitSidebar.finalDoctor.activeView === "core", "Sidebar should switch back to Lekarz360 for later smoke checks");
+    assert(cockpitSidebar.doctor.libraryHeading === "Dane i źródła" && cockpitSidebar.doctor.libraryLabels.includes("Pytania") && cockpitSidebar.doctor.libraryLabels.includes("Podsumowanie"), `Doctor sidebar library should expose context items with canonical labels: ${JSON.stringify(cockpitSidebar.doctor.libraryLabels)}`);
+    assert(cockpitSidebar.patient.libraryHeading === "Dane i źródła" && cockpitSidebar.patient.libraryLabels.includes("Dokumenty") && !cockpitSidebar.patient.libraryLabels.includes("Pytania") && !cockpitSidebar.patient.libraryLabels.includes("Podsumowanie"), `Patient sidebar library should hide doctor-only items but keep canonical labels: ${JSON.stringify(cockpitSidebar.patient.libraryLabels)}`);
+    assert(cockpitSidebar.caregiver.libraryHeading === "Dane i źródła" && cockpitSidebar.caregiver.libraryLabels.includes("Zgody") && !cockpitSidebar.caregiver.libraryLabels.includes("Pytania") && !cockpitSidebar.caregiver.libraryLabels.includes("Podsumowanie"), `Caregiver sidebar library should be scoped to consent with canonical labels: ${JSON.stringify(cockpitSidebar.caregiver.libraryLabels)}`);
+
+    const caregiverNoConsentSidebar = await client.evaluate(`(() => {
+      const setPatient = (patientId) => {
+        const select = document.querySelector('#patientSelect');
+        if (!select) return;
+        select.value = patientId;
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+      };
+      setPatient('p2');
+      document.querySelector('nav button[data-view="caregiverPortal"]')?.click();
+      const labels = [...document.querySelectorAll('nav .nav-item:not(.cockpit-nav):not([data-view="roleStart"])')]
+        .filter((button) => !button.hidden && button.getAttribute('aria-hidden') !== 'true')
+        .map((button) => button.querySelector('span')?.textContent.trim() || '');
+      const heading = document.querySelector('[data-nav-section="library"]')?.textContent.trim() || '';
+      setPatient('p1');
+      document.querySelector('nav button[data-view="core"]')?.click();
+      return { heading, labels };
+    })()`);
+    assert(caregiverNoConsentSidebar.heading === "Dane i źródła" && caregiverNoConsentSidebar.labels.length === 1 && caregiverNoConsentSidebar.labels[0] === "Zgody", `Caregiver without active consent should only see consent scope in sidebar: ${JSON.stringify(caregiverNoConsentSidebar)}`);
 
     const patientSwitch = await client.evaluate(`(() => {
       const setPatient = (patientId) => {
@@ -290,25 +428,27 @@ async function main() {
         if (!select) return '';
         select.value = patientId;
         select.dispatchEvent(new Event('change', { bubbles: true }));
-        document.querySelector('nav button[data-view="core"]')?.click();
         return document.querySelector('#viewRoot')?.textContent || '';
       };
+      document.querySelector('[data-role-switch="doctor"]')?.click();
       const p2Core = setPatient('p2');
-      document.querySelector('nav button[data-view="patientPortal"]')?.click();
+      document.querySelector('[data-role-switch="patient"]')?.click();
       const p2Patient = document.querySelector('#viewRoot')?.textContent || '';
+      document.querySelector('[data-role-switch="doctor"]')?.click();
       const p3Core = setPatient('p3');
       document.querySelector('nav button[data-view="timeline"]')?.click();
       const p3Timeline = document.querySelector('#viewRoot')?.textContent || '';
       setPatient('p1');
+      document.querySelector('[data-role-switch="doctor"]')?.click();
       return { p2Core, p2Patient, p3Core, p3Timeline };
     })()`);
     assert(patientSwitch.p2Core.includes("Atorwastatyna") && !patientSwitch.p2Core.includes("Lek wymagajÄ…cy decyzji przed procedurÄ…"), "Switching to patient p2 should refresh doctor cockpit content");
-    assert(patientSwitch.p2Patient.includes("Demo B") && patientSwitch.p2Patient.includes("kardiologiczna"), "Switching to patient p2 should refresh patient portal content");
-    assert(patientSwitch.p3Core.includes("Demo C") && patientSwitch.p3Core.includes("infekcji"), "Switching to patient p3 should refresh doctor cockpit content");
+    assert(patientSwitch.p2Patient.includes("Andrzej K.") && patientSwitch.p2Patient.includes("kardiologiczna"), "Switching to patient p2 should refresh patient portal content");
+    assert(patientSwitch.p3Core.includes("Maja N.") && patientSwitch.p3Core.includes("infekcji"), "Switching to patient p3 should refresh doctor cockpit content");
     assert(patientSwitch.p3Timeline.includes("Porada pediatryczna") && !patientSwitch.p3Timeline.includes("Atorwastatyna"), "Switching to patient p3 should refresh timeline content");
 
     const patient = await client.evaluate(`(() => {
-      document.querySelector('nav button[data-view="patientPortal"]').click();
+      document.querySelector('[data-role-switch="patient"]')?.click();
       const steps = [...document.querySelectorAll('.previsit-step')].map((step) => step.textContent.trim().replace(/\\s+/g, ' '));
       return {
         activeView: document.querySelector('nav button.active')?.dataset.view || null,
@@ -319,7 +459,7 @@ async function main() {
         hasEmbeddedMap: Boolean(document.querySelector('.patient-map360.embedded')),
         hasSafetyCopy: document.body.textContent.includes('Nie ocenia pilności') && document.body.textContent.includes('nie diagnozuje'),
         hasDocumentsStep: steps.some((text) => text.includes('Dokumenty')),
-        hasReportStep: steps.some((text) => text.includes('Podgląd raportu')),
+        hasConsentStep: steps.some((text) => text.includes('Zgody')),
         hasHorizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
       };
     })()`);
@@ -329,7 +469,7 @@ async function main() {
     assert(patient.hasNowPanel && !patient.hasEmbeddedMap, "Patient portal should show next-step panel and avoid embedding full map");
     assert(patient.stepCount === 6, `Expected 6 pre-visit steps, got ${patient.stepCount}`);
     assert(patient.hasSafetyCopy, "Patient pre-visit flow should keep safety copy");
-    assert(patient.hasDocumentsStep && patient.hasReportStep, "Patient pre-visit flow should include documents and report preview steps");
+    assert(patient.hasDocumentsStep && patient.hasConsentStep, "Patient pre-visit flow should include documents and consent steps");
     assert(!patient.hasHorizontalOverflow, "Desktop patient view should not create body horizontal overflow");
 
     const guardianPatient = await client.evaluate(`(() => {
@@ -338,7 +478,7 @@ async function main() {
         patientSelect.value = 'p3';
         patientSelect.dispatchEvent(new Event('change', { bubbles: true }));
       }
-      document.querySelector('nav button[data-view="patientPortal"]').click();
+      document.querySelector('[data-role-switch="patient"]')?.click();
       const text = document.body.textContent || '';
       const result = {
         patient: document.querySelector('#patientSelect')?.value || '',
@@ -351,7 +491,7 @@ async function main() {
         patientSelect.value = 'p1';
         patientSelect.dispatchEvent(new Event('change', { bubbles: true }));
       }
-      document.querySelector('nav button[data-view="patientPortal"]').click();
+      document.querySelector('[data-role-switch="patient"]')?.click();
       return result;
     })()`);
     assert(guardianPatient.patient === "p3", "Guardian smoke should switch to p3");
@@ -376,7 +516,8 @@ async function main() {
     assert(!dialog.openAfter, "Document dialog should close");
 
     const report = await client.evaluate(`(() => {
-      document.querySelector('.previsit-step [data-set-view="reports"]').click();
+      document.querySelector('[data-role-switch="doctor"]')?.click();
+      document.querySelector('nav button[data-view="reports"]')?.click();
       return {
         activeView: document.querySelector('nav button.active')?.dataset.view || null,
         hasReport: Boolean(document.querySelector('.context-report')),
@@ -593,11 +734,11 @@ async function main() {
     assert(timelineInteractions.resetPatientValue === "p1" && timelineInteractions.activeViewAfterReset === "timeline", "Timeline smoke should reset patient to p1 for later checks");
 
     const caregiver = await client.evaluate(`(() => {
-      document.querySelector('nav button[data-view="caregiverPortal"]').click();
+      document.querySelector('[data-role-switch="caregiver"]')?.click();
       return {
         activeView: document.querySelector('nav button.active')?.dataset.view || null,
         register: document.body.dataset.register || '',
-        hasHeader: document.body.textContent.includes('Kokpit opiekuna'),
+        hasHeader: document.body.textContent.includes('Opiekun360'),
         hasSafetyCopy: document.body.textContent.includes('tylko zakres danych') && document.body.textContent.includes('nie diagnozuje'),
         scopeCount: document.querySelectorAll('.caregiver-scope').length,
         accessCardCount: document.querySelectorAll('.caregiver-access-card').length,
@@ -643,7 +784,7 @@ async function main() {
       if (caregiverField) caregiverField.value = 'Opiekun testowy';
       if (scopeField) scopeField.value = 'opis zawiera leki i wizyty, ale bez checkboxów';
       if (formDialog?.open) document.querySelector('#dialogForm').requestSubmit();
-      const storedAfterBlocked = JSON.parse(localStorage.getItem('pacjent360-state-v7') || '{}');
+      const storedAfterBlocked = JSON.parse(localStorage.getItem('pacjent360-state-v11') || '{}');
       const blockedConsentSaved = (storedAfterBlocked.consents || []).some((item) => item.subject === 'Blokada bez zakresu');
       const blockedDialogStillOpen = Boolean(formDialog?.open);
       if (subjectField) subjectField.value = 'Test zakresu zgody';
@@ -665,7 +806,7 @@ async function main() {
       const createSecondaryButton = document.querySelector('#confirmSecondaryAction');
       const createSecondaryText = createSecondaryButton?.textContent.trim() || '';
       if (createSecondaryButton) createSecondaryButton.click();
-      const storedAfterReturn = JSON.parse(localStorage.getItem('pacjent360-state-v7') || '{}');
+      const storedAfterReturn = JSON.parse(localStorage.getItem('pacjent360-state-v11') || '{}');
       const savedAfterReturn = (storedAfterReturn.consents || []).some((item) => item.subject === 'Test zakresu zgody');
       const createReturnToEdit = Boolean(document.querySelector('#entryDialog')?.open) && !document.querySelector('#confirmDialog')?.open;
       const createReturnPreservedFields =
@@ -676,7 +817,7 @@ async function main() {
       if (document.querySelector('#entryDialog')?.open) document.querySelector('#dialogForm').requestSubmit();
       const createConfirmButton = document.querySelector('#confirmAction');
       if (createConfirmButton) createConfirmButton.click();
-      const storedAfterAdd = JSON.parse(localStorage.getItem('pacjent360-state-v7') || '{}');
+      const storedAfterAdd = JSON.parse(localStorage.getItem('pacjent360-state-v11') || '{}');
       const addedConsent = (storedAfterAdd.consents || []).find((item) => item.subject === 'Test zakresu zgody');
       const secondAddButton = document.querySelector('[data-open-dialog="consent"]');
       if (secondAddButton) secondAddButton.click();
@@ -695,7 +836,7 @@ async function main() {
       const patientPreviewHasRole = patientPreviewText.includes('Pacjent') && patientPreviewText.includes('pacjent');
       const patientConfirmButton = document.querySelector('#confirmAction');
       if (patientConfirmButton) patientConfirmButton.click();
-      const storedAfterPatient = JSON.parse(localStorage.getItem('pacjent360-state-v7') || '{}');
+      const storedAfterPatient = JSON.parse(localStorage.getItem('pacjent360-state-v11') || '{}');
       const addedPatientConsent = (storedAfterPatient.consents || []).find((item) => item.scope === 'Pacjent sprawdza własny raport');
       const beforeButtons = document.querySelectorAll('[data-revoke]').length;
       const firstRevoke = document.querySelector('[data-revoke]');
@@ -714,7 +855,7 @@ async function main() {
       if (firstRevokeAfterCancel) firstRevokeAfterCancel.click();
       const confirmButton = document.querySelector('#confirmAction');
       if (confirmButton) confirmButton.click();
-      const stored = JSON.parse(localStorage.getItem('pacjent360-state-v7') || '{}');
+      const stored = JSON.parse(localStorage.getItem('pacjent360-state-v11') || '{}');
       return {
         activeView: document.querySelector('nav button.active')?.dataset.view || null,
         hasSafetyCopy: document.body.textContent.includes('tylko zakres danych') && document.body.textContent.includes('nie diagnozuje'),
@@ -817,10 +958,12 @@ async function main() {
       deviceScaleFactor: 1,
       mobile: true
     });
+    await client.evaluate(`localStorage.removeItem('pacjent360-state-v11')`);
     await client.call("Page.navigate", { url: `http://127.0.0.1:${serverPort}/demo.html?mobile-smoke=${Date.now()}` });
     await waitForReady(client);
     const mobile = await client.evaluate(`(() => {
-      document.querySelector('nav button[data-view="patientPortal"]').click();
+      document.querySelector('[data-select-role="patient"]')?.click();
+      document.querySelector('[data-start-role="patient"][data-start-patient="p1"]')?.click();
       const grid = document.querySelector('.previsit-step-grid');
       return {
         activeView: document.querySelector('nav button.active')?.dataset.view || null,

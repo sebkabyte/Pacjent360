@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self';"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#10242a" />
+    <title>Engineering | Pacjent360™</title>
+    <meta
+      name="description"
+      content="Techniczne granice Pacjent360™: lokalny prototyp alpha, fikcyjne dane, walidatory, kontrakt danych i zasada Doctor in the Loop."
+    />
+    <link rel="canonical" href="https://pacjent360.com.pl/engineering.html" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="brand/tokens.css" />
+    <link rel="stylesheet" href="brand/components.css" />
+    <link rel="stylesheet" href="site.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Przejdź do treści</a>
+    <header class="site-header">
+      <div class="nav-inner">
+        <a class="brand" href="index.html" aria-label="Pacjent360">
+          <span class="brand-mark">360°</span>
+          <span><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong><small>Warstwa kontekstu pacjenta</small></span>
+        </a>
+        <nav class="main-nav" aria-label="Sekcje strony">
+          <a href="index.html#problem">Problem</a>
+          <a href="index.html#how">Jak działa</a>
+          <a href="index.html#audiences">Dla kogo</a>
+          <a href="demo.html?start=1">Demo alpha</a>
+          <a href="privacy.html">Prywatność</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="subpage-hero">
+        <div class="container">
+          <p class="eyebrow">Engineering</p>
+          <h1>Jak trzymamy granice produktu.</h1>
+          <p class="lead">Ta strona zbiera techniczne szczegóły, których nie powinno być na landing page: kontrakt danych, walidatory, bramki safety i kierunek architektury.</p>
+        </div>
+      </section>
+
+      <section class="container section">
+        <div class="engineering-layout">
+          <nav class="side-nav" aria-label="Spis treści engineering">
+            <a href="#scope">Zakres alpha</a>
+            <a href="#contract">Kontrakt danych</a>
+            <a href="#safety">Safety gates</a>
+            <a href="#assistants">Asystenci pomocniczy</a>
+            <a href="#road">Droga techniczna</a>
+            <a href="ditl.html">DITL</a>
+            <a href="agents.html">Agenci AI</a>
+            <a href="investors.html">Inwestorzy</a>
+          </nav>
+
+          <div>
+            <article class="content-card" id="scope">
+              <h2>Zakres alpha</h2>
+              <p>Pacjent360™ jest statycznym prototypem open source. Demo używa fikcyjnych danych i służy walidacji zrozumiałości, przepływu oraz granic produktu.</p>
+              <ul>
+                <li>Brak backendu i brak kont użytkowników.</li>
+                <li>Brak realnych danych pacjentów.</li>
+                <li>Brak integracji z IKP/P1 w obecnej wersji.</li>
+                <li>Brak diagnozy, triage, oceny pilności i rekomendacji leczenia.</li>
+              </ul>
+            </article>
+
+            <article class="content-card" id="contract">
+              <h2>Kontrakt danych</h2>
+              <p>Model rozdziela źródło, twierdzenie, zdarzenie, epizod, kontakt, zadanie i raport. Celem jest traceability: każda informacja ma pochodzenie, status i zakres dostępu.</p>
+              <div class="doc-grid">
+                <a class="doc-link" href="https://github.com/sebkabyte/Pacjent360/tree/main/schema">
+                  <strong>Schema</strong><span>Kontrakt eksportu i walidacji.</span>
+                </a>
+                <a class="doc-link" href="https://github.com/sebkabyte/Pacjent360/tree/main/fixtures">
+                  <strong>Fixtures</strong><span>Fikcyjne dane do testów regresji.</span>
+                </a>
+              </div>
+            </article>
+
+            <article class="content-card" id="safety">
+              <h2>Safety gates</h2>
+              <p>Każda funkcja ma przejść przez granicę Doctor in the Loop: system może porządkować kontekst, pytania, braki i statusy. Nie może podejmować decyzji klinicznej.</p>
+              <ul>
+                <li>Output ma być pytaniem, statusem, zadaniem albo brakiem danych.</li>
+                <li>Źródło informacji musi być widoczne lub jawnie oznaczone jako brak źródła.</li>
+                <li>Informacje od pacjenta, rodzica lub opiekuna są wywiadem albo obserwacją, nie faktem laboratoryjnym.</li>
+                <li>Wording nie może sugerować diagnozy, triage, pilności ani terapii.</li>
+              </ul>
+            </article>
+
+            <article class="content-card" id="assistants">
+              <h2>Asystenci pomocniczy</h2>
+              <p>Asystenci AI nie są opiekunami i nie podejmują decyzji. W przyszłości mogą działać jako funkcje pomocnicze: wykrywać braki, przygotowywać checklisty i tworzyć szkice do ręcznej akceptacji.</p>
+              <p>Care Circle to zawsze ludzie: pacjent, rodzic, opiekun prawny albo osoba wspierająca.</p>
+            </article>
+
+            <article class="content-card" id="road">
+              <h2>Droga techniczna</h2>
+              <p>Najpierw walidujemy prosty workflow przed wizytą. Dopiero później warto rozważać backend, aplikację mobilną, OCR, integracje i automatyzacje.</p>
+              <div class="doc-grid">
+                <a class="doc-link" href="https://github.com/sebkabyte/Pacjent360">
+                  <strong>GitHub</strong><span>Kod, dokumentacja i roadmapa.</span>
+                </a>
+                <a class="doc-link" href="disclaimer.html">
+                  <strong>Zastrzeżenie medyczne</strong><span>Granice obecnego prototypu.</span>
+                </a>
+                <a class="doc-link" href="ditl.html">
+                  <strong>DITL</strong><span>System porządkuje, lekarz decyduje.</span>
+                </a>
+                <a class="doc-link" href="agents.html">
+                  <strong>Agenci AI</strong><span>Asystenci pomocniczy, nie opiekunowie.</span>
+                </a>
+                <a class="doc-link" href="investors.html">
+                  <strong>Inwestorzy</strong><span>Wedge, walidacja i droga do produktu.</span>
+                </a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-grid">
+        <div><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong><br><span>Niezależny prototyp open source. Demo używa wyłącznie danych fikcyjnych.</span></div>
+        <nav aria-label="Stopka"><a href="index.html">Strona główna</a><a href="demo.html?start=1">Demo alpha</a><a href="https://github.com/sebkabyte/Pacjent360">GitHub</a><a href="ditl.html">DITL</a><a href="agents.html">Agenci AI</a><a href="investors.html">Inwestorzy</a><a href="disclaimer.html">Zastrzeżenie medyczne</a><a href="privacy.html">Prywatność</a></nav>
+      </div>
+    </footer>
+  </body>
+</html>

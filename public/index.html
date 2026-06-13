@@ -8,16 +8,13 @@
   />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#10242a" />
-  <title>Pacjent 360 | Mapa kontekstu pacjenta</title>
+  <title>Pacjent360™ | Brief pacjenta przed wizytą</title>
   <meta
     name="description"
-    content="Pacjent 360 to niezależny prototyp open source: warstwa kontekstu pacjenta dla lekarza, pacjenta i rodzica/opiekuna. Nie diagnozuje — porządkuje historię, źródła i pytania."
+    content="Pacjent360™ układa historię pacjenta w oś historii, pytania i krótkie podsumowanie do rozmowy z lekarzem. Demo działa na fikcyjnych danych i nie stawia diagnozy."
   />
-  <meta property="og:title" content="Pacjent 360 | Mapa kontekstu pacjenta" />
-  <meta
-    property="og:description"
-    content="Pacjent przychodzi z historią, nie z folderem PDF-ów. Jedna mapa kontekstu, trzy perspektywy, źródła obok twierdzeń."
-  />
+  <meta property="og:title" content="Pacjent360™ | Brief pacjenta przed wizytą" />
+  <meta property="og:description" content="Rozproszone wyniki, leki i notatki w czytelny brief przed wizytą. Demo na danych fikcyjnych." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://pacjent360.com.pl/" />
   <meta property="og:image" content="https://pacjent360.com.pl/assets/hero-clinical-context.png" />
@@ -31,176 +28,143 @@
 <a class="skip-link" href="#main-content">Przejdź do treści</a>
 <header class="site-header">
   <div class="nav-inner">
-    <a class="brand" href="index.html" aria-label="Pacjent 360">
-      <span class="brand-mark">360</span>
-      <span><strong>Pacjent 360</strong><small>Warstwa kontekstu pacjenta</small></span>
+    <a class="brand" href="index.html" aria-label="Pacjent360">
+      <span class="brand-mark">360°</span>
+      <span><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong><small>Brief przed wizytą</small></span>
     </a>
     <button class="nav-toggle" data-nav-toggle aria-label="Otwórz menu" aria-expanded="false" aria-controls="mainNav">☰</button>
     <nav class="main-nav" data-nav id="mainNav" aria-label="Sekcje strony">
-      <a href="#problem">Problem</a>
-      <a href="#solution">Rozwiązanie</a>
-      <a href="#wedge">Pierwszy krok</a>
-      <a href="#road">Droga</a>
-      <a href="#collab">Współpraca</a>
-      <a class="cta-link" href="demo.html">Demo alpha</a>
+      <a href="#what">Co to jest</a>
+      <a href="#how">Jak działa</a>
+      <a href="#audiences">Dla kogo</a>
+      <a href="#validate">Walidacja</a>
+      <a class="cta-link" href="demo.html?start=1">Demo</a>
     </nav>
   </div>
 </header>
+
 <main id="main-content">
   <section class="hero hero-photo">
     <img class="hero-bg" src="assets/hero-clinical-context.png" alt="" />
     <div class="hero-overlay" aria-hidden="true"></div>
     <div class="container hero-inner">
-      <p class="eyebrow">Dane są. Kontekstu brakuje.</p>
-      <span class="p360-badge hero-badge">Działa w demo (alpha)</span>
-      <h1>Mapa zdarzeń pacjenta. Film z życia, nie folder z dokumentami.</h1>
-      <p class="lead">Pacjent 360 porządkuje dokumenty, wizyty, leki, objawy, obserwacje rodziny i ustalenia w jedną chronologiczną mapę. Pacjent i lekarz pracują na wspólnym modelu historii, a opiekun widzi tylko udostępnione obszary. System nie diagnozuje — pomaga zauważyć braki, rozbieżności i pytania do omówienia.</p>
+      <p class="eyebrow">Kontekst wizyty w jednym widoku</p>
+      <h1>Zamień rozproszone wyniki, leki i notatki w czytelny brief przed wizytą.</h1>
+      <p class="lead">Pacjent360™ układa historię pacjenta w oś historii, pytania i krótkie podsumowanie do rozmowy z lekarzem. Demo działa na fikcyjnych danych i nie stawia diagnozy.</p>
       <div class="hero-actions">
-        <a class="button primary light" href="demo.html">Zobacz demo alpha</a>
-        <a class="button secondary ghost-light" href="#film">Jak to działa</a>
+        <a class="button primary light" href="demo.html?start=1">Zobacz demo</a>
+        <a class="button secondary ghost-light" href="#audiences">Dla kogo to jest?</a>
       </div>
     </div>
   </section>
 
   <div class="container trust-strip" aria-label="Granice produktu">
-    <span>Nie diagnozuje</span><span>Nie ocenia pilności</span><span>Nie rekomenduje terapii</span><span>Lekarz w procesie decyzyjnym (DITL)</span><span>Źródła + zgody + audyt</span>
+    <span>Dane fikcyjne</span><span>Bez diagnozy</span><span>Bez rekomendacji terapii</span><span>Lekarz podejmuje decyzję</span>
   </div>
 
-  <section class="container section" id="film">
+  <nav class="mobile-jump-nav" aria-label="Szybkie przejście po stronie">
+    <a href="#what">Co to</a>
+    <a href="#how">Jak</a>
+    <a href="#audiences">Role</a>
+    <a class="mobile-jump-primary" href="demo.html?start=1">Demo</a>
+  </nav>
+
+  <section class="container section startup-what" id="what">
     <div class="section-head split">
-      <div><p class="eyebrow">Jak to działa</p><h2>Film z życia pacjenta w trzech krokach.</h2></div>
-      <p>Każda informacja ma źródło, datę i status weryfikacji. Rozbieżności stają się pytaniami do lekarza, a obserwacje bliskich są oznaczone jako obserwacje — nie fakty kliniczne.</p>
+      <div><p class="eyebrow">Co to jest?</p><h2>Brief pacjenta przed wizytą.</h2></div>
+      <p>Jeden widok, który układa rozproszone informacje w historię do rozmowy: co wiadomo, czego brakuje i o co warto zapytać lekarza.</p>
     </div>
-    <aside class="story-card patient-movie standalone" aria-label="Przykładowa historia pacjenta">
-      <div class="movie-header"><strong>Film z życia pacjenta</strong><span>nie folder z dokumentami</span></div>
-      <div class="timeline-line" aria-hidden="true"></div>
-      <div class="event"><span class="event-icon">1</span><div><b>Źródło: wypis / wynik / wywiad</b><small>Każda informacja ma pochodzenie, datę i status weryfikacji.</small></div></div>
-      <div class="event warn"><span class="event-icon">2</span><div><b>Rozbieżność: lek z dokumentacji ≠ lek faktycznie brany</b><small>System nie zmienia leczenia. Tworzy pytanie do potwierdzenia.</small></div></div>
-      <div class="event"><span class="event-icon">3</span><div><b>Rodzic / opiekun dodaje obserwację</b><small>Obserwacja jest oznaczona jako obserwacja — nie fakt kliniczny.</small></div></div>
-      <div class="doctor-brief"><h3>Pacjent w 90 sekund</h3><p>Co wiadomo? Czego brakuje? Co jest niepewne? Co trzeba omówić z lekarzem?</p></div>
-    </aside>
+    <div class="quick-proof">
+      <article><strong>Oś historii</strong><span>co wydarzyło się kiedy</span></article>
+      <article><strong>Źródła</strong><span>dokument, wynik, wywiad</span></article>
+      <article><strong>Pytania</strong><span>braki do rozmowy</span></article>
+      <article><strong>Podsumowanie</strong><span>Znane, nieznane, niepewne i do weryfikacji</span></article>
+    </div>
   </section>
 
   <section class="container section" id="problem">
     <div class="section-head split">
-      <div><p class="eyebrow">Problem</p><h2>System ochrony zdrowia widzi rekordy. Człowiek potrzebuje ciągłości.</h2></div>
-      <p>Wyniki są w jednym miejscu, wypisy w drugim, recepty w trzecim, objawy w głowie pacjenta, a ważne obserwacje często u rodzica albo opiekuna. Lekarz ma kilka minut i decyzję do podjęcia tu i teraz.</p>
-    </div>
-    <div class="problem-grid">
-      <article class="problem-card"><span>01</span><h3>Fragmentacja</h3><p>Dokumenty nie tworzą historii. Brakuje osi czasu, epizodów i tego, co zmieniło się od ostatniego kontaktu.</p></article>
-      <article class="problem-card"><span>02</span><h3>Brak kontekstu</h3><p>Pacjent często ma dane, ale nie potrafi szybko pokazać, co jest najważniejsze dla aktualnej wizyty.</p></article>
-      <article class="problem-card"><span>03</span><h3>Brak zaufania do źródeł</h3><p>Lekarz musi wiedzieć, czy patrzy na dokument medyczny, wpis pacjenta, obserwację rodzica czy szkic AI.</p></article>
+      <div><p class="eyebrow">Problem</p><h2>Dane są. Historia się rozpada.</h2></div>
+      <p>Wyniki, wypisy, leki i obserwacje są rozproszone. Przed wizytą brakuje prostego obrazu całości.</p>
     </div>
   </section>
 
-  <section class="dark-section section" id="solution">
+  <section class="dark-section section" id="how">
     <div class="container">
       <div class="section-head split">
-        <div><p class="eyebrow">Rozwiązanie</p><span class="p360-badge">Działa w demo (alpha)</span><h2>Jedna historia. Wiele soczewek. Bez udawania lekarza.</h2></div>
-        <p>Pacjent 360 jest warstwą kontekstu nad danymi pacjenta: źródła, twierdzenia, zdarzenia, epizody, pytania do lekarza, raporty, zgody i audyt. Decyzja kliniczna zawsze zostaje u człowieka.</p>
+        <div><p class="eyebrow">Jak działa?</p><h2>Dokumenty → oś historii → pytania → podsumowanie.</h2></div>
+        <p>Pacjent, rodzic albo opiekun zbiera kontekst. System porządkuje materiał do rozmowy. Lekarz podejmuje decyzję.</p>
       </div>
-      <div class="possibility-grid">
-        <article class="possibility-card"><h3>Dla lekarza</h3><p>Widok dla lekarza na komputerze: ostatnia zmiana, leki do potwierdzenia, braki danych, rozbieżności i źródła obok każdego twierdzenia.</p></article>
-        <article class="possibility-card"><h3>Dla pacjenta</h3><p>Mobilne przygotowanie wizyty: dokumenty, objawy, lista leków faktycznie przyjmowanych, pytania do omówienia i zadania po wizycie.</p></article>
-        <article class="possibility-card"><h3>Dla rodzica / opiekuna</h3><p>Krąg opieki to ludzie: rodzic, opiekun prawny, osoba wspierająca. Każdy z własną podstawą dostępu i zakresem zgody. Obserwacja opiekuna jest oznaczona jako obserwacja — nie fakt kliniczny.</p></article>
-        <article class="possibility-card"><h3>Dla zaufania</h3><p>Źródło, zgoda i audyt w każdym widoku. Brak źródła jest jawny, a nie ukryty. To fundament zaufania, nie tylko kokpit.</p></article>
-      </div>
-    </div>
-  </section>
-
-  <section class="container section" id="wedge">
-    <div class="section-head split">
-      <div><p class="eyebrow">Pierwszy produktowy krok</p><span class="p360-badge">Działa w demo (alpha)</span><h2>Przygotowanie wizyty + Pacjent w 90 sekund.</h2></div>
-      <p>Nie zaczynamy od „systemu dla wszystkich chorób". Zaczynamy od sytuacji, która boli codziennie: pacjent albo rodzic/opiekun przygotowuje wizytę, a lekarz dostaje krótki, źródłowy kontekst.</p>
-    </div>
-    <div class="wedge-flow">
-      <article><span>Telefon</span><h3>Pacjent / rodzic zbiera kontekst</h3><p>Cel wizyty, dokumenty, leki, objawy, obserwacje, pytania i zgody.</p></article>
-      <article><span>Komputer</span><h3>Lekarz widzi krótkie podsumowanie ze źródłami</h3><p>Znane, nieznane, niepewne i do weryfikacji, historia leków oraz pytania do wyjaśnienia.</p></article>
-      <article><span>Po wizycie</span><h3>Wiadomo, co dalej</h3><p>Zadania organizacyjne jako szkic do akceptacji: dokument do uzupełnienia, badanie do umówienia, pytanie na kontrolę.</p></article>
-    </div>
-  </section>
-
-  <section class="container section" id="road">
-    <div class="section-head split">
-      <div><p class="eyebrow">Droga</p><h2>Najpierw walidacja z ludźmi, potem skala.</h2></div>
-      <p>To jest prototyp koncepcyjny budowany otwarcie. Każdy etap ma bramki bezpieczeństwa, a funkcje opisujemy dopiero wtedy, gdy istnieją w repozytorium — jako kod, kontrakt danych albo dokument.</p>
-    </div>
-    <div class="product-road">
-      <div class="road-line" aria-hidden="true"></div>
-      <article class="road-step" data-step="01"><h3>Dziś: działający prototyp alpha</h3><p>Statyczne demo open source na danych fikcyjnych: mapa pacjenta, przygotowanie wizyty, historia leków, kontrakt danych z walidatorami, zgody i audyt.</p></article>
-      <article class="road-step" data-step="02"><span class="p360-badge">W planie</span><h3>Najbliżej: walidacja z lekarzami i opiekunami</h3><p>Fikcyjne przypadki testowe, feedback lekarzy POZ i specjalisty, pacjentów i rodziców/opiekunów. Decyzja: kontynuować, zmienić kierunek czy zatrzymać projekt.</p></article>
-      <article class="road-step" data-step="03"><span class="p360-badge">W planie</span><h3>Potem: cała wizyta w jednym przebiegu</h3><p>Pełny widok rodzica/opiekuna według zgód, „co dalej po wizycie" jako szkic do akceptacji, wersja mobilna do instalacji (PWA).</p></article>
-      <article class="road-step" data-step="04"><span class="p360-badge">Horyzont</span><h3>Po bramkach safety: asystenci operacyjni</h3><p>Wyłącznie szkice i suche przebiegi z ręczną akceptacją, walidatorem zakazanych treści i audytem. Bez decyzji klinicznych.</p></article>
-      <article class="road-step" data-step="05"><span class="p360-badge">Horyzont</span><h3>Dalszy horyzont: oficjalne integracje</h3><p>IKP/P1 wyłącznie oficjalną ścieżką, bez scrapingu i bez przechowywania loginów. Decyzja dopiero po pozytywnej walidacji.</p></article>
-    </div>
-    <div class="metrics">
-      <div class="metric"><strong>12</strong><span>widoków w demo alpha</span></div>
-      <div class="metric"><strong>5</strong><span>modeli danych z walidatorami</span></div>
-      <div class="metric"><strong>0</strong><span>realnych danych pacjentów</span></div>
-      <div class="metric"><strong>100%</strong><span>otwarty kod (Apache 2.0)</span></div>
-    </div>
-  </section>
-
-  <section class="container section" id="collab">
-    <div class="section-head split collab-head">
-      <div>
-        <p class="eyebrow">Współpraca</p>
-        <h2>Szukamy trzech rozmów, które zdecydują o kierunku alpha.</h2>
-      </div>
-      <p>Najpierw walidujemy problem, język i granice bezpieczeństwa. Dopiero potem warto rozbudowywać funkcje, automatyzacje i integracje.</p>
-    </div>
-    <div class="collab-panel">
-      <div class="collab-intro">
-        <h3>Chcemy sprawdzić jedną rzecz: czy Pacjent 360 pomaga przygotować lepszą rozmowę.</h3>
-        <p>Nie prosimy o obietnice ani patronat. Potrzebujemy krótkich, konkretnych rozmów na fikcyjnych przypadkach: co jest jasne, co przeszkadza, czego brakuje i gdzie przebiega granica bezpieczeństwa.</p>
-        <div class="collab-process" aria-label="Jak wygląda walidacja">
-          <span>trzy rozmowy walidacyjne</span>
-          <span>fikcyjny przypadek testowy</span>
-          <span>decyzja: kontynuować, zmienić kierunek albo zatrzymać</span>
-        </div>
-        <div class="collab-actions">
-          <a class="button primary" href="https://github.com/sebkabyte/Pacjent360">Repozytorium na GitHub</a>
-          <a class="button secondary" href="mailto:kontakt@pacjent360.com.pl">Napisz do projektu</a>
-        </div>
-      </div>
-      <div class="validation-list" aria-label="Kogo szukamy do walidacji">
-        <article>
-          <span>Lekarz POZ / specjalista</span>
-          <strong>Czy raport w 90 sekund pokazuje właściwy kontekst?</strong>
-        </article>
-        <article>
-          <span>Pacjent / rodzic / opiekun</span>
-          <strong>Czy przygotowanie wizyty jest zrozumiałe i realne?</strong>
-        </article>
-        <article>
-          <span>Prawo / ochrona danych / clinical safety</span>
-          <strong>Gdzie kończy się kontekst, a zaczyna ryzyko wyrobu medycznego?</strong>
-        </article>
-        <p class="collab-note">Projektanci, inżynierowie open source i badacze usług publicznych są mile widziani jako współtwórcy repozytorium. Pierwsza walidacja produktu powinna jednak zacząć się od tych trzech rozmów.</p>
+      <div class="flow-row" aria-label="Mechanizm Pacjent360">
+        <article><span>01</span><h3>Dokumenty</h3><p>wypisy, wyniki, leki</p></article>
+        <article><span>02</span><h3>Oś historii</h3><p>co wydarzyło się kiedy</p></article>
+        <article><span>03</span><h3>Pytania</h3><p>czego brakuje</p></article>
+        <article><span>04</span><h3>Podsumowanie</h3><p>kontekst przed rozmową</p></article>
       </div>
     </div>
   </section>
 
   <section class="container section" id="audiences">
-    <div class="section-head"><p class="eyebrow">Dla kogo</p><h2>Ten sam pacjent. Inny język. Inny ekran. Inny zakres dostępu.</h2></div>
+    <div class="section-head"><p class="eyebrow">Dla kogo?</p><h2>Trzy role. Jedna historia pacjenta.</h2></div>
     <div class="audiences">
-      <article><h3>Pacjent</h3><ul><li>nie zgubisz pytań do lekarza,</li><li>przygotujesz dokumenty i leki,</li><li>zobaczysz, czego brakuje,</li><li>udostępnisz dane tylko w wybranym zakresie.</li></ul></article>
-      <article><h3>Lekarz / placówka</h3><ul><li>krótszy czas dojścia do kontekstu,</li><li>źródła obok twierdzeń,</li><li>mniej chaosu w dokumentach,</li><li>raport bez klinicznych rekomendacji systemu.</li></ul></article>
-      <article><h3>Współtwórca</h3><ul><li>realny, codzienny problem do rozwiązania,</li><li>otwarty kod i otwarta dokumentacja,</li><li>jawne granice bezpieczeństwa,</li><li>plan i decyzje w repozytorium, nie w głowie.</li></ul></article>
+      <article><h3>Lekarz</h3><p>Krótki kontekst, źródła, braki i pytania do rozmowy. Bez automatycznej diagnozy.</p></article>
+      <article><h3>Pacjent</h3><p>Dokumenty, leki, wyniki, pytania i zgody zebrane przed wizytą.</p></article>
+      <article><h3>Rodzic / Opiekun</h3><p>Pomoc bliskiej osobie w zakresie, który został udostępniony.</p></article>
     </div>
   </section>
 
-  <section class="cta-section" id="build">
+  <section class="container section map-vision" id="mapa">
+    <div class="section-head split">
+      <div><p class="eyebrow">Mapa historii pacjenta</p><h2>Docelowo: wizyty, leki, wyniki i obserwacje w jednym przebiegu.</h2></div>
+      <p>Mapa jest sercem wizji Pacjent360™. Publiczne demo pokazuje ją dziś jako prosty skrót historii, a pełna mapa wielowarstwowa zostaje kolejnym kamieniem milowym.</p>
+    </div>
+    <div class="quick-proof map-proof">
+      <article><strong>Zdarzenia</strong><span>wizyty, wypisy, zabiegi</span></article>
+      <article><strong>Leki</strong><span>przepisane i faktycznie brane</span></article>
+      <article><strong>Wyniki</strong><span>badania i dokumenty</span></article>
+      <article><strong>Obserwacje</strong><span>pacjent, rodzic, opiekun</span></article>
+    </div>
+  </section>
+
+  <section class="container section product-preview" id="demo-alpha">
+    <div class="section-head split">
+      <div><p class="eyebrow">Demo alpha</p><h2>Wybierz perspektywę i fikcyjny przypadek.</h2></div>
+      <p>Zobacz tę samą historię jako lekarz, pacjent albo opiekun: brief, oś historii, dokumenty, leki, pytania i zgody. Wszystkie dane są fikcyjne.</p>
+    </div>
+    <div class="section-actions">
+      <a class="button primary" href="demo.html?start=1">Zobacz demo</a>
+      <a class="button secondary" href="disclaimer.html">Granice produktu</a>
+    </div>
+  </section>
+
+  <section class="container section compact-road" id="road">
+    <div class="section-head split">
+      <div><p class="eyebrow">Kierunek</p><h2>Najpierw sprawdzamy, czy brief naprawdę pomaga.</h2></div>
+      <p>Dziś pokazujemy fikcyjne przypadki i prostą ścieżkę demo. Po walidacji rozwijamy aplikację pacjenta, kokpit lekarza i ustalenia po wizycie.</p>
+    </div>
+    <div class="resource-links" aria-label="Dalsze materiały">
+      <a href="engineering.html">Engineering</a>
+      <a href="ditl.html">DITL</a>
+      <a href="agents.html">Granice AI</a>
+      <a href="investors.html">Inwestorzy</a>
+    </div>
+  </section>
+
+  <section class="cta-section" id="validate">
     <div class="container cta-card">
-      <div><p class="eyebrow">Budujemy otwarcie, ale odpowiedzialnie</p><h2>Najpierw zaufanie. Potem automatyzacja.</h2><p>Plan programu, architektura, kontrakt danych, walidatory i decyzje projektowe są publiczne w repozytorium. To miejsce dla osób, które chcą współtworzyć fundament produktu.</p></div>
-      <a class="button primary" href="https://github.com/sebkabyte/Pacjent360">Zobacz repozytorium</a>
+      <div><p class="eyebrow">Walidacja alpha</p><h2>Przejdź demo i powiedz, gdzie historia przestaje być jasna.</h2><p>Potrzebujemy konkretnych uwag od lekarzy, pacjentów, rodziców, opiekunów i osób budujących produkty zdrowotne.</p></div>
+      <div class="cta-actions">
+        <a class="button primary" href="demo.html?start=1">Zobacz demo</a>
+        <a class="button secondary" href="https://github.com/sebkabyte/Pacjent360">GitHub</a>
+      </div>
     </div>
   </section>
 </main>
+
 <footer class="footer">
   <div class="container footer-grid">
-    <div><strong>Pacjent 360</strong><br><span>Niezależny prototyp open source. Nie zastępuje lekarza, IKP, P1 ani dokumentacji medycznej. Nie jest usługą CeZ, NFZ, IKP ani żadnego innego publicznego systemu e-zdrowia. Demo używa wyłącznie danych fikcyjnych.</span></div>
-    <nav aria-label="Stopka"><a href="demo.html">Demo alpha</a><a href="https://github.com/sebkabyte/Pacjent360">GitHub</a><a href="disclaimer.html">Zastrzeżenie medyczne</a><a href="privacy.html">Prywatność</a></nav>
+    <div><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong><br><span>Niezależny prototyp open source. Nie zastępuje lekarza, IKP, P1 ani dokumentacji medycznej. Nie jest usługą CeZ, NFZ ani IKP. Demo używa wyłącznie danych fikcyjnych.</span></div>
+    <nav aria-label="Stopka"><a href="demo.html?start=1">Demo alpha</a><a href="https://github.com/sebkabyte/Pacjent360">GitHub</a><a href="engineering.html">Engineering</a><a href="ditl.html">DITL</a><a href="agents.html">Granice AI</a><a href="investors.html">Inwestorzy</a><a href="disclaimer.html">Zastrzeżenie medyczne</a><a href="privacy.html">Prywatność</a></nav>
   </div>
 </footer>
 <script src="assets/story.js"></script>

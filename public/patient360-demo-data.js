@@ -48,7 +48,9 @@
 
   const DEMO_STATE_TEMPLATE = {
   "activePatientId": "p1",
-  "activeView": "core",
+  "activeRole": "doctor",
+  "roleSelectionConfirmed": false,
+  "activeView": "roleStart",
   "reportType": "context",
   "activeCaseStudy": "procedure-readiness",
   "timelinePeriod": "episode",
@@ -61,52 +63,157 @@
   "patients": [
     {
       "id": "p1",
-      "name": "Demo A — dorosły przed planową procedurą",
-      "birthDate": "1972-04-14",
+      "name": "Jan S. — senior przed planową procedurą",
+      "birthDate": "1949-04-14",
       "sex": "M",
-      "height": 178,
-      "weight": 84,
+      "height": 172,
+      "weight": 78,
       "guardian": "brak",
-      "baselineState": "Pacjent samodzielny, leczony ambulatoryjnie z powodu chorób przewlekłych, przygotowywany do planowej procedury.",
-      "currentProblem": "Kwalifikacja do planowej procedury jednodniowej; do uporządkowania są leki, wyniki kontrolne i dokumenty z konsultacji.",
-      "biggestChange": "W dokumentacji pojawiła się potrzeba potwierdzenia aktualnej listy leków oraz brakujących danych przed procedurą.",
+      "baselineState": "Senior mieszkający samodzielnie, leczony ambulatoryjnie z powodu chorób przewlekłych; córka Madeline pomaga w lekach, dokumentach i wizytach.",
+      "currentProblem": "Kwalifikacja do planowej procedury jednodniowej; do uporządkowania są leki, wyniki kontrolne, dokumenty z konsultacji i obserwacje córki.",
+      "biggestChange": "Córka Madeline zgłasza, że przed procedurą trzeba potwierdzić faktycznie przyjmowane leki, transport i plan po wizycie.",
       "decisionToday": "Czy komplet danych wymaganych przed planową procedurą został potwierdzony przez lekarza?",
-      "patientSummary": "Masz zaplanowaną procedurę jednodniową. Masz 4 leki, a 3 wymagają potwierdzenia z lekarzem. Masz aktualne wyniki laboratoryjne. Brakuje aktualnego EKG w danych demo.",
-      "patientQuestion": "Co warto omówić z lekarzem: potwierdź listę leków, zapytaj o przygotowanie do procedury, sprawdź, czy wyniki są kompletne.",
-      "consentScope": "pełny widok 360 do 2026-06-20"
+      "patientSummary": "Jan ma zaplanowaną procedurę jednodniową. W danych demo są 4 leki, a 3 wymagają potwierdzenia z lekarzem. Córka Madeline ma aktywny zakres do dokumentów, mapy, leków, wyników, obserwacji i zadań organizacyjnych.",
+      "patientQuestion": "Co warto omówić z lekarzem: potwierdzić listę leków, przygotowanie do procedury, transport i dokumenty potrzebne w dniu kwalifikacji.",
+      "consentScope": "Jan S.: pełny widok 360; Madeline S. — córka: dokumenty, mapa, leki, wyniki, obserwacje i zadania"
     },
     {
       "id": "p2",
-      "name": "Demo B — kontrola kardiologiczna",
+      "name": "Andrzej K. — kontrola kardiologiczna",
       "birthDate": "1958-03-02",
       "sex": "M",
       "height": 176,
       "weight": 92,
       "guardian": "brak",
-      "baselineState": "Samodzielny, aktywny zawodowo, bez zgłaszanych ograniczeń funkcjonalnych.",
+      "baselineState": "Dorosły pacjent samodzielny, aktywny zawodowo, bez aktywnego opiekuna w danych demo.",
       "currentProblem": "Kontrola kardiologiczna po wyniku NT-proBNP powyżej zakresu ze źródła.",
       "biggestChange": "Brak nowych zgłoszeń w dokumentach demo; aktualny stan do potwierdzenia w wywiadzie przed wizytą.",
       "decisionToday": "Czy obecne dane wystarczają do rutynowej kontroli specjalistycznej?",
-      "patientSummary": "Masz kontrolę kardiologiczną. Masz 1 lek do potwierdzenia, czy nadal jest przyjmowany. Ostatnie echo serca jest z kwietnia.",
+      "patientSummary": "Andrzej ma kontrolę kardiologiczną. W danych demo ma 1 lek do potwierdzenia, czy nadal jest przyjmowany. Ostatnie echo serca jest z kwietnia.",
       "patientQuestion": "Co warto omówić z lekarzem: potwierdź, czy przyjmujesz atorwastatynę, zapytaj o wynik echa.",
       "consentScope": "raport kardiologiczny do 2026-06-12"
     },
     {
       "id": "p3",
-      "name": "Demo C — dziecko po infekcji (widok rodzica)",
+      "name": "Maja N. — dziecko po infekcji (widok rodzica)",
       "birthDate": "2017-09-18",
       "sex": "K",
       "height": 132,
       "weight": 29,
       "guardian": "rodzic",
-      "baselineState": "Dziecko w wieku szkolnym, rodzic przygotowuje kontrolę po niedawnym epizodzie infekcyjnym zapisanym w dokumentacji demo.",
-      "currentProblem": "Kontrola pediatryczna po infekcji; do uporządkowania są dokumenty, leki faktycznie podane w domu, obserwacje rodzica i pytania na wizytę.",
-      "biggestChange": "Rodzic odnotował poprawę samopoczucia, ale lista leków z dokumentacji nie zgadza się w pełni z tym, co faktycznie podano w domu.",
+      "baselineState": "Dziecko w wieku szkolnym; mama Marta przygotowuje kontrolę po niedawnym epizodzie infekcyjnym zapisanym w dokumentacji demo.",
+      "currentProblem": "Kontrola pediatryczna po infekcji; do uporządkowania są dokumenty, leki faktycznie podane w domu, obserwacje mamy i pytania na wizytę.",
+      "biggestChange": "Mama Marta odnotowała poprawę samopoczucia, ale lista leków z dokumentacji nie zgadza się w pełni z tym, co faktycznie podano w domu.",
       "decisionToday": "Jakie informacje rodzic może przygotować do omówienia z lekarzem podczas kontroli dziecka?",
-      "patientSummary": "Rodzic przygotowuje kontrolę po infekcji. W danych demo są 3 dokumenty, 2 leki do porównania i obserwacje opiekuna do omówienia z lekarzem.",
-      "patientQuestion": "Co warto omówić z lekarzem: które leki faktycznie podano, jakie objawy rodzic obserwował w domu i jakie dokumenty zabrać na kontrolę.",
-      "consentScope": "rodzic: pełny zakres; drugi rodzic: wizyty i dokumenty do 2026-07-15"
+      "patientSummary": "Mama Marta przygotowuje kontrolę Mai po infekcji. W danych demo są 3 dokumenty, 2 leki do porównania i obserwacje opiekuna do omówienia z lekarzem.",
+      "patientQuestion": "Co warto omówić z lekarzem: które leki faktycznie podano, jakie objawy mama obserwowała w domu i jakie dokumenty zabrać na kontrolę.",
+      "consentScope": "Marta N. — mama: pełny zakres; Paweł N. — tata: wizyty i dokumenty"
     }
+  ],
+  "roleNarratives": [
+    {
+      "id": "rn-p1-doctor",
+      "patientId": "p1",
+      "role": "doctor",
+      "title": "Jan S.: szybki kontekst przed procedurą",
+      "summary": "Lekarz widzi seniora przygotowywanego do procedury, rozbieżności w lekach, obserwacje córki i brakujące elementy do omówienia.",
+      "mapTitle": "Procedura Jana jako film przygotowania",
+      "mapSummary": "Oś historii pokazuje dokument kwalifikacyjny, wywiad Jana, obserwacje Madeline, leki do potwierdzenia i planowany kontakt. Celem jest zobaczyć, co trzeba wyjaśnić w gabinecie."
+    },
+    {
+      "id": "rn-p1-patient",
+      "patientId": "p1",
+      "role": "patient",
+      "title": "Jan S.: co przygotować przed procedurą",
+      "summary": "Pacjent widzi prosty plan: dokumenty, lista leków, pytania do lekarza, transport i to, co udostępnia córce.",
+      "mapTitle": "Moja droga do procedury",
+      "mapSummary": "Oś historii pomaga Janowi zobaczyć, co już jest zebrane, czego brakuje i jakie pytania zabrać na rozmowę z lekarzem."
+    },
+    {
+      "id": "rn-p1-caregiver",
+      "patientId": "p1",
+      "role": "caregiver",
+      "title": "Madeline S.: pomoc ojcu w przygotowaniu",
+      "summary": "Opiekun widzi zakres zgody udzielonej przez Jana: dokumenty, mapę, leki, wyniki, obserwacje i zadania organizacyjne. Obserwacje Madeline są oznaczone jako wywiad opiekuna.",
+      "mapTitle": "Co mogę dopilnować dla taty",
+      "mapSummary": "Oś historii opiekuna pokazuje przygotowanie Jana do procedury w zakresie zgody: dokumenty, wyniki, leki, wywiad i zadania organizacyjne."
+    },
+    {
+      "id": "rn-p2-doctor",
+      "patientId": "p2",
+      "role": "doctor",
+      "title": "Andrzej K.: kontrola kardiologiczna bez opiekuna",
+      "summary": "Lekarz widzi krótki kontekst kontroli: echo serca, lek do potwierdzenia, brak aktywnego opiekuna i pytania pacjenta.",
+      "mapTitle": "Kontrola Andrzeja w trzech punktach",
+      "mapSummary": "Oś historii łączy badanie, wywiad i planowaną konsultację. Nie ma wpisów opiekuna ani domyślnego udostępniania rodzinie."
+    },
+    {
+      "id": "rn-p2-patient",
+      "patientId": "p2",
+      "role": "patient",
+      "title": "Andrzej K.: moja kontrola i pytania",
+      "summary": "Pacjent widzi, co zabrać na kontrolę, jaki lek potwierdzić i jakie pytanie o wynik echa zapisać przed wizytą.",
+      "mapTitle": "Moja kontrola kardiologiczna",
+      "mapSummary": "Oś historii pokazuje wynik echa, wywiad i nadchodzącą kontrolę w prostym języku przygotowania do rozmowy."
+    },
+    {
+      "id": "rn-p2-caregiver",
+      "patientId": "p2",
+      "role": "caregiver",
+      "title": "Andrzej K.: brak aktywnego opiekuna",
+      "summary": "W tym scenariuszu nie ma aktywnej zgody dla opiekuna. Demo pokazuje, że brak zgody oznacza brak dostępu.",
+      "mapTitle": "Brak udostępnionej mapy dla opiekuna",
+      "mapSummary": "Opiekun nie powinien widzieć historii Andrzeja bez zgody. Aplikacja pokazuje stan braku dostępu zamiast danych."
+    },
+    {
+      "id": "rn-p3-doctor",
+      "patientId": "p3",
+      "role": "doctor",
+      "title": "Maja N.: kontrola dziecka przez wywiad rodzica",
+      "summary": "Lekarz widzi dziecko po infekcji, dokumenty, wyniki, leki podane w domu i obserwacje mamy jako wywiad opiekuna.",
+      "mapTitle": "Historia infekcji Mai oczami dokumentów i mamy",
+      "mapSummary": "Oś historii oddziela dokumenty pediatryczne od obserwacji Marty. Celem jest omówić kaszel, powrót do szkoły i leki faktycznie podane w domu."
+    },
+    {
+      "id": "rn-p3-patient",
+      "patientId": "p3",
+      "role": "patient",
+      "title": "Maja N.: widok rodzica przed kontrolą",
+      "summary": "Rodzic widzi przygotowanie wizyty dziecka: dokumenty, wyniki, leki podane w domu, pytania i zakres dostępu drugiego rodzica.",
+      "mapTitle": "Kontrola Mai po infekcji",
+      "mapSummary": "Oś historii prowadzi rodzica przez poradę, wyniki, obserwacje w domu i planowaną kontrolę pediatryczną."
+    },
+    {
+      "id": "rn-p3-caregiver",
+      "patientId": "p3",
+      "role": "caregiver",
+      "title": "Marta i Paweł: opieka nad dzieckiem w zakresie dostępu",
+      "summary": "Mama ma pełny zakres przygotowania wizyty, a tata widzi tylko wizyty, dokumenty i zadania. Informacje pochodzą od rodzica.",
+      "mapTitle": "Co rodzice widzą w historii Mai",
+      "mapSummary": "Oś historii opiekuna pokazuje zadania, dokumenty, wizyty i obserwacje rodzica zgodnie z zakresem zgody."
+    }
+  ],
+  "roleGoals": [
+    { "id": "rg-p1-doctor", "patientId": "p1", "role": "doctor", "goal": "W 90 sekund zobaczyć leki, braki i pytania przed procedurą.", "primaryView": "core" },
+    { "id": "rg-p1-patient", "patientId": "p1", "role": "patient", "goal": "Przygotować dokumenty, pytania i listę leków do omówienia.", "primaryView": "patientPortal" },
+    { "id": "rg-p1-caregiver", "patientId": "p1", "role": "caregiver", "goal": "Pomóc ojcu w lekach, transporcie i dokumentach w zakresie zgody.", "primaryView": "caregiverPortal" },
+    { "id": "rg-p2-doctor", "patientId": "p2", "role": "doctor", "goal": "Zobaczyć kontekst kontroli kardiologicznej i pytania pacjenta.", "primaryView": "core" },
+    { "id": "rg-p2-patient", "patientId": "p2", "role": "patient", "goal": "Przygotować pytanie o echo i potwierdzenie leku.", "primaryView": "patientPortal" },
+    { "id": "rg-p2-caregiver", "patientId": "p2", "role": "caregiver", "goal": "Zobaczyć, że bez zgody opiekun nie ma dostępu do danych.", "primaryView": "caregiverPortal" },
+    { "id": "rg-p3-doctor", "patientId": "p3", "role": "doctor", "goal": "Oddzielić dokumenty dziecka od obserwacji rodzica i pytań na kontrolę.", "primaryView": "core" },
+    { "id": "rg-p3-patient", "patientId": "p3", "role": "patient", "goal": "Jako rodzic przygotować kontrolę dziecka po infekcji.", "primaryView": "patientPortal" },
+    { "id": "rg-p3-caregiver", "patientId": "p3", "role": "caregiver", "goal": "Wiedzieć, co mama i tata widzą w zakresie zgody.", "primaryView": "caregiverPortal" }
+  ],
+  "roleVisibleSections": [
+    { "id": "rvs-p1-doctor", "patientId": "p1", "role": "doctor", "sections": ["brief 90 sekund", "leki do potwierdzenia", "źródła", "pytania do rozmowy"] },
+    { "id": "rvs-p1-patient", "patientId": "p1", "role": "patient", "sections": ["co teraz", "checklista", "moje pytania", "udostępnianie córce"] },
+    { "id": "rvs-p1-caregiver", "patientId": "p1", "role": "caregiver", "sections": ["dokumenty", "mapa", "leki", "wyniki", "gotowy wywiad", "zgody"] },
+    { "id": "rvs-p2-doctor", "patientId": "p2", "role": "doctor", "sections": ["echo serca", "lek do potwierdzenia", "wywiad pacjenta", "brak opiekuna"] },
+    { "id": "rvs-p2-patient", "patientId": "p2", "role": "patient", "sections": ["kontrola", "pytania", "lek", "wynik echa"] },
+    { "id": "rvs-p2-caregiver", "patientId": "p2", "role": "caregiver", "sections": ["brak aktywnej zgody", "brak danych do wglądu"] },
+    { "id": "rvs-p3-doctor", "patientId": "p3", "role": "doctor", "sections": ["dokumenty dziecka", "wyniki", "leki podane w domu", "obserwacje mamy"] },
+    { "id": "rvs-p3-patient", "patientId": "p3", "role": "patient", "sections": ["widok rodzica", "kontrola", "leki w domu", "pytania do pediatry"] },
+    { "id": "rvs-p3-caregiver", "patientId": "p3", "role": "caregiver", "sections": ["zakres mamy", "zakres taty", "wizyty", "dokumenty"] }
   ],
   "decisionContexts": [
     {
@@ -389,8 +496,34 @@
       },
       "transcript": "Pacjent: Mam zaplanowaną procedurę jednodniową. Chcę uporządkować dokumenty przed kwalifikacją. Przyjmuję lek wymagający decyzji przed procedurą, lek przewlekły B i preparat magnezu OTC. Lek doraźny C stosuję tylko w razie potrzeby. Nie wiem, czy potrzebne jest aktualne EKG i które wyniki powinienem mieć przy sobie.",
       "sourceRefs": [
-        "doc:d1"
+        "doc:d1",
+        "consent:g3"
       ]
+    },
+    {
+      "id": "i4",
+      "patientId": "p1",
+      "date": {
+        "__p360DateOffset": -8
+      },
+      "scenario": "Obserwacje córki-opiekuna przed procedurą",
+      "speaker": "córka / opiekun",
+      "confidence": "średnia",
+      "answers": {
+        "baseline": "Córka Madeline zgłasza, że Jan S. zwykle funkcjonuje samodzielnie, ale wymaga pomocy w przypomnieniu o dokumentach i lekach przed wizytą.",
+        "current": "Madeline chce upewnić się, które leki ojciec faktycznie przyjmuje i co ma zabrać na kwalifikację.",
+        "symptoms": "Opiekun nie zgłasza nowych objawów alarmowych w rozmowie demo; aktualny stan wymaga potwierdzenia przez lekarza.",
+        "function": "Do ustalenia pozostaje transport na procedurę i plan kontaktu po wizycie.",
+        "medications": "Córka widzi rozbieżność między listą leków w dokumentach a tym, co ojciec opisuje jako faktycznie przyjmowane.",
+        "family": "Madeline ma zgodę na leki i zadania organizacyjne; cofnięty dostęp innej osoby nie powinien być używany w raporcie."
+      },
+      "transcript": "Madeline, córka: Tata ma procedurę i boję się, że coś zgubimy. Pomagam mu z lekami i dokumentami. Chcę wiedzieć, które leki ma potwierdzić z lekarzem, czy potrzebne jest EKG, kto organizuje transport i co mamy zrobić po wizycie. To są moje obserwacje jako opiekuna, nie wynik badania.",
+      "sourceRefs": [
+        "consent:g3",
+        "doc:d1",
+        "medication:m1"
+      ],
+      "evidenceClass": "caregiver_reported"
     },
     {
       "id": "i2",
@@ -420,18 +553,18 @@
       "date": {
         "__p360DateOffset": -5
       },
-      "scenario": "Wywiad przed kontrolą dziecka z rodzicem",
-      "speaker": "rodzic",
+      "scenario": "Wywiad przed kontrolą Mai z mamą",
+      "speaker": "mama / opiekun prawny",
       "confidence": "średnia",
       "answers": {
-        "baseline": "Rodzic zgłasza, że dziecko zwykle chodzi do szkoły i funkcjonuje samodzielnie adekwatnie do wieku.",
-        "current": "Rodzic przygotowuje kontrolę po infekcji i chce uporządkować dokumenty, leki oraz obserwacje z domu.",
-        "symptoms": "Rodzic odnotował spadek gorączki i poprawę aktywności, ale chce omówić utrzymujący się kaszel w wywiadzie.",
-        "function": "Rodzic zgłasza stopniowy powrót do normalnej aktywności; powrót do zajęć szkolnych pozostaje do omówienia.",
-        "medications": "Rodzic deklaruje, że lek A z dokumentacji został zakończony wcześniej niż zapisano, a lek doraźny OTC był podawany według potrzeby.",
-        "family": "Drugi rodzic ma mieć dostęp do terminów wizyt i dokumentów, bez dostępu do pełnego raportu."
+        "baseline": "Mama Marta zgłasza, że Maja zwykle chodzi do szkoły i funkcjonuje samodzielnie adekwatnie do wieku.",
+        "current": "Mama przygotowuje kontrolę po infekcji i chce uporządkować dokumenty, leki oraz obserwacje z domu.",
+        "symptoms": "Mama odnotowała spadek gorączki i poprawę aktywności, ale chce omówić utrzymujący się kaszel w wywiadzie.",
+        "function": "Mama zgłasza stopniowy powrót do normalnej aktywności; powrót do zajęć szkolnych pozostaje do omówienia.",
+        "medications": "Mama deklaruje, że lek A z dokumentacji został zakończony wcześniej niż zapisano, a lek doraźny OTC był podawany według potrzeby.",
+        "family": "Tata Paweł ma mieć dostęp do terminów wizyt i dokumentów, bez dostępu do pełnego raportu."
       },
-      "transcript": "Rodzic: Chcę przygotować kontrolę po infekcji. Mam wpis z porady, wynik morfologii i CRP oraz potwierdzenie terminu. Lek A po infekcji z dokumentacji był podany krócej niż pamiętam z opisu, a lek doraźny OTC dla dziecka podawaliśmy tylko przy temperaturze. Dziecko czuje się lepiej, ale chcę zapytać o kaszel, powrót do szkoły i co zabrać na wizytę.",
+      "transcript": "Marta, mama: Chcę przygotować kontrolę Mai po infekcji. Mam wpis z porady, wynik morfologii i CRP oraz potwierdzenie terminu. Lek A po infekcji z dokumentacji był podany krócej niż pamiętam z opisu, a lek doraźny OTC podawaliśmy tylko przy temperaturze. Maja czuje się lepiej, ale chcę zapytać o kaszel, powrót do szkoły i co zabrać na wizytę.",
       "sourceRefs": [
         "doc:d5",
         "doc:d6",
@@ -1234,7 +1367,7 @@
     {
       "id": "m7",
       "patientId": "p3",
-      "name": "Lek doraźny OTC dla dziecka",
+      "name": "Lek doraźny OTC",
       "substance": "lek przeciwgorączkowy OTC",
       "dose": "brak danych w dokumentacji",
       "frequency": "doraźnie według relacji rodzica",
@@ -1824,13 +1957,13 @@
     {
       "id": "rep1",
       "patientId": "p1",
-      "type": "Raport kontekstowy Pacjent 360",
+      "type": "Raport kontekstowy Pacjent360™",
       "generatedAt": {
         "__p360DateOffset": -8,
         "__p360Time": "09:30:00"
       },
       "version": "1.0",
-      "author": "Pacjent 360",
+      "author": "Pacjent360™",
       "status": "DITL: do oceny lekarza",
       "sourceRefs": [
         "doc:d1",
@@ -1842,13 +1975,13 @@
     {
       "id": "rep3",
       "patientId": "p3",
-      "type": "Raport kontekstowy Pacjent 360",
+      "type": "Raport kontekstowy Pacjent360™",
       "generatedAt": {
         "__p360DateOffset": -4,
         "__p360Time": "16:20:00"
       },
       "version": "1.0",
-      "author": "Pacjent 360",
+      "author": "Pacjent360™",
       "status": "DITL: do oceny lekarza",
       "sourceRefs": [
         "doc:d5",
@@ -2065,13 +2198,18 @@
     {
       "id": "g3",
       "patientId": "p1",
-      "subject": "Anna K. - córka",
-      "scope": "leki, zadania organizacyjne i pytania o uzgodnienie listy leków",
+      "subject": "Madeline S. - córka Jana",
+      "scope": "szeroki zakres opieki przed procedurą: dokumenty, oś historii, wyniki, leki, obserwacje, gotowy wywiad i zadania organizacyjne",
       "role": "osoba wspierająca",
       "caregiverId": "cg-med-p1",
-      "caregiverName": "Anna K.",
+      "caregiverName": "Madeline S.",
       "areas": [
+        "documents",
+        "results",
         "medications",
+        "observations",
+        "report",
+        "visits",
         "tasks"
       ],
       "validTo": {
@@ -2081,17 +2219,19 @@
       "sourceRefs": [
         "consent:g3",
         "interview:i1",
+        "interview:i4",
+        "doc:d3",
         "medication:m1"
       ]
     },
     {
       "id": "g4",
       "patientId": "p1",
-      "subject": "Piotr K. - osoba wspierająca",
-      "scope": "wizyty, dokumenty i raport kontekstowy",
+      "subject": "Tomasz S. - syn Jana",
+      "scope": "wizyty, dokumenty i raport kontekstowy; dostęp cofnięty w danych demo",
       "role": "osoba wspierająca",
       "caregiverId": "cg-visit-p1",
-      "caregiverName": "Piotr K.",
+      "caregiverName": "Tomasz S.",
       "areas": [
         "visits",
         "documents",
@@ -2110,11 +2250,11 @@
     {
       "id": "g5",
       "patientId": "p3",
-      "subject": "Rodzic A",
+      "subject": "Marta N. - mama Mai",
       "scope": "pełny zakres przygotowania wizyty dziecka: dokumenty, wyniki, leki, obserwacje, raport i zadania organizacyjne",
       "role": "rodzic",
       "caregiverId": "parent-a-p3",
-      "caregiverName": "Rodzic A",
+      "caregiverName": "Marta N.",
       "areas": [
         "documents",
         "results",
@@ -2137,11 +2277,11 @@
     {
       "id": "g6",
       "patientId": "p3",
-      "subject": "Rodzic B",
+      "subject": "Paweł N. - tata Mai",
       "scope": "ograniczony zakres: terminy wizyt, dokumenty i zadania organizacyjne",
       "role": "rodzic",
       "caregiverId": "parent-b-p3",
-      "caregiverName": "Rodzic B",
+      "caregiverName": "Paweł N.",
       "areas": [
         "visits",
         "documents",
@@ -2157,6 +2297,111 @@
       ]
     }
   ],
+  "careContracts": [
+    {
+      "id": "cc1",
+      "patientId": "p1",
+      "scenario": "Jan S. — senior przed planową procedurą",
+      "relationship": "pacjent senior + córka-opiekun",
+      "patientRole": "Jan S. jest pacjentem i potwierdza własny wywiad.",
+      "primaryInformant": "Madeline S., córka Jana, wnosi obserwacje opiekuna i pomaga w lekach, dokumentach, wynikach, wizytach oraz zadaniach organizacyjnych.",
+      "doctorGets": [
+        "dokumenty kwalifikacyjne, wyniki kontrolne i listę leków",
+        "wywiad Jana oraz obserwacje Madeline oznaczone jako opiekun",
+        "status zgód: Madeline ma aktywny szeroki zakres opieki, Tomasz ma dostęp cofnięty"
+      ],
+      "patientGets": [
+        "prostą mapę przygotowania do procedury",
+        "pytania do omówienia z lekarzem",
+        "widoczny zakres tego, co udostępnia córce: dokumenty, mapa, leki, wyniki, obserwacje i zadania"
+      ],
+      "caregiverGets": [
+        "dokumenty, mapę, leki, wyniki, gotowy wywiad i zadania organizacyjne w zakresie zgody",
+        "pytania o dokumenty, transport i plan po wizycie",
+        "brak dostępu do obszarów poza zgodą"
+      ],
+      "caregiverAdds": [
+        "obserwacje opiekuna",
+        "potwierdzenie faktycznie przyjmowanych leków",
+        "informacje organizacyjne przed wizytą"
+      ],
+      "safetyBoundary": "Obserwacje Madeline są wywiadem/opiekunem, nie faktem laboratoryjnym. Lekarz potwierdza je w rozmowie.",
+      "sourceRefs": [
+        "consent:g3",
+        "consent:g4",
+        "interview:i1",
+        "interview:i4",
+        "decision:dc1"
+      ]
+    },
+    {
+      "id": "cc2",
+      "patientId": "p2",
+      "scenario": "Andrzej K. — samodzielna kontrola kardiologiczna",
+      "relationship": "pacjent dorosły bez aktywnego opiekuna",
+      "patientRole": "Andrzej K. jest pacjentem i głównym źródłem wywiadu.",
+      "primaryInformant": "Brak aktywnego opiekuna w danych demo; lekarz opiera się na dokumentach i wywiadzie pacjenta.",
+      "doctorGets": [
+        "echo serca i dane z dokumentu kardiologicznego",
+        "wywiad Andrzeja przed kontrolą",
+        "pytania o leki i nowe objawy do potwierdzenia w gabinecie"
+      ],
+      "patientGets": [
+        "krótki plan przygotowania kontroli",
+        "listę pytań o wynik echa i status leku",
+        "mapę: badanie, wywiad, planowana konsultacja"
+      ],
+      "caregiverGets": [
+        "brak aktywnego zakresu dla opiekuna",
+        "pacjent może dodać opiekuna dopiero przez zgodę",
+        "raport nie jest automatycznie udostępniany rodzinie"
+      ],
+      "caregiverAdds": [
+        "brak wpisów opiekuna w tym scenariuszu"
+      ],
+      "safetyBoundary": "Brak opiekuna oznacza brak domyślnego udostępniania. Lekarz widzi tylko dokumenty i informacje podane przez pacjenta.",
+      "sourceRefs": [
+        "doc:d4",
+        "interview:i2",
+        "decision:dc2"
+      ]
+    },
+    {
+      "id": "cc3",
+      "patientId": "p3",
+      "scenario": "Maja N. — dziecko po infekcji",
+      "relationship": "dziecko + rodzic jako główne źródło informacji",
+      "patientRole": "Maja N. jest pacjentką, ale informacje przed wizytą wnosi rodzic.",
+      "primaryInformant": "Marta N., mama Mai, przygotowuje dokumenty, leki faktycznie podane w domu i obserwacje po infekcji.",
+      "doctorGets": [
+        "dokument z porady, wyniki kontrolne i termin wizyty",
+        "wywiad mamy oznaczony jako obserwacja opiekuna",
+        "zakres dostępu drugiego rodzica: wizyty, dokumenty i zadania"
+      ],
+      "patientGets": [
+        "mapę kontroli pediatrycznej widzianą przez rodzica",
+        "pytania o kaszel, powrót do szkoły i leki podane w domu",
+        "rozróżnienie dokumentów od obserwacji rodzica"
+      ],
+      "caregiverGets": [
+        "Marta widzi pełny zakres przygotowania wizyty",
+        "Paweł widzi tylko wizyty, dokumenty i zadania",
+        "obserwacje rodzica nie są oznaczane jako wynik badania"
+      ],
+      "caregiverAdds": [
+        "obserwacje po infekcji",
+        "informacje o lekach faktycznie podanych w domu",
+        "pytania rodzica do lekarza"
+      ],
+      "safetyBoundary": "W przypadku dziecka rodzic jest źródłem wywiadu. System nie zamienia obserwacji rodzica w diagnozę ani wynik badania.",
+      "sourceRefs": [
+        "consent:g5",
+        "consent:g6",
+        "interview:i3",
+        "decision:dc3"
+      ]
+    }
+  ],
   "audit": [
     {
       "id": "u1",
@@ -2165,7 +2410,7 @@
         "__p360DateOffset": -8,
         "__p360Time": "09:30:00"
       },
-      "actor": "Pacjent 360",
+      "actor": "Pacjent360™",
       "action": "wygenerowano raport kontekstowy",
       "scope": "raport, źródła d1-d3, wywiad i1"
     },
@@ -2176,7 +2421,7 @@
         "__p360DateOffset": -9,
         "__p360Time": "12:04:00"
       },
-      "actor": "Pacjent",
+      "actor": "Jan S.",
       "action": "dodano wywiad pacjenta",
       "scope": "transkrypcja i odpowiedzi strukturalne"
     },
@@ -2187,7 +2432,7 @@
         "__p360DateOffset": -4,
         "__p360Time": "16:20:00"
       },
-      "actor": "Rodzic A",
+      "actor": "Marta N. - mama",
       "action": "dodano wywiad rodzica",
       "scope": "transkrypcja, leki faktycznie podane i obserwacje opiekuna"
     },
@@ -2198,7 +2443,7 @@
         "__p360DateOffset": -4,
         "__p360Time": "16:25:00"
       },
-      "actor": "Pacjent 360",
+      "actor": "Pacjent360™",
       "action": "wygenerowano raport kontekstowy",
       "scope": "raport rep3, źródła d5-d7, wywiad i3"
     }
