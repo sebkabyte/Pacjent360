@@ -1,20 +1,20 @@
-# Pacjent 360 - architektura systemu
+# Pacjent360™ - architektura systemu
 
 Wersja: `0.2`
 
-Cel: zaprojektowac Pacjent 360 jako otwarta warstwe kontekstu pacjenta nad istniejacym ekosystemem e-zdrowia, w szczegolnosci IKP/P1, bez zastapienia IKP i bez obchodzenia oficjalnych mechanizmow dostepu.
+Cel: zaprojektowac Pacjent360™ jako otwarta warstwe kontekstu pacjenta nad istniejacym ekosystemem e-zdrowia, w szczegolnosci IKP/P1, bez zastapienia IKP i bez obchodzenia oficjalnych mechanizmow dostepu.
 
 Dokument nadrzedny dla LLM i asystentow operacyjnych: `SSOT.md`. Jesli opis agentow, zakresow lub outputow w architekturze koliduje z `SSOT.md`, obowiazuje `SSOT.md` do czasu formalnej aktualizacji ADR.
 
 ## Teza architektoniczna
 
-Pacjent 360 nie powinien byc aplikacja, ktora "udaje pacjenta" i loguje sie do IKP za niego. Powinien byc:
+Pacjent360™ nie powinien byc aplikacja, ktora "udaje pacjenta" i loguje sie do IKP za niego. Powinien byc:
 
 > warstwa porzadkowania, wspolpracy i kontekstu decyzyjnego nad danymi pacjenta.
 
-IKP/P1 pozostaje zrodlem urzedowym dla e-recept, e-skierowan, EDM i zdarzen medycznych. Pacjent 360 dodaje warstwe, ktorej w praktyce klinicznej czesto brakuje: wywiad, os czasu, leki faktycznie przyjmowane, pytania do lekarza, braki danych, przypomnienia, zgody rodzinne i raport "co trzeba wyjasnic przed decyzja".
+IKP/P1 pozostaje zrodlem urzedowym dla e-recept, e-skierowan, EDM i zdarzen medycznych. Pacjent360™ dodaje warstwe, ktorej w praktyce klinicznej czesto brakuje: wywiad, os czasu, leki faktycznie przyjmowane, pytania do lekarza, braki danych, przypomnienia, zgody rodzinne i raport "co trzeba wyjasnic przed decyzja".
 
-Druga teza produktu: Pacjent 360 powinien obejmowac cala petle wizyty, nie tylko przygotowanie raportu przed kontaktem medycznym.
+Druga teza produktu: Pacjent360™ powinien obejmowac cala petle wizyty, nie tylko przygotowanie raportu przed kontaktem medycznym.
 
 ```text
 Przed wizyta -> w trakcie wizyty -> po wizycie
@@ -27,7 +27,7 @@ Po wizycie system moze pomoc pacjentowi i opiekunowi zrozumiec, co padlo w rozmo
 
 1. Pacjent kontroluje dostep.
 2. IKP/P1 pozostaje zrodlem urzedowym.
-3. Pacjent 360 nie przechowuje loginow ani hasel do IKP.
+3. Pacjent360™ nie przechowuje loginow ani hasel do IKP.
 4. Kazda informacja ma zrodlo, typ zrodla i poziom pewnosci.
 5. Kazda decyzja kliniczna pozostaje DITL: Doctor in the Loop. Lekarz decyduje, system pyta i porzadkuje.
 6. Przypomnienia nie sa zaleceniami terapeutycznymi. Sa odtworzeniem planu z dokumentu, recepty, wizyty albo wpisu pacjenta oznaczonego jako "do potwierdzenia".
@@ -112,7 +112,7 @@ flowchart LR
 
 ## Granice odpowiedzialnosci
 
-| Obszar | IKP/P1 | Pacjent 360 |
+| Obszar | IKP/P1 | Pacjent360™ |
 | --- | --- | --- |
 | e-recepta, e-skierowanie, EDM | Zrodlo urzedowe | Odczyt/import jako zrodlo kontekstu, jesli legalnie dostepne |
 | Dokumentacja dodana przez pacjenta | Nie zawsze kompletna | Przechowywanie, opis, zrodlo, os czasu |
@@ -420,7 +420,7 @@ Zasady:
 
 ### 8. Warstwa asystentow operacyjnych
 
-Asystent operacyjny w Pacjent 360 nie jest "autonomicznym lekarzem". Dziala na jawnych zasadach, w zakresie zgody pacjenta i z pelnym audytem.
+Asystent operacyjny w Pacjent360™ nie jest "autonomicznym lekarzem". Dziala na jawnych zasadach, w zakresie zgody pacjenta i z pelnym audytem.
 
 Dozwolone klasy techniczne:
 
@@ -556,7 +556,7 @@ Widoki:
    - dzisiejsza decyzja,
    - pytania DITL.
 
-2. Kokpit pacjenta: `Moj Pacjent 360`
+2. Kokpit pacjenta: `Moj Pacjent360™`
    - moje dokumenty,
    - moje badania,
    - moje wizyty,
@@ -697,7 +697,7 @@ Obecny prototyp moze zostac statyczny, ale dokumentacja powinna juz prowadzic pr
 
 Krotka wersja na strone www:
 
-> Pacjent 360 to open source companion dla IKP/P1: warstwa, ktora porzadkuje historie pacjenta, leki, wizyty, dokumenty, wywiady, zgody rodzinne i pytania do lekarza. Przed wizyta pomaga przygotowac kontekst. Po wizycie pomaga zamienic rozmowe w prosty opis ustalen, niejasnosci i zadan organizacyjnych. Nie zastepuje IKP, nie diagnozuje i nie wydaje zalecen. Pomaga pacjentowi, rodzinie i lekarzowi szybciej zobaczyc, co wiadomo, czego brakuje i co trzeba wyjasnic przed decyzja.
+> Pacjent360™ to open source companion dla IKP/P1: warstwa, ktora porzadkuje historie pacjenta, leki, wizyty, dokumenty, wywiady, zgody rodzinne i pytania do lekarza. Przed wizyta pomaga przygotowac kontekst. Po wizycie pomaga zamienic rozmowe w prosty opis ustalen, niejasnosci i zadan organizacyjnych. Nie zastepuje IKP, nie diagnozuje i nie wydaje zalecen. Pomaga pacjentowi, rodzinie i lekarzowi szybciej zobaczyc, co wiadomo, czego brakuje i co trzeba wyjasnic przed decyzja.
 
 ## Referencje
 

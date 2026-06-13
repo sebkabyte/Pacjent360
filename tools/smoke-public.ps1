@@ -87,7 +87,7 @@ try {
   Assert-True ([int]$assetResponse.StatusCode -eq 200) "Hero asset should return 200"
   Assert-True ($assetResponse.RawContentLength -gt 10000) "Hero asset looks unexpectedly small"
 
-  Assert-True ($index.Contains("Pacjent 360")) "index.html should contain project name"
+  Assert-True ($index.Contains("Pacjent360")) "index.html should contain project name"
   Assert-True ($index.Contains("demo.html")) "index.html should link demo.html"
   Assert-True ($index.Contains("CeZ") -and $index.Contains("NFZ") -and $index.Contains("IKP")) "index.html should show public-system independence"
   Assert-True ($index.Contains('rel="canonical" href="https://pacjent360.com.pl/"')) "index.html should include canonical URL"
@@ -118,12 +118,12 @@ try {
   Assert-True ($app.Contains("Doctor in the Loop") -or $app.Contains("DITL")) "app.js should contain DITL language"
 
   Assert-True ($privacy.Contains("localStorage")) "privacy.html should disclose localStorage"
-  Assert-True ($privacy.Contains("pacjent360-state-v7")) "privacy.html should disclose the current demo localStorage key"
+  Assert-True ($privacy.Contains("pacjent360-state-v11")) "privacy.html should disclose the current demo localStorage key"
   Assert-True ($privacy.Contains("lucide@0.468.0")) "privacy.html should disclose pinned Lucide"
   Assert-True ($privacy.Contains('rel="canonical" href="https://pacjent360.com.pl/privacy.html"')) "privacy.html should include canonical URL"
-  Assert-True ($disclaimer.Contains("Pacjent 360")) "disclaimer.html should contain project name"
+  Assert-True ($disclaimer.Contains("Pacjent360")) "disclaimer.html should contain project name"
   Assert-True ($disclaimer.Contains('rel="canonical" href="https://pacjent360.com.pl/disclaimer.html"')) "disclaimer.html should include canonical URL"
-  Assert-True ($maintenance.Contains("Pacjent 360")) "maintenance.html should contain project name"
+  Assert-True ($maintenance.Contains("Pacjent360")) "maintenance.html should contain project name"
   Assert-True ($health.Contains("project=pacjent360") -and $health.Contains("contains_patient_data=false")) "health.txt should expose static deployment markers"
 
   $blockedPaths = @(".env", ".git/HEAD", "README.md", "PROGRAM_PLAN.md", "dist/", "prints/")

@@ -97,6 +97,19 @@ button:focus-visible {
   font-size: 13px;
 }
 
+.brand-name {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 1px;
+}
+
+.brand-legal-mark {
+  font-size: 0.56em;
+  line-height: 1;
+  margin-left: 1px;
+  transform: translateY(-0.18em);
+}
+
 .site-nav nav {
   display: flex;
   align-items: center;

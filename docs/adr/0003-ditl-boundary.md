@@ -4,7 +4,7 @@ Status: zaakceptowany
 
 ## Decyzja
 
-Pacjent 360 stosuje zasadę DITL: Doctor in the Loop. System może porządkować dane, braki, pytania, źródła i zadania organizacyjne. System nie może diagnozować, oceniać pilności, rekomendować terapii ani zastępować decyzji lekarza.
+Pacjent360™ stosuje zasadę DITL: Doctor in the Loop. System może porządkować dane, braki, pytania, źródła i zadania organizacyjne. System nie może diagnozować, oceniać pilności, rekomendować terapii ani zastępować decyzji lekarza.
 
 ## Clinical Safety Checklist
 

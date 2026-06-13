@@ -6,7 +6,7 @@ Status: przyjęte
 
 ## Kontekst
 
-`docs/SSOT.md` nosił tytuł „Pacjent 360 SSOT: LLM Agents" i opisywał wyłącznie rolę LLM/agentów, ale w hierarchii dokumentów funkcjonował jak nadrzędne źródło prawdy całego produktu. Brakowało dokumentu odpowiadającego na pytania: czym jest produkt, kto jest użytkownikiem, jaki jest kanoniczny model danych, co jest no-go, jak ma się krąg opieki (ludzie) do agentów (funkcje systemu). Problem wskazała analiza zewnętrzna (materiały koncepcyjne autora, 2026-06-09); ocena potwierdziła, że krytyka jest trafna.
+`docs/SSOT.md` nosił tytuł „Pacjent360™ SSOT: LLM Agents" i opisywał wyłącznie rolę LLM/agentów, ale w hierarchii dokumentów funkcjonował jak nadrzędne źródło prawdy całego produktu. Brakowało dokumentu odpowiadającego na pytania: czym jest produkt, kto jest użytkownikiem, jaki jest kanoniczny model danych, co jest no-go, jak ma się krąg opieki (ludzie) do agentów (funkcje systemu). Problem wskazała analiza zewnętrzna (materiały koncepcyjne autora, 2026-06-09); ocena potwierdziła, że krytyka jest trafna.
 
 ## Decyzja
 

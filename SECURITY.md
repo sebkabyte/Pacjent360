@@ -1,6 +1,6 @@
 # Security Policy
 
-Pacjent 360 jest prototypem koncepcyjnym przeznaczonym wyłącznie do pracy z fikcyjnymi danymi pacjentów.
+Pacjent360™ jest prototypem koncepcyjnym przeznaczonym wyłącznie do pracy z fikcyjnymi danymi pacjentów.
 
 ## Zgłaszanie problemów
 
@@ -49,7 +49,7 @@ Priorytetowe obszary:
 
 ## LLM i asystenci operacyjni
 
-Do czasu osobnej walidacji Pacjent 360 nie wysyła realnych danych pacjentów do zewnętrznych modeli LLM. Prompt, fixture, dry-run, eksport testowy i log agenta mogą używać wyłącznie danych fikcyjnych, kompozytowych albo syntetycznych.
+Do czasu osobnej walidacji Pacjent360™ nie wysyła realnych danych pacjentów do zewnętrznych modeli LLM. Prompt, fixture, dry-run, eksport testowy i log agenta mogą używać wyłącznie danych fikcyjnych, kompozytowych albo syntetycznych.
 
 Każda przyszła funkcja LLM musi przejść przez `docs/SSOT.md`, Sprint A0 Safety & Contracts, przegląd prywatności i przegląd bezpieczeństwa. Szczególne ryzyka bezpieczeństwa i prywatności:
 

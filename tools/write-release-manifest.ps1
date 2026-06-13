@@ -58,7 +58,7 @@ $dist = Join-Path $root "dist"
 Assert-True (Test-Path $dist) "dist directory does not exist. Run tools/validate-go-live.ps1 first."
 
 $manifest = [ordered]@{
-  project = "Pacjent 360"
+  project = "Pacjent360"
   status = "local release candidate"
   generatedAtUtc = (Get-Date).ToUniversalTime().ToString("o")
   externalGates = [ordered]@{

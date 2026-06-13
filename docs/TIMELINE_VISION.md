@@ -1,4 +1,4 @@
-# Pacjent 360: Mapa Pacjenta 360
+# Pacjent360™: Mapa Pacjenta 360
 
 Status: vision SSOT
 Zakres: docelowy timeline, warstwy, epizody, zasilanie danymi, asystenci operacyjni
@@ -6,9 +6,9 @@ Wersja: 0.1
 
 ## Teza
 
-Timeline nie jest jedna z zakladek Pacjent 360. Timeline jest rdzeniem produktu.
+Timeline nie jest jedna z zakladek Pacjent360™. Timeline jest rdzeniem produktu.
 
-Docelowo Pacjent 360 powinien byc wspolna, warstwowa mapa historii pacjenta. Lekarz, pacjent i opiekun patrza na te sama historie, ale z innym jezykiem, gestoscia informacji i zakresem dostepu.
+Docelowo Pacjent360™ powinien byc wspolna, warstwowa mapa historii pacjenta. Lekarz, pacjent i opiekun patrza na te sama historie, ale z innym jezykiem, gestoscia informacji i zakresem dostepu.
 
 Robocza nazwa:
 
@@ -22,7 +22,7 @@ Alternatywy:
 
 ## North Star
 
-Pacjent 360 pomaga nie zgubic historii pacjenta.
+Pacjent360™ pomaga nie zgubic historii pacjenta.
 
 System pokazuje:
 
@@ -82,7 +82,7 @@ Gdzie:
 
 ## Byty Zasilajace Mape
 
-| Obszar | Byty Pacjent 360 | Odpowiedniki interop/FHIR |
+| Obszar | Byty Pacjent360™ | Odpowiedniki interop/FHIR |
 |---|---|---|
 | Kontakt z systemem | wizyta, teleporada, SOR, hospitalizacja | `Encounter`, `Appointment` |
 | Epizod | ciag zdarzen wokol problemu, procedury lub okresu opieki | `EpisodeOfCare` |
@@ -97,7 +97,7 @@ Gdzie:
 
 Kluczowa inspiracja z FHIR: rozdzielenie `Request` i `Event`.
 
-Pacjent 360 powinien odroznic:
+Pacjent360™ powinien odroznic:
 
 - co bylo zaplanowane,
 - co zostalo zlecone,
@@ -624,10 +624,10 @@ No-go po v0.3:
 
 ## Decyzja Councilu
 
-Pacjent 360 powinien przestac myslec o timeline jako o "module".
+Pacjent360™ powinien przestac myslec o timeline jako o "module".
 
 Docelowo:
 
-> Pacjent 360 = Mapa Pacjenta 360 + soczewki: lekarz, pacjent, opiekun, dokumenty, leki, raport, zgody.
+> Pacjent360™ = Mapa Pacjenta 360 + soczewki: lekarz, pacjent, opiekun, dokumenty, leki, raport, zgody.
 
 To jest produktowa roznica miedzy dashboardem a systemem, ktory naprawde pomaga spotkac sie przy tej samej historii.

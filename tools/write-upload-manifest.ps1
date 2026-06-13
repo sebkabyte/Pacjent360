@@ -65,7 +65,7 @@ Assert-True (-not ($filePaths -contains "deployment-handoff.txt")) "Upload manif
 Assert-True (-not ($filePaths -contains "upload-ready-manifest.json")) "Upload manifest should not include upload-ready-manifest.json"
 
 $manifest = [pscustomobject]@{
-  project = "Pacjent 360"
+  project = "Pacjent360"
   generatedAtUtc = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
   uploadDir = $UploadDir
   fileCount = @($files).Count
@@ -79,7 +79,7 @@ $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 Write-Host "Upload manifest written: $outputFullPath"
 
 $checklistLines = New-Object System.Collections.Generic.List[string]
-$checklistLines.Add("Pacjent 360 document root checklist") | Out-Null
+$checklistLines.Add("Pacjent360 document root checklist") | Out-Null
 $checklistLines.Add("GeneratedAtUtc: $((Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ"))") | Out-Null
 $checklistLines.Add("TargetBaseUrl: $BaseUrl") | Out-Null
 $checklistLines.Add("ExpectedFileCount: $($manifest.fileCount)") | Out-Null
@@ -126,7 +126,7 @@ if (-not $SkipDeploymentHandoff) {
   $documentRootChecklistHash = (Get-FileHash -LiteralPath $documentRootChecklistFullPath -Algorithm SHA256).Hash.ToLowerInvariant()
   $handoffLines = New-Object System.Collections.Generic.List[string]
 
-  $handoffLines.Add("Pacjent 360 deployment handoff") | Out-Null
+  $handoffLines.Add("Pacjent360 deployment handoff") | Out-Null
   $handoffLines.Add("GeneratedAtUtc: $((Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ"))") | Out-Null
   $handoffLines.Add("ManifestGeneratedAtUtc: $($releaseManifest.generatedAtUtc)") | Out-Null
   $handoffLines.Add("") | Out-Null

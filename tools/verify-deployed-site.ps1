@@ -252,10 +252,10 @@ $assetResponse = Invoke-WebRequest -Uri (Join-WebPath $base "assets/hero-clinica
 Assert-True ([int]$assetResponse.StatusCode -eq 200) "Hero asset should return 200"
 Assert-True ($assetResponse.RawContentLength -gt 10000) "Hero asset looks unexpectedly small"
 
-Assert-True ($index.Contains("Pacjent 360")) "index.html should contain project name"
+Assert-True ($index.Contains("Pacjent360")) "index.html should contain project name"
 Assert-True ($index.Contains("demo.html")) "index.html should link demo.html"
 Assert-True ($index.Contains("CeZ") -and $index.Contains("NFZ") -and $index.Contains("IKP")) "index.html should show public-system independence"
-Assert-True ($index.Contains("nie zastępuje lekarza") -or ($index.Contains("zast") -and $index.Contains("lekarza"))) "index.html should state that Pacjent 360 does not replace the doctor"
+Assert-True ($index.Contains("nie zastępuje lekarza") -or ($index.Contains("zast") -and $index.Contains("lekarza"))) "index.html should state that Pacjent360 does not replace the doctor"
 Assert-True ($index.Contains('rel="canonical" href="https://pacjent360.com.pl/"')) "index.html should include canonical URL"
 
 Assert-True ($demo.Contains("DANE FIKCYJNE")) "demo.html should show fictional data marker"
@@ -282,12 +282,12 @@ Assert-True ($app.Contains("consentSourceRefsForContract")) "app.js should conta
 Assert-True ($demoData.Contains("consent:g1")) "patient360-demo-data.js should contain consent source refs"
 
 Assert-True ($privacy.Contains("localStorage")) "privacy.html should disclose localStorage"
-Assert-True ($privacy.Contains("pacjent360-state-v7")) "privacy.html should disclose the current demo localStorage key"
+Assert-True ($privacy.Contains("pacjent360-state-v11")) "privacy.html should disclose the current demo localStorage key"
 Assert-True ($privacy.Contains("lucide@0.468.0")) "privacy.html should disclose pinned Lucide"
 Assert-True ($privacy.Contains('rel="canonical" href="https://pacjent360.com.pl/privacy.html"')) "privacy.html should include canonical URL"
-Assert-True ($disclaimer.Contains("Pacjent 360")) "disclaimer.html should contain project name"
+Assert-True ($disclaimer.Contains("Pacjent360")) "disclaimer.html should contain project name"
 Assert-True ($disclaimer.Contains('rel="canonical" href="https://pacjent360.com.pl/disclaimer.html"')) "disclaimer.html should include canonical URL"
-Assert-True ($maintenance.Contains("Pacjent 360")) "maintenance.html should contain project name"
+Assert-True ($maintenance.Contains("Pacjent360")) "maintenance.html should contain project name"
 Assert-True ($health.Contains("project=pacjent360") -and $health.Contains("contains_patient_data=false")) "health.txt should expose static deployment markers"
 Assert-True ($health.Contains("medical_device=false") -and $health.Contains("clinical_decision_support=false")) "health.txt should expose safety boundary markers"
 

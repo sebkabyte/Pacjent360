@@ -1,18 +1,18 @@
-# Pacjent 360 SSOT: LLM i agenci operacyjni
+# Pacjent360™ SSOT: LLM i agenci operacyjni
 
 Status: decyzja produktowa po council. Zakres: wyłącznie rola LLM i agentów operacyjnych.
 
-Nadrzędnym źródłem prawdy o produkcie jest `PRODUCT_SSOT.md` w katalogu głównym repo (ADR 0005). Ten dokument jest pojedynczym źródłem prawdy **dla roli LLM i agentów** w Pacjent 360 i działa w granicach wyznaczonych przez `PRODUCT_SSOT.md`. Obowiązuje dla backlogu, prototypów, demo, przyszłych PR oraz rozmów z partnerami. W razie konfliktu języka lub zakresu agentów z innymi materiałami produktowymi ten dokument ma pierwszeństwo do czasu formalnej aktualizacji; w razie konfliktu o to, czym jest produkt, rozstrzyga `PRODUCT_SSOT.md`.
+Nadrzędnym źródłem prawdy o produkcie jest `PRODUCT_SSOT.md` w katalogu głównym repo (ADR 0005). Ten dokument jest pojedynczym źródłem prawdy **dla roli LLM i agentów** w Pacjent360™ i działa w granicach wyznaczonych przez `PRODUCT_SSOT.md`. Obowiązuje dla backlogu, prototypów, demo, przyszłych PR oraz rozmów z partnerami. W razie konfliktu języka lub zakresu agentów z innymi materiałami produktowymi ten dokument ma pierwszeństwo do czasu formalnej aktualizacji; w razie konfliktu o to, czym jest produkt, rozstrzyga `PRODUCT_SSOT.md`.
 
 ## Decyzja główna
 
-LLM w Pacjent 360 działa jako **sekretariat kontekstu**, nie jako doradca medyczny.
+LLM w Pacjent360™ działa jako **sekretariat kontekstu**, nie jako doradca medyczny.
 
 System może porządkować informacje, wskazywać braki, zadawać pytania DITL, sprawdzać źródła, przygotowywać checklisty i pomagać w audycie danych. System nie diagnozuje, nie rekomenduje leczenia, nie ocenia pilności, nie prowadzi triage i nie zastępuje decyzji lekarza ani innego uprawnionego profesjonalisty medycznego.
 
 ## Intended Purpose
 
-Pacjent 360 ma pomagać pacjentowi, opiekunowi i lekarzowi szybciej zobaczyć kontekst potrzebny przed wizytą lub decyzją medyczną.
+Pacjent360™ ma pomagać pacjentowi, opiekunowi i lekarzowi szybciej zobaczyć kontekst potrzebny przed wizytą lub decyzją medyczną.
 
 Dozwolony cel użycia:
 
@@ -92,7 +92,7 @@ Wymagania dodatkowe:
 
 ### Forbidden Agents
 
-Agenci zakazani nie mogą być implementowani w Pacjent 360 bez zmiany intended purpose, pełnej walidacji klinicznej, prawnej i regulacyjnej oraz odrębnej decyzji council.
+Agenci zakazani nie mogą być implementowani w Pacjent360™ bez zmiany intended purpose, pełnej walidacji klinicznej, prawnej i regulacyjnej oraz odrębnej decyzji council.
 
 Zakazani są agenci, którzy:
 

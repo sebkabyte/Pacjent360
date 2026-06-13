@@ -1,4 +1,4 @@
-# Pacjent 360: runbook publikacji na nazwa.pl
+# Pacjent360™: runbook publikacji na nazwa.pl
 
 Status: praktyczny runbook dla pierwszego uploadu `pacjent360.com.pl`.
 

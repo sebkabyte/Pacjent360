@@ -1,4 +1,4 @@
-# Pacjent 360
+# Pacjent360™
 
 Pacjent przychodzi do systemu ochrony zdrowia z historią, nie z tabelą danych.
 
@@ -6,7 +6,7 @@ Ma wyniki badań, wypisy, listę leków, skierowania, objawy, wspomnienia z popr
 
 Problemem bardzo często nie jest brak danych. Problemem jest brak kontekstu.
 
-**Pacjent 360** to otwarty projekt, który próbuje odpowiedzieć na jedno praktyczne pytanie:
+**Pacjent360™** to otwarty projekt, który próbuje odpowiedzieć na jedno praktyczne pytanie:
 
 > Co trzeba wyjaśnić przed dzisiejszą decyzją medyczną?
 
@@ -22,7 +22,7 @@ Problemem bardzo często nie jest brak danych. Problemem jest brak kontekstu.
 
 ## O co chodzi
 
-Pacjent 360 ma być warstwą porządkującą historię pacjenta: dokumenty, badania, leki, wizyty, wywiady, obserwacje, zgody, przypomnienia i pytania do lekarza.
+Pacjent360™ ma być warstwą porządkującą historię pacjenta: dokumenty, badania, leki, wizyty, wywiady, obserwacje, zgody, przypomnienia i pytania do lekarza.
 
 Nie chodzi o to, żeby system zastąpił lekarza. Chodzi o to, żeby przed rozmową z lekarzem szybciej zobaczyć:
 
@@ -38,7 +38,7 @@ To jest projekt o lepszym kontekście, nie o automatycznej diagnozie.
 
 Polski pacjent coraz częściej ma dostęp do danych w IKP, mojeIKP, dokumentach PDF, wynikach badań i systemach placówek. Ale sam dostęp do informacji nie oznacza jeszcze, że da się ją szybko zrozumieć w sytuacji medycznej.
 
-Pacjent 360 ma ułożyć tę historię w formę przydatną dla trzech stron:
+Pacjent360™ ma ułożyć tę historię w formę przydatną dla trzech stron:
 
 - dla pacjenta, który chce rozumieć swoje badania, wizyty, leki i plan opieki,
 - dla lekarza, który potrzebuje krótkiego kontekstu decyzyjnego,
@@ -48,7 +48,7 @@ W obecnej wersji alfa pierwszy proces jest węższy: pacjent, rodzic albo opieku
 
 ## Dlaczego teraz
 
-Tak. Pacjent 360 powinien iść z duchem aktualnych publikacji, ale bez udawania, że jest częścią państwowego systemu, certyfikowanym wyrobem medycznym albo narzędziem podejmującym decyzje kliniczne.
+Tak. Pacjent360™ powinien iść z duchem aktualnych publikacji, ale bez udawania, że jest częścią państwowego systemu, certyfikowanym wyrobem medycznym albo narzędziem podejmującym decyzje kliniczne.
 
 Aktualny kierunek jest spójny w kilku miejscach:
 
@@ -57,7 +57,7 @@ Aktualny kierunek jest spójny w kilku miejscach:
 - **Polska dyskusja o IKP, EDM, P1 i e-Profilu Pacjenta** przesuwa się w stronę pytania: jak lekarz i pacjent mają szybko zobaczyć pełniejszy, praktyczny kontekst w chwili wizyty.
 - **Publikacje WHO o AI w zdrowiu** podkreślają, że automatyzacja w ochronie zdrowia wymaga jasnego celu, transparentności, ochrony danych, nadzoru człowieka i odpowiedzialności za użycie.
 
-Wniosek dla projektu jest prosty: Pacjent 360 nie powinien budować "AI lekarza" ani obchodzić IKP. Powinien rozwijać się jako niezależna, open source warstwa porządkowania kontekstu:
+Wniosek dla projektu jest prosty: Pacjent360™ nie powinien budować "AI lekarza" ani obchodzić IKP. Powinien rozwijać się jako niezależna, open source warstwa porządkowania kontekstu:
 
 - źródła i proweniencja danych,
 - oś czasu i epizody opieki,
@@ -72,7 +72,7 @@ To oznacza, że roadmapa powinna być inspirowana aktualnymi standardami i publi
 
 ## Wizja
 
-Docelowo Pacjent 360 powinien działać jak **otwarty, niezależny towarzysz kontekstu dla IKP/P1**.
+Docelowo Pacjent360™ powinien działać jak **otwarty, niezależny towarzysz kontekstu dla IKP/P1**.
 
 Nie zastępuje IKP. Nie obchodzi IKP. Nie przechowuje loginów pacjenta. Nie udaje systemu państwowego.
 
@@ -86,7 +86,7 @@ Prototyp jest lokalny i demonstracyjny. Pokazuje kierunek produktu:
 
 - trzy kokpity oparte o te same dane: **Lekarz**, **Pacjent** i **Opiekun**,
 - widok lekarza **Pacjent w 90 sekund**,
-- widok pacjenta **Mój Pacjent 360**,
+- widok pacjenta **Mój Pacjent360™**,
 - wywiad i transkrypcję rozmowy jako ważne źródło danych,
 - wielotorowa oś czasu od ogółu do szczegółu,
 - historia leków: leki przepisane vs faktycznie przyjmowane,
@@ -140,7 +140,7 @@ Pierwsza hipoteza do walidacji jest prosta: **czy taki jednostronicowy raport po
 
 ## Czego ten projekt nie robi
 
-Pacjent 360 nie jest systemem medycznym gotowym do użycia klinicznego.
+Pacjent360™ nie jest systemem medycznym gotowym do użycia klinicznego.
 
 Nie diagnozuje. Nie rekomenduje leczenia. Nie mówi lekarzowi ani pacjentowi, co mają zrobić terapeutycznie. Nie zastępuje IKP, P1, EDM ani systemów placówek.
 
@@ -163,7 +163,7 @@ Ta lista jest obowiązkową bramką dla zmian publicznych i PR, zgodnie z `CONTR
 - Czy każda flaga, pytanie, automatyzacja i informacja wyjściowa ma źródło oraz jawny status DITL?
 - Czy UI używa języka: pytanie, brak danych, zadanie, status, kontekst, do wyjaśnienia?
 - Czy UI unika języka: diagnoza, zalecenie, wskazanie, pilne, należy, leczenie, terapia, w normie, poza normą?
-- Czy użytkownik widzi, że Pacjent 360 nie jest IKP, P1, CeZ, NFZ ani e-Profilem Pacjenta?
+- Czy użytkownik widzi, że Pacjent360™ nie jest IKP, P1, CeZ, NFZ ani e-Profilem Pacjenta?
 - Czy zmiana jest spójna z `docs/legal/DISCLAIMER.md`, `docs/governance/RISKS.md`, `docs/legal/PRIVACY.md` i `SECURITY.md`?
 
 Jeśli odpowiedź na którekolwiek pytanie jest negatywna albo niepewna, zmiana jest **no-go** do czasu wyjaśnienia przez review kliniczne, prawne lub bezpieczeństwa.
@@ -243,7 +243,7 @@ Root repozytorium ma być czytelny. Szczegółowe dokumenty są w `docs/`, żeby
 - `README.md`, `LICENSE`, `NOTICE`, `SECURITY.md`, `CONTRIBUTING.md`, `CHANGELOG.md` - podstawowe dokumenty open source.
 - `PRODUCT_SSOT.md` - nadrzędne źródło prawdy o produkcie: czym jest, czym nie jest, kanoniczny model, no-go.
 - `docs/PROGRAM_PLAN.md` - nadrzędny plan strategiczny i harmonogram rzeczowo-techniczny.
-- `docs/ARCHITECTURE.md` - architektura Pacjent 360 jako warstwy kontekstu nad IKP/P1.
+- `docs/ARCHITECTURE.md` - architektura Pacjent360™ jako warstwy kontekstu nad IKP/P1.
 - `docs/SSOT.md` - źródło prawdy dla roli LLM i asystentów operacyjnych (podrzędne wobec `PRODUCT_SSOT.md`).
 - `docs/product/FIRST_WEDGE.md` - pierwszy wedge produktu: pętla przygotowania wizyty (opiekun mobile + lekarz desktop).
 - `docs/TIMELINE_VISION.md` - docelowa mapa pacjenta, warstwy, epizody i zasilanie danymi.
@@ -259,11 +259,11 @@ Root repozytorium ma być czytelny. Szczegółowe dokumenty są w `docs/`, żeby
 
 ## Licencje i znak projektu
 
-Kod, skrypty, modele danych, testy i pliki techniczne Pacjent 360 są udostępniane na warunkach Apache License 2.0.
+Kod, skrypty, modele danych, testy i pliki techniczne Pacjent360™ są udostępniane na warunkach Apache License 2.0.
 
 Dokumentacja, architektura, roadmapa, opisy koncepcyjne i materiały projektowe są udostępniane na warunkach Creative Commons Attribution 4.0 International (CC BY 4.0), chyba że dany plik wskazuje inaczej.
 
-Nazwa Pacjent 360, domena `pacjent360.com.pl`, identyfikacja projektu i materiały opisujące jego status nie mogą być używane w sposób sugerujący oficjalną afiliację z CeZ, NFZ, IKP, P1, e-Profilem Pacjenta, certyfikację kliniczną, status wyrobu medycznego albo gotowość do użycia medycznego. Szczegóły: `NOTICE`, `docs/legal/DISCLAIMER.md` i `docs/legal/DOCS_LICENSE.md`.
+Nazwa Pacjent360™, domena `pacjent360.com.pl`, identyfikacja projektu i materiały opisujące jego status nie mogą być używane w sposób sugerujący oficjalną afiliację z CeZ, NFZ, IKP, P1, e-Profilem Pacjenta, certyfikację kliniczną, status wyrobu medycznego albo gotowość do użycia medycznego. Szczegóły: `NOTICE`, `docs/legal/DISCLAIMER.md` i `docs/legal/DOCS_LICENSE.md`.
 
 ## Ważne ograniczenie
 
@@ -279,7 +279,7 @@ Najważniejszy dokument dla LLM i asystentów operacyjnych: `docs/SSOT.md`. Spri
 
 ## Referencje koncepcyjne
 
-Pacjent 360 nie deklaruje zgodności regulacyjnej ani formalnej integracji ze standardami medycznymi. Te źródła pokazują kierunek myślenia: interoperacyjność, krótkie podsumowanie pacjenta, bezpieczeństwo AI, proweniencja danych i jasne granice kliniczne.
+Pacjent360™ nie deklaruje zgodności regulacyjnej ani formalnej integracji ze standardami medycznymi. Te źródła pokazują kierunek myślenia: interoperacyjność, krótkie podsumowanie pacjenta, bezpieczeństwo AI, proweniencja danych i jasne granice kliniczne.
 
 Aktualny kontekst systemowy i standardy:
 
