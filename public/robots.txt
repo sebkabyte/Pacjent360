@@ -6,6 +6,7 @@ Allow: /engineering.html
 Allow: /ditl.html
 Allow: /agents.html
 Allow: /investors.html
+Allow: /jak-sie-przygotowac.html
 Allow: /sitemap.xml
 Disallow: /demo.html
 Disallow: /app.js
