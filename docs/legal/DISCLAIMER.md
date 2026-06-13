@@ -1,6 +1,6 @@
 # Disclaimer medyczny
 
-Pacjent 360 jest prototypem koncepcyjnym i edukacyjnym. Nie jest wyrobem medycznym, nie jest certyfikowanym systemem klinicznym, nie diagnozuje, nie rekomenduje leczenia i nie zastępuje lekarza.
+Pacjent360™ jest prototypem koncepcyjnym i edukacyjnym. Nie jest wyrobem medycznym, nie jest certyfikowanym systemem klinicznym, nie diagnozuje, nie rekomenduje leczenia i nie zastępuje lekarza.
 
 Wszelkie flagi, pytania, raporty i widoki w MVP mają charakter demonstracyjny. Przed jakimkolwiek zastosowaniem produkcyjnym projekt wymaga walidacji klinicznej, prawnej, bezpieczeństwa, ochrony danych i zgodności regulacyjnej.
 

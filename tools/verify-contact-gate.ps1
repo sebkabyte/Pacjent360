@@ -69,7 +69,7 @@ foreach ($alias in $Aliases) {
 Write-Host ""
 Write-Host "Manual receipt checklist:"
 Write-Host "1. Send a test email from an external mailbox to each required alias."
-Write-Host "2. Use a neutral subject, for example: Pacjent 360 contact gate test."
+Write-Host "2. Use a neutral subject, for example: Pacjent360 contact gate test."
 Write-Host "3. Do not include patient data, medical details, passwords or private files."
 Write-Host "4. Confirm the message arrives in the monitored mailbox and is not only in spam."
 Write-Host "5. Reply from the monitored mailbox and confirm the external sender receives the reply."

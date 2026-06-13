@@ -1,4 +1,4 @@
-Pacjent 360 static deployment health
+Pacjent360™ static deployment health
 project=pacjent360
 package=upload-root
 status=ready

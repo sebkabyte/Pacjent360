@@ -191,7 +191,7 @@ Poniższe kroki są rozbiciem tej samej bramki na pojedyncze komendy.
    - `demo.html` Sygnały — ✅ „Mapa pytań i sygnałów DITL”, brak `red flag`.
    - `demo.html` Wyniki — ✅ „zakresy podane przez źródła”, brak interpretacji klinicznej.
    - `demo.html` Raporty — ✅ badge „FIKCYJNA SOCZEWKA DEMO / DANE PACJENTA DEMO”, Known / Unknown / Uncertain / To verify.
-   - `privacy.html` — ✅ `localStorage`, klucz `pacjent360-state-v7`, CDN `unpkg.com/lucide@0.468.0`, pinned version i SRI.
+   - `privacy.html` — ✅ `localStorage`, klucz `pacjent360-state-v11`, CDN `unpkg.com/lucide@0.468.0`, pinned version i SRI.
 7. Browser DOM smoke — ✅ brak błędów konsoli, watermark obecny w testowanych widokach.
 8. Printy/screenshoty — ✅ zapisane w `prints/`: desktop `index`, `Lekarz`, `Pacjent`, `Sygnały`, `Wyniki`, `Raporty`, `Privacy`; mobile `index`, `Lekarz`.
 

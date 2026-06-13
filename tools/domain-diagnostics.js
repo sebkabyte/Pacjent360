@@ -102,7 +102,7 @@ function requestUrl(url, timeoutMs) {
           location: response.headers.location || "",
           server: response.headers.server || "",
           contentType: response.headers["content-type"] || "",
-          hasPacjent360: /Pacjent 360|Pacjent360|pacjent360/i.test(body),
+          hasPacjent360: /Pacjent360|Pacjent360|pacjent360/i.test(body),
         });
       });
     });
@@ -169,10 +169,10 @@ function buildGuidance(probes, domain) {
     guidance.push("health.txt is 404: the upload-root package is not extracted in the current document root.");
   }
   if (httpsHealth && httpsHealth.status >= 200 && httpsHealth.status < 300 && httpsHealth.hasPacjent360) {
-    guidance.push("health.txt contains Pacjent 360 markers: the static package is visible from this document root.");
+    guidance.push("health.txt contains Pacjent360 markers: the static package is visible from this document root.");
   }
   if (httpsRoot && httpsRoot.status >= 200 && httpsRoot.status < 300 && !httpsRoot.hasPacjent360) {
-    guidance.push("HTTPS root returns 200 but does not contain Pacjent 360 markers: another site or placeholder may be served from the domain root.");
+    guidance.push("HTTPS root returns 200 but does not contain Pacjent360 markers: another site or placeholder may be served from the domain root.");
   }
   if (httpsWww && httpsRoot && httpsWww.status !== httpsRoot.status) {
     guidance.push("www and bare domain differ: configure www alias/redirect after the bare domain is correct.");
@@ -224,7 +224,7 @@ async function main() {
   const guidance = buildGuidance(probes, domain);
 
   const lines = [];
-  lines.push("Pacjent 360 domain diagnostics");
+  lines.push("Pacjent360 domain diagnostics");
   lines.push(`GeneratedAtUtc: ${new Date().toISOString().replace(/\.\d{3}Z$/, "Z")}`);
   lines.push(`Domain: ${domain}`);
   lines.push("");

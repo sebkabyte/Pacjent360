@@ -4,14 +4,14 @@ Status: zatwierdzony przez autora 2026-06-10. Obowiązuje dla M4-M6 (pre-visit, 
 
 ## Decyzja
 
-Pierwsze ostre zastosowanie Pacjent 360 to **jedna pętla z dwoma końcami**:
+Pierwsze ostre zastosowanie Pacjent360™ to **jedna pętla z dwoma końcami**:
 
 ```text
 Wedge A: rodzic / opiekun / pacjent przygotowuje wizytę osoby zależnej (telefon)
 Wedge B: lekarz dostaje „Pacjenta w 90 sekund" ze źródłami i pytaniami DITL (desktop)
 ```
 
-Nie budujemy „Pacjent 360 dla wszystkich pacjentów, chorób i lekarzy". Budujemy jedną dobrze przećwiczoną ścieżkę.
+Nie budujemy „Pacjent360™ dla wszystkich pacjentów, chorób i lekarzy". Budujemy jedną dobrze przećwiczoną ścieżkę.
 
 ## Dlaczego ten wedge
 

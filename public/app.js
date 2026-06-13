@@ -1715,13 +1715,13 @@ function renderRoleStart() {
   const roleConfirmed = Boolean(state.roleSelectionConfirmed);
   if (roleConfirmed) return renderRoleScenarioSubpage(selectedRole);
   return `
-    <section class="role-game-hero">
+    <section class="role-demo-hero">
       <div>
         <p class="eyebrow"><i data-lucide="play-circle"></i>Jedna historia, trzy perspektywy</p>
         <h1>Wybierz perspektywę 360° i zobacz tę samą historię pacjenta</h1>
         <p>Pacjent360™ pokazuje jedną historię w trzech soczewkach: Lekarz360 dla szybkiego kontekstu, Pacjent360 dla przygotowania wizyty i Opiekun360 dla pomocy bliskiej osobie w zakresie zgody.</p>
       </div>
-      <div class="role-game-current">
+      <div class="role-demo-current">
         <span>Zacznij tutaj</span>
         <strong><i data-lucide="mouse-pointer-click"></i>Wybierz perspektywę</strong>
         <p>Po wyborze perspektywy przejdziesz do osobnego ekranu z historiami pacjentów.</p>
@@ -1763,13 +1763,13 @@ function renderRoleScenarioSubpage(role) {
       </button>
     </section>
 
-    <section class="role-game-hero role-scenario-hero">
+    <section class="role-demo-hero role-scenario-hero">
       <div>
         <p class="eyebrow"><i data-lucide="${escapeHtml(meta.icon)}"></i>Krok 2 · ${escapeHtml(meta.label)}</p>
         <h1>Wybierz historię, którą chcesz zobaczyć w ${escapeHtml(meta.label)}</h1>
         <p>${escapeHtml(meta.promise)} Każdy scenariusz prowadzi do innego kokpitu, ale korzysta z tej samej mapy zdarzeń pacjenta.</p>
       </div>
-      <div class="role-game-current">
+      <div class="role-demo-current">
         <span>Wybrana perspektywa</span>
         <strong><i data-lucide="${escapeHtml(meta.icon)}"></i>${escapeHtml(meta.label)}</strong>
         <p>To osobny ekran po wyborze perspektywy. Teraz wybierasz pacjenta demonstracyjnego.</p>

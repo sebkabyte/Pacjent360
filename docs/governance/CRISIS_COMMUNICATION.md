@@ -4,11 +4,11 @@ Te komunikaty są krótkimi odpowiedziami startowymi. Nie zastępują konsultacj
 
 ## Media: "czy to AI lekarz?"
 
-Pacjent 360 nie jest AI lekarzem. To niezależny prototyp open source, który porządkuje kontekst, źródła, braki danych i pytania przed wizytą. Decyzja medyczna pozostaje po stronie lekarza: Doctor in the Loop.
+Pacjent360™ nie jest AI lekarzem. To niezależny prototyp open source, który porządkuje kontekst, źródła, braki danych i pytania przed wizytą. Decyzja medyczna pozostaje po stronie lekarza: Doctor in the Loop.
 
 ## CeZ / NFZ / IKP: "czy to obejście IKP?"
 
-Nie. Pacjent 360 nie loguje się do IKP, nie przechowuje loginów, nie scrapuje danych i nie podszywa się pod żaden system publiczny. Projekt pokazuje warstwę kontekstu, która może być rozwijana tylko z poszanowaniem oficjalnych ścieżek integracji.
+Nie. Pacjent360™ nie loguje się do IKP, nie przechowuje loginów, nie scrapuje danych i nie podszywa się pod żaden system publiczny. Projekt pokazuje warstwę kontekstu, która może być rozwijana tylko z poszanowaniem oficjalnych ścieżek integracji.
 
 ## Prawnik / MDR: "czy to wyrób medyczny?"
 

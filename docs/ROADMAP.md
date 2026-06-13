@@ -1,6 +1,6 @@
-# Roadmapa Pacjent 360
+# Roadmapa Pacjent360™
 
-Status: kierunek rozwoju eksperymentalnego dla Pacjent 360.
+Status: kierunek rozwoju eksperymentalnego dla Pacjent360™.
 
 Nadrzedny plan programu po audycie repo i council: `PROGRAM_PLAN.md`.
 
@@ -23,7 +23,7 @@ M0, M2, M3 i M4 maja lokalne vertical slice'y. Najblizszy techniczny krok to utr
 - Status M2: `done vertical slice` przez `patient360-contract.js`, schema, walidator i ADR.
 - Status M3: `done vertical slice + snapshot / needs further hardening`.
 - Status M4: `vertical slice + model` przez flow "Przygotowanie krok po kroku", `patient360-previsit-model.js`, fixture no-data i walidator M4.
-- Utrzymac twarda granice DITL: Pacjent 360 to prototyp kontekstowy, nie system kliniczny.
+- Utrzymac twarda granice DITL: Pacjent360™ to prototyp kontekstowy, nie system kliniczny.
 
 ## Nastepne 2 tygodnie
 

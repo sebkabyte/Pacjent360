@@ -1,4 +1,4 @@
-# Pacjent 360 — Product SSOT
+# Pacjent360™ — Product SSOT
 
 Status: nadrzędne źródło prawdy o produkcie. Obowiązuje od 2026-06-10 (ADR 0005).
 
@@ -6,9 +6,9 @@ Ten dokument mówi, **czym jest produkt**. Dokument `docs/SSOT.md` mówi wyłąc
 
 ## 1. Definicja jednozdaniowa
 
-Pacjent 360 jest warstwą kontekstu pacjenta, która pomaga pacjentowi, rodzicowi/opiekunowi i lekarzowi zobaczyć, co wiadomo, czego brakuje, co jest niepewne, co jest rozbieżne i co trzeba wyjaśnić z uprawnionym profesjonalistą medycznym.
+Pacjent360™ jest warstwą kontekstu pacjenta, która pomaga pacjentowi, rodzicowi/opiekunowi i lekarzowi zobaczyć, co wiadomo, czego brakuje, co jest niepewne, co jest rozbieżne i co trzeba wyjaśnić z uprawnionym profesjonalistą medycznym.
 
-## 2. Czym Pacjent 360 nie jest
+## 2. Czym Pacjent360™ nie jest
 
 - systemem diagnozującym;
 - systemem oceny pilności;

@@ -49,7 +49,7 @@ Trzy osoby patrzą na tę samą historię pacjenta, ale każda z fundamentalnie 
 
 ### 3.1 Co jest dobrze
 
-- ✅ Nagłówek „Mój Pacjent 360" — jasna obietnica.
+- ✅ Nagłówek „Mój Pacjent360™" — jasna obietnica.
 - ✅ Profil pacjenta z wiekiem i kontaktem wspierającym.
 - ✅ Sekcja „Co jest przede mną" (upcoming).
 - ✅ Sekcja „Ostatnie wyniki" z wartościami i zakresami.

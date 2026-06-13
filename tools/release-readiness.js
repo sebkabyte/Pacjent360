@@ -320,7 +320,7 @@ function verifyDocumentRootChecklist(localPublicPath) {
   const checklist = fs.readFileSync(checklistPath, "utf8");
 
   const requiredMarkers = [
-    "Pacjent 360 document root checklist",
+    "Pacjent360 document root checklist",
     `ExpectedFileCount: ${uploadFiles.length}`,
     "WHAT MUST BE DIRECTLY IN DOCUMENT ROOT",
     "DO NOT LEAVE IN DOCUMENT ROOT",
@@ -361,7 +361,7 @@ function writeReport(reportPath, options, results, noGoCount, warnCount, nextAct
   fs.mkdirSync(path.dirname(fullPath), { recursive: true });
 
   const lines = [
-    "Pacjent 360 go-live status report",
+    "Pacjent360 go-live status report",
     `GeneratedAtUtc: ${new Date().toISOString().replace(/\.\d{3}Z$/, "Z")}`,
     `Base URL: ${options.baseUrl}`,
     `Local package: ${options.localPublicPath}`,
@@ -386,7 +386,7 @@ async function main() {
   const options = parseArgs(process.argv.slice(2));
   const results = [];
 
-  console.log("Pacjent 360 go-live status");
+  console.log("Pacjent360 go-live status");
   console.log(`Base URL: ${options.baseUrl}`);
   console.log(`Local package: ${options.localPublicPath}`);
   console.log("");

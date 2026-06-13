@@ -1,6 +1,6 @@
 # Contributing
 
-Dziękuję za zainteresowanie Pacjent 360. Projekt dotyczy danych i kontekstu medycznego, dlatego wkład musi być ostrożny, jawny i bezpieczny.
+Dziękuję za zainteresowanie Pacjent360™. Projekt dotyczy danych i kontekstu medycznego, dlatego wkład musi być ostrożny, jawny i bezpieczny.
 
 ## Zasady wkładu
 
@@ -44,4 +44,4 @@ Wnosząc wkład do projektu, zgadzasz się, że:
 - masz prawo wnieść ten wkład i nie zawiera on materiałów, których nie możesz legalnie udostępnić,
 - wkład nie zawiera realnych danych pacjentów, prywatnej dokumentacji medycznej ani danych pozwalających zidentyfikować osobę.
 
-Licencje nie dają prawa do używania nazwy Pacjent 360, domeny, tożsamości projektu ani materiałów w sposób sugerujący oficjalną afiliację z CeZ, NFZ, IKP, P1, e-Profilem Pacjenta, certyfikację kliniczną albo gotowość do użycia medycznego.
+Licencje nie dają prawa do używania nazwy Pacjent360™, domeny, tożsamości projektu ani materiałów w sposób sugerujący oficjalną afiliację z CeZ, NFZ, IKP, P1, e-Profilem Pacjenta, certyfikację kliniczną albo gotowość do użycia medycznego.

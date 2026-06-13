@@ -1,4 +1,4 @@
-# Safety Case — Pacjent 360
+# Safety Case — Pacjent360™
 
 Status: obowiązuje od 2026-06-10 (milestone M14). Wersja dla prototypu alpha.
 
@@ -6,7 +6,7 @@ Disclaimer mówi: „nie jesteśmy lekarzem". Safety Case pokazuje, **jak archit
 
 ## Twierdzenie główne
 
-> Pacjent 360 nie podejmuje decyzji klinicznych. Każdy output systemu jest pytaniem, statusem, brakiem danych, rozbieżnością albo draftem do weryfikacji przez człowieka.
+> Pacjent360™ nie podejmuje decyzji klinicznych. Każdy output systemu jest pytaniem, statusem, brakiem danych, rozbieżnością albo draftem do weryfikacji przez człowieka.
 
 ## Argumentacja: pod-twierdzenia i dowody
 

@@ -1,4 +1,4 @@
-# Pacjent 360: plan strategiczny i harmonogram rzeczowo-techniczny
+# Pacjent360™: plan strategiczny i harmonogram rzeczowo-techniczny
 
 Status: nadrzedny plan programu po audycie repo i councilu.
 
@@ -55,9 +55,9 @@ Konsekwencja:
 
 ## Decyzja strategiczna
 
-Pacjent 360 nie jest "AI lekarzem", systemem triage ani alternatywa dla IKP/P1.
+Pacjent360™ nie jest "AI lekarzem", systemem triage ani alternatywa dla IKP/P1.
 
-Pacjent 360 jest open source warstwa kontekstu pacjenta:
+Pacjent360™ jest open source warstwa kontekstu pacjenta:
 
 ```text
 Source -> Claim -> Event -> Episode -> Encounter -> Task -> Report
@@ -71,7 +71,7 @@ Mapa Pacjenta 360 + petla wizyty + Doctor in the Loop
 
 Najkrotsza definicja:
 
-> Pacjent 360 pomaga pacjentowi, opiekunowi i lekarzowi zobaczyc, co wiadomo, czego brakuje, co jest niepewne i co trzeba wyjasnic przed lub po kontakcie medycznym.
+> Pacjent360™ pomaga pacjentowi, opiekunowi i lekarzowi zobaczyc, co wiadomo, czego brakuje, co jest niepewne i co trzeba wyjasnic przed lub po kontakcie medycznym.
 
 ## Repo dzis
 
@@ -81,7 +81,7 @@ Repo jest dojrzalym prototypem alpha, ale nadal lokalnym i statycznym.
 | --- | --- |
 | Strona publiczna | `public/index.html`, `public/site.css`, `public/site.js`, `public/assets/` |
 | Demo MVP | `public/demo.html`, `public/app.js`, `public/styles.css` |
-| Model lokalny | `localStorage`, `pacjent360-state-v7`, dane fikcyjne |
+| Model lokalny | `localStorage`, `pacjent360-state-v11`, dane fikcyjne |
 | Mapa Pacjenta 360 | wspolny komponent lekarz/pacjent, zdarzenia, epizody, relacje, inspektor |
 | Dokumentacja safety | `DISCLAIMER.md`, `PRIVACY.md`, `SECURITY.md`, `RISKS.md`, `GO_LIVE_CHECKLIST.md` |
 | Architektura | `ARCHITECTURE.md`, `TIMELINE_VISION.md`, `SSOT.md` |
@@ -667,7 +667,7 @@ Status 2026-06-08: M0 i M2 sa wykonane lokalnie jako powtarzalny vertical slice.
 
 ### D-006: context tool vs CDSS/MDR
 
-Decyzja domyslna: Pacjent 360 pozostaje narzedziem kontekstu, zrodel, pytan i zadan organizacyjnych.
+Decyzja domyslna: Pacjent360™ pozostaje narzedziem kontekstu, zrodel, pytan i zadan organizacyjnych.
 
 Formalna decyzja o potencjalnym wejsciu w CDSS/MDR moze zapasc dopiero na M12 albo pozniej, po walidacji, review prawnym/regulacyjnym i osobnym ADR. Do tego czasu kazda funkcja, ktora sugeruje diagnoze, pilnosc, terapie, ranking ryzyka albo decyzje kliniczna, jest no-go.
 

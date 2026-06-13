@@ -1,10 +1,10 @@
 # Prywatność
 
-Pacjent 360 jest statycznym prototypem koncepcyjnym. Publiczna strona nie wymaga konta, a demo jest przeznaczone wyłącznie do pracy z fikcyjnymi danymi pacjentów.
+Pacjent360™ jest statycznym prototypem koncepcyjnym. Publiczna strona nie wymaga konta, a demo jest przeznaczone wyłącznie do pracy z fikcyjnymi danymi pacjentów.
 
 ## Administrator danych
 
-Administratorem danych związanych z publiczną stroną projektu Pacjent 360 jest Sebastian Kalisz.
+Administratorem danych związanych z publiczną stroną projektu Pacjent360™ jest Sebastian Kalisz.
 
 Kontakt w sprawach prywatności: `kontakt@pacjent360.com.pl`.
 
@@ -16,7 +16,7 @@ Podstawą prawną ewentualnego przetwarzania danych technicznych jest Art. 6(1)(
 
 Strona publiczna nie zbiera danych osobowych przez formularze, konta użytkowników, cookies analityczne ani tracking.
 
-Demo MVP działa lokalnie w przeglądarce i korzysta z fikcyjnych danych. Dane wpisane w demo mogą zostać zapisane w `localStorage` przeglądarki, obecnie pod kluczem `pacjent360-state-v7`. Pozostają lokalne dla przeglądarki do czasu resetu demo albo wyczyszczenia danych strony.
+Demo MVP działa lokalnie w przeglądarce i korzysta z fikcyjnych danych. Dane wpisane w demo mogą zostać zapisane w `localStorage` przeglądarki, obecnie pod kluczem `pacjent360-state-v11`. Pozostają lokalne dla przeglądarki do czasu resetu demo albo wyczyszczenia danych strony.
 
 ## Zewnętrzny CDN
 
@@ -52,7 +52,7 @@ Strona nie profiluje użytkowników, nie używa cookies analitycznych i nie śle
 
 ## Brak integracji z IKP/P1
 
-Pacjent 360 nie loguje się do IKP, nie przechowuje loginów, nie scrapuje danych i nie korzysta z oficjalnej integracji z P1. Ewentualne integracje mogą powstać wyłącznie legalną, oficjalną ścieżką.
+Pacjent360™ nie loguje się do IKP, nie przechowuje loginów, nie scrapuje danych i nie korzysta z oficjalnej integracji z P1. Ewentualne integracje mogą powstać wyłącznie legalną, oficjalną ścieżką.
 
 ## Dane realne
 

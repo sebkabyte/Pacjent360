@@ -1,6 +1,6 @@
 # Sprinty LLM i asystentow operacyjnych
 
-Status: plan wdrozenia funkcji eksperymentalnych w prototypie Pacjent 360.
+Status: plan wdrozenia funkcji eksperymentalnych w prototypie Pacjent360™.
 
 Normatywne zrodlo: `SSOT.md`. Obowiazuja tez `docs/legal/DISCLAIMER.md`, `SECURITY.md`, `docs/deployment/GO_LIVE_CHECKLIST.md`, `docs/governance/RISKS.md` i `CONTRIBUTING.md`.
 
