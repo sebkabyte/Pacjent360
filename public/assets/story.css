@@ -868,6 +868,33 @@ body[data-register="story"] .footer a {
 .ai-promise-box strong {
   color: var(--ink);
 }
+.ai-assistant-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+.ai-assistant-list li {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(16, 36, 42, 0.08);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+.ai-assistant-list strong,
+.ai-assistant-list span {
+  display: block;
+}
+.ai-assistant-list strong {
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+}
+.ai-assistant-list span {
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
 
 /* Subway Map Concept (Future Vision) */
 .subway-concept article {
@@ -900,6 +927,10 @@ body[data-register="story"] .footer a {
 }
 
 @media (max-width: 640px) {
+  .ai-assistant-list {
+    grid-template-columns: 1fr;
+  }
+
   .contact-actions {
     flex-direction: column;
   }
