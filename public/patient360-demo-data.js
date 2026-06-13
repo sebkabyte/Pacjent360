@@ -354,11 +354,11 @@
         "__p360DateOffset": -30
       },
       "facility": "Poradnia Procedur Jednodniowych",
-      "author": "system rejestracji",
+      "author": "system rejestracji (KS-SOMED)",
       "quality": "oryginał PDF",
-      "extractionStatus": "przetworzony",
+      "extractionStatus": "potwierdzone",
       "trust": "wysoki",
-      "source": "import PDF",
+      "source": "import IKP (XML)",
       "summary": "Standardowa ankieta przed procedurą: choroby przewlekłe, leki, alergie i potrzeba aktualizacji dokumentów."
     },
     {
@@ -373,11 +373,11 @@
         "__p360DateOffset": -12
       },
       "facility": "Laboratorium Diagnostyczne Alfa",
-      "author": "system LIS",
+      "author": "HL7 ORU",
       "quality": "wynik elektroniczny",
-      "extractionStatus": "przetworzony",
+      "extractionStatus": "potwierdzone",
       "trust": "wysoki",
-      "source": "ręczne dodanie",
+      "source": "integracja HL7 LIS",
       "summary": "Wyniki kontrolne przed procedurą: morfologia, kreatynina, potas i glukoza do interpretacji przez lekarza."
     },
     {
@@ -670,7 +670,7 @@
       "episodeId": "ep1",
       "status": "planowane",
       "title": "Procedura: pytania do rozstrzygnięcia przez lekarza",
-      "description": "Kontekst decyzji DITL przed planowaną procedurą.",
+      "description": "Kontekst decyzji przed planowaną procedurą.",
       "confidence": "wysoka",
       "sourceRefs": [
         "decision:dc1"
@@ -823,7 +823,7 @@
       "episodeId": "ep3",
       "status": "planowane",
       "title": "Kontrola pediatryczna: pytania do lekarza",
-      "description": "Kontekst DITL przed kontrolą dziecka po infekcji.",
+      "description": "Kontekst decyzji przed kontrolą dziecka po infekcji.",
       "confidence": "wysoka",
       "sourceRefs": [
         "doc:d7",
@@ -1171,7 +1171,7 @@
       "fromEventId": "te13",
       "toEventId": "te15",
       "relationType": "powiązane źródłem",
-      "label": "Obserwacje rodzica i pytania DITL pochodzą z tego samego wywiadu przed wizytą.",
+      "label": "Obserwacje rodzica i pytania do rozmowy pochodzą z tego samego wywiadu przed wizytą.",
       "status": "do potwierdzenia",
       "sourceRefs": [
         "interview:i3",
@@ -1711,7 +1711,7 @@
       "color": "amber",
       "category": "Brak aktualnego EKG",
       "question": "Czy aktualne EKG jest dostępne albo lekarz uznał, że nie jest potrzebne?",
-      "evidence": "Konsultacja kwalifikacyjna wskazuje potrzebę aktualnego EKG; brak wyniku w danych demo.",
+      "evidence": "EKG nie jest widoczne w danych. Do potwierdzenia z lekarzem przed decyzją.",
       "status": "do wyjaśnienia",
       "sourceRefs": [
         "doc:d3"
@@ -1760,7 +1760,7 @@
       "id": "f6",
       "patientId": "p1",
       "color": "blue",
-      "category": "Pytanie DITL: kompletność kwalifikacji",
+      "category": "Pytanie do lekarza: kompletność kwalifikacji",
       "question": "Czy komplet dokumentów, leków i wyników jest wystarczający przed procedurą?",
       "evidence": "Ankieta, konsultacja, wywiad i wyniki muszą zostać rozpatrzone razem.",
       "status": "do wyjaśnienia",
@@ -1801,7 +1801,7 @@
       "id": "f9",
       "patientId": "p3",
       "color": "blue",
-      "category": "Pytanie DITL: kontrola po infekcji",
+      "category": "Pytanie do lekarza: kontrola po infekcji",
       "question": "Jakie obserwacje rodzica lekarz chce omówić podczas kontroli dziecka?",
       "evidence": "Rodzic zgłasza obserwacje temperatury, aktywności i pytanie o kaszel.",
       "status": "do wyjaśnienia",
@@ -1854,7 +1854,7 @@
       "id": "ku3",
       "patientId": "p1",
       "category": "Unknown",
-      "description": "Brak w danych demo aktualnego EKG po konsultacji kwalifikacyjnej.",
+      "description": "EKG nie jest widoczne w danych. Do potwierdzenia z lekarzem przed decyzją.",
       "sourceRefs": [
         "doc:d3"
       ]

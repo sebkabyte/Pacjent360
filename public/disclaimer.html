@@ -2,94 +2,78 @@
 <html lang="pl">
   <head>
     <meta charset="utf-8" />
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';"
-    />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#10242a" />
     <title>Zastrzeżenie medyczne | Pacjent360™</title>
-    <meta
-      name="description"
-      content="Ograniczenia medyczne i regulacyjne prototypu Pacjent360™. Projekt nie diagnozuje, nie rekomenduje leczenia i nie zastępuje lekarza."
-    />
-    <meta property="og:title" content="Zastrzeżenie medyczne | Pacjent360™" />
-    <meta
-      property="og:description"
-      content="Pacjent360™ jest prototypem koncepcyjnym. Nie jest wyrobem medycznym i nie zastępuje decyzji lekarza."
-    />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://pacjent360.com.pl/disclaimer.html" />
+    <meta name="description" content="Ograniczenia medyczne i regulacyjne prototypu Pacjent360™. Projekt nie diagnozuje, nie rekomenduje leczenia i nie zastępuje lekarza." />
     <link rel="canonical" href="https://pacjent360.com.pl/disclaimer.html" />
-    <link rel="icon" href="assets/hero-clinical-context.png" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="brand/tokens.css" />
     <link rel="stylesheet" href="brand/components.css" />
     <link rel="stylesheet" href="site.css" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Przejdź do treści</a>
-    <header class="site-nav" aria-label="Nawigacja strony">
-      <a class="brand" href="index.html" aria-label="Pacjent360">
-        <span>360°</span>
-        <strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong>
-      </a>
-      <nav>
-        <a href="index.html#problem">Problem</a>
-        <a href="index.html#how">Jak działa</a>
-        <a href="index.html#build">Walidacja</a>
-        <a href="engineering.html">Engineering</a>
-        <a href="demo.html?start=1">Demo alpha</a>
-        <a href="privacy.html">Prywatność</a>
-      </nav>
+
+    <header class="site-header">
+      <div class="nav-inner">
+        <a class="brand" href="index.html" aria-label="Pacjent360">
+          <span class="brand-mark">360°</span>
+          <span><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong><small>Brief przed wizytą</small></span>
+        </a>
+        <nav class="main-nav" aria-label="Sekcje strony">
+          <a href="index.html#problem">Problem</a>
+          <a href="index.html#how">Rozwiązanie</a>
+          <a href="index.html#audiences">Dla kogo</a>
+          <a class="cta-link" href="demo.html?start=1">Demo</a>
+        </nav>
+      </div>
     </header>
 
     <main class="legal-main" id="main-content" tabindex="-1">
       <section class="legal-hero">
-        <p class="eyebrow">Ograniczenia prototypu</p>
-        <h1>Zastrzeżenie medyczne</h1>
-        <p>
-          Pacjent360™ jest prototypem koncepcyjnym i edukacyjnym. Nie jest wyrobem medycznym,
-          nie jest certyfikowanym systemem klinicznym, nie diagnozuje, nie rekomenduje leczenia
-          i nie zastępuje lekarza.
-        </p>
+        <div class="container">
+          <p class="eyebrow">Ograniczenia prototypu</p>
+          <h1>Zastrzeżenie medyczne</h1>
+          <p>Pacjent360™ jest prototypem koncepcyjnym i edukacyjnym. Nie jest wyrobem medycznym, nie jest certyfikowanym systemem klinicznym, nie diagnozuje, nie rekomenduje leczenia i nie zastępuje lekarza.</p>
+        </div>
       </section>
 
-      <section class="legal-content">
+      <section class="legal-content container">
         <article>
           <h2>Zakres demo (alpha)</h2>
-          <p>
-            Wszelkie flagi, pytania, raporty i widoki w demo mają charakter demonstracyjny.
-            Przed jakimkolwiek zastosowaniem produkcyjnym projekt wymaga walidacji klinicznej,
-            prawnej, bezpieczeństwa, ochrony danych i zgodności regulacyjnej.
-          </p>
+          <p>Wszelkie flagi, pytania, raporty i widoki w demo mają charakter demonstracyjny. Przed jakimkolwiek zastosowaniem produkcyjnym projekt wymaga walidacji klinicznej, prawnej, bezpieczeństwa, ochrony danych i zgodności regulacyjnej.</p>
         </article>
         <article>
           <h2>Dane demo</h2>
-          <p>
-            Przypadki demonstracyjne i dane demo są fikcyjnymi kompozytami projektowymi. Nie opisują
-            historii choroby żadnej konkretnej osoby ani rodziny.
-          </p>
+          <p>Przypadki demonstracyjne i dane demo są fikcyjnymi kompozytami projektowymi. Nie opisują historii choroby żadnej konkretnej osoby ani rodziny.</p>
         </article>
         <article>
-          <h2>Lekarz w procesie decyzyjnym (DITL)</h2>
-          <p>
-            W decyzjach medycznych zawsze musi uczestniczyć uprawniony profesjonalista medyczny.
-            Pacjent360™ porządkuje kontekst, źródła, luki i pytania. Nie podejmuje decyzji
-            terapeutycznych.
-          </p>
+          <h2>Własność i zarządzanie danymi (Bring Your Own Data)</h2>
+          <p>Pacjent360™ z założenia jest narzędziem wspierającym pacjenta w organizacji jego własnych danych. Aplikacja nie jest publicznym rejestrem medycznym (jak IKP) ani systemem dokumentacji placówki. Dane są wczytywane i zarządzane wyłącznie z inicjatywy pacjenta lub opiekuna prawnego.</p>
         </article>
-        <a class="text-link" href="index.html">Wróć do strony projektu</a>
+        <article>
+          <h2>Lekarz w procesie decyzyjnym (Decyzja Lekarza)</h2>
+          <p>W decyzjach medycznych zawsze musi uczestniczyć uprawniony profesjonalista medyczny. Pacjent360™ porządkuje kontekst, źródła, luki i pytania. Nie podejmuje decyzji terapeutycznych.</p>
+        </article>
       </section>
     </main>
 
-    <footer>
-      <span>Pacjent360™</span>
-      <span class="footer-links">
-        <a href="index.html">Strona główna</a>
-        <a href="demo.html?start=1">Demo alpha</a>
-        <a href="engineering.html">Engineering</a>
-        <a href="disclaimer.html">Zastrzeżenie medyczne</a>
-        <a href="privacy.html">Prywatność</a>
-      </span>
+    <footer class="footer">
+      <div class="container footer-grid">
+        <div><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong><br><span>Niezależny prototyp open source. Nie zastępuje lekarza. Demo używa fikcyjnych danych.</span></div>
+        <nav aria-label="Stopka">
+          <a href="demo.html?start=1">Demo alpha</a>
+          <a href="https://github.com/sebkabyte/Pacjent360">GitHub</a>
+          <a href="engineering.html">Engineering</a>
+          <a href="ditl.html">Decyzja Lekarza</a>
+          <a href="agents.html">Granice AI</a>
+          <a href="investors.html">Inwestorzy</a>
+          <a href="disclaimer.html">Zastrzeżenie medyczne</a>
+          <a href="privacy.html">Prywatność</a>
+        </nav>
+      </div>
     </footer>
   </body>
 </html>
