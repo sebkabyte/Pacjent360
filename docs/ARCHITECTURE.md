@@ -14,7 +14,7 @@ Pacjent360™ nie powinien byc aplikacja, ktora "udaje pacjenta" i loguje sie do
 
 IKP/P1 pozostaje zrodlem urzedowym dla e-recept, e-skierowan, EDM i zdarzen medycznych. Pacjent360™ dodaje warstwe, ktorej w praktyce klinicznej czesto brakuje: wywiad, os czasu, leki faktycznie przyjmowane, pytania do lekarza, braki danych, przypomnienia, zgody rodzinne i raport "co trzeba wyjasnic przed decyzja".
 
-Druga teza produktu: Pacjent360™ powinien obejmowac cala petle wizyty, nie tylko przygotowanie raportu przed kontaktem medycznym.
+Druga teza produktu: Pacjent360™ powinien obejmowac cala sciezke wizyty, nie tylko przygotowanie raportu przed kontaktem medycznym.
 
 ```text
 Przed wizyta -> w trakcie wizyty -> po wizycie
