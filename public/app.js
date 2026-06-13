@@ -1732,11 +1732,6 @@ function renderRoleStart() {
         <h1>Wybierz perspektywę 360° i zobacz tę samą historię pacjenta</h1>
         <p>Pacjent360™ pokazuje jedną historię w trzech soczewkach: Lekarz360 dla szybkiego kontekstu, Pacjent360 dla przygotowania wizyty i Opiekun360 dla pomocy bliskiej osobie w zakresie zgody.</p>
       </div>
-      <div class="role-demo-current">
-        <span>Zacznij tutaj</span>
-        <strong><i data-lucide="mouse-pointer-click"></i>Wybierz perspektywę</strong>
-        <p>Po wyborze perspektywy przejdziesz do osobnego ekranu z historiami pacjentów.</p>
-      </div>
     </section>
 
     <section class="section-band role-picker-band">
