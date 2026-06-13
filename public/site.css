@@ -1518,6 +1518,26 @@ footer {
   margin: 0 auto;
 }
 
+.subpage-hero {
+  padding: clamp(48px, 6vw, 76px) 0;
+}
+
+.subpage-hero h1 {
+  max-width: 980px;
+  margin-bottom: 16px;
+  font-size: clamp(2.6rem, 4.25vw, 4.15rem);
+  line-height: 1;
+  letter-spacing: -0.055em;
+  text-wrap: balance;
+}
+
+.subpage-hero .lead {
+  max-width: 860px;
+  margin-bottom: 0;
+  font-size: clamp(1rem, 1.45vw, 1.18rem);
+  line-height: 1.58;
+}
+
 .side-nav {
   position: sticky;
   top: 92px;
@@ -1678,8 +1698,18 @@ footer {
     display: none;
   }
 
+  .subpage-hero {
+    padding: 42px 0 36px;
+  }
+
   .subpage-hero h1 {
-    font-size: clamp(2.2rem, 12vw, 3.4rem);
+    font-size: clamp(2.05rem, 9.8vw, 3rem);
+    line-height: 1.03;
+    letter-spacing: -0.04em;
+  }
+
+  .subpage-hero .lead {
+    font-size: 1rem;
   }
 
   .legal-content {
