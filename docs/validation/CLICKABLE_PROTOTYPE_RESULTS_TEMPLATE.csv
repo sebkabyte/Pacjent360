@@ -1,0 +1,5 @@
+session_id,date,participant_type,device,start_url,test_type,task_id,scenario,expected_first_click,actual_first_click,first_click_success,time_to_first_click_seconds,task_success,time_to_complete_seconds,misclick_count,help_needed,confidence_1_5,safety_concern,confusion_quote,next_fix
+CLICK-YYYYMMDD-01,YYYY-MM-DD,lekarz,laptop,https://pacjent360.com.pl/,first_click,FC-WWW-01,www_demo_start,CTA demo,,,,,,,,,,
+CLICK-YYYYMMDD-02,YYYY-MM-DD,pacjent,mobile,https://pacjent360.com.pl/demo.html?start=1,first_click,FC-DEMO-02,pacjent360_start,Pacjent360,,,,,,,,,,
+CLICK-YYYYMMDD-03,YYYY-MM-DD,opiekun,mobile,https://pacjent360.com.pl/demo.html?start=1,user_journey,PATH-C,jan_opiekun,Opiekun360,,,,,,,,,,
+CLICK-YYYYMMDD-04,YYYY-MM-DD,opiekun,laptop,https://pacjent360.com.pl/demo.html?start=1,user_journey,PATH-D,andrzej_no_consent,Opiekun360,,,,,,,,,,
