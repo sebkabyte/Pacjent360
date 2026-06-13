@@ -143,34 +143,8 @@
   }
 
   function renderTimelineControls(period, detail, zoom, zoomConfig) {
-    const activeLevel = semanticLevel(period.id, detail.id);
-    const levels = [
-      { id: "life", label: "Życie", period: "life", detail: "overview", zoom: zoomConfig.fit, description: "kotwice i epizody" },
-      { id: "period", label: "Okres", period: "year", detail: "overview", zoom: 0.62, description: "ostatni rok" },
-      { id: "episode", label: "Epizod", period: "episode", detail: "standard", zoom: 0.9, description: "aktywny odcinek" },
-      { id: "visit", label: "Wizyta", period: "episode", detail: "detail", zoom: 1.18, description: "najwięcej kontekstu" }
-    ];
     return `
       <div class="temporal-controls">
-        <div class="timeline-control-group">
-          <span>Poziom filmu</span>
-          <div class="segmented semantic-zoom" role="group" aria-label="Poziom filmu z życia pacjenta">
-            ${levels.map((item) => `
-              <button
-                type="button"
-                data-timeline-view-level="${escapeHtml(item.id)}"
-                data-timeline-view-period="${escapeHtml(item.period)}"
-                data-timeline-view-detail="${escapeHtml(item.detail)}"
-                data-timeline-view-zoom="${escapeHtml(item.zoom)}"
-                class="${activeLevel === item.id ? "active" : ""}"
-                title="${escapeHtml(item.description)}"
-              >
-                <span>${escapeHtml(item.label)}</span>
-                <small>${escapeHtml(item.description)}</small>
-              </button>
-            `).join("")}
-          </div>
-        </div>
         <div class="timeline-control-group zoom-group">
           <span>Nawigacja</span>
           <div class="temporal-zoom-control">
@@ -367,7 +341,7 @@
 
   function renderTimelineStoryList(events, detailId, selectedId, persona, sourceChips) {
     const isOverview = detailId === "overview";
-    const personaHint = persona === "patient" ? "Kliknij, aby zobaczyć źródła i pytania do rozmowy." : "Kliknij, aby zobaczyć źródła, epizod i pytania DITL.";
+    const personaHint = persona === "patient" ? "Kliknij, aby zobaczyć źródła i pytania do rozmowy." : "Kliknij, aby zobaczyć źródła, epizod i pytania do weryfikacji.";
     return `
       <div class="timeline-story-list" aria-label="Chronologiczna opowieść wybranego zakresu">
         ${events.map((event, index) => {
@@ -463,7 +437,7 @@
     const statusMeta = event.statusMeta || timelineStatusMeta(status);
     const sourceCount = (Array.isArray(event.sourceRefs) ? event.sourceRefs : [event.sourceRefs].filter(Boolean)).length;
     const selected = event.id === selectedId;
-    const personaHint = persona === "patient" ? "Kliknij, aby zobaczyć źródła i pytania do rozmowy." : "Kliknij, aby zobaczyć źródła, epizod i pytania DITL.";
+    const personaHint = persona === "patient" ? "Kliknij, aby zobaczyć źródła i pytania do rozmowy." : "Kliknij, aby zobaczyć źródła, epizod i punkty do weryfikacji.";
 
     return `
       <article
@@ -477,7 +451,7 @@
         style="--event-left: ${eventLeft}%; --branch-depth: ${branchDepth}px; --lane-index: ${laneIndex}; --lane-top: ${laneOffset + laneIndex * laneHeight}px; --lane-height: ${laneHeight}px;"
       >
         <div class="temporal-branch" aria-hidden="true"></div>
-        <div class="temporal-card">
+        <div class="temporal-card track-${escapeHtml(event.track.replace(/\s+/g, '-'))}">
           <div class="temporal-card-head">
             <span class="temporal-date">${formatDate(event.date)}</span>
             <span class="temporal-track"><i data-lucide="${escapeHtml(timelineTrackIcon(event.track))}"></i>${escapeHtml(event.track)}</span>
@@ -498,7 +472,7 @@
     if (!event) {
       return `
         <aside class="timeline-inspector" aria-label="Szczegóły zdarzenia">
-          ${emptyState("Wybierz zdarzenie na mapie, aby zobaczyć źródła i pytania DITL.")}
+          ${emptyState("Wybierz zdarzenie na mapie, aby zobaczyć źródła i powiązane pytania.")}
         </aside>
       `;
     }
@@ -542,7 +516,7 @@
         </section>
 
         <section class="inspector-section">
-          <strong>Pytania DITL powiązane ze źródłem</strong>
+          <strong>Punkty do weryfikacji (powiązane ze źródłem)</strong>
           <div class="inspector-list">
             ${
               questions.length
@@ -553,7 +527,7 @@
                     <div class="source-line">${sourceChips(item.sourceRefs)}</div>
                   </article>
                 `).join("")
-                : `<p>Brak pytania DITL bezpośrednio połączonego ze źródłami tego zdarzenia.</p>`
+                : `<p>Brak pytań do wyjaśnienia bezpośrednio połączonych ze źródłami tego zdarzenia.</p>`
             }
           </div>
         </section>
@@ -647,7 +621,7 @@
         </div>
         <section class="safety-note compact">
           <i data-lucide="shield-alert"></i>
-          <span>Mapa pokazuje zdarzenia, źródła, luki i pytania DITL. Relacje są opisane jako powiązania czasowe lub źródłowe, nie jako przyczyna.</span>
+          <span>Mapa pokazuje zdarzenia, źródła, luki i pytania do weryfikacji. Relacje są opisane jako powiązania czasowe lub źródłowe, nie jako przyczyna.</span>
         </section>
         ${renderStageSummaries(stageSummaries, events, sourceChips)}
         ${embedded ? "" : renderTimelineControls(period, detail, zoom, zoomConfig)}

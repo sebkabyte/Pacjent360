@@ -577,43 +577,31 @@ async function checkTimelineControls(client) {
   await setPatientAndView(client, "p1", "timeline");
   const before = await client.evaluate(`(() => ({
     text: document.querySelector('#viewRoot')?.textContent || '',
-    cards: document.querySelectorAll('.timeline-story-card,[data-temporal-story-event]').length,
-    activePeriod: document.querySelector('[data-timeline-period].active')?.dataset.timelinePeriod || null,
+    rows: document.querySelectorAll('.history-event-row').length,
+    stages: document.querySelectorAll('.history-stage-group').length,
     activeDetail: document.querySelector('[data-timeline-detail].active')?.dataset.timelineDetail || null
   }))()`);
 
-  const afterPeriod = await client.evaluate(`(() => {
-    const target = [...document.querySelectorAll('[data-timeline-period]')].find((button) => !button.classList.contains('active') && !button.disabled);
+  const afterMode = await client.evaluate(`(() => {
+    const target = document.querySelector('[data-timeline-detail="detail"]');
     if (target) target.click();
-    return target?.dataset.timelinePeriod || null;
+    return {
+      activeDetail: document.querySelector('[data-timeline-detail].active')?.dataset.timelineDetail || null,
+      rows: document.querySelectorAll('.history-event-row').length,
+      stages: document.querySelectorAll('.history-stage-group').length,
+      text: document.querySelector('#viewRoot')?.textContent || ''
+    };
   })()`);
   await pause(90);
-  const periodText = await snapshotRegion(client, "#viewRoot");
   counters.controlChecks += 1;
-  if (afterPeriod && before.text === periodText) {
-    await capture(client, "before_fail_timeline_period_no_change");
-    reportFailure("R1-5", "Timeline period control did not change view", { afterPeriod });
-  }
-
-  const filter = await client.evaluate(`(() => {
-    const beforeCount = document.querySelectorAll('.timeline-story-card,[data-temporal-story-event]').length;
-    const target = [...document.querySelectorAll('[data-filter-track]')].find((button) => !button.disabled && !button.classList.contains('active'));
-    if (target) target.click();
-    return { track: target?.dataset.filterTrack || null, beforeCount };
-  })()`);
-  await pause(90);
-  const afterFilter = await client.evaluate(`(() => ({
-    text: document.querySelector('#viewRoot')?.textContent || '',
-    cards: document.querySelectorAll('.timeline-story-card,[data-temporal-story-event]').length
-  }))()`);
-  counters.controlChecks += 1;
-  if (filter.track && before.cards && afterFilter.cards > filter.beforeCount) {
-    reportFailure("R1-5", "Timeline track filter increased visible cards", { filter, afterCards: afterFilter.cards });
+  if (afterMode.activeDetail !== "detail" || afterMode.stages < 1 || before.text === afterMode.text) {
+    await capture(client, "before_fail_history_mode_no_change");
+    reportFailure("R1-5", "Patient history mode control did not expose stage grouping", { before, afterMode });
   }
 
   await client.evaluate(`(() => {
     if (typeof state === 'object') {
-      state.timelineFilterTrack = null;
+      state.timelineDetail = 'overview';
       state.selectedTimelineEventId = null;
       if (typeof saveState === 'function') saveState();
       if (typeof render === 'function') render();
@@ -627,16 +615,33 @@ async function checkTimelineControls(client) {
       ? items.find((candidate) => candidate.dataset.selectTimelineEvent !== current)
       : (items[1] || items[0]);
     const eventId = item?.dataset.selectTimelineEvent || null;
-    const beforeTitle = document.querySelector('.timeline-inspector h3,.timeline-inspector .record-title')?.textContent || '';
+    const beforeTitle = document.querySelector('.history-event-detail-drawer h3')?.textContent || '';
     if (item) item.click();
     return { eventId, beforeTitle };
   })()`);
   await pause(90);
-  selected.afterTitle = await client.evaluate(`document.querySelector('.timeline-inspector h3,.timeline-inspector .record-title')?.textContent || ''`);
+  selected.afterTitle = await client.evaluate(`document.querySelector('.history-event-detail-drawer h3')?.textContent || ''`);
   counters.controlChecks += 1;
   if (selected.eventId && selected.beforeTitle === selected.afterTitle) {
-    await capture(client, "before_fail_timeline_select_no_change");
-    reportFailure("R1-5", "Timeline event selection did not update inspector", selected);
+    await capture(client, "before_fail_history_select_no_change");
+    reportFailure("R1-5", "Patient history event selection did not update detail panel", selected);
+  }
+
+  const sourceOpen = await client.evaluate(`(() => {
+    const sourceButton = document.querySelector('.history-event-detail-drawer [data-open-evidence]');
+    const ref = sourceButton?.dataset.openEvidence || '';
+    if (sourceButton) sourceButton.click();
+    return {
+      ref,
+      expanded: !document.querySelector('#contentGrid')?.classList.contains('evidence-collapsed'),
+      selected: JSON.parse(localStorage.getItem('pacjent360-state-v11') || '{}').selectedSourceRef || ''
+    };
+  })()`);
+  await pause(90);
+  counters.controlChecks += 1;
+  if (sourceOpen.ref && (!sourceOpen.expanded || sourceOpen.selected !== sourceOpen.ref)) {
+    await capture(client, "before_fail_history_source_no_drawer");
+    reportFailure("R1-5", "Patient history source action did not open evidence drawer", sourceOpen);
   }
 }
 

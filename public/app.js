@@ -34,6 +34,7 @@ if (!PATIENT360_DEMO_DATA) {
 const DATA_SCHEMA_VERSION = PATIENT360_CONTRACT.DATA_SCHEMA_VERSION;
 const DATA_CONTRACT_VERSION = PATIENT360_CONTRACT.DATA_CONTRACT_VERSION;
 const SOURCE_MISSING_REF = PATIENT360_CONTRACT.SOURCE_MISSING_REF;
+
 const DEMO_WATERMARK_TEXT = "PROTOTYP KONCEPCYJNY — DANE FIKCYJNE — NIE UŻYWAĆ Z REALNYMI DANYMI PACJENTA";
 const DEMO_FORM_WARNING =
   "Formularz służy wyłącznie do fikcyjnych danych demo. Nie wpisuj realnych danych pacjenta, danych identyfikujących ani treści z dokumentacji medycznej.";
@@ -43,7 +44,7 @@ const DEMO_PRINT_WARNING =
   "Wydruk jest przeznaczony wyłącznie do publicznego demo i nie może zawierać realnych danych pacjenta.";
 const DITL_STATUS_NOTICE =
   "Status w demo jest tylko lokalnym oznaczeniem. W prawdziwym systemie taka zmiana wymagałaby uzasadnienia, autora i śladu audytu.";
-const REPORT_DEMO_WATERMARK = "FIKCYJNA SOCZEWKA DEMO / DANE PACJENTA DEMO";
+const REPORT_DEMO_WATERMARK = "TRYB DEMO / FIKCYJNE DANE PACJENTA";
 const PATIENT_SCOPED_COLLECTION_KEYS = [
   "decisionContexts",
   "documents",
@@ -131,7 +132,7 @@ const DEMO_JOURNEY_STEPS = Object.freeze([
   { id: "role", label: "Perspektywa", caption: "czyj widok" },
   { id: "scenario", label: "Scenariusz", caption: "który pacjent" },
   { id: "cockpit", label: "Kokpit", caption: "co teraz" },
-  { id: "map", label: "Oś historii", caption: "skrót historii" },
+  { id: "map", label: "Historia pacjenta", caption: "chronologia" },
   { id: "data", label: "Dane / źródła", caption: "skąd to wiemy" },
   { id: "summary", label: "Podsumowanie", caption: "co zabrać dalej" }
 ]);
@@ -155,16 +156,16 @@ const ROLE_DATA_VISIBILITY = Object.freeze({
   doctor: [
     ["interview", "Wywiad", "messages-square", "pacjent, rodzina lub opiekun jako źródło rozmowy"],
     ["documents", "Dokumenty", "files", "wypisy, skierowania i źródła"],
-    ["timeline", "Oś historii", "git-branch", "skrót historii, źródła i pytania"],
+    ["timeline", "Historia pacjenta", "git-branch", "skrót historii, źródła i pytania"],
     ["medications", "Leki", "pill", "przepisane vs faktycznie przyjmowane"],
     ["observations", "Wyniki", "activity", "wartości i zakresy ze źródła"],
-    ["risks", "Pytania DITL", "shield-alert", "pytania i luki do wyjaśnienia"],
+    ["risks", "Punkty do weryfikacji", "shield-alert", "pytania i luki do wyjaśnienia"],
     ["reports", "Podsumowanie kontekstu", "clipboard-list", "co wiadomo, czego brakuje i co potwierdzić"],
     ["consent", "Zgody", "shield-check", "kto widzi dane i dlaczego"]
   ],
   patient: [
     ["documents", "Moje dokumenty", "files", "wypisy, skierowania, wyniki PDF"],
-    ["timeline", "Oś historii", "git-branch", "wizyty i zdarzenia w jednej historii"],
+    ["timeline", "Historia pacjenta", "git-branch", "wizyty i zdarzenia w jednej historii"],
     ["interview", "Opis wywiadu", "messages-square", "rozmowa i pytania do omówienia"],
     ["medications", "Moje leki", "pill", "lista z dokumentów i wywiadu"],
     ["observations", "Moje wyniki", "activity", "badania i zakresy ze źródła"],
@@ -173,7 +174,7 @@ const ROLE_DATA_VISIBILITY = Object.freeze({
   caregiver: [
     ["caregiverPortal", "Opiekun360", "users-round", "kto udostępnił opiekę i nad kim ją sprawuję"],
     ["documents", "Dokumenty", "files", "widoczne w zakresie zgody"],
-    ["timeline", "Oś historii", "git-branch", "historia osoby pod opieką"],
+    ["timeline", "Historia pacjenta", "git-branch", "historia osoby pod opieką"],
     ["interview", "Gotowy wywiad", "messages-square", "informacje z rozmowy i obserwacji"],
     ["medications", "Leki", "pill", "lista do organizacyjnego dopilnowania"],
     ["observations", "Wyniki", "activity", "badania widoczne w zgodzie"],
@@ -198,7 +199,7 @@ const LIBRARY_HEADING = "Dane i źródła";
 const SIDEBAR_LIBRARY_LABELS = Object.freeze({
   interview: "Wywiad",
   documents: "Dokumenty",
-  timeline: "Oś historii",
+  timeline: "Historia pacjenta",
   medications: "Leki",
   observations: "Wyniki",
   risks: "Pytania",
@@ -328,13 +329,13 @@ const REPORT_CASE_STUDIES = [
     id: "procedure-readiness",
     label: "Fikcyjny kompozyt: gotowość do procedury",
     decision: "Czy przed zaplanowaną procedurą zebrano wszystkie pytania wymagające oceny lekarza?",
-    lens: "Raport skupia się na gotowości do procedury bez opisywania konkretnej historii choroby: stan bazowy, aktualny problem, leki, braki danych i pytania DITL.",
+    lens: "Raport skupia się na gotowości do procedury bez opisywania konkretnej historii choroby: stan bazowy, aktualny problem, leki, braki danych i pytania do rozmowy.",
     patientSnapshot: "Syntetyczny pacjent demonstracyjny przed procedurą lub konsultacją kwalifikującą.",
     keyChange: "Najważniejsze jest ustalenie, co zmieniło się względem stanu bazowego i czy ta zmiana ma znaczenie dla decyzji.",
     known: ["Jest określony cel kontaktu z lekarzem.", "Są co najmniej dwa źródła: dokumentacja i wywiad."],
     unknown: ["Nie wiadomo, czy wszystkie dane krytyczne dla tej decyzji są aktualne.", "Nie wiadomo, czy pacjent potwierdził najnowszy stan funkcjonalny."],
     uncertain: ["Część informacji może pochodzić z wywiadu i wymaga oznaczenia jako obserwacja, nie fakt medyczny."],
-    verify: ["Czy lekarz oznaczył, które pytania DITL są wyjaśnione, a które wymagają dalszej kontroli?"],
+    verify: ["Czy lekarz oznaczył, które punkty do weryfikacji są wyjaśnione, a które wymagają dalszej kontroli?"],
     flags: [
       { color: "blue", title: "Cel kontaktu", question: "Czy cel dzisiejszego kontaktu z lekarzem jest jasno nazwany?", sourceRefs: [SOURCE_MISSING_REF] },
       { color: "amber", title: "Kompletność danych", question: "Czy brakuje danych krytycznych dla tej decyzji?", sourceRefs: [SOURCE_MISSING_REF] },
@@ -343,7 +344,7 @@ const REPORT_CASE_STUDIES = [
     questions: [
       "Jaki dokładnie cel kontaktu ma zostać dziś omówiony?",
       "Które dane są znane, nieznane, niepewne albo do potwierdzenia?",
-      "Czy lekarz potwierdził status każdego pytania DITL?"
+      "Czy lekarz potwierdził status każdego punktu do weryfikacji?"
     ]
   },
   {
@@ -371,7 +372,7 @@ const REPORT_CASE_STUDIES = [
     id: "acute-change",
     label: "Fikcyjny kompozyt: nagła zmiana stanu",
     decision: "Czy nowa zmiana zachowania, funkcji albo objawu została właściwie oznaczona jako pytanie do wyjaśnienia?",
-    lens: "Raport rozdziela wypowiedź pacjenta, wynik, lek, dokument i pytanie DITL, żeby nie zamienić relacji w rozstrzygnięcie po stronie systemu.",
+    lens: "Raport rozdziela wypowiedź pacjenta, wynik, lek, dokument i pytanie do lekarza, żeby nie zamienić relacji w rozstrzygnięcie po stronie systemu.",
     patientSnapshot: "Syntetyczny pacjent demonstracyjny z nową zmianą zgłoszoną w wywiadzie.",
     keyChange: "Najważniejsza jest dynamika: kiedy zaczęła się zmiana, co ją poprzedziło i czy przebieg jest nagły, stopniowy czy falujący.",
     known: ["Jest obserwacja zmiany zgłoszona w wywiadzie.", "Można przypisać źródło informacji: pacjent, lekarz, dokument albo wynik."],
@@ -381,7 +382,7 @@ const REPORT_CASE_STUDIES = [
     flags: [
       { color: "red", title: "Nowa zmiana", question: "Czy nowa zmiana stanu została potraktowana jako sygnał do wyjaśnienia?", sourceRefs: [SOURCE_MISSING_REF] },
       { color: "amber", title: "Niepewność przyczyn", question: "Czy przyczyna zmiany nie została założona zbyt wcześnie?", sourceRefs: [SOURCE_MISSING_REF] },
-      { color: "blue", title: "Pytanie DITL", question: "Które pytania lekarz chce omówić w kontekście tej zmiany?", sourceRefs: [SOURCE_MISSING_REF] }
+      { color: "blue", title: "Pytanie do lekarza", question: "Które pytania lekarz chce omówić w kontekście tej zmiany?", sourceRefs: [SOURCE_MISSING_REF] }
     ],
     questions: [
       "Kiedy dokładnie zaczęła się zmiana?",
@@ -452,6 +453,7 @@ let state = loadState();
 
 const viewRoot = document.querySelector("#viewRoot");
 const evidenceRoot = document.querySelector("#evidenceRoot");
+const contentGrid = document.querySelector("#contentGrid");
 const patientSelect = document.querySelector("#patientSelect");
 const roleSwitcher = document.querySelector("#roleSwitcher");
 const searchInput = document.querySelector("#searchInput");
@@ -691,11 +693,8 @@ function canShowSidebarLibraryView(view, role = activeRole()) {
   if (!view || view === "roleStart" || VIEW_ROLE_HINT[view] || view === "audit") return false;
   if (!canAccessViewForRole(view, role)) return false;
   if (role !== "caregiver") return true;
-  if (view === "consent") return true;
-  const activeAreas = activeCaregiverAreas();
-  if (!activeAreas.size) return false;
-  const requiredAreas = CAREGIVER_VIEW_AREAS[view] || [];
-  return requiredAreas.some((area) => activeAreas.has(area));
+  if (!caregiverHasActiveScope()) return view === "consent";
+  return true;
 }
 
 function sidebarLibraryItem(view, role = activeRole()) {
@@ -900,6 +899,12 @@ function statusClass(value) {
   return "info";
 }
 
+function publicStatusLabel(value) {
+  const normalized = normalize(value);
+  if (normalized.includes("ditl")) return "do oceny lekarza";
+  return value || "";
+}
+
 function latestValue(observation) {
   return [...observation.values].sort((a, b) => new Date(b.date) - new Date(a.date))[0];
 }
@@ -1099,17 +1104,15 @@ function renderCriticalStrip() {
     return;
   }
   criticalStrip.classList.add("visible");
-  criticalStrip.innerHTML = `<i data-lucide="triangle-alert"></i><strong>${formatCount(redFlags.length, "sygnał DITL", "sygnały DITL", "sygnałów DITL")} do sprawdzenia:</strong> ${escapeHtml(redFlags[0].question)}`;
+  criticalStrip.innerHTML = `<i data-lucide="triangle-alert"></i><strong>${formatCount(redFlags.length, "punkt do sprawdzenia", "punkty do sprawdzenia", "punktów do sprawdzenia")}:</strong> ${escapeHtml(redFlags[0].question)}`;
 }
 
 function isCaregiverRestrictedView(view = state.activeView) {
   if (activeRole() !== "caregiver") return false;
   if (!["interview", "documents", "timeline", "medications", "observations"].includes(view)) return false;
-  const model = PATIENT360_CAREGIVER_MODEL.buildCaregiverModel({
-    state,
-    patientId: state.activePatientId
-  });
-  return !model.activeScopes.length;
+  const activeAreas = activeCaregiverAreas();
+  const requiredAreas = CAREGIVER_VIEW_AREAS[view] || [];
+  return !requiredAreas.some((area) => activeAreas.has(area));
 }
 
 function renderCaregiverRestrictedData(view = state.activeView) {
@@ -1121,7 +1124,7 @@ function renderCaregiverRestrictedData(view = state.activeView) {
   const label = {
     interview: "wywiady i transkrypcje",
     documents: "dokumenty",
-    timeline: "oś historii",
+    timeline: "historię pacjenta",
     medications: "leki",
     observations: "wyniki",
   }[view] || "dane";
@@ -1132,9 +1135,9 @@ function renderCaregiverRestrictedData(view = state.activeView) {
       <div class="section-head">
         <div>
           <p class="eyebrow">Dostęp opiekuna</p>
-          <h2>${escapeHtml(patient.name)} · ${escapeHtml(label)}</h2>
+          <h2>🔒 Brak dostępu: ${escapeHtml(label)}</h2>
         </div>
-        <span class="status-chip ${model.activeScopes.length ? "done" : "pending"}">${model.activeScopes.length ? "Zakres aktywny" : "Brak aktywnego zakresu"}</span>
+        <span class="status-chip pending">Wymagana zgoda pacjenta</span>
       </div>
       <p class="record-body">${escapeHtml(model.safetyCopy)}</p>
       <div class="caregiver-access-grid">
@@ -1207,6 +1210,14 @@ function renderView() {
   const renderedView = isCaregiverRestrictedView()
     ? renderCaregiverRestrictedData()
     : (renderers[state.activeView] || renderCore)();
+  if (contentGrid) {
+    contentGrid.classList.toggle("history-view-active", state.activeView === "timeline");
+    if (state.activeView === "timeline") {
+      setEvidencePanelCollapsed(true, { persist: false });
+    } else if (!loadUiPrefs().evidenceCollapsed) {
+      setEvidencePanelCollapsed(false, { persist: false });
+    }
+  }
   viewRoot.innerHTML = state.activeView === "roleStart"
     ? renderedView
     : `${renderDemoJourney()}${renderedView}`;
@@ -1316,7 +1327,7 @@ function renderFullDataAccess(context = "clinician") {
     clinician: {
       role: "doctor",
       eyebrow: "Pełny kontekst",
-      intro: "Lekarz360 pokazuje pełny kontekst udostępniony w demo: wywiad, dokumenty, oś historii, leki, wyniki, pytania DITL, podsumowanie i zgody.",
+      intro: "Lekarz360 pokazuje pełny kontekst udostępniony w demo: wywiad, dokumenty, historię pacjenta, leki, wyniki, punkty do weryfikacji, podsumowanie i zgody.",
       title: "Dane dostępne w Lekarz360"
     },
     patient: {
@@ -1433,7 +1444,7 @@ function renderCore() {
   return `
     <div class="page-intro">
       <div>
-        <p class="eyebrow">Kontekst wizyty i pytania do decyzji lekarza (DITL)</p>
+        <p class="eyebrow">Kontekst wizyty i pytania do lekarza</p>
         <h1>Lekarz360: kontekst w 90 sekund</h1>
         <p>${escapeHtml(patient.name)}, ${formatAge(patient.birthDate)}. System pokazuje pytania i luki do wyjaśnienia, bez automatycznej decyzji po stronie systemu.</p>
       </div>
@@ -1454,25 +1465,25 @@ function renderCore() {
       steps: [
         ["1", "Powód wizyty", patient.currentProblem || "Brak opisu aktualnego problemu."],
         ["2", "Niepewności", gaps[0]?.description || "Brak jawnych braków danych w demo."],
-        ["3", "Pytania", topQuestions[0]?.question || "Brak pytań DITL dla tego pacjenta."]
+        ["3", "Pytania", topQuestions[0]?.question || "Brak pytań do lekarza dla tego pacjenta."]
       ],
       actions: [
-        { label: "Raport", icon: "file-text", view: "reports", primary: true },
-        { label: "Oś historii", icon: "git-branch", view: "timeline" },
-        { label: "Leki", icon: "pill", view: "medications" }
+        { label: "Zobacz podsumowanie", icon: "file-text", view: "reports", primary: true },
+        { label: "Przejdź do historii", icon: "git-branch", view: "timeline" },
+        { label: "Pokaż źródła", icon: "files", view: "documents" }
       ]
     })}
     ${renderFullDataAccess("clinician")}
     ${renderCareContractPanel("doctor")}
 
-    ${renderCockpitDetails("Pełne dane Lekarz360: leki, źródła, karta 90 sekund, oś historii i skróty", `
+    ${renderCockpitDetails("Pełne dane Lekarz360: leki, źródła, karta 90 sekund, historia pacjenta i skróty", `
       <section class="section-band decision-hero core-brief">
         <div class="section-head">
           <div>
             <p class="eyebrow">Dzisiejszy kontekst wizyty</p>
             <h2>${escapeHtml(decisionHeadline)}</h2>
           </div>
-          <span class="status-chip info">${escapeHtml(decision?.status || "DITL")}</span>
+          <span class="status-chip info">${escapeHtml(publicStatusLabel(decision?.status || "do oceny lekarza"))}</span>
         </div>
         <p class="record-body">Kontakt: ${formatDate(decision?.contactDate)}. Lekarz oznacza każde pytanie jako wyjaśnione, odrzucone albo do dalszej kontroli.</p>
         <p class="record-body"><strong>Największa zmiana:</strong> ${escapeHtml(patient.biggestChange)}</p>
@@ -1485,7 +1496,7 @@ function renderCore() {
         ${renderNinetyCard("Stan bazowy", patient.baselineState, "user-round-check", latestInterviewRefs)}
         ${renderNinetyCard("Aktualny problem", patient.currentProblem, "activity", decisionRefs)}
         ${renderNinetyList("Największe braki danych", gaps.map((gap) => gap.description), "search-x", gaps.flatMap((gap) => gap.sourceRefs))}
-        ${renderNinetyList("Top pytania DITL", topQuestions.map((question) => question.question), "circle-help", topQuestions.flatMap((question) => question.sourceRefs || []))}
+        ${renderNinetyList("Punkty do weryfikacji", topQuestions.map((question) => question.question), "circle-help", topQuestions.flatMap((question) => question.sourceRefs || []))}
       </div>
 
       ${renderMapShortcut()}
@@ -1628,7 +1639,7 @@ function renderDitlQuestion(question) {
           <div class="record-meta"><span class="status-chip ${statusClass(question.status)}">${escapeHtml(question.status)}</span></div>
         </div>
       </div>
-      <div class="status-actions" role="group" aria-label="Status DITL">
+      <div class="status-actions" role="group" aria-label="Status punktu do weryfikacji">
         ${DITL_STATUSES.map((status) => `<button class="small-action ${question.status === status ? "selected" : ""}" data-ditl-type="${escapeHtml(type)}" data-ditl-id="${escapeHtml(id)}" data-ditl-status="${escapeHtml(status)}">${escapeHtml(status)}</button>`).join("")}
       </div>
       ${renderDitlStatusNotice()}
@@ -1645,7 +1656,7 @@ function renderMapShortcut() {
   return `
     <section class="section-band core-map-shortcut">
       <div>
-        <p class="eyebrow"><i data-lucide="map"></i>Oś historii pacjenta</p>
+        <p class="eyebrow"><i data-lucide="map"></i>Historia pacjenta</p>
         <h2>Skrót historii pacjenta: od osi czasu do źródeł</h2>
         <p class="record-body">
           ${events.length
@@ -1656,7 +1667,7 @@ function renderMapShortcut() {
           ${events.map((event) => `<span class="${event.status === "planowane" ? "future" : ""}" style="left:${timelinePreviewPosition(event, first, last)}%"></span>`).join("")}
         </div>
       </div>
-      <button class="primary-button" data-set-view="timeline"><i data-lucide="git-branch"></i>Otwórz oś historii</button>
+      <button class="primary-button" data-set-view="timeline"><i data-lucide="git-branch"></i>Otwórz historię pacjenta</button>
     </section>
   `;
 }
@@ -1808,7 +1819,7 @@ function renderScenarioCard(patient, role) {
         <strong>${escapeHtml(goal?.goal || meta.promise)}</strong>
       </div>
       <ul class="plain-list compact-list">
-        ${(sections.length ? sections : ["Kokpit 360°", "Oś historii", "Następny krok"]).slice(0, 4).map((item) => `<li><i data-lucide="check-circle-2"></i><span>${escapeHtml(item)}</span></li>`).join("")}
+        ${(sections.length ? sections : ["Kokpit 360°", "Historia pacjenta", "Następny krok"]).slice(0, 4).map((item) => `<li><i data-lucide="check-circle-2"></i><span>${escapeHtml(item)}</span></li>`).join("")}
       </ul>
       <button class="primary-button" data-start-role="${escapeHtml(role)}" data-start-patient="${escapeHtml(patient.id)}">
         <i data-lucide="${escapeHtml(meta.icon)}"></i>${escapeHtml(meta.cta)}
@@ -1825,7 +1836,7 @@ function renderRoleContextBanner(role = activeRole()) {
     <section class="section-band role-context-banner">
       <div>
         <p class="eyebrow"><i data-lucide="${escapeHtml(meta.icon)}"></i>${escapeHtml(meta.label)}</p>
-        <h2>${escapeHtml(narrative?.title || "Ten sam film życia, inna soczewka")}</h2>
+        <h2>${escapeHtml(narrative?.title || "Ta sama historia, inna perspektywa")}</h2>
         <p>${escapeHtml(narrative?.summary || meta.promise)}</p>
       </div>
       <article>
@@ -1894,7 +1905,7 @@ function renderPatientPortal() {
       isGuardianView ? "Pacjent360: widok rodzica" : "Pacjent360",
       isGuardianView
         ? "Widok rodzica: co przygotować dla dziecka przed wizytą, jakie dokumenty zabrać i kto ma dostęp do danych dziecka."
-        : "Osobisty widok Pacjent360™: oś historii, następne kroki, leki, dokumenty i udostępnianie opiekunowi. Nie zastępuje konsultacji lekarskiej.",
+        : "Osobisty widok Pacjent360™: historia pacjenta, następne kroki, leki, dokumenty i udostępnianie opiekunowi. Nie zastępuje konsultacji lekarskiej.",
       "smartphone"
     )}
     ${renderRoleContextBanner("patient")}
@@ -1910,9 +1921,9 @@ function renderPatientPortal() {
         ["3", "Zabierz pytania", formatCount(patientQuestions.length, "pytanie do rozmowy z lekarzem", "pytania do rozmowy z lekarzem", "pytań do rozmowy z lekarzem")]
       ],
       actions: [
-        { label: "Dokumenty", icon: "files", view: "documents", primary: true },
-        { label: "Leki", icon: "pill", view: "medications" },
-        { label: "Oś historii", icon: "git-branch", view: "timeline" }
+        { label: "Przejdź do historii", icon: "git-branch", view: "timeline", primary: true },
+        { label: "Zobacz podsumowanie", icon: "clipboard-list", view: "reports" },
+        { label: "Pokaż źródła", icon: "files", view: "documents" }
       ]
     })}
     ${renderFullDataAccess("patient")}
@@ -1944,7 +1955,7 @@ function renderPatientNextSteps({ patient, preVisitModel, upcoming, patientQuest
           <p class="eyebrow">${isGuardianView ? "Co przygotować dla dziecka" : "Co mam zrobić teraz"}</p>
           <h2><i data-lucide="clipboard-check"></i>${isGuardianView ? "Najbliższe kroki rodzica" : "Najbliższe kroki przed wizytą"}</h2>
         </div>
-        <button class="ghost-button" data-set-view="timeline"><i data-lucide="git-branch"></i>Oś historii</button>
+        <button class="ghost-button" data-set-view="timeline"><i data-lucide="git-branch"></i>Historia pacjenta</button>
       </div>
       <div class="patient-now-grid">
         <article>
@@ -1993,7 +2004,7 @@ function renderPatientAppHome({ patient, preVisitModel, docs, observations, meds
           </p>
           <div class="patient-app-actions" aria-label="Skróty aplikacji pacjenta">
             <button class="patient-app-tab active" data-set-view="patientPortal"><i data-lucide="home"></i>Start</button>
-            <button class="patient-app-tab" data-set-view="timeline"><i data-lucide="git-branch"></i>Oś historii</button>
+            <button class="patient-app-tab" data-set-view="timeline"><i data-lucide="git-branch"></i>Historia pacjenta</button>
             <button class="patient-app-tab" data-set-view="medications"><i data-lucide="pill"></i>Leki</button>
             <button class="patient-app-tab" data-set-view="documents"><i data-lucide="files"></i>Dokumenty</button>
             <button class="patient-app-tab" data-set-view="consent"><i data-lucide="shield-check"></i>Udostępnianie</button>
@@ -2017,7 +2028,7 @@ function renderPatientAppHome({ patient, preVisitModel, docs, observations, meds
           view: "patientPortal"
         })}
         ${renderPatientAppTile({
-          label: "Oś historii",
+          label: "Historia pacjenta",
           title: latestEvent ? latestEvent.title : "Brak zdarzeń",
           body: latestEvent ? `${formatDate(latestEvent.date)} · ${latestEvent.track}` : "Dodaj dokument lub wywiad demo, aby zbudować mapę.",
           icon: "map",
@@ -2478,38 +2489,529 @@ function renderDocuments() {
 
 function renderTimeline() {
   const role = activeRole();
+  const patient = activePatient();
+  const mapState = stateForMapPersona(role);
+  const events = byPatient(mapState.timelineEvents).slice().sort((a, b) => new Date(a.date) - new Date(b.date));
+  const mode = activeHistoryMode();
+  const visibleEvents = historyEventsForMode(events, mode);
+  const selected = selectedTimelineEvent(visibleEvents);
+  const episode = selected ? timelineEpisodeForEvent(selected) : historyPrimaryEpisode(events);
+  const issues = historyTopIssues(events).slice(0, 3);
+  const range = historyRange(events);
+  const narrative = activeRoleNarrative(role);
+  const summary = cleanHistoryCopy(narrative?.mapSummary || narrative?.summary || "Historia pacjenta porządkuje zdarzenia w czasie i pokazuje pytania do omówienia z lekarzem.");
+  const sourceCount = new Set(events.flatMap((event) => Array.isArray(event.sourceRefs) ? event.sourceRefs : [event.sourceRefs].filter(Boolean))).size;
+  const questionCount = historyTopIssues(events).length;
+  const medicationIssues = events.length ? byPatient(state.medications).filter(medNeedsConfirmation).slice(0, 3) : [];
+  const nextStep = historyNextStep(events);
+
   return `
-    ${pageHeader("Oś historii pacjenta", "Publiczne demo pokazuje uproszczony skrót historii: wizyty, badania, leki, wywiady, dokumenty, zgody i pytania DITL. Pełna mapa wielowarstwowa jest kierunkiem rozwoju.", "git-branch")}
-    ${renderTimelineNarrator(role)}
-    ${renderPatientMap360({ persona: role })}
+    ${pageHeader("Historia pacjenta", "Mapa historii pokazuje, co wydarzyło się po kolei, skąd to wiemy i co warto omówić z lekarzem. Nie diagnozuje i nie zastępuje decyzji lekarza.", "git-branch")}
+    <section class="section-band history-v2 history-tri-panel">
+      <div class="history-context-bar">
+        <div>
+          <p class="eyebrow"><i data-lucide="${escapeHtml(activeRoleMeta(role).icon)}"></i>Mapa historii · ${escapeHtml(activeRoleMeta(role).label)}</p>
+          <h2>${escapeHtml(patientDisplayName(patient))}</h2>
+          <p>${escapeHtml(summary)}</p>
+        </div>
+        <div class="history-facts compact" aria-label="Kontekst historii pacjenta">
+          <article><span>Zdarzenia</span><strong>${events.length}</strong></article>
+          <article><span>Źródła</span><strong>${sourceCount}</strong></article>
+          <article><span>Pytania</span><strong>${questionCount}</strong></article>
+        </div>
+      </div>
+
+      <div class="history-panel-grid">
+        ${renderHistoryCurrentPanel({ patient, role, episode, issues, events, medicationIssues, nextStep, range })}
+        ${renderHistoryVerticalTimeline(events, visibleEvents, selected, mode)}
+        ${renderHistoryEventDetail(selected, mode, events)}
+      </div>
+
+      <div class="safety-note compact">
+        <i data-lucide="shield-alert"></i>
+        <span>Historia pacjenta porządkuje źródła, zdarzenia i pytania. Nie diagnozuje, nie rozstrzyga decyzji medycznych i nie tworzy zaleceń terapeutycznych.</span>
+      </div>
+    </section>
   `;
 }
 
-function renderTimelineNarrator(role = activeRole()) {
-  const meta = activeRoleMeta(role);
-  const narrative = activeRoleNarrative(role);
-  const sections = activeRoleSections(role).slice(0, 4);
-  const events = byPatient(state.timelineEvents).slice().sort((a, b) => new Date(a.date) - new Date(b.date));
-  const first = events[0];
-  const last = events[events.length - 1];
+function cleanHistoryCopy(value) {
+  return String(value || "")
+    .replaceAll("Film życia", "Historia pacjenta")
+    .replaceAll("film życia", "historia pacjenta")
+    .replaceAll("Oś historii", "Historia pacjenta")
+    .replaceAll("oś historii", "historia pacjenta");
+}
+
+function historyRange(events) {
+  if (!events.length) return "Brak zdarzeń w widocznym zakresie";
+  return `${formatDate(events[0].date)} - ${formatDate(events[events.length - 1].date)}`;
+}
+
+function activeHistoryMode() {
+  if (state.timelineDetail === "detail") return "stages";
+  if (state.timelineDetail === "standard") return "all";
+  return "important";
+}
+
+function historyEventsForMode(events, mode) {
+  if (mode === "all" || mode === "stages") return events;
+  const important = events.filter((event) => {
+    const status = normalize(timelineEventStatus(event));
+    return status.includes("potwierdzenia") || status.includes("planow") || timelineEventQuestions(event).length;
+  });
+  return (important.length >= 3 ? important : events).slice(0, 6);
+}
+
+function historyNextStep(events) {
+  if (!events.length) return null;
+  const today = parseDateOnly(todayInputValue());
+  return events.find((event) => {
+    const eventDate = parseDateOnly(event.date);
+    const status = normalize(timelineEventStatus(event));
+    return status.includes("planow") || (today && eventDate && eventDate >= today);
+  }) || events[events.length - 1];
+}
+
+function historyGapLabel(previousDate, currentDate) {
+  const previous = parseDateOnly(previousDate);
+  const current = parseDateOnly(currentDate);
+  if (!previous || !current) return "";
+  const days = Math.round((current.getTime() - previous.getTime()) / 86400000);
+  if (days < 14) return "";
+  if (days < 45) return `${days} dni później`;
+  if (days < 365) return `${Math.round(days / 30)} mies. później`;
+  return `${Math.round(days / 365)} lat później`;
+}
+
+function historyDayGroups(events) {
+  const groups = [];
+  events.forEach((event) => {
+    const key = event.date || "brak-daty";
+    const last = groups[groups.length - 1];
+    if (last && last.date === key) {
+      last.events.push(event);
+    } else {
+      groups.push({
+        date: key,
+        gapLabel: last ? historyGapLabel(last.date, key) : "",
+        events: [event]
+      });
+    }
+  });
+  return groups;
+}
+
+function historyPrimaryEpisode(events) {
+  const eventWithEpisode = events.find((event) => event.episodeId);
+  if (eventWithEpisode) return timelineEpisodeForEvent(eventWithEpisode);
+  return byPatient(state.timelineEpisodes || [])[0] || null;
+}
+
+function historyTopIssues(events) {
+  const eventRefs = new Set(events.flatMap((event) => Array.isArray(event.sourceRefs) ? event.sourceRefs : [event.sourceRefs].filter(Boolean)));
+  const flags = byPatient(state.flags)
+    .filter((flag) => flag.color !== "green")
+    .map((flag) => ({
+      id: `flag-${flag.id}`,
+      label: flag.category,
+      text: flag.question,
+      status: flag.status,
+      sourceRefs: flag.sourceRefs || []
+    }));
+  const decisions = byPatient(state.decisionContexts).flatMap((decision) =>
+    (decision.ditlQuestions || []).map((question) => ({
+      id: `decision-${decision.id}-${question.id}`,
+      label: decision.type,
+      text: question.question,
+      status: question.status,
+      sourceRefs: question.sourceRefs || decision.sourceRefs || []
+    }))
+  );
+  const unknowns = byPatient(state.knownUnknowns)
+    .filter((item) => item.category === "Unknown" || item.category === "To verify" || item.category === "Uncertain")
+    .map((item) => ({
+      id: `unknown-${item.id}`,
+      label: item.category,
+      text: item.description,
+      status: "do potwierdzenia",
+      sourceRefs: item.sourceRefs || []
+    }));
+
+  const seen = new Set();
+  return [...flags, ...decisions, ...unknowns]
+    .filter((item) => !item.sourceRefs?.length || item.sourceRefs.some((ref) => eventRefs.has(ref)))
+    .filter((item) => {
+      const key = normalize(item.text);
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+}
+
+function historyCurrentNotice(issues) {
+  const ekgIssue = issues.find((issue) => normalize(`${issue.label} ${issue.text}`).includes("ekg"));
+  if (ekgIssue) {
+    return {
+      tone: "attention",
+      label: "Do potwierdzenia",
+      text: "EKG nie jest widoczne w danych. Do potwierdzenia z lekarzem przed decyzją.",
+      sourceRefs: ekgIssue.sourceRefs || []
+    };
+  }
+  const firstIssue = issues[0];
+  if (firstIssue) {
+    return {
+      tone: "neutral",
+      label: "Najważniejsze pytanie",
+      text: firstIssue.text,
+      sourceRefs: firstIssue.sourceRefs || []
+    };
+  }
+  return null;
+}
+
+function historyContextStats({ events, issues, medicationIssues }) {
+  const sourceCount = new Set(events.flatMap((event) => Array.isArray(event.sourceRefs) ? event.sourceRefs : [event.sourceRefs].filter(Boolean))).size;
+  return [
+    {
+      value: medicationIssues.length,
+      label: "leki",
+      text: medicationIssues.length ? "do potwierdzenia" : "bez luk w widoku",
+      icon: "pill"
+    },
+    {
+      value: issues.length,
+      label: "sprawy",
+      text: "do rozmowy",
+      icon: "circle-help"
+    },
+    {
+      value: sourceCount,
+      label: "źródeł",
+      text: "przy zdarzeniach",
+      icon: "files"
+    }
+  ];
+}
+
+function renderHistoryIssues(issues) {
   return `
-    <section class="section-band timeline-narrator">
-      <div>
-        <p class="eyebrow"><i data-lucide="${escapeHtml(meta.icon)}"></i>Film życia · ${escapeHtml(meta.label)}</p>
-        <h2>${escapeHtml(narrative?.mapTitle || narrative?.title || "Ta sama historia, inna soczewka")}</h2>
-        <p>${escapeHtml(narrative?.mapSummary || narrative?.summary || "Oś historii porządkuje zdarzenia w czasie i pokazuje, co warto omówić w kolejnym kontakcie.")}</p>
+    <section class="history-priorities" aria-label="Najważniejsze sprawy do wyjaśnienia">
+      <div class="section-head compact-head">
+        <div>
+          <p class="eyebrow">Do rozmowy</p>
+          <h3>3 sprawy, które lekarz powinien zobaczyć</h3>
+        </div>
       </div>
-      <div class="timeline-narrator-facts">
-        <article>
-          <span>Odcinek</span>
-          <strong>${events.length ? `${formatDate(first.date)} - ${formatDate(last.date)}` : "Brak zdarzeń"}</strong>
-        </article>
-        <article>
-          <span>W tej perspektywie widzisz</span>
-          <strong>${escapeHtml(sections.length ? sections.join(" · ") : "historię, pytania i źródła")}</strong>
-        </article>
+      <div class="history-priority-grid">
+        ${issues.length ? issues.map((issue, index) => `
+          <article class="history-priority-card">
+            <span>${String(index + 1).padStart(2, "0")}</span>
+            <strong>${escapeHtml(issue.label)}</strong>
+            <p>${escapeHtml(issue.text)}</p>
+            <div class="source-line">${sourceChips(compactSourceRefs(issue.sourceRefs, 2))}</div>
+          </article>
+        `).join("") : emptyState("Brak pytań do rozmowy powiązanych z tym widokiem.")}
       </div>
     </section>
+  `;
+}
+
+function historyStageGroups(events) {
+  const stages = byPatient(state.stageSummaries || [])
+    .slice()
+    .sort((a, b) => (a.order || 0) - (b.order || 0))
+    .slice(0, 6);
+  const eventMap = new Map(events.map((event) => [event.id, event]));
+  const used = new Set();
+  const groups = stages.map((stage, index) => {
+    const refs = (stage.points || []).map((point) => point.eventRef).filter(Boolean);
+    const stageEvents = refs.map((ref) => eventMap.get(ref)).filter(Boolean);
+    stageEvents.forEach((event) => used.add(event.id));
+    return {
+      id: stage.id || `stage-${index}`,
+      order: stage.order || index + 1,
+      title: stage.title,
+      status: (stage.points || [])[0]?.status || "etap historii",
+      events: stageEvents
+    };
+  }).filter((group) => group.events.length);
+
+  const leftovers = events.filter((event) => !used.has(event.id));
+  if (leftovers.length) {
+    groups.push({
+      id: "stage-other",
+      order: groups.length + 1,
+      title: "Pozostałe zdarzenia",
+      status: "chronologia",
+      events: leftovers
+    });
+  }
+  if (groups.length) return groups.slice(0, 6);
+  return events.slice(0, 6).map((event, index) => ({
+    id: `stage-${event.id}`,
+    order: index + 1,
+    title: event.title,
+    status: timelineEventStatus(event),
+    events: [event]
+  }));
+}
+
+function renderHistoryModeControls(mode) {
+  const modes = [
+    ["overview", "Najważniejsze", "kluczowe zdarzenia"],
+    ["detail", "Etapy", "historia w odcinkach"],
+    ["standard", "Wszystkie zdarzenia", "pełna lista"]
+  ];
+  return `
+    <div class="segmented history-mode-switch" role="group" aria-label="Tryb historii pacjenta">
+      ${modes.map(([detail, label, title]) => {
+        const itemMode = detail === "overview" ? "important" : detail === "detail" ? "stages" : "all";
+        return `<button type="button" data-timeline-detail="${detail}" class="${mode === itemMode ? "active" : ""}" title="${escapeHtml(title)}">${escapeHtml(label)}</button>`;
+      }).join("")}
+    </div>
+  `;
+}
+
+function renderHistoryCurrentPanel({ patient, role, episode, issues, events, medicationIssues, nextStep, range }) {
+  const roleCopy = role === "patient"
+    ? "Co warto przygotować do rozmowy"
+    : role === "caregiver"
+      ? "Co widać w zakresie zgody"
+      : "Co wymaga szybkiego kontekstu";
+  const notice = historyCurrentNotice(issues);
+  const stats = historyContextStats({ events, issues, medicationIssues });
+  return `
+    <aside class="history-current-panel" aria-label="Tu i teraz">
+      <div class="history-current-head">
+        <p class="eyebrow">Tu i teraz</p>
+        <h3>${escapeHtml(roleCopy)}</h3>
+        <p>${escapeHtml(patient.currentProblem || "Widoczny kontekst pacjenta w tym scenariuszu.")}</p>
+      </div>
+      ${notice ? `
+        <div class="history-context-alert ${notice.tone === "attention" ? "attention" : ""}">
+          <span>${escapeHtml(notice.label)}</span>
+          <strong>${escapeHtml(notice.text)}</strong>
+          <div class="source-line">${sourceChips(compactSourceRefs(notice.sourceRefs, 1))}</div>
+        </div>
+      ` : ""}
+      <div class="history-kpi-grid" aria-label="Skrót kontekstu">
+        ${stats.map((stat) => `
+          <article>
+            <i data-lucide="${escapeHtml(stat.icon)}"></i>
+            <strong>${escapeHtml(stat.value)}</strong>
+            <span>${escapeHtml(stat.label)}</span>
+            <small>${escapeHtml(stat.text)}</small>
+          </article>
+        `).join("")}
+      </div>
+      <div class="history-current-card">
+        <span>Aktualny epizod</span>
+        <strong>${escapeHtml(episode?.title || "Brak aktywnego epizodu")}</strong>
+        <p>${escapeHtml(range)}</p>
+      </div>
+      <div class="history-current-card">
+        <span>Leki</span>
+        <ul class="history-compact-list">
+          ${medicationIssues.length ? medicationIssues.map((med) => `<li><i data-lucide="pill"></i><span>${escapeHtml(med.name)}<small>${escapeHtml(med.actualStatus || med.status || "status do sprawdzenia")}</small></span></li>`).join("") : `<li><i data-lucide="check-circle-2"></i><span>Brak leków wymagających potwierdzenia w widocznej historii.</span></li>`}
+        </ul>
+      </div>
+      <div class="history-current-card">
+        <span>3 sprawy do omówienia</span>
+        <ol class="history-issue-list">
+          ${issues.length ? issues.map((issue) => `<li>${escapeHtml(issue.text)} ${sourceChips(compactSourceRefs(issue.sourceRefs, 1))}</li>`).join("") : `<li>Brak pytań do rozmowy powiązanych z widocznymi zdarzeniami.</li>`}
+        </ol>
+      </div>
+      <div class="history-current-card">
+        <span>Najbliższy punkt historii</span>
+        ${nextStep ? `<strong>${escapeHtml(nextStep.title)}</strong><p>${formatDate(nextStep.date)} · ${escapeHtml(timelineEventStatus(nextStep))}</p>` : `<p>Brak zdarzeń w tej perspektywie.</p>`}
+      </div>
+    </aside>
+  `;
+}
+
+function renderHistoryVerticalTimeline(allEvents, visibleEvents, selected, mode) {
+  return `
+    <section class="history-vertical-timeline" aria-label="Pionowa historia pacjenta">
+        <div class="history-list-head">
+          <div>
+            <p class="eyebrow">${mode === "stages" ? "Etapy" : "Chronologia"}</p>
+            <h3>${mode === "stages" ? "Historia w odcinkach" : "Co wydarzyło się po kolei"}</h3>
+          </div>
+          ${renderHistoryModeControls(mode)}
+        </div>
+        ${mode === "stages" ? renderHistoryStageGroups(allEvents, selected?.id) : renderHistoryDayTimeline(visibleEvents, selected?.id, mode)}
+    </section>
+  `;
+}
+
+function renderHistoryDayTimeline(events, selectedId, mode) {
+  const groups = historyDayGroups(events);
+  return `
+    <div class="history-event-list history-event-list-vertical">
+      ${groups.length ? groups.map((group) => `
+        ${group.gapLabel ? `<div class="history-gap-marker"><span>${escapeHtml(group.gapLabel)}</span></div>` : ""}
+        <section class="history-day-group" aria-label="${escapeHtml(formatDate(group.date))}">
+          <div class="history-day-date">${formatDate(group.date)}</div>
+          <div class="history-day-events">
+            ${group.events.map((event, index) => renderHistoryEventRow(event, index, selectedId, mode, group.events.length)).join("")}
+          </div>
+        </section>
+      `).join("") : emptyState("Brak zdarzeń w tej perspektywie.")}
+    </div>
+  `;
+}
+
+function renderHistoryStageGroups(events, selectedId) {
+  const groups = historyStageGroups(events);
+  return `
+    <div class="history-stage-groups">
+      ${groups.map((group) => `
+        <section class="history-stage-group" aria-label="${escapeHtml(group.title)}">
+          <div class="history-stage-group-head">
+            <span>${String(group.order).padStart(2, "0")}</span>
+            <div>
+              <strong>${escapeHtml(group.title)}</strong>
+              <small>${escapeHtml(group.status)} · ${formatCount(group.events.length, "zdarzenie", "zdarzenia", "zdarzeń")}</small>
+            </div>
+          </div>
+          <div class="history-event-list history-event-list-vertical">
+            ${group.events.map((event, index) => renderHistoryEventRow(event, index, selectedId, "stages")).join("")}
+          </div>
+        </section>
+      `).join("") || emptyState("Brak etapów w tej perspektywie.")}
+    </div>
+  `;
+}
+
+function renderHistoryEventRow(event, index, selectedId, mode) {
+  const status = timelineEventStatus(event);
+  const statusMeta = timelineStatusMeta(status);
+  const tone = historyTrackTone(event.track);
+  const indicator = historyEventIndicator(event);
+  return `
+    <article class="history-event-row ${selectedId === event.id ? "selected" : ""} history-track-${tone}">
+      <button type="button" data-select-timeline-event="${escapeHtml(event.id)}">
+        <span class="history-event-index"><i data-lucide="${escapeHtml(timelineTrackIcon(event.track))}"></i></span>
+        <span class="history-event-main">
+          <small>${escapeHtml(historyTrackLabel(event.track))}</small>
+          <strong>${escapeHtml(event.title)}</strong>
+          ${mode === "all" ? `<p>${escapeHtml(event.description || "")}</p>` : ""}
+        </span>
+        <span class="history-event-side">
+          <span class="status-chip ${escapeHtml(statusMeta.className)}"><i data-lucide="${escapeHtml(statusMeta.icon)}"></i>${escapeHtml(statusMeta.label)}</span>
+          ${indicator ? `<small>${escapeHtml(indicator)}</small>` : ""}
+        </span>
+      </button>
+    </article>
+  `;
+}
+
+function historyEventIndicator(event) {
+  const questions = timelineEventQuestions(event).length;
+  const sourceCount = (Array.isArray(event.sourceRefs) ? event.sourceRefs : [event.sourceRefs].filter(Boolean)).length;
+  const type = historyTrackTone(event.track);
+  if (questions) return `${questions} pyt.`;
+  if (type === "result") return `${sourceCount || 1} źr. wyników`;
+  if (type === "medication") return sourceCount ? `${sourceCount} źr. leków` : "lek";
+  if (sourceCount) return `${sourceCount} źr.`;
+  return "";
+}
+
+function historyTrackTone(track) {
+  const value = normalize(track);
+  if (value.includes("lek")) return "medication";
+  if (value.includes("bad") || value.includes("wynik")) return "result";
+  if (value.includes("konsult") || value.includes("hospital")) return "visit";
+  if (value.includes("obserw") || value.includes("objaw") || value.includes("funkcjon")) return "observation";
+  if (value.includes("zgod")) return "consent";
+  if (value.includes("decyz")) return "task";
+  return "document";
+}
+
+function historyTrackLabel(track) {
+  const tone = historyTrackTone(track);
+  return {
+    medication: "leki",
+    result: "badania / wyniki",
+    visit: "wizyta / konsultacja",
+    observation: "objawy / obserwacje",
+    consent: "zgody",
+    task: "ustalenia",
+    document: track || "dokument"
+  }[tone];
+}
+
+function renderHistoryEventDetail(event, mode, events) {
+  if (!event) {
+    return `<aside class="history-event-detail-drawer">${emptyState("Wybierz zdarzenie, aby zobaczyć opis, źródła i pytania do rozmowy.")}</aside>`;
+  }
+  const status = timelineEventStatus(event);
+  const statusMeta = timelineStatusMeta(status);
+  const episode = timelineEpisodeForEvent(event);
+  const questions = timelineEventQuestions(event);
+  const relations = timelineEventRelations(event, events);
+  const refs = Array.isArray(event.sourceRefs) ? event.sourceRefs : [event.sourceRefs].filter(Boolean);
+  return `
+    <aside class="history-event-detail-drawer" aria-label="Szczegóły wybranego zdarzenia">
+      <div class="history-detail-head">
+        <p class="eyebrow">Szczegóły po kliknięciu</p>
+        <h3>${escapeHtml(event.title)}</h3>
+        <div class="record-meta">
+          <span class="tag">${formatDate(event.date)}</span>
+          <span class="tag"><i data-lucide="${escapeHtml(timelineTrackIcon(event.track))}"></i>${escapeHtml(event.track)}</span>
+          <span class="status-chip ${escapeHtml(statusMeta.className)}"><i data-lucide="${escapeHtml(statusMeta.icon)}"></i>${escapeHtml(statusMeta.label)}</span>
+        </div>
+      </div>
+
+      <section class="history-detail-section">
+        <strong>Co wiemy</strong>
+        <p>${escapeHtml(event.description || "Brak opisu zdarzenia.")}</p>
+      </section>
+
+      <section class="history-detail-section">
+        <strong>Źródła przy tym zdarzeniu</strong>
+        <div class="source-line">${sourceChips(refs)}</div>
+        ${refs.length ? `<button class="ghost-button compact-action" type="button" data-open-evidence="${escapeHtml(refs[0])}"><i data-lucide="panel-right-open"></i>Pokaż źródła</button>` : ""}
+      </section>
+
+      <section class="history-detail-section">
+        <strong>Punkty do weryfikacji</strong>
+        <div class="history-question-list">
+          ${questions.length ? questions.map((item) => `
+            <article>
+              <span class="status-chip ${statusClass(item.status)}">${escapeHtml(publicStatusLabel(item.status))}</span>
+              <p>${escapeHtml(item.question)}</p>
+              <div class="source-line">${sourceChips(compactSourceRefs(item.sourceRefs, 2))}</div>
+            </article>
+          `).join("") : `<p>Brak pytania do rozmowy bezpośrednio połączonego ze źródłami tego zdarzenia.</p>`}
+        </div>
+      </section>
+
+      ${episode ? `
+        <section class="history-detail-section ${mode === "all" ? "" : "muted-section"}">
+          <strong>Epizod</strong>
+          <p>${escapeHtml(episode.title)}. ${escapeHtml(episode.summary || "")}</p>
+          ${mode === "all" ? `<div class="source-line">${sourceChips(compactSourceRefs(episode.sourceRefs || [], 3))}</div>` : ""}
+        </section>
+      ` : ""}
+
+      ${mode === "all" ? `
+        <section class="history-detail-section">
+          <strong>Powiązania czasowe lub źródłowe</strong>
+          <div class="history-question-list">
+            ${relations.length ? relations.map((relation) => `
+              <article>
+                <span class="tag">${escapeHtml(relation.relationType)}</span>
+                <p>${escapeHtml(relation.label)}</p>
+                ${relation.otherEvent ? `<small>${formatDate(relation.otherEvent.date)} · ${escapeHtml(relation.otherEvent.title)}</small>` : ""}
+              </article>
+            `).join("") : `<p>Brak opisanych powiązań dla tego zdarzenia.</p>`}
+          </div>
+        </section>
+      ` : ""}
+    </aside>
   `;
 }
 
@@ -2581,7 +3083,7 @@ function renderTimelineInspector(event, persona, events) {
   if (!event) {
     return `
       <aside class="timeline-inspector" aria-label="Szczegóły zdarzenia">
-        ${emptyState("Wybierz zdarzenie na mapie, aby zobaczyć źródła i pytania DITL.")}
+        ${emptyState("Wybierz zdarzenie na mapie, aby zobaczyć źródła i pytania do rozmowy.")}
       </aside>
     `;
   }
@@ -2625,18 +3127,18 @@ function renderTimelineInspector(event, persona, events) {
       </section>
 
       <section class="inspector-section">
-        <strong>Pytania DITL powiązane ze źródłem</strong>
+        <strong>Pytania do rozmowy powiązane ze źródłem</strong>
         <div class="inspector-list">
           ${
             questions.length
               ? questions.map((item) => `
                 <article>
-                  <span class="status-chip ${statusClass(item.status)}">${escapeHtml(item.status)}</span>
+                  <span class="status-chip ${statusClass(item.status)}">${escapeHtml(publicStatusLabel(item.status))}</span>
                   <p>${escapeHtml(item.question)}</p>
                   <div class="source-line">${sourceChips(item.sourceRefs)}</div>
                 </article>
               `).join("")
-              : `<p>Brak pytania DITL bezpośrednio połączonego ze źródłami tego zdarzenia.</p>`
+              : `<p>Brak pytania do rozmowy bezpośrednio połączonego ze źródłami tego zdarzenia.</p>`
           }
         </div>
       </section>
@@ -2836,7 +3338,7 @@ function timelineDisplayEvents(events, patient, range, periodId) {
       date: range.end,
       track: "decyzje medyczne",
       title: "Dziś / chwila użycia narzędzia",
-      description: "Aktualny punkt pracy lekarza z kontekstem decyzji DITL.",
+      description: "Aktualny punkt pracy lekarza z kontekstem decyzji.",
       confidence: "orientacyjna",
       status: "orientacyjne",
       sourceRefs: [],
@@ -2861,10 +3363,10 @@ function renderTimelineControls(period, detail, zoom) {
         </div>
       </div>
       <div class="timeline-control-group zoom-group">
-        <span>Zoom mapy</span>
+        <span>Skala mapy</span>
         <div class="temporal-zoom-control">
           <button class="icon-button compact" data-timeline-zoom-step="${escapeHtml(-TIMELINE_ZOOM.step)}" title="Oddal mapę" aria-label="Oddal mapę pacjenta"><i data-lucide="zoom-out"></i></button>
-          <input type="range" min="${TIMELINE_ZOOM.min}" max="${TIMELINE_ZOOM.max}" step="0.01" value="${zoom}" data-timeline-zoom-range aria-label="Zoom mapy pacjenta">
+          <input type="range" min="${TIMELINE_ZOOM.min}" max="${TIMELINE_ZOOM.max}" step="0.01" value="${zoom}" data-timeline-zoom-range aria-label="Skala mapy pacjenta">
           <button class="icon-button compact" data-timeline-zoom-step="${escapeHtml(TIMELINE_ZOOM.step)}" title="Przybliż mapę" aria-label="Przybliż mapę pacjenta"><i data-lucide="zoom-in"></i></button>
           <button class="ghost-button fit-button" data-timeline-zoom-fit title="Oddal tak, aby zobaczyć cały odcinek"><i data-lucide="scan"></i>Dopasuj</button>
           <strong>${Math.round(zoom * 100)}%</strong>
@@ -3003,7 +3505,7 @@ function renderTimelineEvent(event, index, detailId = "standard", zoom = 0.9, se
   const statusMeta = timelineStatusMeta(status);
   const sourceCount = (Array.isArray(event.sourceRefs) ? event.sourceRefs : [event.sourceRefs].filter(Boolean)).length;
   const selected = event.id === selectedId;
-  const personaHint = persona === "patient" ? "Kliknij, aby zobaczyć źródła i pytania do rozmowy." : "Kliknij, aby zobaczyć źródła, epizod i pytania DITL.";
+  const personaHint = persona === "patient" ? "Kliknij, aby zobaczyć źródła i pytania do rozmowy." : "Kliknij, aby zobaczyć źródła, epizod i punkty do weryfikacji.";
 
   return `
     <article
@@ -3136,7 +3638,7 @@ function renderRisks() {
   const flags = byPatient(state.flags).filter(matchesSearch);
   const grouped = ["red", "amber", "green", "blue"];
   return `
-    ${pageHeader("Pytania i luki DITL", "Ten widok jest skrótem do pytań i luk w kontekście. Nie jest gotową oceną ani decyzją po stronie systemu i nie zastępuje lekarza.", "flag")}
+    ${pageHeader("Punkty do weryfikacji i luki", "Ten widok jest skrótem do pytań i luk w kontekście. Nie jest gotową oceną ani decyzją po stronie systemu i nie zastępuje lekarza.", "flag")}
     <section class="flag-legend">
       ${grouped.map((color) => `<span class="flag-badge ${FLAG_META[color].className}"><i data-lucide="${escapeHtml(FLAG_META[color].icon)}"></i>${escapeHtml(FLAG_META[color].label)}</span>`).join("")}
     </section>
@@ -3259,7 +3761,7 @@ function renderOnePagerV2(type) {
   return `
     <article class="report-section">
       ${renderReportDemoBadge(caseStudy.label)}
-      <p class="eyebrow">Status: DITL, do oceny lekarza</p>
+      <p class="eyebrow">Do oceny lekarza</p>
       <h2>${escapeHtml(typeLabel(type))} / ${escapeHtml(caseStudy.label)}</h2>
       <p class="record-body">${escapeHtml(patient.name)}, ${formatAge(patient.birthDate)}. Scenariusz demonstracyjny: ${escapeHtml(caseStudy.decision)}</p>
     </article>
@@ -3297,7 +3799,7 @@ function renderOnePagerV2(type) {
       </ul>
     </article>
     <article class="report-section">
-      <h3>Pytania DITL do lekarza</h3>
+      <h3>Pytania do lekarza</h3>
       <ol class="question-list">
         ${questions.map((question) => `<li>${escapeHtml(question.question)} <span class="status-chip ${statusClass(question.status)}">${escapeHtml(question.status)}</span> ${sourceChips(question.sourceRefs)}</li>`).join("")}
       </ol>
@@ -3454,9 +3956,9 @@ function renderCaregiverPortal() {
         ["3", "Po cofnięciu", model.revocationEffects[0]?.description || "Brak cofniętych zakresów w danych demo."]
       ],
       actions: [
-        { label: "Zgody", icon: "shield-check", view: "consent", primary: true },
-        { label: "Leki", icon: "pill", view: "medications" },
-        { label: "Oś historii", icon: "git-branch", view: "timeline" }
+        { label: "Zakres zgody", icon: "shield-check", view: "consent", primary: true },
+        { label: "Przejdź do historii", icon: "git-branch", view: "timeline" },
+        { label: "Pokaż źródła", icon: "files", view: "documents" }
       ]
     })}
     ${renderCaregiverAssignmentPanel(model)}
@@ -3821,7 +4323,7 @@ function confirmDialogAction() {
 function renderAudit() {
   const entries = byPatient(state.audit).filter(matchesSearch).sort((a, b) => new Date(b.date) - new Date(a.date));
   return `
-    ${pageHeader("Audyt", "Każda zmiana statusu DITL, wywiad, eksport i raport trafiają do lokalnego śladu audytu.", null)}
+    ${pageHeader("Audyt", "Każda zmiana statusu punktu do weryfikacji, wywiad, eksport i raport trafiają do lokalnego śladu audytu.", null)}
     <section class="section-band flush">
       <div class="table-wrap">
         <table>
@@ -3846,7 +4348,7 @@ function renderEvidence() {
   const docs = byPatient(state.documents).slice(0, 3).map((doc) => `doc:${doc.id}`);
   const interviews = byPatient(state.interviews).slice(0, 2).map((interview) => `interview:${interview.id}`);
   evidenceRoot.innerHTML = `
-    <div class="evidence-empty">Kliknij etykietę źródła, aby sprawdzić, czy informacja pochodzi z dokumentu, wywiadu, transkrypcji, wyniku, leku, zgody czy decyzji DITL.</div>
+    <div class="evidence-empty">Kliknij etykietę źródła, aby sprawdzić, czy informacja pochodzi z dokumentu, wywiadu, transkrypcji, wyniku, leku, zgody czy punktu do weryfikacji.</div>
     <div class="record-list">
       ${[...docs, ...interviews].map((ref) => {
         const { parsed, record } = sourceRecord(ref);
@@ -3909,6 +4411,23 @@ function renderEvidenceCard(ref, parsed, record) {
 
 function emptyState(message) {
   return `<div class="empty-state">${escapeHtml(message)}</div>`;
+}
+
+function setEvidencePanelCollapsed(collapsed, options = {}) {
+  const { persist = true } = options;
+  const grid = contentGrid || document.getElementById("contentGrid");
+  const toggle = document.getElementById("toggleEvidence");
+  if (!grid || !toggle) return;
+  grid.classList.toggle("evidence-collapsed", collapsed);
+  toggle.setAttribute("aria-expanded", String(!collapsed));
+  const label = collapsed ? "Rozwiń panel źródeł" : "Zwiń panel źródeł";
+  toggle.setAttribute("aria-label", label);
+  toggle.title = label;
+  const icon = toggle.querySelector("i");
+  if (icon) {
+    icon.setAttribute("data-lucide", collapsed ? "chevrons-left" : "chevrons-right");
+  }
+  if (persist) saveUiPrefs({ evidenceCollapsed: collapsed });
 }
 
 function bindViewActions() {
@@ -4082,6 +4601,17 @@ function bindViewActions() {
       openConsentRevokeDialog(button.dataset.revoke);
     });
   });
+
+  viewRoot.querySelectorAll("[data-open-evidence]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const ref = button.dataset.openEvidence;
+      if (ref) state.selectedSourceRef = ref;
+      saveState();
+      setEvidencePanelCollapsed(false, { persist: false });
+      renderEvidence();
+      refreshIcons();
+    });
+  });
 }
 
 function bindSourceButtons() {
@@ -4089,6 +4619,7 @@ function bindSourceButtons() {
     button.addEventListener("click", () => {
       state.selectedSourceRef = button.dataset.sourceRef;
       saveState();
+      setEvidencePanelCollapsed(false, { persist: false });
       renderEvidence();
       refreshIcons();
     });
@@ -4100,14 +4631,14 @@ function setDitlStatus(type, id, status) {
     const flag = state.flags.find((item) => item.id === id);
     if (flag) {
       flag.status = status;
-      addAudit("zmieniono status sygnału DITL", `${flag.category}: ${status}`);
+      addAudit("zmieniono status punktu do weryfikacji", `${flag.category}: ${status}`);
     }
   } else {
     for (const decision of state.decisionContexts) {
       const question = (decision.ditlQuestions || []).find((item) => item.id === id);
       if (question) {
         question.status = status;
-        addAudit("zmieniono status pytania DITL", `${question.question}: ${status}`);
+        addAudit("zmieniono status pytania do lekarza", `${question.question}: ${status}`);
       }
     }
   }
@@ -4210,12 +4741,12 @@ function dialogConfig(type) {
       ]
     },
     decision: {
-      title: "Dodaj kontekst decyzji (DITL)",
+      title: "Dodaj kontekst decyzji",
       fields: [
         { name: "type", label: "Typ decyzji", kind: "select", options: ["Decyzja przed zabiegiem", "Wizyta kontrolna", "Zmiana leków", "Wypis", "Konsultacja kardiologiczna", "Konsultacja neurologiczna", "Druga opinia"] },
         { name: "contactDate", label: "Data kontaktu", kind: "date", value: today, required: true },
         { name: "contextQuestion", label: "Pytanie kontekstowe na dziś", kind: "textarea", required: true },
-        { name: "ditlQuestions", label: "Pytania DITL, po jednym w linii", kind: "textarea" }
+        { name: "ditlQuestions", label: "Pytania do lekarza, po jednym w linii", kind: "textarea" }
       ]
     },
     interview: {
@@ -4254,7 +4785,7 @@ function dialogConfig(type) {
       ]
     },
     flag: {
-      title: "Dodaj sygnał DITL",
+      title: "Dodaj sygnał do weryfikacji",
       fields: [
         { name: "color", label: "Kategoria sygnału", kind: "select", options: FLAG_COLOR_OPTIONS },
         { name: "category", label: "Kategoria", required: true },
@@ -4370,7 +4901,7 @@ function saveDecision(id, values) {
     type: values.type,
     clinicalQuestion: contextQuestion, // decisionContext
     contactDate: values.contactDate,
-    status: "DITL: do oceny lekarza",
+    status: "do wyjaśnienia",
     sourceRefs: latestSourceRefs(),
     ditlQuestions
   });
@@ -4386,7 +4917,7 @@ function saveDecision(id, values) {
     confidence: "wysoka",
     sourceRefs: [`decision:${id}`]
   });
-  addAudit("dodano decyzję DITL", values.type);
+  addAudit("dodano kontekst decyzji", values.type);
 }
 
 function saveDocument(id, values) {
@@ -4519,7 +5050,7 @@ function saveFlag(id, values) {
     status: "do wyjaśnienia",
     sourceRefs: latestSourceRefs()
   });
-  addAudit("dodano sygnał DITL", values.category);
+  addAudit("dodano punkt do weryfikacji", values.category);
 }
 
 function latestSourceRefs() {
@@ -4543,7 +5074,7 @@ function generateReport() {
     generatedAt: new Date().toISOString(),
     version: `${byPatient(state.reports).length + 1}.0`,
     author: "Pacjent360™",
-    status: "DITL: do oceny lekarza",
+    status: "do wyjaśnienia",
     caseStudyId: caseStudy.id,
     sourceRefs: patientRefs
   });
@@ -4807,7 +5338,7 @@ function buildDataContractExport(exportState) {
     schemaVersion: DATA_SCHEMA_VERSION,
     contractVersion: DATA_CONTRACT_VERSION,
     exportedAt: new Date().toISOString(),
-    intendedUse: "Kontekst, źródła, pytania DITL i zadania organizacyjne. Nie diagnoza, ocena pilności ani rekomendacja terapeutyczna.",
+    intendedUse: "Kontekst, źródła, pytania do rozmowy i zadania organizacyjne. Nie diagnoza ani rekomendacja terapeutyczna.",
     patient: exportState.patients?.[0] || null,
     sources: buildContractSources(exportState),
     claims: buildContractClaims(exportState),

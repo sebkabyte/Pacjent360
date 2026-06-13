@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="pl">
   <head>
     <meta charset="utf-8" />
@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#10242a" />
     <title>Granice AI | Pacjent360™</title>
-    <meta name="description" content="Planowane funkcje pomocnicze AI w Pacjent360™: szkice, listy i porządkowanie informacji do weryfikacji przez człowieka." />
+    <meta name="description" content="Rola sztucznej inteligencji w Pacjent360™. AI jako asystent porządkujący, a nie wirtualny opiekun." />
     <link rel="canonical" href="https://pacjent360.com.pl/agents.html" />
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="brand/tokens.css" />
@@ -15,14 +15,87 @@
   </head>
   <body>
     <a class="skip-link" href="#main-content">Przejdź do treści</a>
-    <header class="site-header"><div class="nav-inner"><a class="brand" href="index.html" aria-label="Pacjent360"><span class="brand-mark">360°</span><span><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong><small>Granice AI</small></span></a><nav class="main-nav" aria-label="Sekcje"><a href="index.html">Strona główna</a><a href="ditl.html">DITL</a><a href="engineering.html">Engineering</a></nav></div></header>
+
+    <header class="site-header">
+      <div class="nav-inner">
+        <a class="brand" href="index.html" aria-label="Pacjent360">
+          <span class="brand-mark">360°</span>
+          <span><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong><small>Brief przed wizytą</small></span>
+        </a>
+        <nav class="main-nav" aria-label="Sekcje strony">
+          <a href="index.html#problem">Problem</a>
+          <a href="index.html#how">Rozwiązanie</a>
+          <a href="index.html#audiences">Dla kogo</a>
+          <a class="cta-link" href="demo.html?start=1">Demo</a>
+        </nav>
+      </div>
+    </header>
+
     <main id="main-content">
-      <section class="subpage-hero"><div class="container"><p class="eyebrow">Granice AI</p><h1>AI może porządkować informacje. Nie zastępuje człowieka.</h1><p class="lead">Care Circle to ludzie: pacjent, rodzic, opiekun prawny albo osoba wspierająca. AI może być tylko funkcją pomocniczą: szkicem, listą albo uporządkowaniem informacji do sprawdzenia przez człowieka.</p></div></section>
-      <section class="container section"><div class="doc-grid">
-        <article class="content-card"><h2>Możliwe funkcje</h2><ul><li>szkic listy braków danych,</li><li>checklista przed wizytą,</li><li>propozycje pytań do rozmowy,</li><li>porządkowanie dokumentów,</li><li>przypomnienie o zadaniu organizacyjnym.</li></ul></article>
-        <article class="content-card"><h2>Granice</h2><ul><li>brak diagnozy,</li><li>brak triage,</li><li>brak rekomendacji leczenia,</li><li>brak działania bez akceptacji człowieka,</li><li>brak realnych danych w publicznym demo.</li></ul></article>
-      </div></section>
+      <section class="subpage-hero">
+        <div class="container">
+          <p class="eyebrow">Asystenci porządkujący</p>
+          <h1>Porządkowanie tekstu. Bez magii.</h1>
+          <p class="lead">Care Circle (Krąg Opieki) to zawsze ludzie: pacjent, rodzic, opiekun i lekarz. Funkcje AI są kierunkiem rozwoju: mogą pomagać w porządkowaniu tekstu, ale nie są opiekunem, lekarzem ani samodzielnym decydentem.</p>
+        </div>
+      </section>
+
+      <section class="container section">
+        <div class="subpage-layout">
+          <nav class="side-nav" aria-label="Spis treści">
+            <a href="#role">Rola asystentów</a>
+            <a href="#skills">Planowane umiejętności</a>
+            <a href="#privacy">Bezpieczeństwo danych</a>
+            <a href="#handoff">Człowiek za sterami</a>
+          </nav>
+
+          <div class="subpage-content">
+            <article class="content-card" id="role">
+              <h2>Asystenci, nie Opiekunowie</h2>
+              <p>Wokół sztucznej inteligencji narosło wiele mitów medycznych. Nasze podejście w Pacjent360™ jest pragmatyczne: LLM nie ma być diagnostą. Ma być narzędziem pomocniczym do pracy z tekstem i zawsze działać w trybie szkicu do sprawdzenia.</p>
+              <p>Docelowo asystent może pomóc odczytać długi wypis, wskazać daty, nazwy leków i fragmenty wymagające sprawdzenia. Wynik takiej pracy powinien pozostać szkicem z widocznym źródłem, zanim trafi do historii pacjenta.</p>
+            </article>
+
+            <article class="content-card" id="skills">
+              <h2>Planowane umiejętności AI</h2>
+              <p>Zamiast abstrakcyjnej inteligencji, planujemy zestaw bardzo konkretnych, ograniczonych umiejętności (Skills), które można precyzyjnie przetestować:</p>
+              <ul>
+                <li><strong>OCR dokumentów:</strong> zamiana zdjęć i skanów PDF w tekst do ręcznej weryfikacji.</li>
+                <li><strong>Mapowanie dat:</strong> wskazanie dat z treści opisu, aby łatwiej ułożyć zdarzenia w historii.</li>
+                <li><strong>Lista leków do sprawdzenia:</strong> wyłapanie nazw leków z dokumentu i oznaczenie ich jako "do potwierdzenia".</li>
+                <li><strong>Detekcja braków:</strong> wskazanie, że w rozmowie pojawia się badanie lub dokument, którego nie ma jeszcze w bibliotece.</li>
+              </ul>
+            </article>
+
+            <article class="content-card" id="privacy">
+              <h2>Rozwój z poszanowaniem danych</h2>
+              <p>Aktualnie, publiczne demo alpha Pacjent360™ używa wyłącznie danych fikcyjnych na froncie aplikacji i nie przetwarza prawdziwych dokumentów przez żadne zewnętrzne modele LLM.</p>
+              <p>Zdajemy sobie sprawę, że użycie modeli do przetwarzania prawdziwych danych medycznych wymaga najwyższych standardów prywatności. Każdy przyszły wariant produkcyjny będzie wymagał osobnej decyzji bezpieczeństwa, audytu RODO, oceny architektury oraz jasnych zasad: kto przetwarza dane, gdzie są przechowywane i czy mogą być użyte do trenowania modeli.</p>
+            </article>
+
+            <article class="content-card" id="handoff">
+              <h2>Przekazanie sterów człowiekowi</h2>
+              <p>Najważniejszym etapem pracy asystenta jest przekazanie sterów człowiekowi. AI nie powinna publikować wpisu bezpośrednio do finalnego widoku. Przygotowuje jedynie szkic w trybie "do weryfikacji". To pacjent, rodzic, opiekun albo lekarz sprawdza treść i decyduje, czy może zostać pokazana dalej.</p>
+            </article>
+          </div>
+        </div>
+      </section>
     </main>
-    <footer class="footer"><div class="container footer-grid"><div><strong>Pacjent360™</strong><br><span>Funkcje AI są kierunkiem rozwoju, nie funkcją kliniczną alpha.</span></div><nav aria-label="Stopka"><a href="index.html">Strona główna</a><a href="demo.html?start=1">Demo alpha</a><a href="disclaimer.html">Zastrzeżenie medyczne</a></nav></div></footer>
+
+    <footer class="footer">
+      <div class="container footer-grid">
+        <div><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong><br><span>Niezależny prototyp open source. Nie zastępuje lekarza. Demo używa fikcyjnych danych.</span></div>
+        <nav aria-label="Stopka">
+          <a href="demo.html?start=1">Demo alpha</a>
+          <a href="https://github.com/sebkabyte/Pacjent360">GitHub</a>
+          <a href="engineering.html">Engineering</a>
+          <a href="ditl.html">Decyzja Lekarza</a>
+          <a href="agents.html">Granice AI</a>
+          <a href="investors.html">Inwestorzy</a>
+          <a href="disclaimer.html">Zastrzeżenie medyczne</a>
+          <a href="privacy.html">Prywatność</a>
+        </nav>
+      </div>
+    </footer>
   </body>
 </html>

@@ -722,3 +722,190 @@ body[data-register="story"] .startup-roadmap .road-step p {
     margin-top: 22px;
   }
 }
+
+.language-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px;
+  border: 1px solid var(--p360-register-ledger-border, #b8cfcb);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.language-switch button {
+  min-width: 38px;
+  min-height: 32px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.language-switch button.active {
+  background: var(--p360-color-ink-strong, #10242a);
+  color: #ffffff;
+}
+
+.language-note {
+  margin: -14px 0 22px;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .language-switch {
+    margin-left: auto;
+  }
+
+  .nav-inner {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 520px) {
+  .brand small {
+    max-width: 132px;
+  }
+
+  .language-switch button {
+    min-width: 34px;
+  }
+}
+
+/* V2 Marketing & Storytelling Styles */
+.trust-strip {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+body[data-register="story"] .dark-section .flow-row article {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: none;
+}
+
+body[data-register="story"] .dark-section .flow-row span {
+  background: rgba(141, 228, 220, 0.16);
+  color: #8de4dc;
+}
+
+body[data-register="story"] .dark-section .flow-row h3 {
+  color: #ffffff;
+}
+
+body[data-register="story"] .dark-section .flow-row p {
+  color: #d8e7e9;
+}
+
+body[data-register="story"] .footer-grid {
+  grid-template-columns: minmax(260px, 380px) minmax(0, 1fr);
+  align-items: start;
+}
+
+body[data-register="story"] .footer-grid > div:first-child {
+  max-width: 380px;
+  line-height: 1.55;
+}
+
+body[data-register="story"] .footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 14px 22px;
+}
+
+body[data-register="story"] .footer a {
+  margin-left: 0;
+  white-space: nowrap;
+}
+
+.story-lead {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: #36545b;
+  max-width: 760px;
+}
+.story-lead p {
+  margin-bottom: 16px;
+}
+.story-lead .highlight {
+  font-size: 1.25rem;
+  color: var(--p360-color-ink-strong, #10242a);
+  background: rgba(21, 163, 154, 0.08);
+  padding: 8px 12px;
+  border-radius: 8px;
+  display: inline-block;
+  margin-top: 8px;
+}
+
+.ai-promise-box {
+  background: rgba(21, 163, 154, 0.06);
+  border: 1px dashed rgba(21, 163, 154, 0.3);
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ai-promise-box h3 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--p360-color-teal, #0f766e);
+  font-size: 1.2rem;
+}
+.ai-promise-box p {
+  margin: 0;
+  color: var(--muted);
+}
+.ai-promise-box strong {
+  color: var(--ink);
+}
+
+/* Subway Map Concept (Future Vision) */
+.subway-concept article {
+  border-top-width: 6px;
+}
+.subway-concept article:nth-child(1) { border-top-color: var(--p360-color-blue, #1d4ed8); }
+.subway-concept article:nth-child(2) { border-top-color: var(--p360-color-teal, #0f766e); }
+.subway-concept article:nth-child(3) { border-top-color: var(--p360-color-purple, #6d28d9); }
+.subway-concept article:nth-child(4) { border-top-color: var(--p360-color-ink-strong, #10242a); border-top-style: dashed; }
+
+/* Contact Section */
+.contact-section .section-head h2 {
+  font-size: clamp(2rem, 3.5vw, 2.6rem);
+}
+.contact-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 32px;
+}
+
+@media (max-width: 900px) {
+  body[data-register="story"] .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-register="story"] .footer nav {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .contact-actions {
+    flex-direction: column;
+  }
+
+  .contact-actions .button {
+    width: 100%;
+    justify-content: center;
+  }
+}

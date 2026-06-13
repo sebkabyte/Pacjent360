@@ -1,12 +1,12 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="pl">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self';" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#10242a" />
-    <title>Doctor in the Loop | Pacjent360™</title>
-    <meta name="description" content="Granica Doctor in the Loop w Pacjent360™: system porządkuje kontekst, a decyzję podejmuje lekarz." />
+    <title>Decyzja Lekarza | Pacjent360™</title>
+    <meta name="description" content="Granica odpowiedzialności w Pacjent360™. System porządkuje kontekst, decyzję medyczną podejmuje człowiek." />
     <link rel="canonical" href="https://pacjent360.com.pl/ditl.html" />
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="brand/tokens.css" />
@@ -15,14 +15,107 @@
   </head>
   <body>
     <a class="skip-link" href="#main-content">Przejdź do treści</a>
-    <header class="site-header"><div class="nav-inner"><a class="brand" href="index.html" aria-label="Pacjent360"><span class="brand-mark">360°</span><span><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong><small>Doctor in the Loop</small></span></a><nav class="main-nav" aria-label="Sekcje"><a href="index.html">Strona główna</a><a href="demo.html?start=1">Demo alpha</a><a href="disclaimer.html">Zastrzeżenie medyczne</a></nav></div></header>
+
+    <header class="site-header">
+      <div class="nav-inner">
+        <a class="brand" href="index.html" aria-label="Pacjent360">
+          <span class="brand-mark">360°</span>
+          <span><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong><small>Brief przed wizytą</small></span>
+        </a>
+        <nav class="main-nav" aria-label="Sekcje strony">
+          <a href="index.html#problem">Problem</a>
+          <a href="index.html#how">Rozwiązanie</a>
+          <a href="index.html#audiences">Dla kogo</a>
+          <a class="cta-link" href="demo.html?start=1">Demo</a>
+        </nav>
+      </div>
+    </header>
+
     <main id="main-content">
-      <section class="subpage-hero"><div class="container"><p class="eyebrow">DITL</p><h1>System porządkuje. Lekarz decyduje.</h1><p class="lead">Doctor in the Loop to granica produktu: Pacjent360™ może pokazać źródła, braki, pytania i statusy, ale nie podejmuje decyzji klinicznej.</p></div></section>
-      <section class="container section"><div class="doc-grid">
-        <article class="content-card"><h2>Dozwolone</h2><ul><li>pytania do rozmowy,</li><li>braki danych,</li><li>status potwierdzenia,</li><li>źródło informacji,</li><li>zakres zgody.</li></ul></article>
-        <article class="content-card"><h2>Niedozwolone w alpha</h2><ul><li>diagnoza,</li><li>triage lub ocena pilności,</li><li>rekomendacja terapii,</li><li>automatyczna decyzja kliniczna,</li><li>użycie realnych danych pacjentów w demo.</li></ul></article>
-      </div></section>
+      <section class="subpage-hero">
+        <div class="container">
+          <p class="eyebrow">Granice decyzyjne</p>
+          <h1>System porządkuje. Lekarz decyduje.</h1>
+          <p class="lead">Technologia to narzędzie. Odpowiedzialność pozostaje po stronie człowieka. Poznaj zasady projektowania naszych interfejsów i systemów wsparcia.</p>
+        </div>
+      </section>
+
+      <section class="container section">
+        <div class="subpage-layout">
+          <nav class="side-nav" aria-label="Spis treści">
+            <a href="#manifesto">Manifest Bezpieczeństwa</a>
+            <a href="#design">Zasady Projektowania</a>
+            <a href="#boundaries">Dozwolone & Niedozwolone</a>
+            <a href="#mitigation">Ograniczanie błędów</a>
+          </nav>
+
+          <div class="subpage-content">
+            <article class="content-card" id="manifesto">
+              <h2>Manifest Bezpieczeństwa</h2>
+              <p>Rdzeniem architektury Pacjent360™ jest twarda granica odpowiedzialności, którą roboczo (w języku inżynieryjnym) nazywamy <strong>Doctor in the Loop (DITL)</strong>. Jej zasada jest prosta: żaden system komputerowy nie może zastępować lekarza w procesie decyzyjnym.</p>
+              <p>Zamiast udawać lekarza i wyciągać pochopne wnioski kliniczne z fragmentarycznych danych, nasze narzędzia skupiają się wyłącznie na budowaniu bezpiecznego, uporządkowanego środowiska pracy. Naszym celem jest zmniejszenie chaosu dokumentacyjnego, by dać lekarzowi więcej czasu i przejrzystości na podjęcie właściwej decyzji na żywo w gabinecie.</p>
+            </article>
+
+            <article class="content-card" id="design">
+              <h2>Zasady UX dla Lekarza</h2>
+              <p>Interfejsy Pacjent360™ są projektowane tak, aby unikać ukrytych założeń i sugerowania odpowiedzi. Każda informacja w systemie jest projektowana w oparciu o następujące paradygmaty:</p>
+              <ul>
+                <li><strong>Wymuszone potwierdzenie:</strong> Podsumowania, checklisty czy braki danych zawsze posiadają status "do weryfikacji", wymagający świadomego spojrzenia lekarza.</li>
+                <li><strong>Widoczne źródła:</strong> Jeśli system prezentuje wynik badania, zawsze dostarcza możliwość kliknięcia i wglądu w surowy skan dokumentu bazowego.</li>
+                <li><strong>Kategoryzacja niepewności:</strong> Zamiast pomijać to, czego nie wiemy, eksponujemy to. "Brak danych z tego okresu" to kluczowa wskazówka kliniczna.</li>
+              </ul>
+            </article>
+
+            <article class="content-card" id="boundaries">
+              <h2>Dozwolone & Niedozwolone</h2>
+              <p>Nasze algorytmy (w tym funkcje AI na przyszłość) mają ścisły zakaz wychodzenia poza swoją kompetencję strukturyzacyjną.</p>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 18px;">
+                <div style="border: 1px solid var(--teal-soft); padding: 18px; border-radius: 8px;">
+                  <strong style="color: var(--teal); display: block; margin-bottom: 8px;">Dozwolone funkcje</strong>
+                  <ul style="margin: 0; font-size: 0.95rem; color: var(--muted);">
+                    <li>Ekstrakcja faktów z PDF.</li>
+                    <li>Sugerowanie pytań do rozmowy.</li>
+                    <li>Oznaczanie luk w osi czasu.</li>
+                    <li>Grupowanie podobnych zdarzeń medycznych.</li>
+                    <li>Linkowanie do oryginalnego źródła.</li>
+                  </ul>
+                </div>
+                <div style="border: 1px solid #f0c8c3; background: #fffafa; padding: 18px; border-radius: 8px;">
+                  <strong style="color: var(--red); display: block; margin-bottom: 8px;">Zablokowane w architekturze</strong>
+                  <ul style="margin: 0; font-size: 0.95rem; color: var(--muted);">
+                    <li>Sugestia diagnozy medycznej.</li>
+                    <li>Automatyczny triage (ocena pilności zdrowotnej).</li>
+                    <li>Rekomendacja zmiany lub odstawienia leków.</li>
+                    <li>Ukrywanie dokumentów (bias potwierdzający).</li>
+                    <li>Odmowa wygenerowania historii.</li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+
+            <article class="content-card" id="mitigation">
+              <h2>Ograniczanie błędów danych</h2>
+              <p>Rozumiemy zagrożenia płynące ze zbyt optymistycznego ufania technologii. Dlatego cały system Pacjent360™ bazuje na zasobach surowych (ekstrakty wypisów, twarde PDFy) i pozwala użytkownikowi (pacjentowi/opiekunowi) zawsze zgłosić, że "ten fragment dokumentu jest błędny". Informacja podana przez pacjenta to w systemie zawsze <strong>"Wywiad"</strong>, a nie twardy <strong>"Fakt Laboratoryjny"</strong>, co zapobiega zafałszowywaniu obrazu klinicznego przed decyzją lekarza.</p>
+            </article>
+          </div>
+        </div>
+      </section>
     </main>
-    <footer class="footer"><div class="container footer-grid"><div><strong>Pacjent360™</strong><br><span>Niezależny prototyp open source na fikcyjnych danych.</span></div><nav aria-label="Stopka"><a href="index.html">Strona główna</a><a href="engineering.html">Engineering</a><a href="privacy.html">Prywatność</a></nav></div></footer>
+
+    <footer class="footer">
+      <div class="container footer-grid">
+        <div><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong><br><span>Niezależny prototyp open source. Nie zastępuje lekarza. Demo używa fikcyjnych danych.</span></div>
+        <nav aria-label="Stopka">
+          <a href="demo.html?start=1">Demo alpha</a>
+          <a href="https://github.com/sebkabyte/Pacjent360">GitHub</a>
+          <a href="engineering.html">Engineering</a>
+          <a href="ditl.html">Decyzja Lekarza</a>
+          <a href="agents.html">Granice AI</a>
+          <a href="investors.html">Inwestorzy</a>
+          <a href="disclaimer.html">Zastrzeżenie medyczne</a>
+          <a href="privacy.html">Prywatność</a>
+        </nav>
+      </div>
+    </footer>
   </body>
 </html>
