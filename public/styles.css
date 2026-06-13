@@ -5174,10 +5174,7 @@ dialog::backdrop {
 }
 
 .role-demo-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.6fr);
-  gap: 18px;
-  align-items: stretch;
+  display: block;
   margin-bottom: 18px;
   padding: clamp(22px, 4vw, 44px);
   border: 1px solid rgba(15, 118, 110, 0.16);
