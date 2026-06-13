@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="pl">
 <head>
   <meta charset="utf-8" />
@@ -13,7 +13,6 @@
     name="description"
     content="Pacjent360™ porządkuje wyniki, wypisy, leki, obserwacje i pytania w jedną historię pacjenta przed wizytą. Demo alpha dla pacjentów, opiekunów i lekarzy."
   />
-  <meta name="keywords" content="asystent pacjenta, aplikacja dla pacjenta, uporządkowana dokumentacja medyczna, dzienniczek zdrowia, brief przed wizytą" />
   <meta property="og:title" content="Pacjent360™ | Jedna historia pacjenta zamiast chaosu dokumentów" />
   <meta property="og:description" content="Pacjent360™ porządkuje wyniki, wypisy, leki, obserwacje i pytania w czytelny kontekst przed wizytą." />
   <meta property="og:type" content="website" />
@@ -23,15 +22,72 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Pacjent360",
-    "applicationCategory": "WebApplication",
-    "operatingSystem": "Web",
-    "description": "Open source alpha prototype for organizing patient history, medical documents, medications, observations and pre-visit questions.",
-    "softwareVersion": "alpha",
-    "isAccessibleForFree": true,
-    "url": "https://pacjent360.com.pl/",
-    "codeRepository": "https://github.com/sebkabyte/Pacjent360"
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://pacjent360.com.pl/#organization",
+        "name": "Pacjent360",
+        "url": "https://pacjent360.com.pl/",
+        "description": "Niezależny projekt open source pomagający pacjentom uporządkować dokumentację medyczną i historię leczenia."
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://pacjent360.com.pl/#software",
+        "name": "Pacjent360™",
+        "applicationCategory": "HealthApplication",
+        "operatingSystem": "Web",
+        "description": "Narzędzie do organizowania wyników, wypisów, leków, obserwacji i pytań w ujednoliconej osi czasu pacjenta.",
+        "softwareVersion": "Alpha",
+        "isAccessibleForFree": true,
+        "url": "https://pacjent360.com.pl/",
+        "codeRepository": "https://github.com/sebkabyte/Pacjent360"
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Czym jest Pacjent360?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Pacjent360 to narzędzie typu 'Bring Your Own Data', które pomaga pacjentom i opiekunom zebrać rozproszone wyniki badań, wypisy szpitalne, listy leków i własne obserwacje w jedną chronologiczną historię przed wizytą lekarską."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Czy Pacjent360 diagnozuje?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nie. Pacjent360 wyłącznie porządkuje dostarczone materiały, aby zoptymalizować czas wizyty. Nie ocenia objawów, nie sugeruje leczenia ani nie wykonuje triażu medycznego – decyzja zawsze należy do lekarza."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Jak przygotować dokumenty przed wizytą?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Zbierz wyniki badań z ostatnich 12 miesięcy, wypisy szpitalne, listę aktualnie przyjmowanych leków oraz spisz własne obserwacje i pytania. Następnie uporządkuj je chronologicznie, np. za pomocą asystentów AI w Pacjent360, aby lekarz od razu widział najważniejsze punkty."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Czym różni się od IKP (Internetowe Konto Pacjenta)?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Pacjent360 jest uzupełnieniem IKP. IKP to oficjalny rejestr państwowy (e-recepty, e-skierowania), natomiast Pacjent360 pozwala dodać własne notatki, prywatne wyniki badań czy pytania do lekarza, z którymi przychodzisz na wizytę (zasada BYOD)."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Co widzi lekarz, pacjent i opiekun?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Każda rola ma inną perspektywę, kontrolowaną przez model zgód pacjenta. Lekarz widzi ustrukturyzowany kokpit z punktami do weryfikacji. Pacjent zarządza swoimi dokumentami i dostępami. Opiekun widzi tylko te obszary historii, które udostępnił mu pacjent."
+            }
+          }
+        ]
+      }
+    ]
   }
   </script>
   <link rel="alternate" hreflang="pl" href="https://pacjent360.com.pl/" />
@@ -143,6 +199,34 @@
     <div class="ai-promise-box">
       <h3 data-i18n="aiPromiseTitle">Asystenci porządkujący materiały</h3>
       <p data-i18n="aiPromiseBody">W kolejnym kroku asystenci porządkujący materiały mogą pomagać układać dokumenty, wskazywać braki i przygotowywać pytania do sprawdzenia. <strong>Decyzja zawsze należy do lekarza.</strong></p>
+    </div>
+  </section>
+
+  <section id="faq" class="story-faq" aria-labelledby="faq-title">
+    <div class="container">
+      <h2 id="faq-title">Częste pytania</h2>
+      <dl class="faq-list">
+        <div class="faq-item">
+          <dt>Czym jest Pacjent360?</dt>
+          <dd>Pacjent360 to narzędzie typu 'Bring Your Own Data', które pomaga pacjentom i opiekunom zebrać rozproszone wyniki badań, wypisy szpitalne, listy leków i własne obserwacje w jedną chronologiczną historię przed wizytą lekarską.</dd>
+        </div>
+        <div class="faq-item">
+          <dt>Czy Pacjent360 diagnozuje?</dt>
+          <dd>Nie. Pacjent360 wyłącznie porządkuje dostarczone materiały, aby zoptymalizować czas wizyty. Nie ocenia objawów, nie sugeruje leczenia ani nie wykonuje triażu medycznego – decyzja zawsze należy do lekarza.</dd>
+        </div>
+        <div class="faq-item">
+          <dt>Jak przygotować dokumenty przed wizytą?</dt>
+          <dd>Zbierz wyniki badań z ostatnich 12 miesięcy, wypisy szpitalne, listę aktualnie przyjmowanych leków oraz spisz własne obserwacje i pytania. Następnie uporządkuj je chronologicznie, np. za pomocą asystentów AI w Pacjent360, aby lekarz od razu widział najważniejsze punkty.</dd>
+        </div>
+        <div class="faq-item">
+          <dt>Czym różni się od IKP (Internetowe Konto Pacjenta)?</dt>
+          <dd>Pacjent360 jest uzupełnieniem IKP. IKP to oficjalny rejestr państwowy (e-recepty, e-skierowania), natomiast Pacjent360 pozwala dodać własne notatki, prywatne wyniki badań czy pytania do lekarza, z którymi przychodzisz na wizytę (zasada BYOD).</dd>
+        </div>
+        <div class="faq-item">
+          <dt>Co widzi lekarz, pacjent i opiekun?</dt>
+          <dd>Każda rola ma inną perspektywę, kontrolowaną przez model zgód pacjenta. Lekarz widzi ustrukturyzowany kokpit z punktami do weryfikacji. Pacjent zarządza swoimi dokumentami i dostępami. Opiekun widzi tylko te obszary historii, które udostępnił mu pacjent.</dd>
+        </div>
+      </dl>
     </div>
   </section>
 
