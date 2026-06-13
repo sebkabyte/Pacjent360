@@ -1,10 +1,10 @@
-# Pierwszy wedge: pętla przygotowania wizyty
+# Pierwszy wedge: ścieżka przygotowania wizyty
 
 Status: zatwierdzony przez autora 2026-06-10. Obowiązuje dla M4-M6 (pre-visit, validation pack, pilot).
 
 ## Decyzja
 
-Pierwsze ostre zastosowanie Pacjent360™ to **jedna pętla z dwoma końcami**:
+Pierwsze ostre zastosowanie Pacjent360™ to **jedna ścieżka z dwoma końcami**:
 
 ```text
 Wedge A: rodzic / opiekun / pacjent przygotowuje wizytę osoby zależnej (telefon)

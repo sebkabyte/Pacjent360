@@ -110,7 +110,7 @@ Najbliższy rozwój projektu powinien odpowiadać na potrzeby trzech osób patrz
    - każde pytanie ma źródło: dokument, wynik, wywiad, lek albo transkrypcja,
    - lekarz może oznaczyć pytania i flagi jako wyjaśnione, odrzucone albo wymagające kontroli.
 
-3. **Po wizycie: zamknięcie pętli**
+3. **Po wizycie: domknięcie wizyty**
    - system zapisuje statusy DITL i źródłowo opisane zadania organizacyjne,
    - pacjent widzi, co ma przygotować, sprawdzić lub omówić przy kolejnym kontakcie,
    - opiekun może pilnować tylko tych zadań, do których pacjent dał mu dostęp.
@@ -245,7 +245,7 @@ Root repozytorium ma być czytelny. Szczegółowe dokumenty są w `docs/`, żeby
 - `docs/PROGRAM_PLAN.md` - nadrzędny plan strategiczny i harmonogram rzeczowo-techniczny.
 - `docs/ARCHITECTURE.md` - architektura Pacjent360™ jako warstwy kontekstu nad IKP/P1.
 - `docs/SSOT.md` - źródło prawdy dla roli LLM i asystentów operacyjnych (podrzędne wobec `PRODUCT_SSOT.md`).
-- `docs/product/FIRST_WEDGE.md` - pierwszy wedge produktu: pętla przygotowania wizyty (opiekun mobile + lekarz desktop).
+- `docs/product/FIRST_WEDGE.md` - pierwszy wedge produktu: ścieżka przygotowania wizyty (opiekun mobile + lekarz desktop).
 - `docs/TIMELINE_VISION.md` - docelowa mapa pacjenta, warstwy, epizody i zasilanie danymi.
 - `docs/ROADMAP.md`, `docs/SPRINTS.md` - roadmapa i aktywny backlog rozwoju.
 - `docs/legal/` - disclaimer, prywatność i licencja dokumentacji.

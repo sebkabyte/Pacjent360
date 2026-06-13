@@ -102,6 +102,8 @@ const enCopy = {
   aiAssistantVisitText: "collects questions, gaps and documents needed before the conversation.",
   aiAssistantSourcesTitle: "Source assistant",
   aiAssistantSourcesText: "shows where information comes from and what needs confirmation.",
+  aiAssistantDoctorTitle: "Doctor in the Loop",
+  aiAssistantDoctorText: "in the target online clinic model, specialist doctors remain responsible for decisions and visit standards.",
   audiencesEyebrow: "For whom",
   audiencesTitle: "One story. Three lenses.",
   doctorTitle: "For the doctor",

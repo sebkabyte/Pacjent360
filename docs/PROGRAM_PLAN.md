@@ -66,7 +66,7 @@ Source -> Claim -> Event -> Episode -> Encounter -> Task -> Report
 Produktowo oznacza to:
 
 ```text
-Mapa Pacjenta 360 + petla wizyty + Doctor in the Loop
+Mapa Pacjenta 360 + sciezka wizyty + Doctor in the Loop
 ```
 
 Najkrotsza definicja:
@@ -150,7 +150,7 @@ Zakres:
 
 ### 5. After Visit Loop
 
-Cel: zamknac petle po wizycie bez wchodzenia w decyzje kliniczne.
+Cel: domknac wizyte po kontakcie z lekarzem bez wchodzenia w decyzje kliniczne.
 
 Zakres:
 
@@ -245,7 +245,7 @@ Cel: uporzadkowac jeden rdzen danych i jeden plan programu.
 
 Zadania produktowe:
 
-- zamrozic definicje: Mapa Pacjenta 360 + petla wizyty + DITL,
+- zamrozic definicje: Mapa Pacjenta 360 + sciezka wizyty + DITL,
 - oznaczyc `SPRINTS.md` jako plan agentowy, nie caly plan produktu,
 - zaktualizowac `ROADMAP.md` do programu M0-M12.
 
@@ -406,7 +406,7 @@ Definition of Done:
 
 ### Tydzien 7-8: After Visit Loop MVP
 
-Cel: zamknac petle po kontakcie z lekarzem.
+Cel: domknac wizyte po kontakcie z lekarzem.
 
 Zadania:
 

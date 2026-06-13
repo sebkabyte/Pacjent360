@@ -34,7 +34,7 @@ UI jest soczewką nad modelem, nie źródłem prawdy. Implementacja modelu: `pub
 
 ## 4. Perspektywy użytkowników
 
-Główny użytkownik MVP: pacjent, rodzic albo opiekun przygotowujący kontekst przed wizytą. Lekarz jest głównym odbiorcą i osobą weryfikującą raport kontekstowy. Szerszy produkt nadal obejmuje trzy perspektywy, ale walidacja wersji alfa zaczyna się od pętli przygotowania wizyty.
+Główny użytkownik MVP: pacjent, rodzic albo opiekun przygotowujący kontekst przed wizytą. Lekarz jest głównym odbiorcą i osobą weryfikującą raport kontekstowy. Szerszy produkt nadal obejmuje trzy perspektywy, ale walidacja wersji alfa zaczyna się od ścieżki przygotowania wizyty.
 
 ### Lekarz (desktop)
 Szybki, źródłowy kontekst przed decyzją: „Pacjent w 90 sekund", oś czasu, leki do potwierdzenia, braki, rozbieżności i pytania DITL. Źródło zawsze obok twierdzenia. Lekarz pozostaje decydentem.
