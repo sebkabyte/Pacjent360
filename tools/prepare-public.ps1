@@ -33,6 +33,7 @@ $files = @(
   "ditl.html",
   "agents.html",
   "investors.html",
+  "readme.html",
   "jak-sie-przygotowac.html",
   "soczewki.html",
   "disclaimer.html",

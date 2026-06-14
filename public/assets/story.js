@@ -174,6 +174,7 @@ const enCopy = {
   footerDemo: "Alpha demo",
   footerAi: "AI boundaries",
   footerInvestors: "Investors",
+  footerJoin: "Co-creators",
   footerDisclaimer: "Medical disclaimer",
   footerPrivacy: "Privacy"
 };
