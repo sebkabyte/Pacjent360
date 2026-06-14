@@ -4,6 +4,8 @@ Status: plan do wykonania
 Zakres: demo PL/EN, routing ze strony WWW do właściwej wersji językowej demo
 Zasada: jedna aplikacja `demo.html`, dwa języki przez `?lang=pl|en`, bez duplikowania demo
 
+Guard rails wykonania: `docs/product/DEMO_I18N_GOAL_GUARD.md`. Ten dokument jest obowiązkowy dla każdego etapu sprintu. Jeśli guard i sprint plan są w konflikcie, wygrywa guard.
+
 ## Cel
 
 Po wejściu ze strony polskiej użytkownik trafia do polskiego demo. Po wejściu ze strony angielskiej użytkownik trafia do angielskiego demo. Demo zachowuje tę samą historię, te same fikcyjne dane i te same granice bezpieczeństwa, ale zmienia język, nazwy ról, CTA, komunikaty i narrację.
