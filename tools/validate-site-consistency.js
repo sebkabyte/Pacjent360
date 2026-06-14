@@ -9,7 +9,7 @@ const publicRoot = path.join(root, "public");
 
 // Strony publiczne objęte kanonem (demo.html ma własny shell aplikacji).
 const PAGES = [
-  "index.html", "investors.html", "engineering.html", "ditl.html", "agents.html",
+  "index.html", "investors.html", "dla-lekarzy.html", "engineering.html", "ditl.html", "agents.html",
   "soczewki.html", "mapa-historii.html", "biblioteka-dokumentow.html",
   "jak-sie-przygotowac.html", "readme.html", "wspoltworcy.html",
   "disclaimer.html", "privacy.html"

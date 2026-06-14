@@ -54,11 +54,11 @@ for (const legalFile of ["disclaimer.html", "privacy.html"]) {
   assert(html[legalFile].includes('id="main-content"') && html[legalFile].includes('tabindex="-1"'), `${legalFile} skip link target should exist and be focusable`);
 }
 
-const siteCss = read("site.css");
+const storyCss = read("assets/story.css");
 const stylesCss = read("styles.css");
-assert(siteCss.includes(".skip-link") && siteCss.includes(":focus-visible"), "site.css should style skip-link and focus-visible");
+assert(storyCss.includes(".skip-link") && storyCss.includes(":focus-visible"), "story.css should style skip-link and focus-visible");
 assert(stylesCss.includes(".skip-link") && stylesCss.includes(":focus-visible"), "styles.css should style skip-link and focus-visible");
-assert(/a:focus-visible[\s\S]*button:focus-visible/.test(siteCss), "site.css should expose visible focus styles for links/buttons");
+assert(/a:focus-visible[\s\S]*button:focus-visible/.test(storyCss), "story.css should expose visible focus styles for links/buttons");
 assert(/input:focus-visible[\s\S]*textarea:focus-visible/.test(stylesCss), "styles.css should expose visible focus styles for form controls");
 
 console.log("Accessibility static validation passed");

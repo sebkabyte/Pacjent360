@@ -56,6 +56,7 @@ $nodeCheckFiles = @(
   "tools/validate-brand-contrast.js",
   "tools/validate-validation-pack.js",
   "tools/validate-harm-gates.js",
+  "tools/validate-site-consistency.js",
   "tools/capture-screens.js",
   "tools/domain-diagnostics.js",
   "tools/release-readiness.js",
@@ -127,6 +128,7 @@ Invoke-External "Accessibility static validation" "powershell" @("-ExecutionPoli
 Invoke-External "Brand contrast validation" "node" @("tools/validate-brand-contrast.js")
 Invoke-External "Validation pack validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-validation-pack.ps1"))
 Invoke-External "Definition of Harm gates" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-harm-gates.ps1"))
+Invoke-External "Site consistency" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-site-consistency.ps1"))
 
 Invoke-External "Prepare public package" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/prepare-public.ps1"), "-Zip")
 Invoke-External "Verify public package" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/verify-public.ps1"))
