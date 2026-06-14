@@ -1124,3 +1124,11 @@ body[data-register="story"] .trust-strip a.trust-link:hover{transform:none;borde
   body[data-register="story"] .subpage-layout .side-nav{grid-column:1;grid-row:1;position:static;top:auto;display:flex;flex-wrap:wrap;gap:8px}
   body[data-register="story"] .subpage-hero{padding:48px 0 20px}
 }
+
+/* CTA końcowe: wyśrodkowany, zbalansowany blok zamiast 1fr+auto z pustą
+   przestrzenią po prawej (sprint serwisu 2026-06-14) */
+body[data-register="story"] .cta-card{grid-template-columns:1fr;justify-items:center;text-align:center;gap:22px;padding:52px 40px}
+body[data-register="story"] .cta-card > div:first-child{max-width:720px}
+body[data-register="story"] .cta-card h2{font-size:clamp(1.7rem,2.6vw,2.5rem);line-height:1.12;letter-spacing:-.02em;margin:0 0 14px}
+body[data-register="story"] .cta-card p{margin:0 auto;max-width:60ch}
+body[data-register="story"] .cta-actions{justify-content:center}
