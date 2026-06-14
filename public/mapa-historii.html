@@ -96,10 +96,10 @@
         </div>
         <button class="nav-toggle" data-nav-toggle aria-label="Otwórz menu" aria-expanded="false" aria-controls="mainNav">☰</button>
         <nav class="main-nav" data-nav id="mainNav" aria-label="Sekcje strony">
-          <a href="index.html#problem">Problem</a>
+          <a href="index.html#problem" data-en="Problem">Problem</a>
           <a href="index.html#how">Jak działa</a>
-          <a href="index.html#audiences">Dla kogo</a>
-          <a href="index.html#validate">Walidacja</a>
+          <a href="index.html#audiences" data-en="For whom">Dla kogo</a>
+          <a href="index.html#validate" data-en="Validation">Walidacja</a>
           <a class="cta-link" href="demo.html?start=1">Demo</a>
         </nav>
       </div>
@@ -108,35 +108,35 @@
     <main id="main-content">
       <section class="subpage-hero">
         <div class="container">
-          <p class="eyebrow">Historia na osi czasu</p>
-          <h1>Jedna mapa. Pełny obraz zdrowia.</h1>
-          <p class="lead">Pacjent nie jest zbiorem rozproszonych plików. To ciągła historia, w której przyczyna i skutek mają znaczenie. Budujemy chronologiczną oś zdarzeń medycznych.</p>
+          <p class="eyebrow" data-en="Timeline-based story">Historia na osi czasu</p>
+          <h1 data-en="One map. A full view of health context.">Jedna mapa. Pełny obraz zdrowia.</h1>
+          <p class="lead" data-en="A patient is not a pile of scattered files. It is a continuous story where sequence and context matter. We are building a chronological timeline of medical events.">Pacjent nie jest zbiorem rozproszonych plików. To ciągła historia, w której przyczyna i skutek mają znaczenie. Budujemy chronologiczną oś zdarzeń medycznych.</p>
         </div>
       </section>
 
       <section class="container section">
         <div class="engineering-layout">
           <aside class="side-nav">
-            <a href="#dlaczego">Dlaczego oś czasu?</a>
+            <a href="#dlaczego" data-en="Why a timeline?">Dlaczego oś czasu?</a>
             <a href="#przyklad">Przykład z życia</a>
             <a href="#bezpieczenstwo">Korelacja faktów</a>
           </aside>
           
           <div>
             <article class="content-card" id="dlaczego">
-              <h2>Dlaczego oś czasu jest kluczowa?</h2>
-              <p>Tradycyjna dokumentacja medyczna wymusza na lekarzu skakanie między różnymi systemami i formatami (PDF, papier, systemy gabinetowe). Wymaga pamiętania dat i układania ich w głowie.</p>
-              <p>Pacjent360™ automatycznie wyciąga daty z dokumentów i tworzy <strong>spójną narrację</strong>. Dzięki temu od razu widać, że obecne pogorszenie wyników nerkowych wystąpiło po dodaniu konkretnego leku dwa lata temu. To widok, który ratuje życie i zapobiega błędom.</p>
+              <h2 data-en="Why the timeline matters">Dlaczego oś czasu jest kluczowa?</h2>
+              <p data-en="Traditional medical documentation forces the doctor to jump between systems and formats: PDF, paper and clinic systems. Dates must be remembered and arranged mentally.">Tradycyjna dokumentacja medyczna wymusza na lekarzu skakanie między różnymi systemami i formatami (PDF, papier, systemy gabinetowe). Wymaga pamiętania dat i układania ich w głowie.</p>
+              <p data-en="Patient360 extracts dates from documents and builds a coherent story draft. This helps show that selected lab changes and medication changes belong to the same period, while final interpretation remains with the doctor.">Pacjent360™ automatycznie wyciąga daty z dokumentów i tworzy <strong>spójną narrację</strong>. Dzięki temu od razu widać, że obecne pogorszenie wyników nerkowych wystąpiło po dodaniu konkretnego leku dwa lata temu. To widok, który ratuje życie i zapobiega błędom.</p>
             </article>
 
             <article class="content-card" id="przyklad">
-              <h2>Przykład wygenerowanej mapy</h2>
+              <h2 data-en="Example of a generated map">Przykład wygenerowanej mapy</h2>
               <div style="margin-top: 24px;">
                 <div class="timeline-node">
                   <div class="timeline-date">2026<br>Maj</div>
                   <div class="timeline-content">
-                    <h3>Skierowanie na operację zaćmy</h3>
-                    <p>Decyzja o kwalifikacji do zabiegu na prawym oku. Zalecono odstawienie leków przeciwzakrzepowych.</p>
+                    <h3 data-en="Referral for cataract surgery">Skierowanie na operację zaćmy</h3>
+                    <p data-en="A decision point related to right-eye surgery qualification. The medication plan was marked as a topic to confirm with the doctor.">Decyzja o kwalifikacji do zabiegu na prawym oku. Zalecono odstawienie leków przeciwzakrzepowych.</p>
                     <span class="tag warn">Ważne planowanie</span>
                   </div>
                 </div>
@@ -144,8 +144,8 @@
                 <div class="timeline-node">
                   <div class="timeline-date">2025<br>Wrz</div>
                   <div class="timeline-content">
-                    <h3>Zmiana leków kardiologicznych</h3>
-                    <p>Wprowadzenie nowych leków regulujących ciśnienie po epizodzie migotania przedsionków.</p>
+                    <h3 data-en="Change in cardiac medications">Zmiana leków kardiologicznych</h3>
+                    <p data-en="New blood-pressure related medications were recorded after an atrial fibrillation episode.">Wprowadzenie nowych leków regulujących ciśnienie po epizodzie migotania przedsionków.</p>
                     <span class="tag">Kardiologia</span>
                   </div>
                 </div>
@@ -153,8 +153,8 @@
                 <div class="timeline-node">
                   <div class="timeline-date">2023<br>Lut</div>
                   <div class="timeline-content">
-                    <h3>Rozpoznanie Cukrzycy Typu 2</h3>
-                    <p>Wdrożenie diety oraz leczenia doustnego. Systematyczna kontrola glikemii.</p>
+                    <h3 data-en="Type 2 diabetes recorded in the history">Rozpoznanie Cukrzycy Typu 2</h3>
+                    <p data-en="Diet and oral medication were recorded in the story. Glucose monitoring is visible as an ongoing context item.">Wdrożenie diety oraz leczenia doustnego. Systematyczna kontrola glikemii.</p>
                     <span class="tag">Diabetologia</span>
                   </div>
                 </div>
@@ -162,8 +162,8 @@
             </article>
 
             <article class="content-card" id="bezpieczenstwo">
-              <h2>Korelacja faktów</h2>
-              <p>Zestawienie tych danych pozwala lekarzowi na szybkie wychwycenie zależności. Na przykład planowany zabieg okulistyczny wymaga modyfikacji leczenia kardiologicznego z powodu przeciwzakrzepowych właściwości stosowanych leków. Gdy mamy "Mapę historii", lekarz na pierwszy rzut oka dostrzega takie konflikty.</p>
+              <h2 data-en="Connecting facts without claiming causality">Korelacja faktów</h2>
+              <p data-en="Putting these data points together helps the doctor see what needs to be checked together. For example, a planned eye procedure and anticoagulant-related medication questions should appear in the same conversation, with sources visible next to each item.">Zestawienie tych danych pozwala lekarzowi na szybkie wychwycenie zależności. Na przykład planowany zabieg okulistyczny wymaga modyfikacji leczenia kardiologicznego z powodu przeciwzakrzepowych właściwości stosowanych leków. Gdy mamy "Mapę historii", lekarz na pierwszy rzut oka dostrzega takie konflikty.</p>
               <a class="button primary" style="margin-top: 20px;" href="demo.html?start=1">Zobacz interaktywne Demo</a>
             </article>
           </div>

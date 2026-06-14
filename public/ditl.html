@@ -46,10 +46,10 @@
         </div>
         <button class="nav-toggle" data-nav-toggle aria-label="Otwórz menu" aria-expanded="false" aria-controls="mainNav">☰</button>
         <nav class="main-nav" data-nav id="mainNav" aria-label="Sekcje strony">
-          <a href="index.html#problem">Problem</a>
+          <a href="index.html#problem" data-en="Problem">Problem</a>
           <a href="index.html#how">Jak działa</a>
-          <a href="index.html#audiences">Dla kogo</a>
-          <a href="index.html#validate">Walidacja</a>
+          <a href="index.html#audiences" data-en="For whom">Dla kogo</a>
+          <a href="index.html#validate" data-en="Validation">Walidacja</a>
           <a class="cta-link" href="demo.html?start=1">Demo</a>
         </nav>
       </div>
@@ -58,9 +58,9 @@
     <main id="main-content">
       <section class="subpage-hero">
         <div class="container">
-          <p class="eyebrow">Granice decyzyjne</p>
-          <h1>System porządkuje. Lekarz decyduje.</h1>
-          <p class="lead">Technologia to narzędzie. Odpowiedzialność pozostaje po stronie człowieka: lekarza prowadzącego, specjalisty i zespołu poradni online. Poznaj zasady projektowania naszych interfejsów i systemów wsparcia.</p>
+          <p class="eyebrow" data-en="Decision boundaries">Granice decyzyjne</p>
+          <h1 data-en="The system organizes. The doctor decides.">System porządkuje. Lekarz decyduje.</h1>
+          <p class="lead" data-en="Technology is a tool. Responsibility remains with people: the attending doctor, specialist and online clinic team. Learn the principles behind our interfaces and support systems.">Technologia to narzędzie. Odpowiedzialność pozostaje po stronie człowieka: lekarza prowadzącego, specjalisty i zespołu poradni online. Poznaj zasady projektowania naszych interfejsów i systemów wsparcia.</p>
         </div>
       </section>
 
@@ -68,59 +68,59 @@
         <div class="subpage-layout">
           <nav class="side-nav" aria-label="Spis treści">
             <a href="#manifesto">Manifest Bezpieczeństwa</a>
-            <a href="#design">Zasady Projektowania</a>
-            <a href="#boundaries">Dozwolone & Niedozwolone</a>
+            <a href="#design" data-en="Design rules">Zasady Projektowania</a>
+            <a href="#boundaries" data-en="Allowed and not allowed">Dozwolone & Niedozwolone</a>
             <a href="#mitigation">Ograniczanie błędów</a>
           </nav>
 
           <div class="subpage-content">
             <article class="content-card" id="manifesto">
-              <h2>Manifest Bezpieczeństwa</h2>
-              <p>Rdzeniem architektury Pacjent360™ jest twarda granica odpowiedzialności. W dokumentacji technicznej używamy angielskiego terminu <strong>Doctor in the Loop (DITL)</strong>. W polskim języku produktu mówimy prościej: <strong>nadzór lekarza</strong> i <strong>decyzja lekarza</strong>.</p>
-              <p>Zasada jest prosta: żaden system komputerowy nie zastępuje lekarza w procesie decyzyjnym. Pacjent360™ porządkuje historię, źródła i pytania, a nie wydaje rozstrzygnięć klinicznych.</p>
-              <p>Docelowy model rozwoju zakłada współpracę z lekarzami specjalistami odpowiedzialnymi za poradnie, konsultacje i wizyty online. To oni są częścią merytoryczną procesu, a technologia ma przygotować im czytelny kontekst pracy.</p>
+              <h2 data-en="Safety manifesto">Manifest Bezpieczeństwa</h2>
+              <p data-en="The core of the Patient360 architecture is a hard boundary of responsibility. In technical documentation we use the English term Doctor in the Loop (DITL). In product language, we say it more simply: doctor oversight and doctor decision.">Rdzeniem architektury Pacjent360™ jest twarda granica odpowiedzialności. W dokumentacji technicznej używamy angielskiego terminu <strong>Doctor in the Loop (DITL)</strong>. W polskim języku produktu mówimy prościej: <strong>nadzór lekarza</strong> i <strong>decyzja lekarza</strong>.</p>
+              <p data-en="The rule is simple: no computer system replaces the doctor in the decision process. Patient360 organizes the story, sources and questions; it does not issue clinical determinations.">Zasada jest prosta: żaden system komputerowy nie zastępuje lekarza w procesie decyzyjnym. Pacjent360™ porządkuje historię, źródła i pytania, a nie wydaje rozstrzygnięć klinicznych.</p>
+              <p data-en="The target development model assumes cooperation with specialist doctors responsible for clinics, consultations and online visits. They are the medical part of the process, while technology prepares a readable work context.">Docelowy model rozwoju zakłada współpracę z lekarzami specjalistami odpowiedzialnymi za poradnie, konsultacje i wizyty online. To oni są częścią merytoryczną procesu, a technologia ma przygotować im czytelny kontekst pracy.</p>
             </article>
 
             <article class="content-card" id="design">
-              <h2>Zasady UX dla Lekarza</h2>
-              <p>Interfejsy Pacjent360™ są projektowane tak, aby unikać ukrytych założeń i sugerowania odpowiedzi. Każda informacja w systemie jest projektowana w oparciu o następujące paradygmaty:</p>
+              <h2 data-en="UX rules for doctors">Zasady UX dla Lekarza</h2>
+              <p data-en="Patient360 interfaces are designed to avoid hidden assumptions and answer-suggesting language. Every piece of information in the system is designed around the following paradigms:">Interfejsy Pacjent360™ są projektowane tak, aby unikać ukrytych założeń i sugerowania odpowiedzi. Każda informacja w systemie jest projektowana w oparciu o następujące paradygmaty:</p>
               <ul>
-                <li><strong>Wymuszone potwierdzenie:</strong> Podsumowania, checklisty czy braki danych zawsze posiadają status "do weryfikacji", wymagający świadomego spojrzenia lekarza.</li>
-                <li><strong>Widoczne źródła:</strong> Jeśli system prezentuje wynik badania, zawsze dostarcza możliwość kliknięcia i wglądu w surowy skan dokumentu bazowego.</li>
-                <li><strong>Kategoryzacja niepewności:</strong> Zamiast pomijać to, czego nie wiemy, eksponujemy to. "Brak danych z tego okresu" to kluczowa wskazówka kliniczna.</li>
+                <li data-en="<strong>Required confirmation:</strong> summaries, checklists and data gaps always carry a 'to verify' status that requires a conscious review by the doctor."><strong>Wymuszone potwierdzenie:</strong> Podsumowania, checklisty czy braki danych zawsze posiadają status "do weryfikacji", wymagający świadomego spojrzenia lekarza.</li>
+                <li data-en="<strong>Visible sources:</strong> if the system presents a test result, it always offers a way to click through to the raw source document."><strong>Widoczne źródła:</strong> Jeśli system prezentuje wynik badania, zawsze dostarcza możliwość kliknięcia i wglądu w surowy skan dokumentu bazowego.</li>
+                <li data-en="<strong>Uncertainty categories:</strong> instead of hiding what we do not know, we expose it. 'No data from this period' is important context for the doctor."><strong>Kategoryzacja niepewności:</strong> Zamiast pomijać to, czego nie wiemy, eksponujemy to. "Brak danych z tego okresu" to kluczowa wskazówka kliniczna.</li>
               </ul>
             </article>
 
             <article class="content-card" id="boundaries">
-              <h2>Dozwolone & Niedozwolone</h2>
-              <p>Nasze algorytmy (w tym funkcje AI na przyszłość) mają ścisły zakaz wychodzenia poza swoją kompetencję strukturyzacyjną.</p>
+              <h2 data-en="Allowed and not allowed">Dozwolone & Niedozwolone</h2>
+              <p data-en="Our algorithms, including future AI functions, have a strict boundary: they must not go beyond their structuring competence.">Nasze algorytmy (w tym funkcje AI na przyszłość) mają ścisły zakaz wychodzenia poza swoją kompetencję strukturyzacyjną.</p>
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 18px;">
                 <div style="border: 1px solid var(--teal-soft); padding: 18px; border-radius: 8px;">
                   <strong style="color: var(--teal); display: block; margin-bottom: 8px;">Dozwolone funkcje</strong>
                   <ul style="margin: 0; font-size: 0.95rem; color: var(--muted);">
-                    <li>Ekstrakcja faktów z PDF.</li>
-                    <li>Sugerowanie pytań do rozmowy.</li>
-                    <li>Oznaczanie luk w osi czasu.</li>
-                    <li>Grupowanie podobnych zdarzeń medycznych.</li>
-                    <li>Linkowanie do oryginalnego źródła.</li>
+                    <li data-en="Extracting facts from PDFs.">Ekstrakcja faktów z PDF.</li>
+                    <li data-en="Suggesting questions for the conversation.">Sugerowanie pytań do rozmowy.</li>
+                    <li data-en="Marking gaps in the timeline.">Oznaczanie luk w osi czasu.</li>
+                    <li data-en="Grouping similar medical events.">Grupowanie podobnych zdarzeń medycznych.</li>
+                    <li data-en="Linking to the original source.">Linkowanie do oryginalnego źródła.</li>
                   </ul>
                 </div>
                 <div style="border: 1px solid #f0c8c3; background: #fffafa; padding: 18px; border-radius: 8px;">
                   <strong style="color: var(--red); display: block; margin-bottom: 8px;">Zablokowane w architekturze</strong>
                   <ul style="margin: 0; font-size: 0.95rem; color: var(--muted);">
-                    <li>Sugestia diagnozy medycznej.</li>
-                    <li>Automatyczny triage (ocena pilności zdrowotnej).</li>
-                    <li>Rekomendacja zmiany lub odstawienia leków.</li>
-                    <li>Ukrywanie dokumentów (bias potwierdzający).</li>
-                    <li>Odmowa wygenerowania historii.</li>
+                    <li data-en="Suggesting a clinical conclusion.">Sugestia diagnozy medycznej.</li>
+                    <li data-en="Automatic medical-urgency sorting.">Automatyczny triage (ocena pilności zdrowotnej).</li>
+                    <li data-en="Suggesting a medication change or discontinuation.">Rekomendacja zmiany lub odstawienia leków.</li>
+                    <li data-en="Hiding documents through confirmation bias.">Ukrywanie dokumentów (bias potwierdzający).</li>
+                    <li data-en="Refusing to generate the story.">Odmowa wygenerowania historii.</li>
                   </ul>
                 </div>
               </div>
             </article>
 
             <article class="content-card" id="mitigation">
-              <h2>Ograniczanie błędów danych</h2>
-              <p>Rozumiemy zagrożenia płynące ze zbyt optymistycznego ufania technologii. Dlatego cały system Pacjent360™ bazuje na zasobach surowych (ekstrakty wypisów, twarde PDFy) i pozwala użytkownikowi (pacjentowi/opiekunowi) zawsze zgłosić, że "ten fragment dokumentu jest błędny". Informacja podana przez pacjenta to w systemie zawsze <strong>"Wywiad"</strong>, a nie twardy <strong>"Fakt Laboratoryjny"</strong>, co zapobiega zafałszowywaniu obrazu klinicznego przed decyzją lekarza.</p>
+              <h2 data-en="Reducing data errors">Ograniczanie błędów danych</h2>
+              <p data-en="We understand the risks of over-trusting technology. That is why the whole Patient360 system is based on raw assets such as discharge extracts and hard PDFs, and lets the user, patient or caregiver, always report that 'this document fragment is wrong'. Information provided by a patient is always treated in the system as an interview statement, not as a hard laboratory fact, preventing distortion of the clinical picture before the doctor's decision.">Rozumiemy zagrożenia płynące ze zbyt optymistycznego ufania technologii. Dlatego cały system Pacjent360™ bazuje na zasobach surowych (ekstrakty wypisów, twarde PDFy) i pozwala użytkownikowi (pacjentowi/opiekunowi) zawsze zgłosić, że "ten fragment dokumentu jest błędny". Informacja podana przez pacjenta to w systemie zawsze <strong>"Wywiad"</strong>, a nie twardy <strong>"Fakt Laboratoryjny"</strong>, co zapobiega zafałszowywaniu obrazu klinicznego przed decyzją lekarza.</p>
             </article>
           </div>
         </div>
@@ -131,13 +131,13 @@
       <div class="container footer-grid">
         <div><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong><br><span>Niezależny prototyp open source. Nie zastępuje lekarza. Demo używa fikcyjnych danych.</span></div>
         <nav aria-label="Stopka">
-          <a href="demo.html?start=1">Demo alpha</a>
+          <a href="demo.html?start=1" data-en="Alpha demo">Demo alpha</a>
           <a href="https://github.com/sebkabyte/Pacjent360">GitHub</a>
           <a href="engineering.html">Engineering</a>
-          <a href="ditl.html">Decyzja Lekarza</a>
-          <a href="agents.html">Granice AI</a>
-          <a href="soczewki.html">Macierz / Soczewki</a>
-          <a href="investors.html">Inwestorzy</a>
+          <a href="ditl.html" data-en="Doctor decision">Decyzja Lekarza</a>
+          <a href="agents.html" data-en="AI boundaries">Granice AI</a>
+          <a href="soczewki.html" data-en="Matrix / lenses">Macierz / Soczewki</a>
+          <a href="investors.html" data-en="Investors">Inwestorzy</a>
           <a href="wspoltworcy.html">Współtwórcy</a>
           <a href="disclaimer.html">Zastrzeżenie medyczne</a>
           <a href="privacy.html">Prywatność</a>

@@ -46,10 +46,10 @@
         </div>
         <button class="nav-toggle" data-nav-toggle aria-label="Otwórz menu" aria-expanded="false" aria-controls="mainNav">☰</button>
         <nav class="main-nav" data-nav id="mainNav" aria-label="Sekcje strony">
-          <a href="index.html#problem">Problem</a>
+          <a href="index.html#problem" data-en="Problem">Problem</a>
           <a href="index.html#how">Jak działa</a>
-          <a href="index.html#audiences">Dla kogo</a>
-          <a href="index.html#validate">Walidacja</a>
+          <a href="index.html#audiences" data-en="For whom">Dla kogo</a>
+          <a href="index.html#validate" data-en="Validation">Walidacja</a>
           <a class="cta-link" href="demo.html?start=1">Demo</a>
         </nav>
       </div>
@@ -58,36 +58,36 @@
     <main id="main-content">
       <section class="subpage-hero">
         <div class="container">
-          <p class="eyebrow">Engineering</p>
-          <h1>Solidne fundamenty dla historii pacjenta.</h1>
-          <p class="lead">Zajrzyj pod maskę Pacjent360™. Poniżej zebraliśmy nasze zasady projektowania kontraktów danych, przepływ informacji i kierunki architektoniczne.</p>
+          <p class="eyebrow" data-en="Engineering">Engineering</p>
+          <h1 data-en="Solid foundations for patient history.">Solidne fundamenty dla historii pacjenta.</h1>
+          <p class="lead" data-en="Look under the hood of Patient360. Below we collect our principles for data contracts, information flow and architectural direction.">Zajrzyj pod maskę Pacjent360™. Poniżej zebraliśmy nasze zasady projektowania kontraktów danych, przepływ informacji i kierunki architektoniczne.</p>
         </div>
       </section>
 
       <section class="container section">
         <div class="subpage-layout">
           <nav class="side-nav" aria-label="Spis treści">
-            <a href="#scope">Zakres prototypu alpha</a>
+            <a href="#scope" data-en="Alpha prototype scope">Zakres prototypu alpha</a>
             <a href="#dataflow">Przepływ Danych</a>
-            <a href="#contract">Kontrakt Danych</a>
-            <a href="#architecture">Architektura produktu</a>
-            <a href="#github">Repozytorium</a>
+            <a href="#contract" data-en="Data contract">Kontrakt Danych</a>
+            <a href="#architecture" data-en="Product architecture">Architektura produktu</a>
+            <a href="#github" data-en="Repository">Repozytorium</a>
           </nav>
 
           <div class="subpage-content">
             <article class="content-card" id="scope">
-              <h2>Zakres wersji Alpha</h2>
-              <p>Aktualna wersja Pacjent360™ to statyczny (stateless) prototyp frontendowy o charakterze open-source. Stanowi on jednak zaledwie pierwszy, wizualny krok w drodze do docelowej, rozproszonej i chmurowej infrastruktury API (SaaS), która będzie stanowić globalny, skalowalny standard wymiany i porządkowania danych medycznych dla milionów pacjentów.</p>
+              <h2 data-en="Alpha scope">Zakres wersji Alpha</h2>
+              <p data-en="The current Patient360 version is a static, stateless, open-source frontend prototype. It is the first visual step toward a future distributed cloud API infrastructure that can become a scalable standard for organizing medical context.">Aktualna wersja Pacjent360™ to statyczny (stateless) prototyp frontendowy o charakterze open-source. Stanowi on jednak zaledwie pierwszy, wizualny krok w drodze do docelowej, rozproszonej i chmurowej infrastruktury API (SaaS), która będzie stanowić globalny, skalowalny standard wymiany i porządkowania danych medycznych dla milionów pacjentów.</p>
               <ul>
-                <li><strong>Statyczny UI:</strong> Brak produkcyjnego backendu i bazy danych (wszystko rezyduje na urządzeniu).</li>
-                <li><strong>Local Storage:</strong> Dane sesyjne i wybór w demo trzymany jest wyłącznie w obiekcie <code>localStorage</code> pod zdefiniowanym kluczem.</li>
-                <li><strong>Bezpieczny izolator:</strong> Taka architektura pozwala nam maksymalnie bezpiecznie testować interfejsy z użytkownikami, bez ryzyka wycieku danych testowych do zewnętrznych serwerów.</li>
+                <li data-en="<strong>Static UI:</strong> no production backend or database; everything stays on the device."><strong>Statyczny UI:</strong> Brak produkcyjnego backendu i bazy danych (wszystko rezyduje na urządzeniu).</li>
+                <li data-en="<strong>Local Storage:</strong> session data and demo choices are stored only in localStorage under a defined key."><strong>Local Storage:</strong> Dane sesyjne i wybór w demo trzymany jest wyłącznie w obiekcie <code>localStorage</code> pod zdefiniowanym kluczem.</li>
+                <li data-en="<strong>Safe sandbox:</strong> this architecture lets us test interfaces with users while minimizing the risk of test data leaving the browser."><strong>Bezpieczny izolator:</strong> Taka architektura pozwala nam maksymalnie bezpiecznie testować interfejsy z użytkownikami, bez ryzyka wycieku danych testowych do zewnętrznych serwerów.</li>
               </ul>
             </article>
 
             <article class="content-card" id="dataflow">
-              <h2>Architektura Przepływu (Data Flow)</h2>
-              <p>Struktura danych Pacjent360™ jest zbudowana dookoła prostej idei: surowe dane wchodzą z różnych miejsc, są ustandaryzowane w paczki zdarzeń, a następnie filtrowane dla różnych ról użytkowników.</p>
+              <h2 data-en="Data flow architecture">Architektura Przepływu (Data Flow)</h2>
+              <p data-en="The Patient360 data structure is built around a simple idea: raw data enters from different places, is standardized into event packages and then filtered for different user roles.">Struktura danych Pacjent360™ jest zbudowana dookoła prostej idei: surowe dane wchodzą z różnych miejsc, są ustandaryzowane w paczki zdarzeń, a następnie filtrowane dla różnych ról użytkowników.</p>
 
               <div class="data-flow-diagram">
                 <div class="flow-step">
@@ -110,8 +110,8 @@
             </article>
 
             <article class="content-card" id="contract">
-              <h2>Kontrakt Danych</h2>
-              <p>Model rozdziela źródło, twierdzenie, zdarzenie, epizod, kontakt, zadanie i raport. Celem jest całkowite <em>traceability</em> (identyfikowalność): każda pojedyncza informacja wyświetlana w UI ma swoje udokumentowane pochodzenie, status i zakres dostępu.</p>
+              <h2 data-en="Data contract">Kontrakt Danych</h2>
+              <p data-en="The model separates source, claim, event, episode, encounter, task and report. The goal is full traceability: every piece of information shown in the UI has documented origin, status and access scope.">Model rozdziela źródło, twierdzenie, zdarzenie, epizod, kontakt, zadanie i raport. Celem jest całkowite <em>traceability</em> (identyfikowalność): każda pojedyncza informacja wyświetlana w UI ma swoje udokumentowane pochodzenie, status i zakres dostępu.</p>
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px;">
                 <a href="https://github.com/sebkabyte/Pacjent360/tree/main/schema" style="border: 1px solid var(--line); border-radius: 12px; padding: 20px; text-decoration: none; color: var(--ink);">
                   <strong style="display: block; margin-bottom: 8px; font-size: 1.1rem;">Schema</strong>
@@ -125,18 +125,18 @@
             </article>
 
             <article class="content-card" id="architecture">
-              <h2>Architektura produktu</h2>
-              <p>Naszym długoterminowym planem (faza produkcyjna) jest oparcie się o ujednolicone standardy. Wierzymy, że w zamkniętych ekosystemach medycznych wygrywa interoperacyjność.</p>
+              <h2 data-en="Product architecture">Architektura produktu</h2>
+              <p data-en="Our long-term production direction is based on unified standards. In closed medical ecosystems, interoperability wins.">Naszym długoterminowym planem (faza produkcyjna) jest oparcie się o ujednolicone standardy. Wierzymy, że w zamkniętych ekosystemach medycznych wygrywa interoperacyjność.</p>
               <ul>
-                <li><strong>Docelowy standard:</strong> Wymiana danych w oparciu o standard komunikacji HL7 FHIR (Fast Healthcare Interoperability Resources).</li>
-                <li><strong>Backend:</strong> Środowisko izolowane, chmurowe. Usługi serwowane z naciskiem na bezpieczeństwo sieciowe (HIPAA/GDPR compliance).</li>
-                <li><strong>Frontend:</strong> Przejście z vanilla JavaScript i DOM na rozbudowany framework oparty o komponenty i architekturę SSR (Server-Side Rendering) dla optymalizacji.</li>
+                <li data-en="<strong>Target standard:</strong> data exchange based on HL7 FHIR (Fast Healthcare Interoperability Resources)."><strong>Docelowy standard:</strong> Wymiana danych w oparciu o standard komunikacji HL7 FHIR (Fast Healthcare Interoperability Resources).</li>
+                <li data-en="<strong>Backend:</strong> an isolated cloud environment in a future phase, with services designed around network security and GDPR/HIPAA-aware controls."><strong>Backend:</strong> Środowisko izolowane, chmurowe. Usługi serwowane z naciskiem na bezpieczeństwo sieciowe (HIPAA/GDPR compliance).</li>
+                <li data-en="<strong>Frontend:</strong> a later transition from vanilla JavaScript and DOM work toward a component-based framework and SSR architecture."><strong>Frontend:</strong> Przejście z vanilla JavaScript i DOM na rozbudowany framework oparty o komponenty i architekturę SSR (Server-Side Rendering) dla optymalizacji.</li>
               </ul>
             </article>
 
             <article class="content-card" id="github">
-              <h2>Otwarte i przejrzyste</h2>
-              <p>Cały kod źródłowy MVP dostępny jest na platformie GitHub. Zapraszamy inżynierów do przeglądu logiki, propozycji ulepszeń lub zgłaszania issue.</p>
+              <h2 data-en="Open and transparent">Otwarte i przejrzyste</h2>
+              <p data-en="The MVP source code is available on GitHub. We invite engineers to review the logic, suggest improvements or open issues.">Cały kod źródłowy MVP dostępny jest na platformie GitHub. Zapraszamy inżynierów do przeglądu logiki, propozycji ulepszeń lub zgłaszania issue.</p>
               <a href="https://github.com/sebkabyte/Pacjent360" style="display:inline-block;margin-top:16px;padding:12px 24px;background:var(--ink);color:#fff;border-radius:8px;font-weight:bold;">Otwórz Repozytorium</a>
             </article>
           </div>
@@ -148,13 +148,13 @@
       <div class="container footer-grid">
         <div><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong><br><span>Niezależny prototyp open source. Nie zastępuje lekarza. Demo używa fikcyjnych danych.</span></div>
         <nav aria-label="Stopka">
-          <a href="demo.html?start=1">Demo alpha</a>
+          <a href="demo.html?start=1" data-en="Alpha demo">Demo alpha</a>
           <a href="https://github.com/sebkabyte/Pacjent360">GitHub</a>
           <a href="engineering.html">Engineering</a>
-          <a href="ditl.html">Decyzja Lekarza</a>
-          <a href="agents.html">Granice AI</a>
-          <a href="soczewki.html">Macierz / Soczewki</a>
-          <a href="investors.html">Inwestorzy</a>
+          <a href="ditl.html" data-en="Doctor decision">Decyzja Lekarza</a>
+          <a href="agents.html" data-en="AI boundaries">Granice AI</a>
+          <a href="soczewki.html" data-en="Matrix / lenses">Macierz / Soczewki</a>
+          <a href="investors.html" data-en="Investors">Inwestorzy</a>
           <a href="wspoltworcy.html">Współtwórcy</a>
           <a href="disclaimer.html">Zastrzeżenie medyczne</a>
           <a href="privacy.html">Prywatność</a>
