@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self';" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#10242a" />
+    <title>Biblioteka wyników i dokumentów | Pacjent360™</title>
+    <meta name="description" content="Bezpieczne miejsce na wszystkie skany, PDFy i zdjęcia z wynikami badań." />
+    <link rel="canonical" href="https://pacjent360.com.pl/biblioteka-dokumentow.html" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="brand/tokens.css" />
+    <link rel="stylesheet" href="brand/components.css" />
+    <link rel="stylesheet" href="assets/story.css" />
+    <style>
+      .library-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-top: 24px;
+      }
+      .doc-item {
+        background: #f7fbfa;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .doc-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgba(16,36,42,.06);
+      }
+      .doc-icon {
+        width: 42px;
+        height: 42px;
+        background: var(--mint);
+        color: var(--accent);
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        font-weight: 900;
+        font-size: 0.85rem;
+      }
+      .doc-item.pdf .doc-icon { background: #ffebee; color: #c62828; }
+      .doc-item.img .doc-icon { background: #e8eaf6; color: #283593; }
+      
+      .doc-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+      .doc-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        margin: 0 !important;
+        line-height: 1.3;
+      }
+      @media (max-width: 700px) {
+        .library-grid { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body data-register="story">
+    <a class="skip-link" href="#main-content">Przejdź do treści</a>
+
+    <header class="site-header">
+      <div class="nav-inner">
+        <a class="brand" href="index.html" aria-label="Pacjent360">
+          <span class="brand-mark">360°</span>
+          <span><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong><small>Brief przed wizytą</small></span>
+        </a>
+        <nav class="main-nav" aria-label="Sekcje strony">
+          <a href="index.html#problem">Problem</a>
+          <a href="index.html#how">Rozwiązanie</a>
+          <a href="index.html#audiences">Dla kogo</a>
+          <a class="cta-link" href="demo.html?start=1">Demo</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="subpage-hero">
+        <div class="container">
+          <p class="eyebrow">Dokumentacja pod ręką</p>
+          <h1>Biblioteka wyników i dokumentów</h1>
+          <p class="lead">Koniec z szukaniem pogniecionych kartek i zapomnianych PDF-ów. Wszystkie wypisy i wyniki w jednym bezpiecznym miejscu.</p>
+        </div>
+      </section>
+
+      <section class="container section">
+        <div class="engineering-layout">
+          <aside class="side-nav">
+            <a href="#cyfryzacja">Cyfryzacja</a>
+            <a href="#ai">Zrozumienie i AI</a>
+            <a href="#przyklad">Podgląd dokumentów</a>
+          </aside>
+          
+          <div>
+            <article class="content-card" id="cyfryzacja">
+              <h2>Opanowanie chaosu</h2>
+              <p>Medycyna wciąż tonie w papierze. Nawet elektroniczne wyniki często otrzymujemy w formacie nieczytelnego pliku PDF. Uporządkowanie tego materiału jest pierwszym krokiem do skutecznej diagnozy.</p>
+              <p>W Bibliotece wszystkie Twoje pliki – zdjęcia z telefonu, PDF-y z laboratorium, a nawet notatki głosowe – otrzymują zunifikowany, spójny format i tagowanie.</p>
+            </article>
+
+            <article class="content-card" id="ai">
+              <h2>Więcej niż "dysk w chmurze"</h2>
+              <p>Pacjent360™ nie tylko przechowuje pliki. System analizuje zawartość PDF-ów i zdjęć przy użyciu sztucznej inteligencji (w tym OCR i modeli LLM dostosowanych do medycyny), aby automatycznie odnaleźć kluczowe rozpoznania, wyniki laboratoryjne i zalecenia.</p>
+              <p>Dzięki temu dokumenty stają się <strong>interaktywnymi danymi</strong> zasilającymi Twoją Mapę Historii.</p>
+            </article>
+
+            <article class="content-card" id="przyklad">
+              <h2>Zorganizowana struktura</h2>
+              <p>Tak wygląda spójny widok wgranych materiałów z perspektywy oprogramowania.</p>
+              
+              <div class="library-grid">
+                <div class="doc-item pdf">
+                  <div class="doc-icon">PDF</div>
+                  <h3 class="doc-title">Wypis ze szpitala - Kardiologia</h3>
+                  <div class="doc-meta">
+                    <span>12 Maj 2026</span>
+                    <span>2.4 MB</span>
+                  </div>
+                </div>
+
+                <div class="doc-item img">
+                  <div class="doc-icon">JPG</div>
+                  <h3 class="doc-title">Wyniki krwi - Morfologia i lipidy</h3>
+                  <div class="doc-meta">
+                    <span>08 Kwi 2026</span>
+                    <span>1.1 MB</span>
+                  </div>
+                </div>
+
+                <div class="doc-item pdf">
+                  <div class="doc-icon">PDF</div>
+                  <h3 class="doc-title">Opis badania rezonansem (MRI)</h3>
+                  <div class="doc-meta">
+                    <span>14 Sty 2025</span>
+                    <span>3.8 MB</span>
+                  </div>
+                </div>
+
+                <div class="doc-item img">
+                  <div class="doc-icon">PNG</div>
+                  <h3 class="doc-title">Lista leków od specjalisty</h3>
+                  <div class="doc-meta">
+                    <span>20 Wrz 2024</span>
+                    <span>800 KB</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-grid">
+        <div class="footer-copy">
+          <p><strong>Pacjent360™</strong> Projekt Open Source dla poprawy jakości komunikacji z lekarzem.<br>
+          <small>© 2026 Wszelkie prawa zastrzeżone.</small></p>
+        </div>
+        <nav class="footer-nav">
+          <a href="engineering.html">Architektura</a>
+          <a href="disclaimer.html">Zastrzeżenie</a>
+          <a href="privacy.html">Prywatność</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

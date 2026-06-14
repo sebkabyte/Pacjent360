@@ -46,6 +46,16 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://pacjent360.com.pl/mapa-historii.html</loc>
+    <lastmod>2026-06-14</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pacjent360.com.pl/biblioteka-dokumentow.html</loc>
+    <lastmod>2026-06-14</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://pacjent360.com.pl/soczewki.html</loc>
     <lastmod>2026-06-14</lastmod>
     <priority>0.7</priority>

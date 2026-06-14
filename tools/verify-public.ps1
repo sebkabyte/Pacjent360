@@ -62,6 +62,8 @@ $expectedFiles = @(
   "investors.html",
   "readme.html",
   "jak-sie-przygotowac.html",
+  "mapa-historii.html",
+  "biblioteka-dokumentow.html",
   "soczewki.html",
   "wspoltworcy.html",
   "disclaimer.html",

@@ -82,6 +82,8 @@ try {
   $disclaimer = Get-SmokeText -BaseUrl $baseUrl -Path "disclaimer.html"
   $readme = Get-SmokeText -BaseUrl $baseUrl -Path "readme.html"
   $contributors = Get-SmokeText -BaseUrl $baseUrl -Path "wspoltworcy.html"
+  $historyMap = Get-SmokeText -BaseUrl $baseUrl -Path "mapa-historii.html"
+  $documentLibrary = Get-SmokeText -BaseUrl $baseUrl -Path "biblioteka-dokumentow.html"
   $maintenance = Get-SmokeText -BaseUrl $baseUrl -Path "maintenance.html"
   $health = Get-SmokeText -BaseUrl $baseUrl -Path "health.txt"
 
@@ -128,6 +130,8 @@ try {
   Assert-True ($readme.Contains("Pacjent360") -and $readme.Contains("O projekcie")) "readme.html should contain public project summary"
   Assert-True (-not ($readme.Contains("raw.githubusercontent.com") -or $readme.Contains("cdn.jsdelivr.net") -or $readme.Contains("fetch("))) "readme.html should not depend on live external README fetching"
   Assert-True ($contributors.Contains("Pacjent360") -and $contributors.Contains("sweat equity")) "wspoltworcy.html should contain public contributors page"
+  Assert-True ($historyMap.Contains("Pacjent360") -and $historyMap.Contains("Mapa historii")) "mapa-historii.html should contain public history map page"
+  Assert-True ($documentLibrary.Contains("Pacjent360") -and $documentLibrary.Contains("Asystenci AI")) "biblioteka-dokumentow.html should contain public document library page"
   Assert-True ($maintenance.Contains("Pacjent360")) "maintenance.html should contain project name"
   Assert-True ($health.Contains("project=pacjent360") -and $health.Contains("contains_patient_data=false")) "health.txt should expose static deployment markers"
 
