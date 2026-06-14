@@ -216,6 +216,8 @@ $disclaimer = Get-HttpContent $disclaimerUrl
 $privacy = Get-HttpContent $privacyUrl
 $readme = Get-HttpContent (Join-WebPath $base "readme.html")
 $contributors = Get-HttpContent (Join-WebPath $base "wspoltworcy.html")
+$historyMap = Get-HttpContent (Join-WebPath $base "mapa-historii.html")
+$documentLibrary = Get-HttpContent (Join-WebPath $base "biblioteka-dokumentow.html")
 $maintenance = Get-HttpContent $maintenanceUrl
 $health = Get-HttpContent $healthUrl
 $app = Get-HttpContent (Join-WebPath $base "app.js")
@@ -303,6 +305,8 @@ Assert-True ($disclaimer.Contains('rel="canonical" href="https://pacjent360.com.
 Assert-True ($readme.Contains("Pacjent360") -and $readme.Contains("O projekcie")) "readme.html should contain public project summary"
 Assert-True (-not ($readme.Contains("raw.githubusercontent.com") -or $readme.Contains("cdn.jsdelivr.net") -or $readme.Contains("fetch("))) "readme.html should not depend on live external README fetching"
 Assert-True ($contributors.Contains("Pacjent360") -and $contributors.Contains("sweat equity")) "wspoltworcy.html should contain public contributors page"
+Assert-True ($historyMap.Contains("Pacjent360") -and $historyMap.Contains("Mapa historii")) "mapa-historii.html should contain public history map page"
+Assert-True ($documentLibrary.Contains("Pacjent360") -and $documentLibrary.Contains("Asystenci AI")) "biblioteka-dokumentow.html should contain public document library page"
 Assert-True ($maintenance.Contains("Pacjent360")) "maintenance.html should contain project name"
 Assert-True ($health.Contains("project=pacjent360") -and $health.Contains("contains_patient_data=false")) "health.txt should expose static deployment markers"
 Assert-True ($health.Contains("medical_device=false") -and $health.Contains("clinical_decision_support=false")) "health.txt should expose safety boundary markers"

@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self';" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#10242a" />
+    <title>Mapa historii pacjenta | Pacjent360™</title>
+    <meta name="description" content="Chronologiczna wizualizacja historii medycznej pacjenta. Zobacz jak porządkujemy chaos w czytelną oś czasu." />
+    <link rel="canonical" href="https://pacjent360.com.pl/mapa-historii.html" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="brand/tokens.css" />
+    <link rel="stylesheet" href="brand/components.css" />
+    <link rel="stylesheet" href="assets/story.css" />
+    <style>
+      .timeline-node {
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        gap: 20px;
+        position: relative;
+        padding-bottom: 30px;
+      }
+      .timeline-node:last-child {
+        padding-bottom: 0;
+      }
+      .timeline-node::before {
+        content: '';
+        position: absolute;
+        left: 20px;
+        top: 30px;
+        bottom: 0;
+        width: 2px;
+        background: linear-gradient(180deg, var(--accent), transparent);
+      }
+      .timeline-node:last-child::before {
+        display: none;
+      }
+      .timeline-date {
+        font-weight: 800;
+        color: var(--accent);
+        text-align: right;
+        font-size: 0.95rem;
+        padding-top: 14px;
+        line-height: 1.2;
+      }
+      .timeline-content {
+        background: #f7fbfa;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 20px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .timeline-content:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgba(16,36,42,.06);
+      }
+      .timeline-content h3 {
+        margin: 0 0 6px 0 !important;
+        font-size: 1.15rem;
+      }
+      .timeline-content p {
+        margin: 0;
+        font-size: 0.95rem;
+      }
+      .tag {
+        display: inline-flex;
+        background: var(--mint);
+        color: var(--accent);
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 800;
+        margin-top: 10px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .tag.warn {
+        background: var(--sand);
+        color: #a06d00;
+      }
+    </style>
+  </head>
+  <body data-register="story">
+    <a class="skip-link" href="#main-content">Przejdź do treści</a>
+
+    <header class="site-header">
+      <div class="nav-inner">
+        <a class="brand" href="index.html" aria-label="Pacjent360">
+          <span class="brand-mark">360°</span>
+          <span><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong><small>Brief przed wizytą</small></span>
+        </a>
+        <nav class="main-nav" aria-label="Sekcje strony">
+          <a href="index.html#problem">Problem</a>
+          <a href="index.html#how">Rozwiązanie</a>
+          <a href="index.html#audiences">Dla kogo</a>
+          <a class="cta-link" href="demo.html?start=1">Demo</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="subpage-hero">
+        <div class="container">
+          <p class="eyebrow">Historia na osi czasu</p>
+          <h1>Jedna mapa. Pełny obraz zdrowia.</h1>
+          <p class="lead">Pacjent nie jest zbiorem rozproszonych plików. To ciągła historia, w której przyczyna i skutek mają znaczenie. Budujemy chronologiczną oś zdarzeń medycznych.</p>
+        </div>
+      </section>
+
+      <section class="container section">
+        <div class="engineering-layout">
+          <aside class="side-nav">
+            <a href="#dlaczego">Dlaczego oś czasu?</a>
+            <a href="#przyklad">Przykład z życia</a>
+            <a href="#bezpieczenstwo">Korelacja faktów</a>
+          </aside>
+          
+          <div>
+            <article class="content-card" id="dlaczego">
+              <h2>Dlaczego oś czasu jest kluczowa?</h2>
+              <p>Tradycyjna dokumentacja medyczna wymusza na lekarzu skakanie między różnymi systemami i formatami (PDF, papier, systemy gabinetowe). Wymaga pamiętania dat i układania ich w głowie.</p>
+              <p>Pacjent360™ automatycznie wyciąga daty z dokumentów i tworzy <strong>spójną narrację</strong>. Dzięki temu od razu widać, że obecne pogorszenie wyników nerkowych wystąpiło po dodaniu konkretnego leku dwa lata temu. To widok, który ratuje życie i zapobiega błędom.</p>
+            </article>
+
+            <article class="content-card" id="przyklad">
+              <h2>Przykład wygenerowanej mapy</h2>
+              <div style="margin-top: 24px;">
+                <div class="timeline-node">
+                  <div class="timeline-date">2026<br>Maj</div>
+                  <div class="timeline-content">
+                    <h3>Skierowanie na operację zaćmy</h3>
+                    <p>Decyzja o kwalifikacji do zabiegu na prawym oku. Zalecono odstawienie leków przeciwzakrzepowych.</p>
+                    <span class="tag warn">Ważne planowanie</span>
+                  </div>
+                </div>
+
+                <div class="timeline-node">
+                  <div class="timeline-date">2025<br>Wrz</div>
+                  <div class="timeline-content">
+                    <h3>Zmiana leków kardiologicznych</h3>
+                    <p>Wprowadzenie nowych leków regulujących ciśnienie po epizodzie migotania przedsionków.</p>
+                    <span class="tag">Kardiologia</span>
+                  </div>
+                </div>
+
+                <div class="timeline-node">
+                  <div class="timeline-date">2023<br>Lut</div>
+                  <div class="timeline-content">
+                    <h3>Rozpoznanie Cukrzycy Typu 2</h3>
+                    <p>Wdrożenie diety oraz leczenia doustnego. Systematyczna kontrola glikemii.</p>
+                    <span class="tag">Diabetologia</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="content-card" id="bezpieczenstwo">
+              <h2>Korelacja faktów</h2>
+              <p>Zestawienie tych danych pozwala lekarzowi na szybkie wychwycenie zależności. Na przykład planowany zabieg okulistyczny wymaga modyfikacji leczenia kardiologicznego z powodu przeciwzakrzepowych właściwości stosowanych leków. Gdy mamy "Mapę historii", lekarz na pierwszy rzut oka dostrzega takie konflikty.</p>
+              <a class="button primary" style="margin-top: 20px;" href="demo.html?start=1">Zobacz interaktywne Demo</a>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-grid">
+        <div class="footer-copy">
+          <p><strong>Pacjent360™</strong> Projekt Open Source dla poprawy jakości komunikacji z lekarzem.<br>
+          <small>© 2026 Wszelkie prawa zastrzeżone.</small></p>
+        </div>
+        <nav class="footer-nav">
+          <a href="engineering.html">Architektura</a>
+          <a href="disclaimer.html">Zastrzeżenie</a>
+          <a href="privacy.html">Prywatność</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

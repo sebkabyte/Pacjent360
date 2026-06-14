@@ -836,7 +836,17 @@ footer {
   margin-top: 24px;
 }
 
-.trust-strip span {
+.trust-strip a.trust-link {
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.trust-strip a.trust-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(16, 36, 42, 0.15);
+}
+
+.trust-strip span, .trust-strip a.trust-link {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -1429,7 +1439,7 @@ footer {
     margin-top: 16px;
   }
 
-  .trust-strip span {
+  .trust-strip span, .trust-strip a.trust-link {
     min-height: 30px;
     padding: 5px 9px;
     font-size: 12px;
