@@ -19,8 +19,17 @@ if (filter) {
   });
 }
 
-const i18nElements = [...document.querySelectorAll("[data-i18n]")];
-const plCopy = Object.fromEntries(i18nElements.map((element) => [element.dataset.i18n, element.textContent]));
+// Elementy tłumaczone: klucz w słowniku (data-i18n) ALBO tekst EN na elemencie
+// (data-en). Oryginał PL zapisujemy na elemencie, by poprawnie wracać do PL.
+const i18nElements = [...document.querySelectorAll("[data-i18n],[data-en]")];
+i18nElements.forEach((element) => {
+  if (element.dataset.plOriginal === undefined) element.dataset.plOriginal = element.textContent;
+});
+const plCopy = Object.fromEntries(
+  i18nElements
+    .filter((element) => element.dataset.i18n)
+    .map((element) => [element.dataset.i18n, element.dataset.plOriginal])
+);
 
 const metaCopy = {
   pl: {
@@ -201,7 +210,12 @@ function setLanguage(lang, options = {}) {
   const copy = languageCopy[normalized] || languageCopy.pl;
   i18nElements.forEach((element) => {
     const key = element.dataset.i18n;
-    if (copy[key]) element.textContent = copy[key];
+    if (normalized === "en") {
+      const enText = element.dataset.en || (key && copy[key]);
+      if (enText) element.textContent = enText;
+    } else {
+      element.textContent = element.dataset.plOriginal;
+    }
   });
   document.querySelectorAll(".brand-name").forEach((element) => {
     element.innerHTML = brandCopy[normalized];
