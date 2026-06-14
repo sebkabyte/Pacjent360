@@ -23,7 +23,8 @@ if (filter) {
 // (data-en). Oryginał PL zapisujemy na elemencie, by poprawnie wracać do PL.
 const i18nElements = [...document.querySelectorAll("[data-i18n],[data-en]")];
 i18nElements.forEach((element) => {
-  if (element.dataset.plOriginal === undefined) element.dataset.plOriginal = element.textContent;
+  // Oryginał PL jako innerHTML, by data-en mogło nieść formatowanie (np. <strong>, badge).
+  if (element.dataset.plOriginal === undefined) element.dataset.plOriginal = element.innerHTML;
 });
 const plCopy = Object.fromEntries(
   i18nElements
@@ -212,9 +213,9 @@ function setLanguage(lang, options = {}) {
     const key = element.dataset.i18n;
     if (normalized === "en") {
       const enText = element.dataset.en || (key && copy[key]);
-      if (enText) element.textContent = enText;
+      if (enText) element.innerHTML = enText;
     } else {
-      element.textContent = element.dataset.plOriginal;
+      element.innerHTML = element.dataset.plOriginal;
     }
   });
   document.querySelectorAll(".brand-name").forEach((element) => {
