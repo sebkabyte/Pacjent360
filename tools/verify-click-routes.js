@@ -251,28 +251,52 @@ async function assertLandingRoutes(client, baseUrl) {
         .filter((item) => item.href.startsWith('#') && !ids.has(item.href.slice(1)))
         .map((item) => item.href),
       demoLinks: hrefs.filter((item) => item.href.startsWith('demo.html')),
-      heroStartCount: document.querySelectorAll('.hero-actions a[href="demo.html?start=1"]').length
+      heroStartCount: document.querySelectorAll('.hero-actions a[href="demo.html?start=1&lang=pl"]').length
     };
   })()`);
   assert(!landing.missingAnchors.length, `Landing has missing anchors: ${landing.missingAnchors.join(", ")}`);
-  assert(landing.heroStartCount === 1, "Landing hero should have exactly one clean-start demo CTA");
-  assert(landing.demoLinks.length >= 4 && landing.demoLinks.every((item) => item.href === "demo.html?start=1"), `All landing demo links should use demo.html?start=1: ${JSON.stringify(landing.demoLinks)}`);
+  assert(landing.heroStartCount === 1, "Landing hero should have exactly one clean-start PL demo CTA");
+  assert(landing.demoLinks.length >= 4 && landing.demoLinks.every((item) => item.href === "demo.html?start=1&lang=pl"), `All landing demo links should use demo.html?start=1&lang=pl: ${JSON.stringify(landing.demoLinks)}`);
   assert(!landing.text.includes("Start gry") && !landing.text.includes("Demo jako gra w role"), "Landing should not use game wording");
 
-  await client.evaluate(`document.querySelector('.hero-actions a[href="demo.html?start=1"]')?.click()`);
+  await client.evaluate(`document.querySelector('.hero-actions a[href="demo.html?start=1&lang=pl"]')?.click()`);
   await waitForDemoReady(client);
   const afterHero = await snapshotDemo(client);
   assert(afterHero.activeView === "roleStart" && afterHero.roleCards === 3 && afterHero.scenarioCards === 0, `Hero CTA should open perspective choice: ${JSON.stringify(afterHero)}`);
+
+  await setViewport(client, 1366, 900, false);
+  await navigate(client, `${baseUrl}/index.html?lang=en&click-routes-en=${Date.now()}`);
+  const landingEn = await client.evaluate(`(() => {
+    const hrefs = [...document.querySelectorAll('a[href]')].map((link) => ({
+      text: link.textContent.replace(/\\s+/g, ' ').trim(),
+      href: link.getAttribute('href'),
+      visible: Boolean(link.offsetWidth || link.offsetHeight)
+    }));
+    return {
+      htmlLang: document.documentElement.lang,
+      demoLinks: hrefs.filter((item) => item.href.startsWith('demo.html')),
+      heroStartCount: document.querySelectorAll('.hero-actions a[href="demo.html?start=1&lang=en"]').length
+    };
+  })()`);
+  assert(landingEn.htmlLang === "en", `English landing should set html lang=en: ${JSON.stringify(landingEn)}`);
+  assert(landingEn.heroStartCount === 1, "English landing hero should have exactly one clean-start EN demo CTA");
+  assert(landingEn.demoLinks.length >= 4 && landingEn.demoLinks.every((item) => item.href === "demo.html?start=1&lang=en"), `All English landing demo links should use demo.html?start=1&lang=en: ${JSON.stringify(landingEn.demoLinks)}`);
+  await client.evaluate(`document.querySelector('.hero-actions a[href="demo.html?start=1&lang=en"]')?.click()`);
+  await waitForDemoReady(client);
+  const afterHeroEn = await snapshotDemo(client);
+  const afterHeroEnUrl = await client.evaluate(`location.href`);
+  assert(afterHeroEnUrl.includes("lang=en"), `English hero CTA should preserve lang=en in demo URL: ${afterHeroEnUrl}`);
+  assert(afterHeroEn.activeView === "roleStart" && afterHeroEn.roleCards === 3 && afterHeroEn.scenarioCards === 0, `English hero CTA should open perspective choice: ${JSON.stringify(afterHeroEn)}`);
 
   await setViewport(client, 390, 844, true);
   await navigate(client, `${baseUrl}/index.html?mobile-click-routes=${Date.now()}`);
   const mobileNav = await client.evaluate(`(() => ({
     jumpVisible: Boolean(document.querySelector('.mobile-jump-nav')?.offsetWidth || document.querySelector('.mobile-jump-nav')?.offsetHeight),
-    startCount: document.querySelectorAll('.mobile-jump-nav a[href="demo.html?start=1"]').length,
+    startCount: document.querySelectorAll('.mobile-jump-nav a[href="demo.html?start=1&lang=pl"]').length,
     toggleVisible: Boolean(document.querySelector('[data-nav-toggle]')?.offsetWidth || document.querySelector('[data-nav-toggle]')?.offsetHeight)
   }))()`);
   assert(mobileNav.jumpVisible && mobileNav.startCount === 1 && mobileNav.toggleVisible, `Mobile landing navigation should expose clean Start: ${JSON.stringify(mobileNav)}`);
-  await client.evaluate(`document.querySelector('.mobile-jump-nav a[href="demo.html?start=1"]')?.click()`);
+  await client.evaluate(`document.querySelector('.mobile-jump-nav a[href="demo.html?start=1&lang=pl"]')?.click()`);
   await waitForDemoReady(client);
   const afterMobileStart = await snapshotDemo(client);
   assert(afterMobileStart.activeView === "roleStart" && afterMobileStart.roleCards === 3 && afterMobileStart.scenarioCards === 0, `Mobile Start should open perspective choice: ${JSON.stringify(afterMobileStart)}`);
