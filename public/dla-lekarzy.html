@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#10242a" />
+    <title>Dla Lekarzy | Pacjent360™</title>
+    <meta name="description" content="Odzyskaj czas z każdej wizyty. Koniec z przepisywaniem danych z pogniecionych kartek i wypisów." />
+    <link rel="canonical" href="https://pacjent360.com.pl/dla-lekarzy.html" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="brand/tokens.css" />
+    <link rel="stylesheet" href="brand/components.css" />
+    <link rel="stylesheet" href="assets/story.css" />
+    <style>
+      .b2b-highlight {
+        color: var(--accent);
+        font-weight: 700;
+      }
+      .pain-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-top: 24px;
+      }
+      .pain-card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 24px;
+        transition: transform 0.2s ease, border-color 0.2s ease;
+      }
+      .pain-card:hover {
+        transform: translateY(-2px);
+        border-color: #d32f2f;
+      }
+      .pain-icon {
+        width: 48px;
+        height: 48px;
+        background: #ffebee;
+        color: #d32f2f;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        margin-bottom: 16px;
+      }
+      .pain-card h3 {
+        margin-top: 0;
+        font-size: 1.1rem;
+        color: var(--ink);
+      }
+      .pain-card p {
+        margin: 0;
+        font-size: 0.95rem;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      
+      .solution-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin-top: 24px;
+      }
+      .solution-row {
+        background: #f7fbfa;
+        border: 1px solid var(--accent);
+        border-radius: 16px;
+        padding: 24px;
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+      }
+      .solution-icon {
+        width: 54px;
+        height: 54px;
+        background: var(--mint);
+        color: var(--accent);
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+      }
+      .solution-content h3 {
+        margin: 0 0 8px 0;
+        font-size: 1.15rem;
+      }
+      .solution-content p {
+        margin: 0;
+        font-size: 0.95rem;
+        color: var(--muted);
+      }
+
+      @media (max-width: 768px) {
+        .pain-grid { grid-template-columns: 1fr; }
+        .solution-row { flex-direction: column; gap: 16px; }
+      }
+    </style>
+  </head>
+  <body data-register="story">
+    <a class="skip-link" href="#main-content">Przejdź do treści</a>
+
+    <header class="site-header">
+      <div class="nav-inner">
+        <a class="brand" href="index.html" aria-label="Pacjent360">
+          <span class="brand-mark">360°</span>
+          <span><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong><small>Brief przed wizytą</small></span>
+        </a>
+        <nav class="main-nav" aria-label="Sekcje strony">
+          <a href="index.html#problem">Problem</a>
+          <a href="index.html#how">Rozwiązanie</a>
+          <a href="index.html#audiences">Dla kogo</a>
+          <a href="dla-lekarzy.html" class="active">Dla Lekarzy</a>
+          <a class="cta-link" href="demo.html?start=1">Demo</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="subpage-hero">
+        <div class="container">
+          <p class="eyebrow">PERSPEKTYWA LEKARZA</p>
+          <h1>Odzyskaj do 30% czasu z każdej wizyty. Koniec z "Pajama Time".</h1>
+          <p class="lead">Lekarze spędzają średnio 2 godziny na papierologii na każdą godzinę pracy z pacjentem. Pacjent360™ zastępuje chaos ustrukturyzowanym briefem gotowym do importu.</p>
+        </div>
+      </section>
+
+      <section class="container section">
+        <div class="engineering-layout">
+          <aside class="side-nav">
+            <a href="#bolaczki">Codzienne bolączki</a>
+            <a href="#rozwiazanie">Kokpit Lekarza w 90s</a>
+            <a href="#compliance">Wsparcie, nie diagnoza</a>
+          </aside>
+          
+          <div class="subpage-content">
+            
+            <article class="content-card" id="bolaczki">
+              <h2>Znamy Twój ból (EHR Fatigue)</h2>
+              <p>Zamiast patrzeć na pacjenta, pierwsze 7 minut wizyty spędzasz przed monitorem. Znasz to?</p>
+              
+              <div class="pain-grid">
+                <div class="pain-card">
+                  <div class="pain-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                  </div>
+                  <h3>Zjawisko "Kopiuj-Wklej"</h3>
+                  <p>Pacjent przynosi pogniecione wypisy, zamazane PDFy z telefonu. Musisz ręcznie przepisywać leki i wyniki do systemu placówki (HIS).</p>
+                </div>
+                
+                <div class="pain-card">
+                  <div class="pain-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  </div>
+                  <h3>"Takie małe, białe tabletki"</h3>
+                  <p>Wywiad z pacjentem, który nie pamięta nazw leków ani dawkowania. Brak czasu na rzetelną analizę interakcji.</p>
+                </div>
+                
+                <div class="pain-card">
+                  <div class="pain-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                  </div>
+                  <h3>Szum informacyjny</h3>
+                  <p>Część danych jest w IKP, część w teczce pacjenta. Brak jasnej osi czasu sprawia, że szukasz kluczowych informacji w chaosie.</p>
+                </div>
+
+                <div class="pain-card">
+                  <div class="pain-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                  </div>
+                  <h3>Trudna komunikacja</h3>
+                  <p>Zaburzona relacja z pacjentem, który czuje, że nie jest słuchany, ponieważ lekarz w pośpiechu przeszukuje komputer.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="content-card" id="rozwiazanie">
+              <h2>Zamiast chaosu – ustrukturyzowany Brief</h2>
+              <p>Platforma Pacjent360 nie dodaje Ci kolejnego systemu, do którego musisz się logować. Daje Ci wynik pracy Asystentów AI w postaci czytelnego raportu gotowego w 90 sekund.</p>
+
+              <div class="solution-grid">
+                <div class="solution-row">
+                  <div class="solution-icon">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  </div>
+                  <div class="solution-content">
+                    <h3>Wyekstrahowane Leki (z OCR)</h3>
+                    <p>Zamiast czytać wyblakły wypis, otrzymujesz gotową listę leków zidentyfikowanych z obrazu przez AI. Wystarczy jedno kliknięcie, by je zweryfikować z pacjentem.</p>
+                  </div>
+                </div>
+
+                <div class="solution-row">
+                  <div class="solution-icon">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  </div>
+                  <div class="solution-content">
+                    <h3>Oś Czasu (Timeline)</h3>
+                    <p>Wszystkie wyniki, wypisy i obserwacje ułożone chronologicznie. Natychmiast widzisz ciąg przyczynowo-skutkowy.</p>
+                  </div>
+                </div>
+
+                <div class="solution-row">
+                  <div class="solution-icon">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                  </div>
+                  <div class="solution-content">
+                    <h3>Zgodność z globalnym standardem</h3>
+                    <p>Docelowo, przygotowany przez pacjenta wywiad jest mapowany na globalny standard (np. HL7 FHIR), co pozwoli na błyskawiczne zassanie danych wprost do Twojego systemu HIS. Zero ręcznego wklepywania.</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="content-card" id="compliance">
+              <h2>My porządkujemy. Ty leczysz. (Compliance)</h2>
+              <p>Platforma Pacjent360 działa w reżimie ścisłego rozdzielenia technologii od medycyny (Clinical Decision Support).</p>
+              <ul style="line-height: 1.6;">
+                <li><strong>AI nie diagnozuje:</strong> System nie wydaje rozstrzygnięć. Zamienia bałagan w ustrukturyzowane źródła.</li>
+                <li><strong>Brak źródła jest jawny:</strong> Jeśli pacjent ma "obserwację opiekuna", system wyraźnie to flaguje. Nie mylisz faktu klinicznego z odczuciem pacjenta.</li>
+                <li><strong>Pełna kontrola Lekarza:</strong> Użytkownik w widoku <span class="b2b-highlight">Lekarz360</span> decyduje, co wchodzi w skład oficjalnej dokumentacji medycznej. System ułatwia to zadanie, ale to Ty jesteś kapitanem statku.</li>
+              </ul>
+              <div style="margin-top: 32px; padding-top: 32px; border-top: 1px solid var(--line);">
+                <h3 style="margin-top:0;">Przetestuj perspektywę lekarza</h3>
+                <p>Kliknij poniżej, aby zobaczyć kokpit lekarza z przykładowymi danymi pacjenta. Zobaczysz w praktyce, jak wygląda uporządkowany przez system zestaw informacji.</p>
+                <a class="button primary" href="demo.html?start=1">Zobacz Demo (Kokpit Lekarza)</a>
+              </div>
+            </article>
+
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-grid">
+        <div class="footer-copy">
+          <p><strong>Pacjent360™</strong> Projekt Open Source dla poprawy jakości komunikacji z lekarzem.<br>
+          <small>© 2026 Wszelkie prawa zastrzeżone.</small></p>
+        </div>
+        <nav class="footer-nav">
+          <a href="engineering.html">Architektura</a>
+          <a href="disclaimer.html">Zastrzeżenie</a>
+          <a href="privacy.html">Prywatność</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
