@@ -2,64 +2,16 @@
 <html lang="pl">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#10242a" />
-    <title>O projekcie (README) | Pacjent360™</title>
-    <meta name="description" content="Status projektu, wizja open-source i cele walidacji. Oficjalne repozytorium projektu Pacjent360™." />
+    <title>O projekcie (README) | Pacjent360&trade;</title>
+    <meta name="description" content="Publiczny opis projektu Pacjent360: status alpha, granice bezpieczeństwa, repozytorium open source i dalszy kierunek rozwoju." />
     <link rel="canonical" href="https://pacjent360.com.pl/readme.html" />
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="brand/tokens.css" />
     <link rel="stylesheet" href="brand/components.css" />
     <link rel="stylesheet" href="site.css?v=20260614-typography" />
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <style>
-      .markdown-content {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 2rem 1rem;
-        font-family: var(--font-stack-base);
-        color: var(--navy);
-        line-height: 1.6;
-      }
-      .markdown-content h1, .markdown-content h2, .markdown-content h3 {
-        color: var(--teal);
-        margin-top: 2rem;
-        margin-bottom: 1rem;
-        font-family: var(--font-stack-display);
-      }
-      .markdown-content h1 { font-size: 2.5rem; }
-      .markdown-content h2 { font-size: 1.8rem; border-bottom: 1px solid rgba(16, 36, 42, 0.1); padding-bottom: 0.5rem; }
-      .markdown-content a { color: var(--blue); text-decoration: none; }
-      .markdown-content a:hover { text-decoration: underline; }
-      .markdown-content code {
-        background: rgba(16, 36, 42, 0.05);
-        padding: 0.2rem 0.4rem;
-        border-radius: 4px;
-        font-family: monospace;
-        font-size: 0.9em;
-      }
-      .markdown-content pre {
-        background: #f4f7f6;
-        padding: 1rem;
-        border-radius: 8px;
-        overflow-x: auto;
-      }
-      .markdown-content pre code {
-        background: none;
-        padding: 0;
-      }
-      .markdown-content blockquote {
-        margin: 1.5rem 0;
-        padding: 1rem 1.5rem;
-        border-left: 4px solid var(--teal);
-        background: rgba(13, 153, 153, 0.05);
-        font-style: italic;
-      }
-      .markdown-content ul, .markdown-content ol { margin-bottom: 1.5rem; padding-left: 2rem; }
-      .markdown-content li { margin-bottom: 0.5rem; }
-      .loading-readme { text-align: center; padding: 4rem; color: var(--steel); }
-    </style>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Przejdź do treści</a>
@@ -67,8 +19,8 @@
     <header class="site-header">
       <div class="nav-inner">
         <a class="brand" href="index.html" aria-label="Pacjent360">
-          <span class="brand-mark">360°</span>
-          <span><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong><small>Alpha do walidacji</small></span>
+          <span class="brand-mark">360&deg;</span>
+          <span><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">&trade;</sup></strong><small>Alpha do walidacji</small></span>
         </a>
         <nav class="main-nav" aria-label="Sekcje strony">
           <a href="index.html#problem">Problem</a>
@@ -80,53 +32,81 @@
     </header>
 
     <main id="main-content">
-      <section class="subpage-hero" style="background: var(--navy); color: white;">
-        <div class="container" style="text-align: center;">
-          <p class="eyebrow" style="color: var(--teal-light);">Dokumentacja Główna</p>
-          <h1 style="color: white;">Pełny obraz projektu</h1>
-          <p class="lead" style="color: rgba(255,255,255,0.8); max-width: 600px; margin: 0 auto;">Poniższa treść ładuje się dynamicznie z pliku README.md naszego repozytorium open source. Stanowi ostateczne źródło wiedzy o wizji i statusie prac.</p>
+      <section class="subpage-hero">
+        <div class="container">
+          <p class="eyebrow">O projekcie</p>
+          <h1>Pacjent360&trade; porządkuje kontekst pacjenta przed wizytą.</h1>
+          <p class="lead">To niezależny prototyp open source. Pokazuje, jak wyniki, wypisy, leki, pytania, obserwacje opiekuna i zgody mogą ułożyć się w jedną historię do rozmowy z lekarzem.</p>
         </div>
       </section>
 
       <section class="container section">
-        <div id="readme-container" class="markdown-content">
-          <div class="loading-readme">Pobieranie pliku README.md...</div>
+        <div class="subpage-layout">
+          <nav class="side-nav" aria-label="Spis treści">
+            <a href="#what">Czym jest</a>
+            <a href="#alpha">Co działa w alpha</a>
+            <a href="#boundaries">Granice</a>
+            <a href="#repo">Repozytorium</a>
+            <a href="#contact">Kontakt</a>
+          </nav>
+
+          <div class="subpage-content">
+            <article class="content-card" id="what">
+              <h2>Czym jest Pacjent360&trade;</h2>
+              <p>Pacjent360&trade; jest warstwą kontekstu nad rozproszonymi materiałami medycznymi. Zamiast kolejnego folderu z plikami, projekt pokazuje krótką historię pacjenta: co wiadomo, czego brakuje, co jest niepewne i co warto omówić podczas wizyty.</p>
+              <p>Pierwszy klin produktu to przygotowanie wizyty: pacjent lub opiekun zbiera dokumenty, leki, wyniki i pytania, a lekarz otrzymuje czytelny brief ze źródłami.</p>
+            </article>
+
+            <article class="content-card" id="alpha">
+              <h2>Co działa w wersji alpha</h2>
+              <ul>
+                <li>strona publiczna z opisem problemu, rozwiązania i kierunku rozwoju,</li>
+                <li>demo na fikcyjnych przypadkach pacjentów, bez danych realnych,</li>
+                <li>trzy perspektywy: Lekarz360, Pacjent360 i Opiekun360,</li>
+                <li>historia pacjenta z dokumentami, lekami, wynikami, pytaniami i zgodami,</li>
+                <li>repozytorium open source z walidatorami, bramkami bezpieczeństwa i dokumentacją.</li>
+              </ul>
+            </article>
+
+            <article class="content-card" id="boundaries">
+              <h2>Granice bezpieczeństwa</h2>
+              <p>Pacjent360&trade; nie diagnozuje, nie ocenia pilności i nie rekomenduje terapii. System porządkuje informacje, ale decyzja zawsze należy do lekarza.</p>
+              <p>Demo jest statycznym prototypem z fikcyjnymi danymi. Nie integruje się z IKP, P1, NFZ ani systemami placówek. Nie przechowuje loginów i nie pobiera danych z systemów publicznych.</p>
+            </article>
+
+            <article class="content-card" id="repo">
+              <h2>Repozytorium i pełny README</h2>
+              <p>Ta strona jest bezpiecznym, statycznym opisem projektu. Pełny techniczny README, historia zmian i kod źródłowy są dostępne w publicznym repozytorium GitHub.</p>
+              <p><a class="button secondary" href="https://github.com/sebkabyte/Pacjent360">Otwórz repozytorium na GitHub</a></p>
+            </article>
+
+            <article class="content-card" id="contact">
+              <h2>Kontakt</h2>
+              <p>Jeśli chcesz pomóc w walidacji, porozmawiać o partnerstwie albo sprawdzić projekt od strony medycznej, produktowej lub technicznej, napisz do projektu.</p>
+              <p><a class="button primary" href="mailto:kontakt@pacjent360.com.pl">Napisz do projektu</a></p>
+            </article>
+          </div>
         </div>
       </section>
     </main>
 
     <footer class="footer">
       <div class="container footer-grid">
-        <div><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong><br><span>Niezależny prototyp open source. Nie zastępuje lekarza. Demo używa fikcyjnych danych.</span></div>
+        <div><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">&trade;</sup></strong><br><span>Niezależny prototyp open source. Nie zastępuje lekarza. Demo używa fikcyjnych danych.</span></div>
         <nav aria-label="Stopka">
           <a href="demo.html?start=1">Demo alpha</a>
-          <a href="readme.html">O projekcie (README)</a>
+          <a href="readme.html">O projekcie</a>
           <a href="https://github.com/sebkabyte/Pacjent360">GitHub</a>
           <a href="engineering.html">Engineering</a>
           <a href="ditl.html">Decyzja Lekarza</a>
           <a href="agents.html">Granice AI</a>
           <a href="soczewki.html">Macierz / Soczewki</a>
           <a href="investors.html">Inwestorzy</a>
+          <a href="wspoltworcy.html">Współtwórcy</a>
           <a href="disclaimer.html">Zastrzeżenie medyczne</a>
           <a href="privacy.html">Prywatność</a>
         </nav>
       </div>
     </footer>
-
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        fetch('https://raw.githubusercontent.com/sebkabyte/Pacjent360/main/README.md')
-          .then(response => {
-            if (!response.ok) throw new Error('Nie udało się wczytać pliku README.md');
-            return response.text();
-          })
-          .then(text => {
-            document.getElementById('readme-container').innerHTML = marked.parse(text);
-          })
-          .catch(error => {
-            document.getElementById('readme-container').innerHTML = '<div style="color: var(--error);">Wystąpił błąd podczas wczytywania dokumentacji: ' + error.message + '</div>';
-          });
-      });
-    </script>
   </body>
 </html>

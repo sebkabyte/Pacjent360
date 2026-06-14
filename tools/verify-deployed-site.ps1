@@ -214,6 +214,7 @@ $index = [string]$indexResponse.Content
 $demo = Get-HttpContent $demoUrl
 $disclaimer = Get-HttpContent $disclaimerUrl
 $privacy = Get-HttpContent $privacyUrl
+$readme = Get-HttpContent (Join-WebPath $base "readme.html")
 $maintenance = Get-HttpContent $maintenanceUrl
 $health = Get-HttpContent $healthUrl
 $app = Get-HttpContent (Join-WebPath $base "app.js")
@@ -298,6 +299,8 @@ Assert-True ($privacy.Contains("assets/lucide.min.js") -and $privacy.Contains("0
 Assert-True ($privacy.Contains('rel="canonical" href="https://pacjent360.com.pl/privacy.html"')) "privacy.html should include canonical URL"
 Assert-True ($disclaimer.Contains("Pacjent360")) "disclaimer.html should contain project name"
 Assert-True ($disclaimer.Contains('rel="canonical" href="https://pacjent360.com.pl/disclaimer.html"')) "disclaimer.html should include canonical URL"
+Assert-True ($readme.Contains("Pacjent360") -and $readme.Contains("O projekcie")) "readme.html should contain public project summary"
+Assert-True (-not ($readme.Contains("raw.githubusercontent.com") -or $readme.Contains("cdn.jsdelivr.net") -or $readme.Contains("fetch("))) "readme.html should not depend on live external README fetching"
 Assert-True ($maintenance.Contains("Pacjent360")) "maintenance.html should contain project name"
 Assert-True ($health.Contains("project=pacjent360") -and $health.Contains("contains_patient_data=false")) "health.txt should expose static deployment markers"
 Assert-True ($health.Contains("medical_device=false") -and $health.Contains("clinical_decision_support=false")) "health.txt should expose safety boundary markers"
