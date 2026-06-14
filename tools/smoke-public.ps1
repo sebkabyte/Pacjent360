@@ -81,6 +81,7 @@ try {
   $privacy = Get-SmokeText -BaseUrl $baseUrl -Path "privacy.html"
   $disclaimer = Get-SmokeText -BaseUrl $baseUrl -Path "disclaimer.html"
   $readme = Get-SmokeText -BaseUrl $baseUrl -Path "readme.html"
+  $contributors = Get-SmokeText -BaseUrl $baseUrl -Path "wspoltworcy.html"
   $maintenance = Get-SmokeText -BaseUrl $baseUrl -Path "maintenance.html"
   $health = Get-SmokeText -BaseUrl $baseUrl -Path "health.txt"
 
@@ -126,6 +127,7 @@ try {
   Assert-True ($disclaimer.Contains('rel="canonical" href="https://pacjent360.com.pl/disclaimer.html"')) "disclaimer.html should include canonical URL"
   Assert-True ($readme.Contains("Pacjent360") -and $readme.Contains("O projekcie")) "readme.html should contain public project summary"
   Assert-True (-not ($readme.Contains("raw.githubusercontent.com") -or $readme.Contains("cdn.jsdelivr.net") -or $readme.Contains("fetch("))) "readme.html should not depend on live external README fetching"
+  Assert-True ($contributors.Contains("Pacjent360") -and $contributors.Contains("sweat equity")) "wspoltworcy.html should contain public contributors page"
   Assert-True ($maintenance.Contains("Pacjent360")) "maintenance.html should contain project name"
   Assert-True ($health.Contains("project=pacjent360") -and $health.Contains("contains_patient_data=false")) "health.txt should expose static deployment markers"
 
