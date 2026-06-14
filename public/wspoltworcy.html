@@ -11,21 +11,24 @@
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="brand/tokens.css" />
     <link rel="stylesheet" href="brand/components.css" />
-    <link rel="stylesheet" href="site.css?v=20260614-typography" />
+    <link rel="stylesheet" href="assets/story.css" />
+    <script src="assets/story.js" defer></script>
   </head>
-  <body>
+  <body data-register="story">
     <a class="skip-link" href="#main-content">Przejdź do treści</a>
 
     <header class="site-header">
       <div class="nav-inner">
         <a class="brand" href="index.html" aria-label="Pacjent360">
           <span class="brand-mark">360&deg;</span>
-          <span><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">&trade;</sup></strong><small>Alpha do walidacji</small></span>
+          <span><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">&trade;</sup></strong><small>Brief przed wizytą</small></span>
         </a>
-        <nav class="main-nav" aria-label="Sekcje strony">
+        <button class="nav-toggle" data-nav-toggle aria-label="Otwórz menu" aria-expanded="false" aria-controls="mainNav">☰</button>
+        <nav class="main-nav" data-nav id="mainNav" aria-label="Sekcje strony">
           <a href="index.html#problem">Problem</a>
-          <a href="index.html#how">Rozwiązanie</a>
-          <a href="investors.html">Inwestorzy</a>
+          <a href="index.html#how">Jak działa</a>
+          <a href="index.html#audiences">Dla kogo</a>
+          <a href="index.html#validate">Walidacja</a>
           <a class="cta-link" href="demo.html?start=1">Demo</a>
         </nav>
       </div>
@@ -54,7 +57,7 @@
             <article class="content-card" id="manifest">
               <h2>Manifest współtwórców</h2>
               <p>Ten projekt nie potrzebuje wyłącznie wykonawców od zadań. Potrzebuje ludzi, którzy potrafią wziąć odpowiedzialność za fragment systemu: lekarza, który powie gdzie kończy się użyteczny brief, inżyniera, który nie pomyli prototypu z produkcją, eksperta RODO, który zatrzyma ryzykowny skrót, oraz projektanta, który umie uprościć trudną decyzję.</p>
-              <p>Inspiruje nas energia wczesnych zespołów produktowych: mała grupa, wysoka sprawczość, jasne granice i odwaga, by zbudować coś lepszego niż kolejny folder z PDF-ami.</p>
+              <p>Inspiruje nas energia wczesnych zespołów produktowych: mała grupa, wysoka sprawczość, jasne granice i odwaga, by ustanowić nowy globalny standard, który połączy miliony pacjentów z placówkami, a nie tylko zbudować kolejny folder z PDF-ami.</p>
             </article>
 
             <article class="content-card" id="roles">

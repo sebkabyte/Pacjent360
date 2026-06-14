@@ -1086,3 +1086,41 @@ body[data-register="story"] .footer a {
     justify-content: center;
   }
 }
+
+/* ── Unifikacja serwisu (sprint 2026-06-14) ───────────────────────
+   Kanoniczny subpage shell wg badań o czytaniu (F-pattern, NN/g):
+   TREŚĆ po lewej (oko skanuje lewą krawędź, ~70 znaków/linia),
+   sticky spis "Na tej stronie" po PRAWEJ. Zakotwiczone pod
+   data-register="story", by wygrać nad wcześniejszymi override'ami. */
+
+/* Hero podstrony: płaski, lekki gradient, czytelny h1 */
+body[data-register="story"] .subpage-hero{padding:72px 0 28px;background:radial-gradient(circle at 86% 0%,rgba(21,163,154,.14),transparent 42%),#f7fbfa}
+body[data-register="story"] .subpage-hero h1{font-size:clamp(2rem,3.4vw,3.2rem);line-height:1.05;letter-spacing:-.03em;margin:0 0 16px;max-width:20ch}
+body[data-register="story"] .subpage-hero .lead{max-width:62ch}
+
+/* Wielosekcyjne: treść lewo (1fr) + sticky spis prawo (240px) */
+body[data-register="story"] .subpage-layout{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:40px;align-items:start}
+body[data-register="story"] .subpage-content{grid-column:1;grid-row:1;display:flex;flex-direction:column;gap:20px;min-width:0;max-width:760px}
+body[data-register="story"] .subpage-content .content-card h2{font-size:clamp(1.45rem,2.2vw,1.9rem);letter-spacing:-.02em}
+body[data-register="story"] .subpage-content .content-card p,
+body[data-register="story"] .subpage-content .content-card li{max-width:66ch}
+body[data-register="story"] .subpage-layout .side-nav{grid-column:2;grid-row:1;font-size:.92rem}
+body[data-register="story"] .subpage-layout .side-nav::before{content:"Na tej stronie";display:block;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+
+/* Długie/prawne: jedna czytelna kolumna, bez bocznego spisu */
+body[data-register="story"] .subpage-article{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+body[data-register="story"] .subpage-article h2{font-size:clamp(1.45rem,2.2vw,1.9rem);letter-spacing:-.02em;margin:10px 0 2px}
+body[data-register="story"] .subpage-article p,
+body[data-register="story"] .subpage-article li{max-width:68ch;color:#4d6870}
+
+/* Kafelki-skróty w hero strony głównej: spójne, nie "wyskakują" */
+body[data-register="story"] .trust-strip span,
+body[data-register="story"] .trust-strip a.trust-link{font-weight:600;color:var(--ink);box-shadow:0 4px 14px rgba(16,36,42,.06);letter-spacing:-.01em;transition:border-color .18s ease,box-shadow .18s ease}
+body[data-register="story"] .trust-strip a.trust-link:hover{transform:none;border-color:var(--accent);box-shadow:0 6px 18px rgba(16,36,42,.1)}
+
+@media(max-width:860px){
+  body[data-register="story"] .subpage-layout{grid-template-columns:1fr;gap:18px}
+  body[data-register="story"] .subpage-content{grid-row:2;max-width:none}
+  body[data-register="story"] .subpage-layout .side-nav{grid-column:1;grid-row:1;position:static;top:auto;display:flex;flex-wrap:wrap;gap:8px}
+  body[data-register="story"] .subpage-hero{padding:48px 0 20px}
+}
