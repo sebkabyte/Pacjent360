@@ -287,6 +287,8 @@ async function assertLandingRoutes(client, baseUrl) {
   const afterHeroEnUrl = await client.evaluate(`location.href`);
   assert(afterHeroEnUrl.includes("lang=en"), `English hero CTA should preserve lang=en in demo URL: ${afterHeroEnUrl}`);
   assert(afterHeroEn.activeView === "roleStart" && afterHeroEn.roleCards === 3 && afterHeroEn.scenarioCards === 0, `English hero CTA should open perspective choice: ${JSON.stringify(afterHeroEn)}`);
+  assert(afterHeroEn.text.includes("Choose a 360") && afterHeroEn.text.includes("One story, three perspectives"), `English hero CTA should render English demo start copy: ${JSON.stringify(afterHeroEn)}`);
+  assert(!afterHeroEn.text.includes("Wybierz perspektyw") && !afterHeroEn.text.includes("Jedna historia, trzy perspektywy"), `English demo start should not leak Polish start copy: ${JSON.stringify(afterHeroEn)}`);
 
   await setViewport(client, 390, 844, true);
   await navigate(client, `${baseUrl}/index.html?mobile-click-routes=${Date.now()}`);

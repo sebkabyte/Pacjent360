@@ -1,4 +1,5 @@
 const STORAGE_KEY = "pacjent360-state-v11";
+const DEMO_LANGUAGE_STORAGE_KEY = "pacjent360-demo-lang";
 const PATIENT360_CONTRACT = globalThis.Patient360Contract;
 if (!PATIENT360_CONTRACT) {
   throw new Error("Missing patient360-contract.js");
@@ -105,6 +106,153 @@ const ROLE_META = Object.freeze({
     view: "caregiverPortal",
     promise: "Chcę pomóc bliskiej osobie w lekach, dokumentach i wizytach.",
     cta: "Wejdź do Opiekun360"
+  }
+});
+
+const DEMO_I18N = Object.freeze({
+  en: {
+    title: "Patient360 | Visit context demo",
+    skipLink: "Skip to demo content",
+    watermark: "CONCEPT PROTOTYPE — FICTIONAL DATA — DO NOT USE REAL PATIENT DATA",
+    brandName: "Patient360",
+    brandSubtitle: "Visit context and questions",
+    sidebar: {
+      aria: "Demo module navigation",
+      start: "Start",
+      roleStartTitle: "Choose perspective and scenario",
+      roleStart: "Start demo",
+      cockpits: "Cockpits",
+      doctorTitle: "Doctor360 cockpit",
+      patientTitle: "Patient360 cockpit",
+      caregiverTitle: "Caregiver360 cockpit",
+      library: "Data and sources",
+      interviewTitle: "Patient and caregiver interview",
+      interview: "Interview",
+      documentsTitle: "Document registry",
+      documents: "Documents",
+      timelineTitle: "Patient history",
+      timeline: "Patient history",
+      medicationsTitle: "Medications and allergies",
+      medications: "Medications",
+      observationsTitle: "Results and values reported by sources",
+      observations: "Results",
+      risksTitle: "Questions and gaps to discuss with the doctor",
+      risks: "Questions",
+      reportsTitle: "Context summary",
+      reports: "Summary",
+      consentTitle: "Consents and access",
+      consent: "Consents",
+      auditTitle: "Technical audit",
+      audit: "Audit",
+      footer: "Independent prototype. It is not a service of CeZ, NFZ, IKP or any other public e-health system.",
+      status: "Demo data, local",
+      disclaimer: "Medical disclaimer",
+      privacy: "Privacy"
+    },
+    topbar: {
+      patientLabel: "Scenario",
+      roleAria: "Choose demo perspective",
+      searchAria: "Search demo data",
+      searchPlaceholder: "Search documents, medications, results, questions...",
+      resetTitle: "Restore demo data",
+      printTitle: "Print demo preview"
+    },
+    evidence: {
+      aria: "Source index",
+      eyebrow: "How we know this",
+      title: "Demo sources",
+      collapseTitle: "Collapse sources panel",
+      clearTitle: "Clear source selection"
+    },
+    roles: {
+      doctor: {
+        label: "Doctor360",
+        promise: "I have 90 seconds to see what needs clarification.",
+        cta: "Open Doctor360"
+      },
+      patient: {
+        label: "Patient360",
+        promise: "I want to know what to prepare and what comes next.",
+        cta: "Open Patient360"
+      },
+      caregiver: {
+        label: "Caregiver360",
+        promise: "I want to help a close person with medications, documents and visits.",
+        cta: "Open Caregiver360"
+      }
+    },
+    roleStart: {
+      eyebrow: "One story, three perspectives",
+      title: "Choose a 360° perspective and see the same patient story",
+      body: "Patient360 shows one story through three lenses: Doctor360 for fast context, Patient360 for visit preparation and Caregiver360 for support within the consent scope.",
+      step: "Step 1",
+      question: "From which perspective are you viewing the story?"
+    },
+    scenario: {
+      progressRole: "Step 1",
+      progressPatient: "Step 2: choose patient",
+      changePerspective: "Change perspective",
+      step: "Step 2",
+      titlePrefix: "Choose the story you want to see in",
+      bodySuffix: "Each scenario opens a different cockpit but uses the same patient event history.",
+      selectedPerspective: "Selected perspective",
+      selectedPerspectiveBody: "This is a separate screen after choosing a perspective. Now choose a demo patient.",
+      patientsEyebrow: "Demo patients",
+      patientsTitle: "Three stories, three 360° cockpits",
+      goalLabel: "Goal of this perspective",
+      defaultSections: ["360° cockpit", "Patient history", "Next step"],
+      ages: "age"
+    },
+    scenarioSummaries: {
+      p1: "Senior patient preparing for a day procedure, with his daughter helping organize medications and documents.",
+      p2: "Independent adult patient preparing for a cardiology follow-up and medication review.",
+      p3: "Child patient whose parent organizes symptoms, observations, documents and questions before the visit."
+    },
+    scenarioGoals: {
+      doctor: {
+        p1: "See procedure context, medications to confirm and missing data before the decision.",
+        p2: "See cardiology context, medication discrepancies and questions for the conversation.",
+        p3: "See the child's history, parent observations and questions to clarify."
+      },
+      patient: {
+        p1: "Know what to prepare, what to ask and what documents are visible.",
+        p2: "Prepare results, medications and questions before the specialist visit.",
+        p3: "Support the parent-facing preparation path for the child's visit."
+      },
+      caregiver: {
+        p1: "Help within the shared consent scope: medications, documents, visits and observations.",
+        p2: "See why there is no active caregiver access for this patient.",
+        p3: "See the parent/caregiver view for a child patient."
+      }
+    },
+    scenarioSections: {
+      doctor: ["Brief", "Patient history", "Sources", "Questions"],
+      patient: ["What now", "Documents", "Medications", "Consents"],
+      caregiver: ["Consent scope", "Tasks", "Documents", "Observations"]
+    },
+    roleContext: {
+      title: "The same story, a different perspective",
+      goalNow: "Goal now"
+    },
+    journey: {
+      aria: "Patient360 demo path",
+      eyebrow: "Demo path",
+      body: "The same patient, the same story, a different access scope. You move through the demo step by step.",
+      steps: {
+        role: ["Perspective", "whose view"],
+        scenario: ["Scenario", "which patient"],
+        cockpit: ["Cockpit", "what now"],
+        map: ["Patient history", "chronology"],
+        data: ["Data / sources", "how we know"],
+        summary: ["Summary", "what to take next"]
+      },
+      back: "Back",
+      next: "Next",
+      map: "See patient history",
+      data: "Show sources",
+      summary: "Finish with summary"
+    },
+    resetToast: "Demo data restored."
   }
 });
 
@@ -493,6 +641,7 @@ const evidenceRoot = document.querySelector("#evidenceRoot");
 const contentGrid = document.querySelector("#contentGrid");
 const patientSelect = document.querySelector("#patientSelect");
 const roleSwitcher = document.querySelector("#roleSwitcher");
+const demoLanguageSwitch = document.querySelector("#demoLanguageSwitch");
 const searchInput = document.querySelector("#searchInput");
 const criticalStrip = document.querySelector("#criticalStrip");
 const entryDialog = document.querySelector("#entryDialog");
@@ -566,10 +715,44 @@ function shouldStartDemoFresh() {
   }
 }
 
+function normalizeDemoLanguage(language) {
+  return language === "en" ? "en" : "pl";
+}
+
+function demoUrlLanguage() {
+  try {
+    const language = new URLSearchParams(globalThis.location?.search || "").get("lang");
+    return language === "en" || language === "pl" ? language : null;
+  } catch {
+    return null;
+  }
+}
+
+function demoStoredLanguage() {
+  try {
+    const language = localStorage.getItem(DEMO_LANGUAGE_STORAGE_KEY);
+    return language === "en" || language === "pl" ? language : null;
+  } catch {
+    return null;
+  }
+}
+
+function demoBrowserPreferredLanguage() {
+  const languages = Array.isArray(navigator?.languages) && navigator.languages.length
+    ? navigator.languages
+    : [navigator?.language || "pl"];
+  return languages.some((language) => String(language || "").toLowerCase().startsWith("pl")) ? "pl" : "en";
+}
+
+function initialDemoLanguage() {
+  return demoUrlLanguage() || demoStoredLanguage() || demoBrowserPreferredLanguage();
+}
+
 function freshDemoStartState() {
   const fresh = clone(demoState);
   fresh.activeView = "roleStart";
   fresh.activeRole = "doctor";
+  fresh.activeLanguage = initialDemoLanguage();
   fresh.roleSelectionConfirmed = false;
   fresh.selectedSourceRef = null;
   fresh.selectedTimelineEventId = null;
@@ -593,6 +776,7 @@ function loadState() {
     if (!ROLE_META[loaded.activeRole]) {
       loaded.activeRole = "doctor";
     }
+    loaded.activeLanguage = demoUrlLanguage() || normalizeDemoLanguage(loaded.activeLanguage || demoStoredLanguage() || demoBrowserPreferredLanguage());
     if (!SPECIALTY_LENSES[loaded.specialist]) {
       loaded.specialist = "internist";
     }
@@ -622,12 +806,52 @@ function loadState() {
     }
     return loaded;
   } catch {
-    return clone(demoState);
+    const fallback = clone(demoState);
+    fallback.activeLanguage = initialDemoLanguage();
+    return fallback;
   }
 }
 
 function saveState() {
+  try {
+    localStorage.setItem(DEMO_LANGUAGE_STORAGE_KEY, normalizeDemoLanguage(state.activeLanguage));
+  } catch {
+    // Local language persistence is optional; the demo state remains source of truth.
+  }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function demoLang() {
+  return normalizeDemoLanguage(state?.activeLanguage);
+}
+
+function isDemoEnglish() {
+  return demoLang() === "en";
+}
+
+function demoDictionary() {
+  return DEMO_I18N[demoLang()] || null;
+}
+
+function demoText(path, fallback = "") {
+  const dictionary = demoDictionary();
+  if (!dictionary) return fallback;
+  const value = path.split(".").reduce((current, key) => current?.[key], dictionary);
+  return typeof value === "string" ? value : fallback;
+}
+
+function demoArray(path, fallback = []) {
+  const dictionary = demoDictionary();
+  if (!dictionary) return fallback;
+  const value = path.split(".").reduce((current, key) => current?.[key], dictionary);
+  return Array.isArray(value) ? value : fallback;
+}
+
+function demoJourneyStep(step) {
+  const translated = demoArray(`journey.steps.${step.id}`, []);
+  return translated.length >= 2
+    ? { ...step, label: translated[0], caption: translated[1] }
+    : step;
 }
 
 function activePatient() {
@@ -636,6 +860,10 @@ function activePatient() {
 
 function patientDisplayName(patient = activePatient()) {
   return String(patient?.name || "Pacjent").split(" — ")[0];
+}
+
+function patientScenarioName(patient = activePatient()) {
+  return isDemoEnglish() ? patientDisplayName(patient) : patient.name;
 }
 
 function byPatient(collection) {
@@ -660,7 +888,9 @@ function activeRole() {
 }
 
 function activeRoleMeta(role = activeRole()) {
-  return ROLE_META[role] || ROLE_META.doctor;
+  const meta = ROLE_META[role] || ROLE_META.doctor;
+  const translated = demoDictionary()?.roles?.[role] || {};
+  return { ...meta, ...translated };
 }
 
 function viewForRole(role = activeRole()) {
@@ -690,20 +920,43 @@ function switchActiveRole(role, view = null) {
 }
 
 function activeRoleNarrative(role = activeRole(), patientId = state.activePatientId) {
+  if (isDemoEnglish()) {
+    const summary = demoDictionary()?.scenarioSummaries?.[patientId];
+    if (summary) {
+      return {
+        title: demoText("roleContext.title", "The same story, a different perspective"),
+        summary
+      };
+    }
+  }
   return (state.roleNarratives || []).find((item) => item.patientId === patientId && item.role === role) || null;
 }
 
 function activeRoleGoal(role = activeRole(), patientId = state.activePatientId) {
+  if (isDemoEnglish()) {
+    const goal = demoDictionary()?.scenarioGoals?.[role]?.[patientId];
+    if (goal) return { goal };
+  }
   return (state.roleGoals || []).find((item) => item.patientId === patientId && item.role === role) || null;
 }
 
 function activeRoleSections(role = activeRole(), patientId = state.activePatientId) {
+  if (isDemoEnglish()) {
+    const sections = demoDictionary()?.scenarioSections?.[role];
+    if (Array.isArray(sections) && sections.length) return sections;
+  }
   return (state.roleVisibleSections || []).find((item) => item.patientId === patientId && item.role === role)?.sections || [];
 }
 
 function roleDataVisibility(role = activeRole()) {
   return (ROLE_DATA_VISIBILITY[role] || ROLE_DATA_VISIBILITY.doctor)
-    .filter(([view]) => canAccessViewForRole(view, role));
+    .filter(([view]) => canAccessViewForRole(view, role))
+    .map(([view, label, icon, caption]) => [
+      view,
+      demoText(`sidebar.${view}`, label),
+      icon,
+      demoText(`sidebar.${view}Title`, caption)
+    ]);
 }
 
 function activeCaregiverAreas() {
@@ -930,6 +1183,12 @@ function calculateAge(birthDate) {
 
 function formatAge(birthDate) {
   return PATIENT360_FORMAT.formatYears(calculateAge(birthDate));
+}
+
+function formatPatientAge(birthDate) {
+  return isDemoEnglish()
+    ? `${demoText("scenario.ages", "age")} ${calculateAge(birthDate)}`
+    : formatAge(birthDate);
 }
 
 function formatCount(count, one, few, many) {
@@ -1184,6 +1443,7 @@ function compactSourceRefs(refs, limit = 3) {
 }
 
 function render() {
+  applyDemoLanguageChrome();
   renderRoleSwitcher();
   renderPatientSelect();
   renderCriticalStrip();
@@ -1194,6 +1454,90 @@ function render() {
 
 function refreshIcons() {
   if (window.lucide) window.lucide.createIcons();
+}
+
+function setElementText(selector, text) {
+  const element = document.querySelector(selector);
+  if (element) element.textContent = text;
+}
+
+function setButtonTitle(selector, title) {
+  const element = document.querySelector(selector);
+  if (!element) return;
+  element.title = title;
+  element.setAttribute("aria-label", title);
+}
+
+function applyDemoLanguageChrome() {
+  const language = demoLang();
+  document.documentElement.lang = language;
+  document.title = demoText("title", "Pacjent360™ | Demo kontekstu wizyty");
+  setElementText(".skip-link", demoText("skipLink", "Przejdź do treści demo"));
+  setElementText(".demo-watermark strong", demoText("watermark", DEMO_WATERMARK_TEXT));
+  const brandName = document.querySelector(".brand-name");
+  if (brandName) {
+    brandName.innerHTML = language === "en"
+      ? "Patient360"
+      : `Pacjent360<sup class="brand-legal-mark">™</sup>`;
+  }
+  setElementText(".brand span", demoText("brandSubtitle", "Kontekst wizyty i pytań"));
+
+  const nav = document.querySelector(".nav-list");
+  if (nav) nav.setAttribute("aria-label", demoText("sidebar.aria", "Widoki demo"));
+  const navSections = document.querySelectorAll(".sidebar .nav-section-label");
+  if (navSections[0]) navSections[0].textContent = demoText("sidebar.start", "Start");
+  if (navSections[1]) navSections[1].textContent = demoText("sidebar.cockpits", "Kokpity");
+  setElementText('[data-nav-section="library"]', demoText("sidebar.library", "Dane i źródła"));
+
+  const startButton = document.querySelector('.nav-item[data-view="roleStart"]');
+  if (startButton) {
+    startButton.title = demoText("sidebar.roleStartTitle", "Wybierz perspektywę i scenariusz");
+    const label = startButton.querySelector("span");
+    if (label) label.textContent = demoText("sidebar.roleStart", "Start demo");
+  }
+  ["doctor", "patient", "caregiver"].forEach((role) => {
+    const meta = activeRoleMeta(role);
+    const button = document.querySelector(`.cockpit-nav[data-view="${meta.view}"]`);
+    if (!button) return;
+    button.title = demoText(`sidebar.${role}Title`, `Kokpit ${meta.label}`);
+    const label = button.querySelector("span");
+    if (label) label.textContent = meta.label;
+  });
+
+  const footer = document.querySelector(".sidebar-footer");
+  if (footer) {
+    const text = footer.querySelector("p");
+    if (text) text.textContent = demoText("sidebar.footer", "Niezależny prototyp. Nie jest usługą CeZ, NFZ, IKP ani żadnego innego publicznego systemu e-zdrowia.");
+    const status = footer.querySelector("div span:last-child");
+    if (status) status.textContent = demoText("sidebar.status", "Dane demo, lokalnie");
+    const links = footer.querySelectorAll("a");
+    if (links[0]) links[0].textContent = demoText("sidebar.disclaimer", "Zastrzeżenie medyczne");
+    if (links[1]) links[1].textContent = demoText("sidebar.privacy", "Prywatność");
+  }
+
+  setElementText('label[for="patientSelect"]', demoText("topbar.patientLabel", "Scenariusz"));
+  if (roleSwitcher) roleSwitcher.setAttribute("aria-label", demoText("topbar.roleAria", "Wybierz perspektywę w demo"));
+  if (searchInput) {
+    searchInput.setAttribute("aria-label", demoText("topbar.searchAria", "Szukaj w danych demo"));
+    searchInput.placeholder = demoText("topbar.searchPlaceholder", "Szukaj w dokumentach, lekach, wynikach, pytaniach...");
+  }
+  setButtonTitle("#resetDemo", demoText("topbar.resetTitle", "Przywróć dane demo"));
+  setButtonTitle("#printReport", demoText("topbar.printTitle", "Podgląd wydruku demo"));
+
+  const evidencePanel = document.querySelector(".evidence-panel");
+  if (evidencePanel) evidencePanel.setAttribute("aria-label", demoText("evidence.aria", "Indeks źródeł"));
+  setElementText(".panel-head-copy .eyebrow", demoText("evidence.eyebrow", "Skąd to wiemy"));
+  setElementText(".panel-head-copy h2", demoText("evidence.title", "Źródła demo"));
+  setButtonTitle("#toggleEvidence", demoText("evidence.collapseTitle", "Zwiń panel źródeł"));
+  setButtonTitle("#closeEvidence", demoText("evidence.clearTitle", "Wyczyść wybór źródła"));
+
+  if (demoLanguageSwitch) {
+    demoLanguageSwitch.querySelectorAll("[data-demo-language]").forEach((button) => {
+      const active = button.dataset.demoLanguage === language;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+  }
 }
 
 function renderPatientSelect() {
@@ -1318,11 +1662,11 @@ function renderView() {
   const role = activeRole();
   const libraryLabel = document.querySelector('[data-nav-section="library"]');
   if (libraryLabel) {
-    libraryLabel.textContent = LIBRARY_HEADING;
+    libraryLabel.textContent = demoText("sidebar.library", LIBRARY_HEADING);
   }
   const navList = document.querySelector(".nav-list");
   if (navList) {
-    navList.setAttribute("aria-label", `Widoki demo: ${activeRoleMeta(role).label}`);
+    navList.setAttribute("aria-label", `${demoText("sidebar.aria", "Widoki demo")}: ${activeRoleMeta(role).label}`);
   }
 
   document.querySelectorAll(".nav-item").forEach((button) => {
@@ -1333,7 +1677,7 @@ function renderView() {
     const allowed = isStart || isCockpitSwitch || canShowSidebarLibraryView(view, role);
     const item = isLibraryItem ? sidebarLibraryItem(view, role) : null;
     if (isLibraryItem) {
-      const label = SIDEBAR_LIBRARY_LABELS[view] || item?.[1] || "";
+      const label = demoText(`sidebar.${view}`, SIDEBAR_LIBRARY_LABELS[view] || item?.[1] || "");
       const caption = item?.[3] || button.title;
       const labelNode = button.querySelector("span");
       if (labelNode) labelNode.textContent = label;
@@ -1376,21 +1720,26 @@ function renderDemoJourney() {
   const caregiverNoAccess = role === "caregiver" && !caregiverHasActiveScope();
   const previous = journeyStepByOffset(-1);
   const next = caregiverNoAccess ? null : journeyStepByOffset(1);
+  const currentStep = demoJourneyStep(DEMO_JOURNEY_STEPS[currentIndex] || DEMO_JOURNEY_STEPS[2]);
+  const previousStep = previous ? demoJourneyStep(previous) : null;
+  const nextStep = next ? demoJourneyStep(next) : null;
   const summaryTarget = viewForJourneyStep("summary", role);
   const dataTarget = viewForJourneyStep("data", role);
 
   return `
-    <section class="demo-journey section-band" aria-label="Ścieżka demo Pacjent360">
+    <section class="demo-journey section-band" aria-label="${escapeHtml(demoText("journey.aria", "Ścieżka demo Pacjent360"))}">
       <div class="demo-journey-head">
         <div>
-          <p class="eyebrow"><i data-lucide="route"></i>Ścieżka demo</p>
+          <p class="eyebrow"><i data-lucide="route"></i>${escapeHtml(demoText("journey.eyebrow", "Ścieżka demo"))}</p>
           <h2>${escapeHtml(meta.label)} · ${escapeHtml(patientDisplayName(patient))}</h2>
-          <p>Ten sam pacjent, ta sama historia, inny zakres dostępu. Przechodzisz przez demo krok po kroku.</p>
+          <p>${escapeHtml(demoText("journey.body", "Ten sam pacjent, ta sama historia, inny zakres dostępu. Przechodzisz przez demo krok po kroku."))}</p>
         </div>
-        <span class="status-chip info">${escapeHtml(DEMO_JOURNEY_STEPS[currentIndex]?.label || "Kokpit")}</span>
+        <span class="status-chip info">${escapeHtml(currentStep?.label || "Kokpit")}</span>
       </div>
       <div class="demo-journey-steps">
-        ${DEMO_JOURNEY_STEPS.map((step, index) => `
+        ${DEMO_JOURNEY_STEPS.map((rawStep, index) => {
+          const step = demoJourneyStep(rawStep);
+          return `
           <button
             type="button"
             class="demo-journey-step ${index < currentIndex ? "done" : ""} ${step.id === currentStepId ? "active" : ""}"
@@ -1401,15 +1750,16 @@ function renderDemoJourney() {
             <strong>${escapeHtml(step.label)}</strong>
             <small>${escapeHtml(step.caption)}</small>
           </button>
-        `).join("")}
+        `;
+        }).join("")}
       </div>
-      <div class="demo-journey-actions" aria-label="Następne kroki demo">
-        ${previous ? `<button class="ghost-button" data-journey-step="${escapeHtml(previous.id)}"><i data-lucide="arrow-left"></i>Wróć: ${escapeHtml(previous.label)}</button>` : ""}
-        ${next ? `<button class="primary-button" data-journey-step="${escapeHtml(next.id)}"><i data-lucide="arrow-right"></i>Dalej: ${escapeHtml(next.label)}</button>` : ""}
+      <div class="demo-journey-actions" aria-label="${escapeHtml(demoText("journey.aria", "Następne kroki demo"))}">
+        ${previousStep ? `<button class="ghost-button" data-journey-step="${escapeHtml(previousStep.id)}"><i data-lucide="arrow-left"></i>${escapeHtml(demoText("journey.back", "Wróć"))}: ${escapeHtml(previousStep.label)}</button>` : ""}
+        ${nextStep ? `<button class="primary-button" data-journey-step="${escapeHtml(nextStep.id)}"><i data-lucide="arrow-right"></i>${escapeHtml(demoText("journey.next", "Dalej"))}: ${escapeHtml(nextStep.label)}</button>` : ""}
         ${caregiverNoAccess && state.activeView !== "consent" ? `<button class="primary-button" data-set-view="consent"><i data-lucide="shield-check"></i>Zobacz zakres zgody</button>` : ""}
-        ${!caregiverNoAccess && state.activeView !== "timeline" ? `<button class="ghost-button" data-set-view="timeline"><i data-lucide="git-branch"></i>${role === "caregiver" ? "Zobacz historię w zakresie zgody" : role === "patient" ? "Zobacz moją historię" : "Zobacz zdarzenia i źródła"}</button>` : ""}
-        ${!caregiverNoAccess && state.activeView !== dataTarget ? `<button class="ghost-button" data-set-view="${escapeHtml(dataTarget)}"><i data-lucide="files"></i>Pokaż źródła</button>` : ""}
-        ${!caregiverNoAccess && state.activeView !== summaryTarget ? `<button class="ghost-button" data-set-view="${escapeHtml(summaryTarget)}"><i data-lucide="clipboard-check"></i>Zakończ podsumowaniem</button>` : ""}
+        ${!caregiverNoAccess && state.activeView !== "timeline" ? `<button class="ghost-button" data-set-view="timeline"><i data-lucide="git-branch"></i>${escapeHtml(demoText("journey.map", role === "caregiver" ? "Zobacz historię w zakresie zgody" : role === "patient" ? "Zobacz moją historię" : "Zobacz zdarzenia i źródła"))}</button>` : ""}
+        ${!caregiverNoAccess && state.activeView !== dataTarget ? `<button class="ghost-button" data-set-view="${escapeHtml(dataTarget)}"><i data-lucide="files"></i>${escapeHtml(demoText("journey.data", "Pokaż źródła"))}</button>` : ""}
+        ${!caregiverNoAccess && state.activeView !== summaryTarget ? `<button class="ghost-button" data-set-view="${escapeHtml(summaryTarget)}"><i data-lucide="clipboard-check"></i>${escapeHtml(demoText("journey.summary", "Zakończ podsumowaniem"))}</button>` : ""}
       </div>
     </section>
   `;
@@ -1913,17 +2263,17 @@ function renderRoleStart() {
   return `
     <section class="role-demo-hero">
       <div>
-        <p class="eyebrow"><i data-lucide="play-circle"></i>Jedna historia, trzy perspektywy</p>
-        <h1>Wybierz perspektywę 360° i zobacz tę samą historię pacjenta</h1>
-        <p>Pacjent360™ pokazuje jedną historię w trzech soczewkach: Lekarz360 dla szybkiego kontekstu, Pacjent360 dla przygotowania wizyty i Opiekun360 dla pomocy bliskiej osobie w zakresie zgody.</p>
+        <p class="eyebrow"><i data-lucide="play-circle"></i>${escapeHtml(demoText("roleStart.eyebrow", "Jedna historia, trzy perspektywy"))}</p>
+        <h1>${escapeHtml(demoText("roleStart.title", "Wybierz perspektywę 360° i zobacz tę samą historię pacjenta"))}</h1>
+        <p>${escapeHtml(demoText("roleStart.body", "Pacjent360™ pokazuje jedną historię w trzech soczewkach: Lekarz360 dla szybkiego kontekstu, Pacjent360 dla przygotowania wizyty i Opiekun360 dla pomocy bliskiej osobie w zakresie zgody."))}</p>
       </div>
     </section>
 
     <section class="section-band role-picker-band">
       <div class="section-head">
         <div>
-          <p class="eyebrow">Krok 1</p>
-          <h2>Z jakiej perspektywy oglądasz historię?</h2>
+          <p class="eyebrow">${escapeHtml(demoText("roleStart.step", "Krok 1"))}</p>
+          <h2>${escapeHtml(demoText("roleStart.question", "Z jakiej perspektywy oglądasz historię?"))}</h2>
         </div>
       </div>
       <div class="role-card-grid">
@@ -1945,33 +2295,33 @@ function renderRoleStart() {
 function renderRoleScenarioSubpage(role) {
   const meta = activeRoleMeta(role);
   return `
-    <section class="role-step-breadcrumb" aria-label="Postęp wyboru demo">
-      <span><i data-lucide="check-circle-2"></i>Krok 1: ${escapeHtml(meta.label)}</span>
+    <section class="role-step-breadcrumb" aria-label="${escapeHtml(demoText("scenario.progressPatient", "Postęp wyboru demo"))}">
+      <span><i data-lucide="check-circle-2"></i>${escapeHtml(demoText("scenario.progressRole", "Krok 1"))}: ${escapeHtml(meta.label)}</span>
       <i data-lucide="chevron-right"></i>
-      <strong>Krok 2: wybierz pacjenta</strong>
+      <strong>${escapeHtml(demoText("scenario.progressPatient", "Krok 2: wybierz pacjenta"))}</strong>
       <button type="button" class="ghost-button" data-reset-role-selection>
-        <i data-lucide="arrow-left"></i>Zmień perspektywę
+        <i data-lucide="arrow-left"></i>${escapeHtml(demoText("scenario.changePerspective", "Zmień perspektywę"))}
       </button>
     </section>
 
     <section class="role-demo-hero role-scenario-hero">
       <div>
-        <p class="eyebrow"><i data-lucide="${escapeHtml(meta.icon)}"></i>Krok 2 · ${escapeHtml(meta.label)}</p>
-        <h1>Wybierz historię, którą chcesz zobaczyć w ${escapeHtml(meta.label)}</h1>
-        <p>${escapeHtml(meta.promise)} Każdy scenariusz prowadzi do innego kokpitu, ale korzysta z tej samej mapy zdarzeń pacjenta.</p>
+        <p class="eyebrow"><i data-lucide="${escapeHtml(meta.icon)}"></i>${escapeHtml(demoText("scenario.step", "Krok 2"))} · ${escapeHtml(meta.label)}</p>
+        <h1>${escapeHtml(demoText("scenario.titlePrefix", "Wybierz historię, którą chcesz zobaczyć w"))} ${escapeHtml(meta.label)}</h1>
+        <p>${escapeHtml(meta.promise)} ${escapeHtml(demoText("scenario.bodySuffix", "Każdy scenariusz prowadzi do innego kokpitu, ale korzysta z tej samej mapy zdarzeń pacjenta."))}</p>
       </div>
       <div class="role-demo-current">
-        <span>Wybrana perspektywa</span>
+        <span>${escapeHtml(demoText("scenario.selectedPerspective", "Wybrana perspektywa"))}</span>
         <strong><i data-lucide="${escapeHtml(meta.icon)}"></i>${escapeHtml(meta.label)}</strong>
-        <p>To osobny ekran po wyborze perspektywy. Teraz wybierasz pacjenta demonstracyjnego.</p>
+        <p>${escapeHtml(demoText("scenario.selectedPerspectiveBody", "To osobny ekran po wyborze perspektywy. Teraz wybierasz pacjenta demonstracyjnego."))}</p>
       </div>
     </section>
 
     <section class="section-band scenario-picker-band role-subpage-panel">
       <div class="section-head">
         <div>
-          <p class="eyebrow">Pacjenci demonstracyjni</p>
-        <h2>Trzy historie, trzy kokpity 360°</h2>
+          <p class="eyebrow">${escapeHtml(demoText("scenario.patientsEyebrow", "Pacjenci demonstracyjni"))}</p>
+        <h2>${escapeHtml(demoText("scenario.patientsTitle", "Trzy historie, trzy kokpity 360°"))}</h2>
         </div>
         <span class="status-chip info">${escapeHtml(meta.label)}</span>
       </div>
@@ -1990,16 +2340,16 @@ function renderScenarioCard(patient, role) {
   return `
     <article class="scenario-card ${patient.id === state.activePatientId ? "selected" : ""}">
       <div class="scenario-card-head">
-        <span>${escapeHtml(formatAge(patient.birthDate))}</span>
-        <strong>${escapeHtml(patient.name)}</strong>
+        <span>${escapeHtml(formatPatientAge(patient.birthDate))}</span>
+        <strong>${escapeHtml(patientScenarioName(patient))}</strong>
       </div>
       <p>${escapeHtml(narrative?.summary || patient.patientSummary || patient.currentProblem)}</p>
       <div class="scenario-goal">
-        <span>Cel tej perspektywy</span>
+        <span>${escapeHtml(demoText("scenario.goalLabel", "Cel tej perspektywy"))}</span>
         <strong>${escapeHtml(goal?.goal || meta.promise)}</strong>
       </div>
       <ul class="plain-list compact-list">
-        ${(sections.length ? sections : ["Kokpit 360°", "Historia pacjenta", "Następny krok"]).slice(0, 4).map((item) => `<li><i data-lucide="check-circle-2"></i><span>${escapeHtml(item)}</span></li>`).join("")}
+        ${(sections.length ? sections : demoArray("scenario.defaultSections", ["Kokpit 360°", "Historia pacjenta", "Następny krok"])).slice(0, 4).map((item) => `<li><i data-lucide="check-circle-2"></i><span>${escapeHtml(item)}</span></li>`).join("")}
       </ul>
       <button class="primary-button" data-start-role="${escapeHtml(role)}" data-start-patient="${escapeHtml(patient.id)}">
         <i data-lucide="${escapeHtml(meta.icon)}"></i>${escapeHtml(meta.cta)}
@@ -2016,11 +2366,11 @@ function renderRoleContextBanner(role = activeRole()) {
     <section class="section-band role-context-banner">
       <div>
         <p class="eyebrow"><i data-lucide="${escapeHtml(meta.icon)}"></i>${escapeHtml(meta.label)}</p>
-        <h2>${escapeHtml(narrative?.title || "Ta sama historia, inna perspektywa")}</h2>
+        <h2>${escapeHtml(narrative?.title || demoText("roleContext.title", "Ta sama historia, inna perspektywa"))}</h2>
         <p>${escapeHtml(narrative?.summary || meta.promise)}</p>
       </div>
       <article>
-        <span>Cel teraz</span>
+        <span>${escapeHtml(demoText("roleContext.goalNow", "Cel teraz"))}</span>
         <strong>${escapeHtml(goal?.goal || meta.promise)}</strong>
       </article>
     </section>
@@ -5681,10 +6031,20 @@ document.querySelector("#closeEvidence").addEventListener("click", () => {
   refreshIcons();
 });
 
+demoLanguageSwitch?.querySelectorAll("[data-demo-language]").forEach((button) => {
+  button.addEventListener("click", () => {
+    state.activeLanguage = normalizeDemoLanguage(button.dataset.demoLanguage);
+    saveState();
+    render();
+  });
+});
+
 document.querySelector("#resetDemo").addEventListener("click", () => {
+  const currentLanguage = demoLang();
   state = clone(demoState);
+  state.activeLanguage = currentLanguage;
   saveState();
-  showToast("Przywrócono dane demo.");
+  showToast(demoText("resetToast", "Przywrócono dane demo."));
   render();
 });
 
