@@ -61,6 +61,30 @@ Aktualna lista wymaganych plikow powstaje automatycznie po walidacji w:
 Jesli pliku nie ma w `dist/upload-ready`, nie powinien trafiac na hosting.
 Jesli plik jest w `dist/upload-ready`, powinien zostac wgrany razem z katalogami, np. `brand/` i `assets/`.
 
+Najprostsza sciezka dla wlasciciela projektu:
+
+```powershell
+.\upload-na-nazwa.cmd
+```
+
+Albo bez wrappera CMD:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\upload-to-nazwa.ps1
+```
+
+Skrypt pyta o haslo FTP lokalnie, nie zapisuje go w repo i po uploadzie uruchamia verifier domeny. Domyslnie probuje FTPS. Jesli hosting nazwa.pl nie potwierdzi katalogu zdalnego przez FTPS, skrypt zapyta jawnie, czy sprobowac zwyklego FTP bez TLS. W razie potrzeby mozna tez uruchomic:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\upload-to-nazwa.ps1 -NoSsl
+```
+
+Jesli chcesz najpierw odtworzyc `dist/upload-ready` z aktualnej paczki, dodaj:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\upload-to-nazwa.ps1 -PreparePackage
+```
+
 Alternatywa, jesli panel hostingu pozwala rozpakowac ZIP na serwerze:
 
 1. Wgraj `dist/pacjent360-upload-root.zip` do document root domeny.
