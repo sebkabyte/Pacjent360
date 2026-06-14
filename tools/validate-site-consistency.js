@@ -37,7 +37,7 @@ for (const page of PAGES) {
   check(html.includes('class="brand-name">Pacjent360'), page, "marka musi być Pacjent360 (brand-name)");
   check(html.includes("nav-toggle") && html.includes("data-nav-toggle"), page, "musi mieć przycisk menu mobilnego (nav-toggle)");
   check(html.includes('data-nav id="mainNav"') || html.includes('id="mainNav" data-nav'), page, "nawigacja musi mieć data-nav id=mainNav");
-  check(html.includes('href="demo.html?start=1"'), page, "navbar musi linkować do demo");
+  check(html.includes('href="demo.html?start=1&lang=pl"'), page, "navbar musi linkować do demo z jawnym językiem");
 
   // Jeden tagline w logo; żadnych wariantów patchworku.
   const taglines = [...html.matchAll(/<small[^>]*>([^<]+)<\/small>/g)].map((m) => m[1].trim());

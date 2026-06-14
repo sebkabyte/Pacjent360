@@ -206,6 +206,38 @@ function setMeta(lang) {
   if (ogDescription) ogDescription.setAttribute("content", meta.ogDescription);
 }
 
+function getBrowserPreferredLanguage() {
+  const browserLanguages = Array.isArray(navigator.languages) && navigator.languages.length
+    ? navigator.languages
+    : [navigator.language].filter(Boolean);
+
+  return browserLanguages.some((language) => String(language).toLowerCase().startsWith("pl"))
+    ? "pl"
+    : "en";
+}
+
+function getInitialLanguage() {
+  const urlLanguage = new URLSearchParams(window.location.search).get("lang");
+  if (urlLanguage === "pl" || urlLanguage === "en") return urlLanguage;
+
+  const storedLanguage = localStorage.getItem("pacjent360-site-lang");
+  if (storedLanguage === "pl" || storedLanguage === "en") return storedLanguage;
+
+  return getBrowserPreferredLanguage();
+}
+
+function updateDemoLinks(lang) {
+  const normalized = lang === "en" ? "en" : "pl";
+  document.querySelectorAll('a[href*="demo.html"]').forEach((anchor) => {
+    const rawHref = anchor.getAttribute("href") || "";
+    if (!rawHref.includes("demo.html")) return;
+
+    const hashIndex = rawHref.indexOf("#");
+    const hash = hashIndex >= 0 ? rawHref.slice(hashIndex) : "";
+    anchor.setAttribute("href", `demo.html?start=1&lang=${normalized}${hash}`);
+  });
+}
+
 function setLanguage(lang, options = {}) {
   const normalized = lang === "en" ? "en" : "pl";
   const copy = languageCopy[normalized] || languageCopy.pl;
@@ -225,6 +257,7 @@ function setLanguage(lang, options = {}) {
     element.setAttribute("aria-label", normalized === "en" ? "Patient360" : "Pacjent360");
   });
   setMeta(normalized);
+  updateDemoLinks(normalized);
   document.querySelectorAll("[data-language-switch]").forEach((button) => {
     const active = button.dataset.languageSwitch === normalized;
     button.classList.toggle("active", active);
@@ -247,6 +280,4 @@ document.querySelectorAll("[data-language-switch]").forEach((button) => {
   });
 });
 
-const urlLanguage = new URLSearchParams(window.location.search).get("lang");
-const storedLanguage = localStorage.getItem("pacjent360-site-lang");
-setLanguage(urlLanguage || storedLanguage || "pl", { persist: false });
+setLanguage(getInitialLanguage(), { persist: false });
