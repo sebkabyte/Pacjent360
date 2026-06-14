@@ -162,7 +162,10 @@ const DEMO_I18N = Object.freeze({
       eyebrow: "How we know this",
       title: "Demo sources",
       collapseTitle: "Collapse sources panel",
-      clearTitle: "Clear source selection"
+      clearTitle: "Clear source selection",
+      noSource: "No source",
+      showSource: "Show source",
+      empty: "Click a source label to see whether the information comes from a document, interview, transcript, result, medication, consent or point to verify."
     },
     roles: {
       doctor: {
@@ -183,7 +186,7 @@ const DEMO_I18N = Object.freeze({
     },
     roleStart: {
       eyebrow: "One story, three perspectives",
-      title: "Choose a 360° perspective and see the same patient story",
+      title: "Choose a 360° perspective and see the same patient history",
       body: "Patient360 shows one story through three lenses: Doctor360 for fast context, Patient360 for visit preparation and Caregiver360 for support within the consent scope.",
       step: "Step 1",
       question: "From which perspective are you viewing the story?"
@@ -253,6 +256,45 @@ const DEMO_I18N = Object.freeze({
       summary: "Finish with summary"
     },
     resetToast: "Demo data restored."
+  }
+});
+
+const EN_PATIENT_CONTEXT = Object.freeze({
+  p1: {
+    label: "Jan S.",
+    episode: "Day procedure preparation",
+    current: "A senior patient is preparing for a planned day procedure. The story focuses on documents, medications and caregiver observations that should be confirmed before the visit decision.",
+    clarify: [
+      "Medication list before the procedure",
+      "ECG is not visible in the data. To confirm with the doctor before the decision.",
+      "Caregiver observations should remain marked as interview information, not laboratory facts."
+    ],
+    next: "Take the short context, source list and questions into the medical conversation.",
+    caregiver: "Madeline helps within the active consent scope: medications, documents, visits and observations."
+  },
+  p2: {
+    label: "Andrzej K.",
+    episode: "Cardiology follow-up",
+    current: "An independent adult patient is preparing for a cardiology follow-up. The story focuses on results, medication history and questions for the specialist visit.",
+    clarify: [
+      "Current medication list and actual use",
+      "Which results and documents should be visible before the visit",
+      "No active caregiver access is present in this scenario."
+    ],
+    next: "Prepare results, medication history and questions before the cardiology conversation.",
+    caregiver: "There is no active caregiver consent for this patient in the demo."
+  },
+  p3: {
+    label: "Maja N.",
+    episode: "Child visit preparation",
+    current: "A parent prepares a child’s visit by collecting symptoms, home observations, documents and questions in one story.",
+    clarify: [
+      "Parent observations should be visible as interview information",
+      "Documents and results need to stay connected to their sources",
+      "The parent/caregiver view must show only the consented scope."
+    ],
+    next: "Use the prepared story to support the conversation with the doctor.",
+    caregiver: "The parent/caregiver view shows the child’s story through the consented family-care context."
   }
 });
 
@@ -1423,14 +1465,14 @@ function evidenceClassLabel(ref) {
 
 function sourceChips(refs) {
   const list = Array.isArray(refs) ? refs : [refs].filter(Boolean);
-  if (!list.length) return `<span class="tag">Brak źródła</span>`;
+  if (!list.length) return `<span class="tag">${escapeHtml(demoText("evidence.noSource", "Brak źródła"))}</span>`;
   return list
     .map((ref) => {
       if (ref === SOURCE_MISSING_REF) {
-        return `<span class="tag">Brak źródła</span>`;
+        return `<span class="tag">${escapeHtml(demoText("evidence.noSource", "Brak źródła"))}</span>`;
       }
       const evidence = evidenceClassLabel(ref);
-      const tooltip = evidence ? `${evidence} — pokaż źródło` : "Pokaż źródło";
+      const tooltip = evidence ? `${evidence} — ${demoText("evidence.showSource", "pokaż źródło")}` : demoText("evidence.showSource", "Pokaż źródło");
       return `<span class="source-chip p360-source-chip"><button type="button" data-source-ref="${escapeHtml(ref)}" title="${escapeHtml(tooltip)}">${escapeHtml(sourceLabel(ref))}</button></span>`;
     })
     .join("");
@@ -1920,6 +1962,7 @@ function renderMedReconciliation() {
 }
 
 function renderCore() {
+  if (isDemoEnglish()) return renderEnglishDoctorCockpit();
   const patient = activePatient();
   const decision = activeDecision();
   const specialtyLens = activeSpecialtyLens();
@@ -2256,6 +2299,378 @@ function renderCoreColumn(title, bullets, icon) {
   `;
 }
 
+function englishContext(patientId = state.activePatientId) {
+  return EN_PATIENT_CONTEXT[patientId] || EN_PATIENT_CONTEXT.p1;
+}
+
+function englishDataCounts() {
+  return {
+    documents: byPatient(state.documents).length,
+    results: byPatient(state.observations).length,
+    medications: byPatient(state.medications).length,
+    events: byPatient(state.timelineEvents).length,
+    sources: new Set(byPatient(state.timelineEvents).flatMap((event) => Array.isArray(event.sourceRefs) ? event.sourceRefs : [event.sourceRefs].filter(Boolean))).size,
+    questions: [
+      ...(activeDecision()?.ditlQuestions || []),
+      ...byPatient(state.flags).filter((flag) => flag.color === "blue" || flag.color === "red").map(flagToQuestion)
+    ].length
+  };
+}
+
+function renderEnglishActionRow(actions) {
+  return `
+    <div class="inline-actions">
+      ${actions.map((action) => `
+        <button class="${action.primary ? "primary-button" : "ghost-button"}" data-set-view="${escapeHtml(action.view)}">
+          <i data-lucide="${escapeHtml(action.icon)}"></i>${escapeHtml(action.label)}
+        </button>
+      `).join("")}
+    </div>
+  `;
+}
+
+function renderEnglishContextCards({ title, lead, points, actions }) {
+  const counts = englishDataCounts();
+  return `
+    <section class="section-band dashboard-orchestrator" aria-label="360 cockpit overview">
+      <div class="orchestrator-main">
+        <p class="eyebrow"><i data-lucide="layout-dashboard"></i>360 cockpit</p>
+        <h2>${escapeHtml(title)}</h2>
+        <p>${escapeHtml(lead)}</p>
+        ${renderEnglishActionRow(actions)}
+      </div>
+      <div class="orchestrator-steps">
+        ${points.map((point, index) => `
+          <article>
+            <span>${String(index + 1).padStart(2, "0")}</span>
+            <strong>${escapeHtml(point[0])}</strong>
+            <p>${escapeHtml(point[1])}</p>
+          </article>
+        `).join("")}
+      </div>
+      <div class="history-facts compact english-context-facts" aria-label="Demo data snapshot">
+        <article><span>Documents</span><strong>${counts.documents}</strong></article>
+        <article><span>Results</span><strong>${counts.results}</strong></article>
+        <article><span>Medications</span><strong>${counts.medications}</strong></article>
+        <article><span>Questions</span><strong>${counts.questions}</strong></article>
+      </div>
+    </section>
+  `;
+}
+
+function renderEnglishDoctorCockpit() {
+  const patient = activePatient();
+  const context = englishContext(patient.id);
+  return `
+    ${pageHeader(
+      "Doctor360: 90-second context",
+      `${context.label}, ${formatPatientAge(patient.birthDate)}. A source-based visit brief: what is known, what is missing and what should be clarified with the doctor.`,
+      ""
+    )}
+    ${renderRoleContextBanner("doctor")}
+    ${renderEnglishContextCards({
+      title: context.episode,
+      lead: context.current,
+      points: [
+        ["What is known", "Documents, medications, results and interview information are shown as one story."],
+        ["What needs checking", context.clarify[0]],
+        ["Doctor decides", "The system does not diagnose, triage or recommend treatment."]
+      ],
+      actions: [
+        { label: "See patient history", icon: "git-branch", view: "timeline", primary: true },
+        { label: "Show sources", icon: "files", view: "documents" },
+        { label: "Open summary", icon: "clipboard-list", view: "reports" }
+      ]
+    })}
+    ${renderEnglishToVerifyPanel(context)}
+  `;
+}
+
+function renderEnglishPatientCockpit() {
+  const patient = activePatient();
+  const context = englishContext(patient.id);
+  return `
+    ${pageHeader(
+      "Patient360: prepare the visit",
+      `${context.label}, ${formatPatientAge(patient.birthDate)}. A simple view of documents, medications, results, questions and consents before the visit.`,
+      ""
+    )}
+    ${renderRoleContextBanner("patient")}
+    ${renderEnglishContextCards({
+      title: "What should be ready before the visit",
+      lead: context.current,
+      points: [
+        ["Bring the story", "Documents, medications and observations stay connected to the patient history."],
+        ["Prepare questions", context.clarify[0]],
+        ["Control sharing", "Consents define who can see which part of the story."]
+      ],
+      actions: [
+        { label: "See my history", icon: "git-branch", view: "timeline", primary: true },
+        { label: "Open documents", icon: "files", view: "documents" },
+        { label: "Open consents", icon: "shield-check", view: "consent" }
+      ]
+    })}
+    ${renderEnglishToVerifyPanel(context)}
+  `;
+}
+
+function renderEnglishCaregiverCockpit() {
+  const patient = activePatient();
+  const context = englishContext(patient.id);
+  const model = PATIENT360_CAREGIVER_MODEL.buildCaregiverModel({
+    state,
+    patientId: state.activePatientId
+  });
+  if (!model.activeScopes.length) {
+    return `
+      ${pageHeader(
+        "Caregiver360: no active access",
+        `${context.label}. The caregiver view works only inside an active consent scope. This scenario does not grant caregiver access to patient data.`,
+        ""
+      )}
+      ${renderRoleContextBanner("caregiver")}
+      ${renderEnglishContextCards({
+        title: "No active caregiver consent",
+        lead: context.caregiver,
+        points: [
+          ["Access scope", "No active consent is present for this caregiver scenario."],
+          ["Data visibility", "Documents, medications, results, interview and patient history stay hidden."],
+          ["Next step", "Open the consent view to see how access is described."]
+        ],
+        actions: [
+          { label: "Open consents", icon: "shield-check", view: "consent", primary: true }
+        ]
+      })}
+    `;
+  }
+  return `
+    ${pageHeader(
+      "Caregiver360: support within consent",
+      `${context.label}. The caregiver sees only the shared scope: tasks, documents, medications, visits and observations.`,
+      ""
+    )}
+    ${renderRoleContextBanner("caregiver")}
+    ${renderEnglishContextCards({
+      title: "Help with the shared scope",
+      lead: context.caregiver,
+      points: [
+        ["Consent scope", `${model.activeScopes.length} active access scope(s) in this scenario.`],
+        ["Tasks", `${model.tasks.length} organizational task(s) visible within the shared scope.`],
+        ["Revocation", "When consent is revoked, access is removed and the story requires review."]
+      ],
+      actions: [
+        { label: "Open consents", icon: "shield-check", view: "consent", primary: true },
+        { label: "See shared history", icon: "git-branch", view: "timeline" },
+        { label: "Show sources", icon: "files", view: "documents" }
+      ]
+    })}
+  `;
+}
+
+function renderEnglishToVerifyPanel(context) {
+  return `
+    <section class="section-band">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">To verify with the doctor</p>
+          <h2><i data-lucide="circle-help"></i>Three points before the conversation</h2>
+        </div>
+      </div>
+      <ul class="plain-list">
+        ${context.clarify.map((item) => `<li><i data-lucide="check-circle-2"></i><span>${escapeHtml(item)}</span></li>`).join("")}
+      </ul>
+      ${renderSafetyNote("Patient360 organizes context and questions. It does not diagnose, triage or recommend treatment.", "compact")}
+    </section>
+  `;
+}
+
+function englishTimelineTrackLabel(track) {
+  return {
+    symptoms: "Symptoms / observations",
+    labs: "Results",
+    medications: "Medications",
+    hospitalizations: "Hospitalizations",
+    consultations: "Consultations",
+    functioning: "Functioning",
+    decisions: "Visit decisions",
+    caregiver: "Caregiver observations",
+    documents: "Documents",
+    consents: "Consents",
+    tasks: "Tasks"
+  }[track] || "Event";
+}
+
+function englishTimelineStatus(event) {
+  const status = normalize(timelineEventStatus(event));
+  if (status.includes("potwierdz")) return "confirmed by source";
+  if (status.includes("planow")) return "planned";
+  if (status.includes("potwierdzenia")) return "to confirm";
+  return "source-linked";
+}
+
+function englishStatusLabel(value) {
+  const status = normalize(value);
+  if (status.includes("potwierdz") || status.includes("confirmed")) return "confirmed";
+  if (status.includes("planow") || status.includes("planned")) return "planned";
+  if (status.includes("wyja") || status.includes("confirm")) return "to verify";
+  return value ? "source-linked" : "source-linked";
+}
+
+function renderEnglishTimeline() {
+  const role = activeRole();
+  const patient = activePatient();
+  const context = englishContext(patient.id);
+  const mapState = stateForMapPersona(role);
+  const events = byPatient(mapState.timelineEvents).slice().sort((a, b) => new Date(a.date) - new Date(b.date));
+  const visibleEvents = events.slice(0, 8);
+  const selected = selectedTimelineEvent(visibleEvents) || visibleEvents[0] || null;
+  const counts = englishDataCounts();
+  return `
+    ${pageHeader("Patient history", "A chronological map of events, sources and questions. Details open after choosing an event.", "")}
+    <section class="section-band history-v2 history-tri-panel">
+      <div class="history-context-bar">
+        <div>
+          <p class="eyebrow"><i data-lucide="${escapeHtml(activeRoleMeta(role).icon)}"></i>Patient history · ${escapeHtml(activeRoleMeta(role).label)}</p>
+          <h2>${escapeHtml(context.label)} · ${escapeHtml(context.episode)}</h2>
+          <p>${escapeHtml(context.current)}</p>
+        </div>
+        <div class="history-facts compact" aria-label="Patient history snapshot">
+          <article><span>Events</span><strong>${counts.events}</strong></article>
+          <article><span>Sources</span><strong>${counts.sources}</strong></article>
+          <article><span>Questions</span><strong>${counts.questions}</strong></article>
+        </div>
+      </div>
+      <div class="history-panel-grid">
+        <aside class="history-current-panel">
+          <p class="eyebrow">Here and now</p>
+          <h3>${escapeHtml(context.episode)}</h3>
+          <p>${escapeHtml(context.next)}</p>
+          <ul class="plain-list compact-list">
+            ${context.clarify.map((item) => `<li><i data-lucide="circle-help"></i><span>${escapeHtml(item)}</span></li>`).join("")}
+          </ul>
+        </aside>
+        <section class="history-vertical-timeline" aria-label="Chronological patient events">
+          <div class="history-mode-row" role="group" aria-label="History mode">
+            <span class="status-chip info">Key events</span>
+            <span class="status-chip">All events: ${events.length}</span>
+          </div>
+          <div class="history-event-list">
+            ${visibleEvents.map((event) => `
+              <button type="button" class="history-event-row ${selected?.id === event.id ? "selected" : ""}" data-map-event="${escapeHtml(event.id)}">
+                <span class="history-event-dot ${escapeHtml(event.track || "documents")}"></span>
+                <span class="history-event-date">${escapeHtml(formatDate(event.date))}</span>
+                <strong>${escapeHtml(englishTimelineTrackLabel(event.track))}</strong>
+                <small>${escapeHtml(englishTimelineStatus(event))} · ${compactSourceRefs(event.sourceRefs).length || 0} source(s)</small>
+              </button>
+            `).join("") || emptyState("No events visible for this patient.")}
+          </div>
+        </section>
+        <aside class="history-event-detail-drawer">
+          <p class="eyebrow">Event details</p>
+          ${selected ? `
+            <h3>${escapeHtml(englishTimelineTrackLabel(selected.track))}</h3>
+            <p>${escapeHtml(formatDate(selected.date))} · ${escapeHtml(englishTimelineStatus(selected))}</p>
+            <div class="source-line">${sourceChips(selected.sourceRefs || [])}</div>
+            <button class="ghost-button compact-action" type="button" data-open-evidence="${escapeHtml(compactSourceRefs(selected.sourceRefs)[0] || "")}"><i data-lucide="panel-right-open"></i>Show source</button>
+          ` : `<p>No event selected.</p>`}
+        </aside>
+      </div>
+      ${renderSafetyNote("The patient history organizes sources, events and questions. It does not diagnose, triage or recommend treatment.", "compact")}
+    </section>
+  `;
+}
+
+function renderEnglishSummary() {
+  const patient = activePatient();
+  const context = englishContext(patient.id);
+  const counts = englishDataCounts();
+  return `
+    ${pageHeader("Context summary", "A short demo summary for the visit conversation: known, unknown, uncertain and to verify.", "")}
+    ${renderRoleContextBanner(activeRole())}
+    <section class="section-band report-preview context-report">
+      <article class="report-section">
+        <p class="eyebrow">For doctor review</p>
+        <h2>${escapeHtml(context.label)} · ${escapeHtml(context.episode)}</h2>
+        <p class="record-body">${escapeHtml(context.current)}</p>
+      </article>
+      <article class="report-section">
+        <h3>Known</h3>
+        <p class="record-body">The demo contains ${counts.documents} document(s), ${counts.results} result group(s), ${counts.medications} medication record(s) and ${counts.events} timeline event(s).</p>
+      </article>
+      <article class="report-section">
+        <h3>Unknown / Uncertain / To verify</h3>
+        <ul class="plain-list compact-list">
+          ${context.clarify.map((item) => `<li><i data-lucide="circle-help"></i><span>${escapeHtml(item)}</span></li>`).join("")}
+        </ul>
+      </article>
+      <article class="report-section">
+        <h3>Next conversation</h3>
+        <p class="record-body">${escapeHtml(context.next)}</p>
+      </article>
+      ${renderSafetyNote("This is a public demo summary with fictional data. The system does not make clinical decisions.", "compact")}
+    </section>
+  `;
+}
+
+function renderEnglishSources() {
+  const patient = activePatient();
+  const context = englishContext(patient.id);
+  const documents = byPatient(state.documents).filter(matchesSearch).sort((a, b) => new Date(b.date) - new Date(a.date));
+  const interviews = byPatient(state.interviews).filter(matchesSearch).sort((a, b) => new Date(b.date) - new Date(a.date));
+  const observations = byPatient(state.observations).filter(matchesSearch);
+  return `
+    ${pageHeader("Sources and documents", "A readable source index for the active demo patient. Sources stay connected to the patient history and summary.", "")}
+    ${renderRoleContextBanner(activeRole())}
+    <section class="section-band">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Source registry</p>
+          <h2><i data-lucide="files"></i>${escapeHtml(context.label)} · ${escapeHtml(context.episode)}</h2>
+        </div>
+      </div>
+      <div class="history-facts compact">
+        <article><span>Documents</span><strong>${documents.length}</strong></article>
+        <article><span>Interviews</span><strong>${interviews.length}</strong></article>
+        <article><span>Result groups</span><strong>${observations.length}</strong></article>
+      </div>
+      <div class="record-list">
+        ${documents.slice(0, 6).map((doc) => `
+          <article class="record">
+            <div class="record-head">
+              <div>
+                <p class="record-title">${escapeHtml(doc.type || "Document")}</p>
+                <div class="record-meta">
+                  <span class="tag">${escapeHtml(formatDate(doc.date))}</span>
+                  <span class="tag">${escapeHtml(doc.facility || "source facility")}</span>
+                  <span class="tag">${escapeHtml(englishStatusLabel(doc.status || "confirmed"))}</span>
+                </div>
+              </div>
+              <button class="small-action" data-source-ref="doc:${escapeHtml(doc.id)}">Show source</button>
+            </div>
+            <p class="record-body">${escapeHtml(doc.title || "Demo document")}</p>
+          </article>
+        `).join("") || emptyState("No documents visible for this patient.")}
+        ${interviews.slice(0, 3).map((interview) => `
+          <article class="record">
+            <div class="record-head">
+              <div>
+                <p class="record-title">Interview / conversation context</p>
+                <div class="record-meta">
+                  <span class="tag">${escapeHtml(formatDate(interview.date))}</span>
+                  <span class="tag">speaker: ${escapeHtml(interview.speaker || "source")}</span>
+                  <span class="tag">confidence: ${escapeHtml(interview.confidence || "demo")}</span>
+                </div>
+              </div>
+              <button class="small-action" data-source-ref="interview:${escapeHtml(interview.id)}">Show source</button>
+            </div>
+          </article>
+        `).join("")}
+      </div>
+      ${renderSafetyNote("Source labels explain where the information comes from. Patient or caregiver observations remain interview information, not laboratory facts.", "compact")}
+    </section>
+  `;
+}
+
 function renderRoleStart() {
   const selectedRole = activeRole();
   const roleConfirmed = Boolean(state.roleSelectionConfirmed);
@@ -2404,6 +2819,7 @@ function riskBullets() {
 }
 
 function renderPatientPortal() {
+  if (isDemoEnglish()) return renderEnglishPatientCockpit();
   const patient = activePatient();
   const preVisitModel = PATIENT360_PREVISIT_MODEL.buildPreVisitModel({
     state,
@@ -2992,6 +3408,7 @@ function renderInterviewCard(interview) {
 }
 
 function renderDocuments() {
+  if (isDemoEnglish()) return renderEnglishSources();
   const documents = byPatient(state.documents).filter(matchesSearch).sort((a, b) => new Date(b.date) - new Date(a.date));
   return `
     ${pageHeader("Rejestr dokumentów", "Dokumenty są jednym z typów źródła. Wywiad i transkrypcja są oddzielnymi źródłami o innym poziomie pewności.", "document")}
@@ -3018,6 +3435,7 @@ function renderDocuments() {
 }
 
 function renderTimeline() {
+  if (isDemoEnglish()) return renderEnglishTimeline();
   const role = activeRole();
   const patient = activePatient();
   const mapState = stateForMapPersona(role);
@@ -4218,6 +4636,7 @@ function renderFlagCard(flag) {
 }
 
 function renderReportsV2() {
+  if (isDemoEnglish()) return renderEnglishSummary();
   const reportTypes = [
     ["context", "Podsumowanie kontekstu"]
   ];
@@ -4442,6 +4861,7 @@ function renderCaregiverAssignmentPanel(model) {
 }
 
 function renderCaregiverPortal() {
+  if (isDemoEnglish()) return renderEnglishCaregiverCockpit();
   const model = PATIENT360_CAREGIVER_MODEL.buildCaregiverModel({
     state,
     patientId: state.activePatientId
@@ -4878,7 +5298,7 @@ function renderEvidence() {
   const docs = byPatient(state.documents).slice(0, 3).map((doc) => `doc:${doc.id}`);
   const interviews = byPatient(state.interviews).slice(0, 2).map((interview) => `interview:${interview.id}`);
   evidenceRoot.innerHTML = `
-    <div class="evidence-empty">Kliknij etykietę źródła, aby sprawdzić, czy informacja pochodzi z dokumentu, wywiadu, transkrypcji, wyniku, leku, zgody czy punktu do weryfikacji.</div>
+    <div class="evidence-empty">${escapeHtml(demoText("evidence.empty", "Kliknij etykietę źródła, aby sprawdzić, czy informacja pochodzi z dokumentu, wywiadu, transkrypcji, wyniku, leku, zgody czy punktu do weryfikacji."))}</div>
     <div class="record-list">
       ${[...docs, ...interviews].map((ref) => {
         const { parsed, record } = sourceRecord(ref);
