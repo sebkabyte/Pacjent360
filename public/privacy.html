@@ -2,7 +2,7 @@
 <html lang="pl">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; script-src-attr 'none'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#10242a" />
     <title>Polityka prywatności | Pacjent360™</title>
@@ -71,8 +71,8 @@
           <p>Strona publiczna nie zbiera danych osobowych przez formularze, konta użytkowników, cookies analityczne ani narzędzia śledzące. Demo alpha działa lokalnie w przeglądarce i korzysta z fikcyjnych danych. Dane wpisane w demo mogą zostać zapisane w <code>localStorage</code> przeglądarki, obecnie pod kluczem <code>pacjent360-state-v11</code>. Pozostają lokalne dla przeglądarki do czasu resetu demo albo wyczyszczenia danych strony.</p>
         </article>
         <article>
-          <h2>Zewnętrzny CDN</h2>
-          <p>Demo używa biblioteki ikon Lucide pobieranej z <code>https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js</code>. Wersja jest przypięta, a skrypt w <code>demo.html</code> ma atrybut SRI <code>integrity</code> oraz <code>crossorigin="anonymous"</code>. unpkg.com działa w oparciu o Cloudflare CDN. Adres IP odwiedzającego może być widoczny dla operatora CDN wraz ze standardowymi informacjami technicznymi, takimi jak user-agent, referer i czas żądania.</p>
+          <h2>Biblioteka ikon</h2>
+          <p>Demo używa biblioteki ikon Lucide w wersji <code>0.468.0</code>, serwowanej lokalnie z pliku <code>assets/lucide.min.js</code>. Nie pobieramy tej biblioteki z zewnętrznego CDN w czasie wizyty. Skrypt w <code>demo.html</code> ma atrybut SRI <code>integrity</code>, aby wykryć przypadkową zmianę pliku.</p>
         </article>
         <article>
           <h2>Logi serwera</h2>

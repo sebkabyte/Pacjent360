@@ -259,6 +259,7 @@ body[data-register="story"] #solution,
 body[data-register="story"] #wedge,
 body[data-register="story"] #road,
 body[data-register="story"] #audiences,
+body[data-register="story"] #care-circle,
 body[data-register="story"] #mapa,
 body[data-register="story"] #build {
   scroll-margin-top: 92px;
@@ -391,6 +392,125 @@ body[data-register="story"] .problem-card {
 
 body[data-register="story"] .possibility-card {
   border-radius: 14px;
+}
+
+.care-circle-section {
+  position: relative;
+}
+
+.care-circle-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr);
+  gap: 32px;
+  align-items: start;
+}
+
+.care-circle-copy .section-copy {
+  max-width: 640px;
+}
+
+.consent-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  align-items: stretch;
+}
+
+.consent-card {
+  display: flex;
+  min-height: 292px;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 12px 34px rgba(16, 36, 42, 0.07);
+}
+
+.consent-card-primary {
+  grid-column: 1 / -1;
+  border-color: rgba(21, 163, 154, 0.35);
+  background: linear-gradient(180deg, #f1fbf8 0%, #ffffff 100%);
+}
+
+.consent-kicker {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: rgba(214, 168, 72, 0.16);
+  color: #7a5608;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.consent-card h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.18rem, 2vw, 1.42rem);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+}
+
+.consent-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.96rem;
+}
+
+.consent-pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.consent-pill {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(136, 154, 160, 0.28);
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: #f7fbfa;
+  color: #405f66;
+  font-size: 0.82rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.consent-pill b {
+  border-radius: 999px;
+  padding: 2px 6px;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.consent-pill.allowed b {
+  background: rgba(21, 163, 154, 0.16);
+  color: #0b746e;
+}
+
+.consent-pill.blocked b {
+  background: rgba(232, 111, 90, 0.13);
+  color: #9c3f32;
+}
+
+.consent-note {
+  max-width: 860px;
+  margin: 22px 0 0;
+  padding: 14px 16px;
+  border-left: 4px solid var(--accent2);
+  border-radius: 0 12px 12px 0;
+  background: rgba(255, 246, 223, 0.72);
+  color: #4d6870;
+  font-size: 0.95rem;
 }
 
 body[data-register="story"] .startup-roadmap .road-step {
@@ -526,6 +646,10 @@ body[data-register="story"] .startup-roadmap .road-step p {
     grid-template-columns: 1fr;
   }
 
+  .care-circle-grid {
+    grid-template-columns: 1fr;
+  }
+
   .bento-card,
   .bento-card-large {
     min-height: auto;
@@ -618,7 +742,8 @@ body[data-register="story"] .startup-roadmap .road-step p {
   body[data-register="story"] #problem,
   body[data-register="story"] #wedge,
   body[data-register="story"] #road,
-  body[data-register="story"] #audiences {
+  body[data-register="story"] #audiences,
+  body[data-register="story"] #care-circle {
     padding-top: 64px;
     padding-bottom: 64px;
   }
@@ -687,6 +812,19 @@ body[data-register="story"] .startup-roadmap .road-step p {
 
   body[data-register="story"] .trust-strip {
     margin-top: -26px;
+  }
+
+  .care-circle-grid,
+  .consent-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .consent-card {
+    min-height: 0;
+  }
+
+  .consent-pill {
+    white-space: normal;
   }
 
   body[data-register="story"] .trust-strip span {

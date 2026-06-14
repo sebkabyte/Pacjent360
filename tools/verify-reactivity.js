@@ -665,7 +665,7 @@ async function checkDitlStatus(client) {
   }
 }
 
-async function checkSearchResetExport(client) {
+async function checkSearchResetNoDownload(client) {
   await setPatientAndView(client, "p1", "observations");
   const search = await client.evaluate(`(() => {
     const input = document.querySelector('#searchInput');
@@ -683,20 +683,17 @@ async function checkSearchResetExport(client) {
     reportFailure("R1-5", "Search control did not filter observations", { found: search.found, after: snippet(search.after) });
   }
 
-  for (const patient of PATIENTS) {
-    await setPatientAndView(client, patient.id, "core");
-    const exported = await client.evaluate(`(() => {
-      const data = typeof buildActivePatientExport === 'function' ? buildActivePatientExport() : null;
-      return {
-        patientId: data?.patient?.id || null,
-        mismatches: data ? ${JSON.stringify(PATIENT_SCOPED_EXPORT_KEYS)}
-          .flatMap((key) => (data[key] || []).filter((item) => item.patientId && item.patientId !== data.patient.id).map((item) => key + ':' + item.id + ':' + item.patientId)) : ['no-export']
-      };
-    })()`);
-    counters.controlChecks += 1;
-    if (exported.patientId !== patient.id || exported.mismatches.length) {
-      reportFailure("R1-5", "Export does not match active patient", { patientId: patient.id, exported });
-    }
+  const downloadSurface = await client.evaluate(`(() => {
+    const exportButton = document.querySelector('#exportJson');
+    const jsonDownloads = Array.from(document.querySelectorAll('a[download]')).map((link) => link.getAttribute('download') || '');
+    return {
+      hasExportButton: Boolean(exportButton),
+      jsonDownloads: jsonDownloads.filter((name) => name.toLowerCase().endsWith('.json'))
+    };
+  })()`);
+  counters.controlChecks += 1;
+  if (downloadSurface.hasExportButton || downloadSurface.jsonDownloads.length) {
+    reportFailure("R1-5", "Public demo should not expose JSON download controls", downloadSurface);
   }
 
   const reset = await client.evaluate(`(() => {
@@ -802,7 +799,7 @@ async function main() {
     await checkDialogBindings(client);
     await checkTimelineControls(client);
     await checkDitlStatus(client);
-    await checkSearchResetExport(client);
+    await checkSearchResetNoDownload(client);
     await checkPanelAndPrint(client);
 
     const browserIssues = client.events.filter((event) => {

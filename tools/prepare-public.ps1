@@ -26,6 +26,7 @@ New-Item -ItemType Directory -Force -Path $target | Out-Null
 
 $files = @(
   ".htaccess",
+  ".well-known/security.txt",
   "index.html",
   "demo.html",
   "engineering.html",
@@ -33,6 +34,7 @@ $files = @(
   "agents.html",
   "investors.html",
   "jak-sie-przygotowac.html",
+  "soczewki.html",
   "disclaimer.html",
   "privacy.html",
   "maintenance.html",
@@ -73,6 +75,7 @@ $assetFiles = @(
   "assets/hero-clinical-context.png",
   "assets/story.css",
   "assets/story.js",
+  "assets/lucide.min.js",
   "assets/favicon.svg"
 )
 foreach ($asset in $assetFiles) {

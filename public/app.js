@@ -38,8 +38,6 @@ const SOURCE_MISSING_REF = PATIENT360_CONTRACT.SOURCE_MISSING_REF;
 const DEMO_WATERMARK_TEXT = "PROTOTYP KONCEPCYJNY — DANE FIKCYJNE — NIE UŻYWAĆ Z REALNYMI DANYMI PACJENTA";
 const DEMO_FORM_WARNING =
   "Formularz służy wyłącznie do fikcyjnych danych demo. Nie wpisuj realnych danych pacjenta, danych identyfikujących ani treści z dokumentacji medycznej.";
-const DEMO_EXPORT_WARNING =
-  "Eksport JSON pobiera dane aktywnego pacjenta z lokalnego demo. Kontynuuj tylko dla fikcyjnych danych demonstracyjnych.";
 const DEMO_PRINT_WARNING =
   "Wydruk jest przeznaczony wyłącznie do publicznego demo i nie może zawierać realnych danych pacjenta.";
 const DITL_STATUS_NOTICE =
@@ -192,6 +190,45 @@ const ROLE_SUMMARY_VIEW = Object.freeze({
   doctor: "reports",
   patient: "patientPortal",
   caregiver: "caregiverPortal"
+});
+
+const SPECIALTY_LENS_ORDER = ["internist", "cardiology", "endocrinology", "oncology", "pediatrics"];
+const SPECIALTY_LENSES = Object.freeze({
+  internist: {
+    label: "Ogólna",
+    shortLabel: "Ogólna",
+    icon: "stethoscope",
+    summary: "Pełny kontekst bez zawężania do jednej dziedziny.",
+    terms: []
+  },
+  cardiology: {
+    label: "Kardiologia",
+    shortLabel: "Kardiolog",
+    icon: "heart-pulse",
+    summary: "Wyróżnia źródła i pytania związane z sercem, objawami krążeniowymi, lekami i wynikami kardiologicznymi.",
+    terms: ["kardio", "serc", "echo", "nt-probnp", "atorwastat", "duszno", "omdlen", "obrzęk", "klatce", "ciśnien", "ekg", "lipid"]
+  },
+  endocrinology: {
+    label: "Endokrynologia",
+    shortLabel: "Endokrynolog",
+    icon: "activity",
+    summary: "Wyróżnia wyniki i pytania związane z glukozą, hormonami, metabolizmem i kontrolą przewlekłą.",
+    terms: ["endo", "gluko", "cukr", "hba1c", "tsh", "hormon", "metabol", "insulin", "diabet", "tarczy"]
+  },
+  oncology: {
+    label: "Onkologia",
+    shortLabel: "Onkolog",
+    icon: "scan-search",
+    summary: "Wyróżnia dokumenty i pytania związane z histopatologią, leczeniem onkologicznym i kontrolą po terapii, jeśli są obecne w danych.",
+    terms: ["onkolog", "nowotw", "guz", "histo", "histopat", "biops", "chemi", "radio", "marker"]
+  },
+  pediatrics: {
+    label: "Pediatria",
+    shortLabel: "Pediatra",
+    icon: "baby",
+    summary: "Wyróżnia kontekst dziecka, rodzica, infekcji, obserwacji domowych i kontroli pediatrycznej.",
+    terms: ["dzieck", "pediatr", "rodzic", "mama", "tata", "infek", "gorącz", "kaszel", "szkoł", "crp", "morfolog", "maja", "marta"]
+  }
 });
 
 const LIBRARY_HEADING = "Dane i źródła";
@@ -556,6 +593,9 @@ function loadState() {
     if (!ROLE_META[loaded.activeRole]) {
       loaded.activeRole = "doctor";
     }
+    if (!SPECIALTY_LENSES[loaded.specialist]) {
+      loaded.specialist = "internist";
+    }
     loaded.roleSelectionConfirmed = Boolean(loaded.roleSelectionConfirmed);
     const renderableViews = new Set(["roleStart", "core", "patientPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "reports", "caregiverPortal", "consent", "audit"]);
     if (!renderableViews.has(loaded.activeView)) {
@@ -604,6 +644,11 @@ function byPatient(collection) {
 
 function activeDecision() {
   return byPatient(state.decisionContexts).sort((a, b) => new Date(b.contactDate) - new Date(a.contactDate))[0];
+}
+
+function activeSpecialtyLens() {
+  const id = SPECIALTY_LENSES[state.specialist] ? state.specialist : "internist";
+  return { id, ...SPECIALTY_LENSES[id] };
 }
 
 function activeCareContract() {
@@ -1007,6 +1052,103 @@ function sourceLabel(ref) {
   if (parsed.type === "report") return `Raport: ${record.type}`;
   if (parsed.type === "consent") return `Zgoda: ${record.subject}`;
   return String(ref);
+}
+
+function specialtyLensTextForRecord(record) {
+  if (!record) return "";
+  const parts = [
+    record.type,
+    record.title,
+    record.summary,
+    record.facility,
+    record.author,
+    record.source,
+    record.scenario,
+    record.transcript,
+    record.speaker,
+    record.name,
+    record.story,
+    record.question,
+    record.category,
+    record.evidence,
+    record.description,
+    record.clinicalQuestion,
+    record.status,
+    record.extractionStatus,
+    record.trust
+  ];
+  if (record.answers) parts.push(...Object.values(record.answers));
+  if (Array.isArray(record.values)) {
+    record.values.forEach((value) => parts.push(value.label, value.value, value.unit, value.date));
+  }
+  return parts.filter(Boolean).join(" ");
+}
+
+function specialtyLensTextForRefs(refs) {
+  const list = Array.isArray(refs) ? refs : [refs].filter(Boolean);
+  return list
+    .map((ref) => {
+      const { record } = sourceRecord(ref);
+      return [sourceLabel(ref), specialtyLensTextForRecord(record)].filter(Boolean).join(" ");
+    })
+    .join(" ");
+}
+
+function specialtyLensScore(item, lens = activeSpecialtyLens()) {
+  if (!lens.terms?.length) return 0;
+  const haystack = normalize([
+    specialtyLensTextForRecord(item),
+    item?.text,
+    item?.question,
+    item?.description,
+    item?.label,
+    item?.body,
+    specialtyLensTextForRefs(item?.sourceRefs || [])
+  ].filter(Boolean).join(" "));
+  return lens.terms.reduce((score, term) => score + (haystack.includes(normalize(term)) ? 1 : 0), 0);
+}
+
+function specialtyLensSort(items, lens = activeSpecialtyLens()) {
+  if (!lens.terms?.length) return [...items];
+  return [...items]
+    .map((item, index) => ({ item, index, score: specialtyLensScore(item, lens) }))
+    .sort((a, b) => b.score - a.score || a.index - b.index)
+    .map(({ item }) => item);
+}
+
+function sourceHighlightForLens(source, lens) {
+  const score = specialtyLensScore(source, lens);
+  if (!score) return null;
+  const refPrefix = {
+    document: "doc",
+    observation: "observation",
+    medication: "medication",
+    interview: "interview"
+  }[source.kind];
+  const ref = refPrefix ? `${refPrefix}:${source.item.id}` : null;
+  return {
+    ...source,
+    score,
+    sourceRefs: ref ? [ref] : source.item.sourceRefs || []
+  };
+}
+
+function highlightedSourcesForLens(lens = activeSpecialtyLens(), limit = 4) {
+  if (!lens.terms?.length) return [];
+  const sources = [
+    ...byPatient(state.documents).map((item) => ({ kind: "document", item, title: item.title || item.type, body: item.summary || item.source || "" })),
+    ...byPatient(state.observations).map((item) => {
+      const latest = latestValue(item);
+      return { kind: "observation", item, title: item.name, body: latest ? `${latest.value} ${item.unit} · ${observationStatus(item)}` : observationStatus(item) };
+    }),
+    ...byPatient(state.medications).map((item) => ({ kind: "medication", item, title: item.name, body: item.question || item.story || "" })),
+    ...byPatient(state.interviews).map((item) => ({ kind: "interview", item, title: item.scenario || "Wywiad", body: item.transcript || Object.values(item.answers || {}).join(" ") }))
+  ];
+  return sources
+    .map((source) => sourceHighlightForLens(source, lens))
+    .filter(Boolean)
+    .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title))
+    .slice(0, limit);
 }
 
 function evidenceClassLabel(ref) {
@@ -1430,14 +1572,18 @@ function renderMedReconciliation() {
 function renderCore() {
   const patient = activePatient();
   const decision = activeDecision();
+  const specialtyLens = activeSpecialtyLens();
   const latestInterview = byPatient(state.interviews).sort((a, b) => new Date(b.date) - new Date(a.date))[0];
   const latestInterviewRefs = latestInterview ? [`interview:${latestInterview.id}`, `transcript:${latestInterview.id}`] : [SOURCE_MISSING_REF];
   const decisionSelfRefs = decision ? [`decision:${decision.id}`] : [SOURCE_MISSING_REF];
   const decisionRefs = decision?.sourceRefs?.length ? decision.sourceRefs : decisionSelfRefs;
   const flags = byPatient(state.flags);
   const redFlags = flags.filter((flag) => flag.color === "red" && flag.status !== "wyjaśnione").slice(0, 5);
-  const gaps = byPatient(state.knownUnknowns).filter((item) => item.category === "Unknown" || item.category === "To verify").slice(0, 3);
-  const questions = [...(decision?.ditlQuestions || []), ...flags.filter((flag) => flag.color === "blue").map(flagToQuestion)].slice(0, 7);
+  const allGaps = byPatient(state.knownUnknowns).filter((item) => item.category === "Unknown" || item.category === "To verify");
+  const allQuestions = [...(decision?.ditlQuestions || []), ...flags.filter((flag) => flag.color === "blue").map(flagToQuestion)];
+  const gaps = specialtyLensSort(allGaps, specialtyLens).slice(0, 3);
+  const questions = specialtyLensSort(allQuestions, specialtyLens).slice(0, 7);
+  const highlightedSources = highlightedSourcesForLens(specialtyLens);
   const decisionHeadline = decision ? decision.clinicalQuestion : patient.decisionToday;
   const topQuestions = questions.slice(0, 3);
 
@@ -1456,10 +1602,11 @@ function renderCore() {
     </div>
 
     ${renderRoleContextBanner("doctor")}
+    ${renderSpecialtyLensPanel({ lens: specialtyLens, highlightedSources })}
     ${renderDashboardOrchestrator({
       persona: "Lekarz360",
       icon: "stethoscope",
-      title: "Najpierw kontekst, potem pełne dane",
+      title: specialtyLens.id === "internist" ? "Najpierw kontekst, potem pełne dane" : `Kontekst przez soczewkę: ${specialtyLens.shortLabel}`,
       lead: `${patient.name} · ${formatAge(patient.birthDate)}. ${decisionHeadline}`,
       status: `${formatCount(questions.filter((q) => q.status === "do wyjaśnienia").length, "pytanie do wyjaśnienia", "pytania do wyjaśnienia", "pytań do wyjaśnienia")} · ${formatCount(redFlags.length, "sygnał do sprawdzenia", "sygnały do sprawdzenia", "sygnałów do sprawdzenia")}`,
       steps: [
@@ -1473,10 +1620,11 @@ function renderCore() {
         { label: "Pokaż źródła", icon: "files", view: "documents" }
       ]
     })}
-    ${renderFullDataAccess("clinician")}
     ${renderCareContractPanel("doctor")}
 
     ${renderCockpitDetails("Pełne dane Lekarz360: leki, źródła, karta 90 sekund, historia pacjenta i skróty", `
+      ${renderFullDataAccess("clinician")}
+
       <section class="section-band decision-hero core-brief">
         <div class="section-head">
           <div>
@@ -1502,6 +1650,43 @@ function renderCore() {
       ${renderMapShortcut()}
       ${renderClinicianShortcuts()}
     `)}
+  `;
+}
+
+function renderSpecialtyLensPanel({ lens, highlightedSources }) {
+  const highlightedLine = lens.id === "internist"
+    ? "Pełny widok bez zawężania źródeł."
+    : highlightedSources.length
+      ? `Wyróżnione w danych demo: ${highlightedSources.map((item) => item.title).join(", ")}.`
+      : "Brak bezpośrednich dopasowań w danych demo; pełny kontekst pozostaje widoczny.";
+  return `
+    <section class="specialty-lens-panel" aria-label="Soczewki specjalistyczne">
+      <div class="specialty-lens-toolbar">
+        <div>
+          <p class="eyebrow"><i data-lucide="sliders-horizontal"></i>Soczewka specjalisty</p>
+          <strong>Jak lekarz chce uporządkować ten kontekst?</strong>
+          <small>${escapeHtml(lens.summary)} Nie ukrywa danych, nie ocenia pilności i nie podpowiada decyzji klinicznej.</small>
+        </div>
+        <div class="specialty-lens-options" role="group" aria-label="Wybierz soczewkę specjalisty">
+          ${SPECIALTY_LENS_ORDER.map((id) => {
+            const option = SPECIALTY_LENSES[id];
+            return `
+              <button type="button" class="lens-option ${id === lens.id ? "active" : ""}" data-specialty-lens="${escapeHtml(id)}" title="${escapeHtml(option.summary)}">
+                <i data-lucide="${escapeHtml(option.icon)}"></i>
+                <span>${escapeHtml(option.label)}</span>
+              </button>
+            `;
+          }).join("")}
+        </div>
+      </div>
+      <p class="specialty-lens-summary">${escapeHtml(highlightedLine)}</p>
+      ${lens.id !== "internist" && highlightedSources.length ? `
+        <div class="specialty-lens-source-line">
+          <span>Źródła soczewki</span>
+          ${sourceChips(compactSourceRefs(highlightedSources.flatMap((item) => item.sourceRefs || []), 4))}
+        </div>
+      ` : ""}
+    </section>
   `;
 }
 
@@ -4489,6 +4674,15 @@ function bindViewActions() {
     });
   });
 
+  viewRoot.querySelectorAll("[data-specialty-lens]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const nextLens = button.dataset.specialtyLens;
+      state.specialist = SPECIALTY_LENSES[nextLens] ? nextLens : "internist";
+      saveState();
+      render();
+    });
+  });
+
   viewRoot.querySelectorAll("[data-timeline-period]").forEach((button) => {
     button.addEventListener("click", () => {
       state.timelinePeriod = button.dataset.timelinePeriod;
@@ -5449,26 +5643,6 @@ function buildActivePatientExport() {
   return contract;
 }
 
-function exportDemoJson() {
-  if (!confirmDemoAction(DEMO_EXPORT_WARNING)) return;
-  let exportState;
-  try {
-    exportState = buildActivePatientExport();
-  } catch (error) {
-    window.alert(`Eksport zatrzymany: ${error.message}`);
-    return;
-  }
-  const blob = new Blob([JSON.stringify(exportState, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `pacjent-360-context-v${DATA_SCHEMA_VERSION}-${state.activePatientId}.json`;
-  link.click();
-  URL.revokeObjectURL(url);
-  addAudit("wyeksportowano JSON demo", `aktywny pacjent demo: ${state.activePatientId}`);
-  saveState();
-}
-
 function printCurrentView(scope = "bieżący widok demo") {
   if (!confirmDemoAction(DEMO_PRINT_WARNING)) return;
   addAudit("otwarto podgląd wydruku demo", scope);
@@ -5512,10 +5686,6 @@ document.querySelector("#resetDemo").addEventListener("click", () => {
   saveState();
   showToast("Przywrócono dane demo.");
   render();
-});
-
-document.querySelector("#exportJson").addEventListener("click", () => {
-  exportDemoJson();
 });
 
 document.querySelector("#printReport").addEventListener("click", () => printCurrentView());
