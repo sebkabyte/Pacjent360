@@ -46,10 +46,10 @@
         </div>
         <button class="nav-toggle" data-nav-toggle aria-label="Otwórz menu" aria-expanded="false" aria-controls="mainNav">☰</button>
         <nav class="main-nav" data-nav id="mainNav" aria-label="Sekcje strony">
-          <a href="index.html#problem">Problem</a>
+          <a href="index.html#problem" data-en="Problem">Problem</a>
           <a href="index.html#how">Jak działa</a>
-          <a href="index.html#audiences">Dla kogo</a>
-          <a href="index.html#validate">Walidacja</a>
+          <a href="index.html#audiences" data-en="For whom">Dla kogo</a>
+          <a href="index.html#validate" data-en="Validation">Walidacja</a>
           <a class="cta-link" href="demo.html?start=1">Demo</a>
         </nav>
       </div>
@@ -58,53 +58,53 @@
     <main id="main-content" tabindex="-1">
       <section class="subpage-hero">
         <div class="container">
-          <p class="eyebrow">Prywatność</p>
-          <h1>Polityka prywatności</h1>
-          <p>Pacjent360™ jest statycznym prototypem koncepcyjnym. Publiczna strona nie wymaga konta, a demo jest przeznaczone wyłącznie do pracy z fikcyjnymi danymi pacjentów.</p>
+          <p class="eyebrow" data-en="Privacy">Prywatność</p>
+          <h1 data-en="Privacy Policy">Polityka prywatności</h1>
+          <p data-en="Patient360 is a static conceptual prototype. The public website does not require an account, and the demo is intended only for fictional patient data.">Pacjent360™ jest statycznym prototypem koncepcyjnym. Publiczna strona nie wymaga konta, a demo jest przeznaczone wyłącznie do pracy z fikcyjnymi danymi pacjentów.</p>
         </div>
       </section>
 
       <section class="container section">
         <div class="subpage-article">
         <article>
-          <h2>Administrator danych</h2>
-          <p>Administratorem danych związanych z publiczną stroną projektu Pacjent360™ jest Sebastian Kalisz. Kontakt w sprawach prywatności: <a href="mailto:kontakt@pacjent360.com.pl" class="text-link">kontakt@pacjent360.com.pl</a>.</p>
+          <h2 data-en="Data controller">Administrator danych</h2>
+          <p data-en="The data controller for the public Patient360 project website is Sebastian Kalisz. Privacy contact: kontakt@pacjent360.com.pl.">Administratorem danych związanych z publiczną stroną projektu Pacjent360™ jest Sebastian Kalisz. Kontakt w sprawach prywatności: <a href="mailto:kontakt@pacjent360.com.pl" class="text-link">kontakt@pacjent360.com.pl</a>.</p>
         </article>
         <article>
-          <h2>Podstawa prawna i cel</h2>
-          <p>Podstawą prawną ewentualnego przetwarzania danych technicznych jest Art. 6(1)(f) RODO, czyli uzasadniony interes administratora polegający na hostingu statycznej strony, zapewnieniu jej działania i podstawowym bezpieczeństwie technicznym.</p>
+          <h2 data-en="Legal basis and purpose">Podstawa prawna i cel</h2>
+          <p data-en="The legal basis for any processing of technical data is Article 6(1)(f) GDPR: the controller's legitimate interest in hosting a static website, keeping it available and maintaining basic technical security.">Podstawą prawną ewentualnego przetwarzania danych technicznych jest Art. 6(1)(f) RODO, czyli uzasadniony interes administratora polegający na hostingu statycznej strony, zapewnieniu jej działania i podstawowym bezpieczeństwie technicznym.</p>
         </article>
         <article>
-          <h2>Zakres danych</h2>
-          <p>Strona publiczna nie zbiera danych osobowych przez formularze, konta użytkowników, cookies analityczne ani narzędzia śledzące. Demo alpha działa lokalnie w przeglądarce i korzysta z fikcyjnych danych. Dane wpisane w demo mogą zostać zapisane w <code>localStorage</code> przeglądarki, obecnie pod kluczem <code>pacjent360-state-v11</code>. Pozostają lokalne dla przeglądarki do czasu resetu demo albo wyczyszczenia danych strony.</p>
+          <h2 data-en="Scope of data">Zakres danych</h2>
+          <p data-en="The public website does not collect personal data through forms, user accounts, analytics cookies or visitor-monitoring tools. The alpha demo runs locally in the browser and uses fictional data. Data entered into the demo may be saved in the browser's localStorage, currently under the key pacjent360-state-v11. It remains local to the browser until the demo is reset or site data is cleared.">Strona publiczna nie zbiera danych osobowych przez formularze, konta użytkowników, cookies analityczne ani narzędzia śledzące. Demo alpha działa lokalnie w przeglądarce i korzysta z fikcyjnych danych. Dane wpisane w demo mogą zostać zapisane w <code>localStorage</code> przeglądarki, obecnie pod kluczem <code>pacjent360-state-v11</code>. Pozostają lokalne dla przeglądarki do czasu resetu demo albo wyczyszczenia danych strony.</p>
         </article>
         <article>
-          <h2>Biblioteka ikon</h2>
-          <p>Demo używa biblioteki ikon Lucide w wersji <code>0.468.0</code>, serwowanej lokalnie z pliku <code>assets/lucide.min.js</code>. Nie pobieramy tej biblioteki z zewnętrznego CDN w czasie wizyty. Skrypt w <code>demo.html</code> ma atrybut SRI <code>integrity</code>, aby wykryć przypadkową zmianę pliku.</p>
+          <h2 data-en="Icon library">Biblioteka ikon</h2>
+          <p data-en="The demo uses the Lucide icon library version 0.468.0, served locally from assets/lucide.min.js. We do not load this library from an external CDN during the visit. The script in demo.html uses an SRI integrity attribute to detect accidental file changes.">Demo używa biblioteki ikon Lucide w wersji <code>0.468.0</code>, serwowanej lokalnie z pliku <code>assets/lucide.min.js</code>. Nie pobieramy tej biblioteki z zewnętrznego CDN w czasie wizyty. Skrypt w <code>demo.html</code> ma atrybut SRI <code>integrity</code>, aby wykryć przypadkową zmianę pliku.</p>
         </article>
         <article>
-          <h2>Logi serwera</h2>
-          <p>Hosting nazwa.pl może rejestrować standardowe logi HTTP, takie jak adres IP, user-agent, timestamp, ścieżka URL i kod odpowiedzi HTTP. Retencja logów zależy od polityki hostingu nazwa.pl. Logi służą utrzymaniu działania strony i bezpieczeństwu technicznemu.</p>
+          <h2 data-en="Server logs">Logi serwera</h2>
+          <p data-en="nazwa.pl hosting may record standard HTTP logs such as IP address, user-agent, timestamp, URL path and HTTP response code. Log retention depends on the nazwa.pl hosting policy. Logs are used to maintain website availability and technical security.">Hosting nazwa.pl może rejestrować standardowe logi HTTP, takie jak adres IP, user-agent, timestamp, ścieżka URL i kod odpowiedzi HTTP. Retencja logów zależy od polityki hostingu nazwa.pl. Logi służą utrzymaniu działania strony i bezpieczeństwu technicznemu.</p>
         </article>
         <article>
-          <h2>Prawa użytkownika</h2>
-          <p>W zakresie wynikającym z RODO możesz poprosić o dostęp do danych, sprostowanie, usunięcie, ograniczenie przetwarzania, przenoszenie danych albo wnieść sprzeciw wobec przetwarzania. W sprawach prywatności napisz na <a href="mailto:kontakt@pacjent360.com.pl" class="text-link">kontakt@pacjent360.com.pl</a>.</p>
+          <h2 data-en="User rights">Prawa użytkownika</h2>
+          <p data-en="Within the scope provided by GDPR, you may request access to data, rectification, deletion, restriction of processing, data portability or object to processing. For privacy matters, write to kontakt@pacjent360.com.pl.">W zakresie wynikającym z RODO możesz poprosić o dostęp do danych, sprostowanie, usunięcie, ograniczenie przetwarzania, przenoszenie danych albo wnieść sprzeciw wobec przetwarzania. W sprawach prywatności napisz na <a href="mailto:kontakt@pacjent360.com.pl" class="text-link">kontakt@pacjent360.com.pl</a>.</p>
         </article>
         <article>
-          <h2>Skarga do PUODO</h2>
-          <p>Masz prawo wnieść skargę do Prezesa Urzędu Ochrony Danych Osobowych (PUODO), jeśli uważasz, że przetwarzanie danych narusza przepisy o ochronie danych osobowych.</p>
+          <h2 data-en="Complaint to the Polish data protection authority">Skarga do PUODO</h2>
+          <p data-en="You have the right to lodge a complaint with the President of the Personal Data Protection Office (PUODO) if you believe that data processing violates personal data protection regulations.">Masz prawo wnieść skargę do Prezesa Urzędu Ochrony Danych Osobowych (PUODO), jeśli uważasz, że przetwarzanie danych narusza przepisy o ochronie danych osobowych.</p>
         </article>
         <article>
-          <h2>Brak profilowania i śledzenia</h2>
-          <p>Strona nie profiluje użytkowników, nie używa cookies analitycznych i nie śledzi zachowań odwiedzających. Projekt nie korzysta z reklam ani marketingowych narzędzi śledzących.</p>
+          <h2 data-en="No profiling or visitor monitoring">Brak profilowania i śledzenia</h2>
+          <p data-en="The website does not profile users, does not use analytics cookies and does not record visitor behavior. The project does not use advertising or marketing measurement tools.">Strona nie profiluje użytkowników, nie używa cookies analitycznych i nie śledzi zachowań odwiedzających. Projekt nie korzysta z reklam ani marketingowych narzędzi śledzących.</p>
         </article>
         <article>
-          <h2>Zasada "Bring Your Own Data" (Brak integracji z IKP/P1)</h2>
-          <p>Pacjent360™ w fazie Alpha opiera się na zasadzie "Bring Your Own Data" (Przynieś Własne Dane). Aplikacja nie loguje się do systemów państwowych (IKP), przychodni, ani nie scrapuje danych bez wiedzy pacjenta. To pacjent, jako prawny dysponent i właściciel swoich danych, samodzielnie dostarcza paczkę informacyjną (PDF/XML) do aplikacji, a Pacjent360™ przetwarza je tylko jako procesor w celu przygotowania czytelnej narracji dla lekarza.</p>
+          <h2 data-en="Bring Your Own Data principle (no IKP/P1 integration)">Zasada "Bring Your Own Data" (Brak integracji z IKP/P1)</h2>
+          <p data-en="In the Alpha phase, Patient360 follows the Bring Your Own Data principle. The application does not log into public systems such as IKP, clinics or scrape data without the patient's knowledge. The patient, as the legal holder and controller of their own data, provides an information package (PDF/XML) to the application, and Patient360 processes it only to prepare a readable story for the doctor.">Pacjent360™ w fazie Alpha opiera się na zasadzie "Bring Your Own Data" (Przynieś Własne Dane). Aplikacja nie loguje się do systemów państwowych (IKP), przychodni, ani nie scrapuje danych bez wiedzy pacjenta. To pacjent, jako prawny dysponent i właściciel swoich danych, samodzielnie dostarcza paczkę informacyjną (PDF/XML) do aplikacji, a Pacjent360™ przetwarza je tylko jako procesor w celu przygotowania czytelnej narracji dla lekarza.</p>
         </article>
         <article>
-          <h2>Dane realne</h2>
-          <p>Do publicznych zgłoszeń, repozytorium, formularzy opinii ani demo nie wolno dodawać realnych danych pacjentów. Uwagi najlepiej odnosić do fikcyjnych przypadków demonstracyjnych albo ogólnych problemów procesu pracy.</p>
+          <h2 data-en="Real data">Dane realne</h2>
+          <p data-en="Do not add real patient data to public reports, the repository, feedback forms or the demo. Feedback should refer to fictional demonstration cases or general process problems.">Do publicznych zgłoszeń, repozytorium, formularzy opinii ani demo nie wolno dodawać realnych danych pacjentów. Uwagi najlepiej odnosić do fikcyjnych przypadków demonstracyjnych albo ogólnych problemów procesu pracy.</p>
         </article>
       </div>
       </section>
@@ -114,13 +114,13 @@
       <div class="container footer-grid">
         <div><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong><br><span>Niezależny prototyp open source. Nie zastępuje lekarza. Demo używa fikcyjnych danych.</span></div>
         <nav aria-label="Stopka">
-          <a href="demo.html?start=1">Demo alpha</a>
+          <a href="demo.html?start=1" data-en="Alpha demo">Demo alpha</a>
           <a href="https://github.com/sebkabyte/Pacjent360">GitHub</a>
           <a href="engineering.html">Engineering</a>
-          <a href="ditl.html">Decyzja Lekarza</a>
-          <a href="agents.html">Granice AI</a>
-          <a href="soczewki.html">Macierz / Soczewki</a>
-          <a href="investors.html">Inwestorzy</a>
+          <a href="ditl.html" data-en="Doctor decision">Decyzja Lekarza</a>
+          <a href="agents.html" data-en="AI boundaries">Granice AI</a>
+          <a href="soczewki.html" data-en="Matrix / lenses">Macierz / Soczewki</a>
+          <a href="investors.html" data-en="Investors">Inwestorzy</a>
           <a href="wspoltworcy.html">Współtwórcy</a>
           <a href="disclaimer.html">Zastrzeżenie medyczne</a>
           <a href="privacy.html">Prywatność</a>

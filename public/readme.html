@@ -29,10 +29,10 @@
         </div>
         <button class="nav-toggle" data-nav-toggle aria-label="Otwórz menu" aria-expanded="false" aria-controls="mainNav">☰</button>
         <nav class="main-nav" data-nav id="mainNav" aria-label="Sekcje strony">
-          <a href="index.html#problem">Problem</a>
+          <a href="index.html#problem" data-en="Problem">Problem</a>
           <a href="index.html#how">Jak działa</a>
-          <a href="index.html#audiences">Dla kogo</a>
-          <a href="index.html#validate">Walidacja</a>
+          <a href="index.html#audiences" data-en="For whom">Dla kogo</a>
+          <a href="index.html#validate" data-en="Validation">Walidacja</a>
           <a class="cta-link" href="demo.html?start=1">Demo</a>
         </nav>
       </div>
@@ -41,56 +41,56 @@
     <main id="main-content">
       <section class="subpage-hero">
         <div class="container">
-          <p class="eyebrow">O projekcie</p>
-          <h1>Pacjent360&trade; porządkuje kontekst pacjenta przed wizytą.</h1>
-          <p class="lead">To niezależna warstwa infrastruktury Open Source – fundament pod przyszłą, globalną platformę zdrowotną (Platform Play). Pokazuje, jak wyniki, wypisy, leki, pytania, obserwacje opiekuna i zgody układają się w jedną historię do rozmowy z lekarzem.</p>
+          <p class="eyebrow" data-en="About the project">O projekcie</p>
+          <h1 data-en="Patient360 organizes patient context before the visit.">Pacjent360&trade; porządkuje kontekst pacjenta przed wizytą.</h1>
+          <p class="lead" data-en="It is an independent open-source infrastructure layer: a foundation for a future global health platform. It shows how results, discharge notes, medications, questions, caregiver observations and consents can form one story for the conversation with the doctor.">To niezależna warstwa infrastruktury Open Source – fundament pod przyszłą, globalną platformę zdrowotną (Platform Play). Pokazuje, jak wyniki, wypisy, leki, pytania, obserwacje opiekuna i zgody układają się w jedną historię do rozmowy z lekarzem.</p>
         </div>
       </section>
 
       <section class="container section">
         <div class="subpage-layout">
           <nav class="side-nav" aria-label="Spis treści">
-            <a href="#what">Czym jest</a>
+            <a href="#what" data-en="What it is">Czym jest</a>
             <a href="#alpha">Co działa w alpha</a>
-            <a href="#boundaries">Granice</a>
-            <a href="#repo">Repozytorium</a>
-            <a href="#contact">Kontakt</a>
+            <a href="#boundaries" data-en="Boundaries">Granice</a>
+            <a href="#repo" data-en="Repository">Repozytorium</a>
+            <a href="#contact" data-en="Contact">Kontakt</a>
           </nav>
 
           <div class="subpage-content">
             <article class="content-card" id="what">
-              <h2>Czym jest Pacjent360&trade;</h2>
-              <p>Pacjent360&trade; jest warstwą kontekstu nad rozproszonymi materiałami medycznymi. Zamiast kolejnego folderu z plikami, projekt pokazuje krótką historię pacjenta: co wiadomo, czego brakuje, co jest niepewne i co warto omówić podczas wizyty.</p>
-              <p>Pierwszy klin produktu to przygotowanie wizyty: pacjent lub opiekun zbiera dokumenty, leki, wyniki i pytania, a lekarz otrzymuje czytelny brief ze źródłami.</p>
+              <h2 data-en="What Patient360 is">Czym jest Pacjent360&trade;</h2>
+              <p data-en="Patient360 is a context layer over scattered medical materials. Instead of another file folder, the project shows a short patient history: what is known, what is missing, what is uncertain and what is worth discussing during the visit.">Pacjent360&trade; jest warstwą kontekstu nad rozproszonymi materiałami medycznymi. Zamiast kolejnego folderu z plikami, projekt pokazuje krótką historię pacjenta: co wiadomo, czego brakuje, co jest niepewne i co warto omówić podczas wizyty.</p>
+              <p data-en="The first product wedge is visit preparation: the patient or caregiver gathers documents, medications, results and questions, and the doctor receives a readable brief with sources.">Pierwszy klin produktu to przygotowanie wizyty: pacjent lub opiekun zbiera dokumenty, leki, wyniki i pytania, a lekarz otrzymuje czytelny brief ze źródłami.</p>
             </article>
 
             <article class="content-card" id="alpha">
-              <h2>Co działa w wersji alpha</h2>
+              <h2 data-en="What works in the alpha version">Co działa w wersji alpha</h2>
               <ul>
-                <li>strona publiczna z opisem problemu, rozwiązania i kierunku rozwoju,</li>
-                <li>demo na fikcyjnych przypadkach pacjentów, bez danych realnych,</li>
-                <li>trzy perspektywy: Lekarz360, Pacjent360 i Opiekun360,</li>
-                <li>historia pacjenta z dokumentami, lekami, wynikami, pytaniami i zgodami,</li>
-                <li>repozytorium open source z walidatorami, bramkami bezpieczeństwa i dokumentacją.</li>
+                <li data-en="public website describing the problem, solution and product direction,">strona publiczna z opisem problemu, rozwiązania i kierunku rozwoju,</li>
+                <li data-en="demo using fictional patient cases, without real data,">demo na fikcyjnych przypadkach pacjentów, bez danych realnych,</li>
+                <li data-en="three perspectives: Doctor360, Patient360 and Caregiver360,">trzy perspektywy: Lekarz360, Pacjent360 i Opiekun360,</li>
+                <li data-en="patient history with documents, medications, results, questions and consents,">historia pacjenta z dokumentami, lekami, wynikami, pytaniami i zgodami,</li>
+                <li data-en="open-source repository with validators, safety gates and documentation.">repozytorium open source z walidatorami, bramkami bezpieczeństwa i dokumentacją.</li>
               </ul>
             </article>
 
             <article class="content-card" id="boundaries">
-              <h2>Granice bezpieczeństwa</h2>
-              <p>Pacjent360&trade; nie diagnozuje, nie ocenia pilności i nie rekomenduje terapii. System porządkuje informacje, ale decyzja zawsze należy do lekarza.</p>
-              <p>Demo jest statycznym prototypem z fikcyjnymi danymi. Nie integruje się z IKP, P1, NFZ ani systemami placówek. Nie przechowuje loginów i nie pobiera danych z systemów publicznych.</p>
+              <h2 data-en="Safety boundaries">Granice bezpieczeństwa</h2>
+              <p data-en="Patient360 does not provide clinical conclusions, does not assess medical urgency and does not provide care-plan advice. The system organizes information, but decisions always belong to the doctor.">Pacjent360&trade; nie diagnozuje, nie ocenia pilności i nie rekomenduje terapii. System porządkuje informacje, ale decyzja zawsze należy do lekarza.</p>
+              <p data-en="The demo is a static prototype with fictional data. It does not integrate with IKP, P1, NFZ or facility systems. It does not store logins and does not retrieve data from public systems.">Demo jest statycznym prototypem z fikcyjnymi danymi. Nie integruje się z IKP, P1, NFZ ani systemami placówek. Nie przechowuje loginów i nie pobiera danych z systemów publicznych.</p>
             </article>
 
             <article class="content-card" id="repo">
-              <h2>Repozytorium i pełny README</h2>
-              <p>Ta strona jest bezpiecznym, statycznym opisem projektu. Pełny techniczny README, historia zmian i kod źródłowy są dostępne w publicznym repozytorium GitHub.</p>
-              <p><a class="button secondary" href="https://github.com/sebkabyte/Pacjent360">Otwórz repozytorium na GitHub</a></p>
+              <h2 data-en="Repository and full README">Repozytorium i pełny README</h2>
+              <p data-en="This page is a safe, static description of the project. The full technical README, change history and source code are available in the public GitHub repository.">Ta strona jest bezpiecznym, statycznym opisem projektu. Pełny techniczny README, historia zmian i kod źródłowy są dostępne w publicznym repozytorium GitHub.</p>
+              <p data-en="Open the repository on GitHub"><a class="button secondary" href="https://github.com/sebkabyte/Pacjent360">Otwórz repozytorium na GitHub</a></p>
             </article>
 
             <article class="content-card" id="contact">
-              <h2>Kontakt</h2>
-              <p>Jeśli chcesz pomóc w walidacji, porozmawiać o partnerstwie albo sprawdzić projekt od strony medycznej, produktowej lub technicznej, napisz do projektu.</p>
-              <p><a class="button primary" href="mailto:kontakt@pacjent360.com.pl">Napisz do projektu</a></p>
+              <h2 data-en="Contact">Kontakt</h2>
+              <p data-en="If you want to help with validation, discuss a partnership or review the project from a medical, product or technical perspective, write to the project.">Jeśli chcesz pomóc w walidacji, porozmawiać o partnerstwie albo sprawdzić projekt od strony medycznej, produktowej lub technicznej, napisz do projektu.</p>
+              <p data-en="Write to the project"><a class="button primary" href="mailto:kontakt@pacjent360.com.pl">Napisz do projektu</a></p>
             </article>
           </div>
         </div>
@@ -101,14 +101,14 @@
       <div class="container footer-grid">
         <div><strong class="brand-name">Pacjent360<sup class="brand-legal-mark">&trade;</sup></strong><br><span>Niezależny prototyp open source. Nie zastępuje lekarza. Demo używa fikcyjnych danych.</span></div>
         <nav aria-label="Stopka">
-          <a href="demo.html?start=1">Demo alpha</a>
-          <a href="readme.html">O projekcie</a>
+          <a href="demo.html?start=1" data-en="Alpha demo">Demo alpha</a>
+          <a href="readme.html" data-en="About project">O projekcie</a>
           <a href="https://github.com/sebkabyte/Pacjent360">GitHub</a>
           <a href="engineering.html">Engineering</a>
-          <a href="ditl.html">Decyzja Lekarza</a>
-          <a href="agents.html">Granice AI</a>
-          <a href="soczewki.html">Macierz / Soczewki</a>
-          <a href="investors.html">Inwestorzy</a>
+          <a href="ditl.html" data-en="Doctor decision">Decyzja Lekarza</a>
+          <a href="agents.html" data-en="AI boundaries">Granice AI</a>
+          <a href="soczewki.html" data-en="Matrix / lenses">Macierz / Soczewki</a>
+          <a href="investors.html" data-en="Investors">Inwestorzy</a>
           <a href="wspoltworcy.html">Współtwórcy</a>
           <a href="disclaimer.html">Zastrzeżenie medyczne</a>
           <a href="privacy.html">Prywatność</a>

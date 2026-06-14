@@ -1,6 +1,10 @@
 Options -Indexes
 DirectoryIndex index.html
 
+<IfModule pagespeed_module>
+  ModPagespeed off
+</IfModule>
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteCond %{HTTPS} !=on [OR]
