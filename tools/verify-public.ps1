@@ -53,6 +53,7 @@ $target = (Resolve-Path $target).Path
 
 $expectedFiles = @(
   ".htaccess",
+  ".well-known/security.txt",
   "index.html",
   "demo.html",
   "engineering.html",
@@ -60,6 +61,7 @@ $expectedFiles = @(
   "agents.html",
   "investors.html",
   "jak-sie-przygotowac.html",
+  "soczewki.html",
   "disclaimer.html",
   "privacy.html",
   "maintenance.html",
@@ -82,6 +84,7 @@ $expectedFiles = @(
   "assets/hero-clinical-context.png",
   "assets/story.css",
   "assets/story.js",
+  "assets/lucide.min.js",
   "assets/favicon.svg"
 )
 
@@ -130,14 +133,18 @@ Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-dem
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public app.js"
 
 $htaccess = Get-Content -LiteralPath (Join-Path $target ".htaccess") -Raw
+$securityTxt = Get-Content -LiteralPath (Join-Path $target ".well-known/security.txt") -Raw
 $index = Get-Content -LiteralPath (Join-Path $target "index.html") -Raw
 $demo = Get-Content -LiteralPath (Join-Path $target "demo.html") -Raw
 $privacy = Get-Content -LiteralPath (Join-Path $target "privacy.html") -Raw
 $disclaimer = Get-Content -LiteralPath (Join-Path $target "disclaimer.html") -Raw
 $health = Get-Content -LiteralPath (Join-Path $target "health.txt") -Raw
+$app = Get-Content -LiteralPath (Join-Path $target "app.js") -Raw
 
 Assert-True ($index.Contains("zast") -and $index.Contains("lekarza")) "index.html should state that Pacjent360 does not replace the doctor"
 Assert-True ($htaccess.Contains("Content-Security-Policy") -and $htaccess.Contains("frame-ancestors 'none'")) ".htaccess should configure CSP with frame-ancestors"
+Assert-True ($htaccess.Contains("Strict-Transport-Security") -and $htaccess.Contains("max-age=15552000")) ".htaccess should configure HSTS"
+Assert-True ($htaccess.Contains("script-src 'self'") -and -not $htaccess.Contains("https://unpkg.com")) ".htaccess should use self-hosted scripts only"
 Assert-True ($htaccess.Contains("X-Frame-Options") -and $htaccess.Contains("DENY")) ".htaccess should configure X-Frame-Options DENY"
 Assert-True ($htaccess.Contains("X-Content-Type-Options") -and $htaccess.Contains("nosniff")) ".htaccess should configure nosniff"
 Assert-True ($htaccess.Contains("Options -Indexes")) ".htaccess should disable directory indexes"
@@ -153,14 +160,17 @@ Assert-True ($demo.Contains('class="skip-link"') -and $demo.Contains('href="#vie
 Assert-True ($demo.Contains('aria-label="Szukaj w danych demo"')) "demo search input should have aria-label"
 Assert-True ($demo.Contains('aria-labelledby="dialogTitle"')) "entry dialog should be labelled"
 Assert-True ($demo.Contains('name="robots" content="noindex,nofollow"')) "demo.html should be noindex,nofollow"
+Assert-True (-not $demo.Contains('id="exportJson"')) "demo.html should not expose a JSON export button"
 Assert-True ($demo.Contains("CeZ") -and $demo.Contains("NFZ") -and $demo.Contains("IKP")) "demo.html should show independence from CeZ/NFZ/IKP"
 Assert-True ($health.Contains("project=pacjent360") -and $health.Contains("contains_patient_data=false")) "health.txt should expose static deployment markers without patient data"
 Assert-True ($health.Contains("medical_device=false") -and $health.Contains("clinical_decision_support=false")) "health.txt should expose safety boundary markers"
+Assert-True ($securityTxt.Contains("security@pacjent360.com.pl") -and $securityTxt.Contains("Expires:")) "security.txt should expose security contact and expiry"
 Assert-True ($privacy -match "localStorage") "privacy.html should disclose localStorage"
 Assert-True ($privacy.Contains("pacjent360-state-v11")) "privacy.html should disclose the current demo localStorage key"
 Assert-True ($index.Contains('rel="canonical" href="https://pacjent360.com.pl/"')) "index.html should include canonical URL"
 Assert-True ($privacy.Contains('rel="canonical" href="https://pacjent360.com.pl/privacy.html"')) "privacy.html should include canonical URL"
 Assert-True ($disclaimer.Contains('rel="canonical" href="https://pacjent360.com.pl/disclaimer.html"')) "disclaimer.html should include canonical URL"
+Assert-ScriptLoaded -Html $demo -File "assets/lucide.min.js"
 Assert-ScriptLoaded -Html $demo -File "patient360-contract.js"
 Assert-ScriptLoaded -Html $demo -File "patient360-format.js"
 Assert-ScriptLoaded -Html $demo -File "patient360-map-model.js"
@@ -171,6 +181,7 @@ Assert-ScriptLoaded -Html $demo -File "patient360-consent-model.js"
 Assert-ScriptLoaded -Html $demo -File "patient360-demo-data.js"
 Assert-ScriptLoaded -Html $demo -File "app.js"
 $scriptIndex = @{
+  lucide = Get-ScriptRefIndex -Html $demo -File "assets/lucide.min.js"
   contract = Get-ScriptRefIndex -Html $demo -File "patient360-contract.js"
   format = Get-ScriptRefIndex -Html $demo -File "patient360-format.js"
   mapModel = Get-ScriptRefIndex -Html $demo -File "patient360-map-model.js"
@@ -181,6 +192,7 @@ $scriptIndex = @{
   demoData = Get-ScriptRefIndex -Html $demo -File "patient360-demo-data.js"
   app = Get-ScriptRefIndex -Html $demo -File "app.js"
 }
+Assert-True ($scriptIndex.lucide -lt $scriptIndex.app) "demo.html should load local Lucide before app.js"
 Assert-True ($scriptIndex.contract -lt $scriptIndex.app) "demo.html should load patient360-contract.js before app.js"
 Assert-True ($scriptIndex.format -lt $scriptIndex.app) "demo.html should load patient360-format.js before app.js"
 Assert-True ($scriptIndex.contract -lt $scriptIndex.format) "demo.html should load patient360-contract.js before patient360-format.js"
@@ -199,11 +211,14 @@ Assert-True ($scriptIndex.consent -lt $scriptIndex.app) "demo.html should load p
 Assert-True ($scriptIndex.demoData -lt $scriptIndex.app) "demo.html should load patient360-demo-data.js before app.js"
 Assert-True (-not ($index.Contains("frame-ancestors") -or $demo.Contains("frame-ancestors") -or $privacy.Contains("frame-ancestors") -or $disclaimer.Contains("frame-ancestors"))) "frame-ancestors must be configured as an HTTP header, not as a meta CSP directive"
 
-$lucidePinned = "https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"
+$lucidePinned = "assets/lucide.min.js"
 Assert-True (-not ($index.Contains("unpkg.com"))) "index.html should not load external scripts (landing is self-contained)"
-Assert-True ($demo.Contains($lucidePinned)) "demo.html should use pinned Lucide"
-Assert-True ($privacy.Contains($lucidePinned)) "privacy.html should disclose pinned Lucide"
+Assert-True ($demo.Contains($lucidePinned)) "demo.html should use local Lucide"
+Assert-True ($privacy.Contains("assets/lucide.min.js") -and $privacy.Contains("0.468.0")) "privacy.html should disclose local pinned Lucide"
 Assert-True ($demo -match 'integrity="sha384-[^"]+"' -and $demo -match 'crossorigin="anonymous"') "demo.html should use SRI and crossorigin for Lucide"
+Assert-True (-not (($index + $demo + $privacy + $disclaimer) -match "unpkg\.com")) "Public HTML should not reference unpkg.com"
+Assert-True (-not $app.Contains("URL.createObjectURL")) "app.js should not create downloadable local files"
+Assert-True (-not $app.Contains(".download =")) "app.js should not set browser download targets"
 
 $legacyPhrases = @(
   "lucide@latest",

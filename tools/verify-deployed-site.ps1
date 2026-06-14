@@ -235,6 +235,7 @@ if (-not $AllowHttp) {
   Assert-True ($wwwProbe.Location.StartsWith("https://pacjent360.com.pl")) "www HTTPS root should redirect to https://pacjent360.com.pl, got $($wwwProbe.Location)"
 
   $cspHeader = Get-HeaderValue -Headers $indexResponse.Headers -Name "Content-Security-Policy"
+  $hstsHeader = Get-HeaderValue -Headers $indexResponse.Headers -Name "Strict-Transport-Security"
   $xFrameHeader = Get-HeaderValue -Headers $indexResponse.Headers -Name "X-Frame-Options"
   $nosniffHeader = Get-HeaderValue -Headers $indexResponse.Headers -Name "X-Content-Type-Options"
   $referrerHeader = Get-HeaderValue -Headers $indexResponse.Headers -Name "Referrer-Policy"
@@ -242,6 +243,8 @@ if (-not $AllowHttp) {
 
   Assert-True ($cspHeader.Contains("frame-ancestors 'none'")) "Deployed site should send CSP header with frame-ancestors 'none'"
   Assert-True ($cspHeader.Contains("object-src 'none'")) "Deployed site should send CSP header with object-src 'none'"
+  Assert-True ($cspHeader.Contains("script-src 'self'") -and -not $cspHeader.Contains("https://unpkg.com")) "Deployed site should use self-hosted scripts only"
+  Assert-True ($hstsHeader.Contains("max-age=15552000")) "Deployed site should send HSTS"
   Assert-True ($xFrameHeader -match "DENY") "Deployed site should send X-Frame-Options: DENY"
   Assert-True ($nosniffHeader -match "nosniff") "Deployed site should send X-Content-Type-Options: nosniff"
   Assert-True ($referrerHeader -match "strict-origin-when-cross-origin") "Deployed site should send Referrer-Policy"
@@ -251,6 +254,12 @@ if (-not $AllowHttp) {
 $assetResponse = Invoke-WebRequest -Uri (Join-WebPath $base "assets/hero-clinical-context.png") -UseBasicParsing -TimeoutSec 15
 Assert-True ([int]$assetResponse.StatusCode -eq 200) "Hero asset should return 200"
 Assert-True ($assetResponse.RawContentLength -gt 10000) "Hero asset looks unexpectedly small"
+$lucideResponse = Invoke-WebRequest -Uri (Join-WebPath $base "assets/lucide.min.js") -UseBasicParsing -TimeoutSec 15
+Assert-True ([int]$lucideResponse.StatusCode -eq 200) "Local Lucide asset should return 200"
+Assert-True ($lucideResponse.Content.Contains("createIcons")) "Local Lucide asset should expose icon runtime"
+$securityResponse = Invoke-WebRequest -Uri (Join-WebPath $base ".well-known/security.txt") -UseBasicParsing -TimeoutSec 15
+Assert-True ([int]$securityResponse.StatusCode -eq 200) "security.txt should return 200"
+Assert-True ($securityResponse.Content.Contains("security@pacjent360.com.pl") -and $securityResponse.Content.Contains("Expires:")) "security.txt should expose security contact and expiry"
 
 Assert-True ($index.Contains("Pacjent360")) "index.html should contain project name"
 Assert-True ($index.Contains("demo.html")) "index.html should link demo.html"
@@ -261,6 +270,8 @@ Assert-True ($index.Contains('rel="canonical" href="https://pacjent360.com.pl/"'
 Assert-True ($demo.Contains("DANE FIKCYJNE")) "demo.html should show fictional data marker"
 Assert-True ($demo.Contains('name="robots" content="noindex,nofollow"')) "demo.html should be noindex,nofollow"
 Assert-True ($demo.Contains("patient360-contract.js")) "demo.html should load contract model"
+Assert-True ($demo.Contains("assets/lucide.min.js")) "demo.html should load local Lucide"
+Assert-True (-not $demo.Contains("unpkg.com")) "demo.html should not load unpkg.com"
 Assert-True ($demo.Contains("patient360-format.js")) "demo.html should load Polish format model"
 Assert-True ($demo.Contains("patient360-map-model.js")) "demo.html should load map model"
 Assert-True ($demo.Contains("patient360-previsit-model.js")) "demo.html should load pre-visit model"
@@ -283,7 +294,7 @@ Assert-True ($demoData.Contains("consent:g1")) "patient360-demo-data.js should c
 
 Assert-True ($privacy.Contains("localStorage")) "privacy.html should disclose localStorage"
 Assert-True ($privacy.Contains("pacjent360-state-v11")) "privacy.html should disclose the current demo localStorage key"
-Assert-True ($privacy.Contains("lucide@0.468.0")) "privacy.html should disclose pinned Lucide"
+Assert-True ($privacy.Contains("assets/lucide.min.js") -and $privacy.Contains("0.468.0")) "privacy.html should disclose local pinned Lucide"
 Assert-True ($privacy.Contains('rel="canonical" href="https://pacjent360.com.pl/privacy.html"')) "privacy.html should include canonical URL"
 Assert-True ($disclaimer.Contains("Pacjent360")) "disclaimer.html should contain project name"
 Assert-True ($disclaimer.Contains('rel="canonical" href="https://pacjent360.com.pl/disclaimer.html"')) "disclaimer.html should include canonical URL"

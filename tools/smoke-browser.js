@@ -300,6 +300,9 @@ async function main() {
       hasMapShortcut: Boolean(document.querySelector('.core-map-shortcut')),
       hasEmbeddedMap: Boolean(document.querySelector('.patient-map360.embedded')),
       hasMedReconciliation: Boolean(document.querySelector('.med-reconciliation')),
+      hasSpecialtyLensPanel: Boolean(document.querySelector('.specialty-lens-panel')),
+      specialtyLensCount: document.querySelectorAll('[data-specialty-lens]').length,
+      activeSpecialtyLens: document.querySelector('[data-specialty-lens].active')?.dataset.specialtyLens || '',
       register: document.body.dataset.register || '',
       hasLedgerSourceChip: Boolean(document.querySelector('.source-chip.p360-source-chip')),
       journeyStepCount: document.querySelectorAll('.demo-journey-step').length,
@@ -312,9 +315,25 @@ async function main() {
     assert(core.scrollHeight <= 3000, `Core dashboard should stay within 90-second height budget, got ${core.scrollHeight}px`);
     assert(core.hasMapShortcut && !core.hasEmbeddedMap, "Core dashboard should use a map shortcut instead of embedding the full map");
     assert(core.hasMedReconciliation, "Core dashboard should keep medication reconciliation visible");
+    assert(core.hasSpecialtyLensPanel && core.specialtyLensCount >= 5 && core.activeSpecialtyLens === "internist", `Core dashboard should expose specialty lens selector: ${JSON.stringify(core)}`);
     assert(core.register === "doctor", `Core dashboard should use doctor visual register, got ${core.register}`);
     assert(core.hasLedgerSourceChip, "Core dashboard should render Trust OS ledger source chips");
     assert(core.journeyStepCount === 6 && core.activeJourneyStep === "Kokpit" && core.hasJourneyBack && core.hasJourneyNext && core.hasMapAction, `Core dashboard should expose guided demo journey: ${JSON.stringify(core)}`);
+
+    const specialtyLens = await client.evaluate(`(() => {
+      const stateFromStorage = () => JSON.parse(localStorage.getItem('pacjent360-state-v11') || '{}');
+      const cardiology = document.querySelector('[data-specialty-lens="cardiology"]');
+      if (cardiology) cardiology.click();
+      return {
+        clicked: Boolean(cardiology),
+        storedLens: stateFromStorage().specialist || '',
+        activeLens: document.querySelector('[data-specialty-lens].active')?.dataset.specialtyLens || '',
+        title: document.querySelector('.dashboard-orchestrator h2')?.textContent.trim() || '',
+        hasSafetyCopy: (document.querySelector('.specialty-lens-panel')?.textContent || '').includes('nie ocenia pilności')
+      };
+    })()`);
+    assert(specialtyLens.clicked && specialtyLens.storedLens === "cardiology" && specialtyLens.activeLens === "cardiology", `Specialty lens selector should persist cardiology lens: ${JSON.stringify(specialtyLens)}`);
+    assert(specialtyLens.title.includes("Kardiolog") && specialtyLens.hasSafetyCopy, `Cardiology lens should update dashboard wording without urgency language: ${JSON.stringify(specialtyLens)}`);
 
     const journey = await client.evaluate(`(() => {
       const stateFromStorage = () => JSON.parse(localStorage.getItem('pacjent360-state-v11') || '{}');

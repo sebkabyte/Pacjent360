@@ -169,6 +169,7 @@ $manifestObject = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
 
 Assert-ZipMatchesDirectory -ZipPath $publicZipPath -Directory $publicDirPath -RequiredFiles @(
   ".htaccess",
+  ".well-known/security.txt",
   "index.html",
   "demo.html",
   "engineering.html",
@@ -176,15 +177,18 @@ Assert-ZipMatchesDirectory -ZipPath $publicZipPath -Directory $publicDirPath -Re
   "agents.html",
   "investors.html",
   "jak-sie-przygotowac.html",
+  "soczewki.html",
   "privacy.html",
   "disclaimer.html",
   "maintenance.html",
   "health.txt",
+  "assets/lucide.min.js",
   "assets/hero-clinical-context.png"
 )
 
 Assert-ZipMatchesDirectory -ZipPath $uploadRootZipPath -Directory $publicDirPath -RequiredFiles @(
   ".htaccess",
+  ".well-known/security.txt",
   "index.html",
   "demo.html",
   "engineering.html",
@@ -192,10 +196,12 @@ Assert-ZipMatchesDirectory -ZipPath $uploadRootZipPath -Directory $publicDirPath
   "agents.html",
   "investors.html",
   "jak-sie-przygotowac.html",
+  "soczewki.html",
   "privacy.html",
   "disclaimer.html",
   "maintenance.html",
   "health.txt",
+  "assets/lucide.min.js",
   "assets/hero-clinical-context.png"
 )
 

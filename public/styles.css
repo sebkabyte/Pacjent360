@@ -5801,6 +5801,7 @@ dialog::backdrop {
   .role-card-grid,
   .scenario-card-grid,
   .role-context-banner,
+  .specialty-lens-toolbar,
   .timeline-narrator {
     grid-template-columns: 1fr;
   }
@@ -5812,6 +5813,10 @@ dialog::backdrop {
 
   .orchestrator-actions {
     flex-direction: column;
+  }
+
+  .specialty-lens-options {
+    justify-content: flex-start;
   }
 
   .orchestrator-actions .primary-button,
@@ -5888,6 +5893,98 @@ body[data-register="doctor"] .decision-hero h2 {
 body[data-register="doctor"] .med-reconciliation {
   border-top: 3px solid var(--p360-register-ledger-border);
   background: linear-gradient(180deg, #ffffff, #fbfdfd);
+}
+
+body[data-register="doctor"] .specialty-lens-panel {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--p360-register-doctor-border);
+  border-left: 5px solid var(--p360-register-ledger-accent);
+  border-radius: var(--p360-radius-sm);
+  background:
+    linear-gradient(90deg, rgba(15, 118, 110, 0.07), rgba(255, 255, 255, 0.88)),
+    #ffffff;
+  box-shadow: var(--p360-shadow-clinical);
+}
+
+.specialty-lens-toolbar {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.specialty-lens-toolbar strong,
+.specialty-lens-toolbar small {
+  display: block;
+}
+
+.specialty-lens-toolbar small {
+  max-width: 920px;
+  margin-top: 3px;
+  color: var(--p360-color-muted);
+  line-height: 1.35;
+}
+
+.specialty-lens-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.lens-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 7px 10px;
+  border: 1px solid var(--p360-color-line);
+  border-radius: var(--p360-radius-sm);
+  background: #ffffff;
+  color: var(--p360-color-ink);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lens-option:hover,
+.lens-option:focus-visible {
+  border-color: var(--p360-register-ledger-border);
+  background: var(--p360-register-ledger-bg);
+}
+
+.lens-option.active {
+  border-color: var(--p360-register-ledger-accent);
+  background: rgba(15, 118, 110, 0.1);
+  color: var(--p360-color-teal-strong);
+}
+
+.lens-option i {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+
+.specialty-lens-summary {
+  margin: 8px 0 0;
+  color: var(--p360-color-muted);
+  font-size: 0.92rem;
+}
+
+.specialty-lens-source-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.specialty-lens-source-line > span {
+  color: var(--p360-color-muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
 body[data-register="doctor"] .core-map-shortcut {

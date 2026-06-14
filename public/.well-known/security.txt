@@ -1,0 +1,6 @@
+Contact: mailto:security@pacjent360.com.pl
+Contact: mailto:kontakt@pacjent360.com.pl
+Expires: 2026-12-31T23:59:59Z
+Preferred-Languages: pl, en
+Canonical: https://pacjent360.com.pl/.well-known/security.txt
+Policy: https://github.com/sebkabyte/Pacjent360/blob/main/SECURITY.md
