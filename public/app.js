@@ -1740,7 +1740,8 @@ function renderView() {
     : (renderers[state.activeView] || renderCore)();
   if (contentGrid) {
     contentGrid.classList.toggle("history-view-active", state.activeView === "timeline");
-    if (state.activeView === "timeline") {
+    contentGrid.classList.toggle("evidence-has-selection", Boolean(state.selectedSourceRef));
+    if (state.activeView === "timeline" || state.activeView === "roleStart") {
       setEvidencePanelCollapsed(true, { persist: false });
     } else if (!loadUiPrefs().evidenceCollapsed) {
       setEvidencePanelCollapsed(false, { persist: false });

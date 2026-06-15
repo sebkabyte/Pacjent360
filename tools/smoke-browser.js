@@ -905,22 +905,47 @@ async function main() {
       mobile: true
     });
     await client.evaluate(`localStorage.removeItem('pacjent360-state-v11')`);
-    await client.call("Page.navigate", { url: `http://127.0.0.1:${serverPort}/demo.html?mobile-smoke=${Date.now()}` });
+    await client.call("Page.navigate", { url: `http://127.0.0.1:${serverPort}/demo.html?start=1&mobile-smoke=${Date.now()}` });
     await waitForReady(client);
+    const mobileStart = await client.evaluate(`(() => {
+      const grid = document.querySelector('#contentGrid');
+      const evidence = document.querySelector('.evidence-panel');
+      const nav = document.querySelector('.sidebar .nav-list');
+      const evidenceRect = evidence?.getBoundingClientRect();
+      return {
+        activeView: document.querySelector('nav button.active')?.dataset.view || null,
+        hasBodyOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+        evidenceCollapsed: Boolean(grid?.classList.contains('evidence-collapsed')),
+        evidenceVisible: Boolean(evidence && getComputedStyle(evidence).display !== 'none' && evidenceRect?.width > 0 && evidenceRect?.height > 0),
+        navScrollbarWidth: nav ? getComputedStyle(nav).scrollbarWidth : '',
+        navScrollWidth: nav?.scrollWidth || 0,
+        navClientWidth: nav?.clientWidth || 0
+      };
+    })()`);
+    assert(mobileStart.activeView === "roleStart", `Mobile fresh demo should start at roleStart, got ${mobileStart.activeView}`);
+    assert(!mobileStart.hasBodyOverflow, "Mobile fresh demo should not create body horizontal overflow");
+    assert(mobileStart.evidenceCollapsed && !mobileStart.evidenceVisible, "Mobile fresh demo should not open the sources panel before a source click");
+    assert(mobileStart.navScrollbarWidth === "none", `Mobile bottom navigation should hide native scrollbar, got ${mobileStart.navScrollbarWidth}`);
+    assert(mobileStart.navScrollWidth >= mobileStart.navClientWidth, "Mobile bottom navigation should remain horizontally scrollable when needed");
     const mobile = await client.evaluate(`(() => {
       document.querySelector('[data-select-role="patient"]')?.click();
       document.querySelector('[data-start-role="patient"][data-start-patient="p1"]')?.click();
       const grid = document.querySelector('.previsit-step-grid');
+      const contentGrid = document.querySelector('#contentGrid');
+      const evidence = document.querySelector('.evidence-panel');
       return {
         activeView: document.querySelector('nav button.active')?.dataset.view || null,
         stepCount: document.querySelectorAll('.previsit-step').length,
         hasHorizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
-        gridColumns: grid ? getComputedStyle(grid).gridTemplateColumns : ''
+        gridColumns: grid ? getComputedStyle(grid).gridTemplateColumns : '',
+        evidenceHasSelection: Boolean(contentGrid?.classList.contains('evidence-has-selection')),
+        evidenceVisible: Boolean(evidence && getComputedStyle(evidence).display !== 'none' && evidence.getBoundingClientRect().height > 0)
       };
     })()`);
     assert(mobile.activeView === "patientPortal", "Mobile smoke should open patient portal");
     assert(mobile.stepCount === 6, `Mobile smoke expected 6 steps, got ${mobile.stepCount}`);
     assert(!mobile.hasHorizontalOverflow, "Mobile patient view should not create body horizontal overflow");
+    assert(!mobile.evidenceHasSelection && !mobile.evidenceVisible, "Mobile patient cockpit should keep sources panel on demand before a source click");
     assert(!mobile.gridColumns.includes(" ") || mobile.gridColumns.split(" ").length <= 1, `Mobile pre-visit grid should be one column, got ${mobile.gridColumns}`);
 
     const mobileTimeline = await client.evaluate(`(() => {
