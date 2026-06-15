@@ -4448,8 +4448,7 @@ dialog::backdrop {
     border-right: 0;
     background: rgba(255, 255, 255, 0.98);
     box-shadow: 0 -12px 32px rgba(31, 41, 51, 0.14);
-    overflow-x: auto;
-    overflow-y: hidden;
+    overflow: hidden;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -4463,8 +4462,17 @@ dialog::backdrop {
     display: flex;
     grid-template-columns: none;
     gap: 6px;
-    width: max-content;
+    width: 100%;
+    max-width: 100%;
     min-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sidebar .nav-list::-webkit-scrollbar {
+    display: none;
   }
 
   .nav-item {
@@ -6208,7 +6216,20 @@ body[data-register="caregiver"] .page-intro p {
   .panel-splitter { display: none; }
   .content-grid { grid-template-columns: minmax(0, 1fr); }
   .content-grid.evidence-collapsed { --evidence-w: 330px; }
-  .content-grid.evidence-collapsed .evidence-panel .panel-head-copy,
-  .content-grid.evidence-collapsed .evidence-panel #evidenceRoot,
-  .content-grid.evidence-collapsed .evidence-panel #closeEvidence { display: revert; }
+  .content-grid.evidence-collapsed .evidence-panel {
+    display: none;
+  }
+
+  .content-grid:not(.evidence-has-selection) .evidence-panel {
+    display: none;
+  }
+
+  .content-grid:not(.evidence-collapsed) .evidence-panel {
+    position: fixed;
+    inset: auto 12px 12px;
+    z-index: 1201;
+    max-height: min(72vh, 560px);
+    overflow: auto;
+    box-shadow: 0 -18px 48px rgba(31, 41, 51, 0.2);
+  }
 }
