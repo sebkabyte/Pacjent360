@@ -8,7 +8,7 @@ echo Skrypt wysle zawartosc dist\upload-ready na hosting i po uploadzie sprawdzi
 echo Haslo FTP wpiszesz w oknie PowerShell. Nie zostanie zapisane w repo.
 echo.
 
-powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0tools\upload-to-nazwa.ps1"
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0tools\upload-to-nazwa.ps1" -PreparePackage
 
 echo.
 pause

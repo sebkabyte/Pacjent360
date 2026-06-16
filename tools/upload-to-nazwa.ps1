@@ -132,8 +132,11 @@ function Assert-UploadPackage {
 
 function Invoke-PackagePreparation {
     Write-Step 'Przygotowanie paczki hostingowej'
+    & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $RepoRoot 'tools\prepare-public.ps1') -Zip
+    & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $RepoRoot 'tools\write-release-manifest.ps1')
     & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $RepoRoot 'tools\prepare-hosting-upload.ps1')
     & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $RepoRoot 'tools\write-upload-manifest.ps1')
+    & node (Join-Path $RepoRoot 'tools\smoke-browser.js') --packageDir dist\upload-ready
 }
 
 function Invoke-DeployedVerification {
