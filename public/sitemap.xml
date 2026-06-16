@@ -2,67 +2,72 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://pacjent360.com.pl/</loc>
-    <lastmod>2026-06-13</lastmod>
+    <lastmod>2026-06-16</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://pacjent360.com.pl/dla-lekarzy.html</loc>
+    <lastmod>2026-06-16</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://pacjent360.com.pl/disclaimer.html</loc>
-    <lastmod>2026-06-08</lastmod>
+    <lastmod>2026-06-16</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://pacjent360.com.pl/privacy.html</loc>
-    <lastmod>2026-06-08</lastmod>
+    <lastmod>2026-06-16</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://pacjent360.com.pl/engineering.html</loc>
-    <lastmod>2026-06-13</lastmod>
+    <lastmod>2026-06-16</lastmod>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://pacjent360.com.pl/ditl.html</loc>
-    <lastmod>2026-06-13</lastmod>
+    <lastmod>2026-06-16</lastmod>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://pacjent360.com.pl/agents.html</loc>
-    <lastmod>2026-06-13</lastmod>
+    <lastmod>2026-06-16</lastmod>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://pacjent360.com.pl/investors.html</loc>
-    <lastmod>2026-06-14</lastmod>
+    <lastmod>2026-06-16</lastmod>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://pacjent360.com.pl/wspoltworcy.html</loc>
-    <lastmod>2026-06-14</lastmod>
+    <lastmod>2026-06-16</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://pacjent360.com.pl/jak-sie-przygotowac.html</loc>
-    <lastmod>2026-06-13</lastmod>
+    <lastmod>2026-06-16</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://pacjent360.com.pl/mapa-historii.html</loc>
-    <lastmod>2026-06-14</lastmod>
+    <lastmod>2026-06-16</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://pacjent360.com.pl/biblioteka-dokumentow.html</loc>
-    <lastmod>2026-06-14</lastmod>
+    <lastmod>2026-06-16</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://pacjent360.com.pl/soczewki.html</loc>
-    <lastmod>2026-06-14</lastmod>
+    <lastmod>2026-06-16</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://pacjent360.com.pl/readme.html</loc>
-    <lastmod>2026-06-14</lastmod>
+    <lastmod>2026-06-16</lastmod>
     <priority>0.6</priority>
   </url>
 </urlset>
