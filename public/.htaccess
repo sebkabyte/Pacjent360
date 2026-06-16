@@ -25,6 +25,8 @@ DirectoryIndex index.html
 </IfModule>
 
 <IfModule mod_mime.c>
+  AddDefaultCharset UTF-8
+  AddCharset UTF-8 .html .css .js .json .xml .txt
   AddType text/html .html
   AddType text/css .css
   AddType application/javascript .js

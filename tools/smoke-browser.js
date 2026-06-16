@@ -260,6 +260,12 @@ async function main() {
       register: document.body.dataset.register || '',
       hasPerspectiveDemo: document.body.textContent.includes('Jedna historia, trzy perspektywy') && document.querySelectorAll('[data-select-role]').length === 3,
       scenarioChoicesVisible: document.querySelectorAll('[data-start-patient]').length,
+      patientSwitcherHidden: document.querySelector('.patient-switcher')?.hidden === true && getComputedStyle(document.querySelector('.patient-switcher')).display === 'none',
+      globalSearchHidden: document.querySelector('.global-search')?.hidden === true && getComputedStyle(document.querySelector('.global-search')).display === 'none',
+      roleSwitcherHidden: document.querySelector('#roleSwitcher')?.hidden === true && getComputedStyle(document.querySelector('#roleSwitcher')).display === 'none',
+      evidencePanelHidden: getComputedStyle(document.querySelector('.evidence-panel')).display === 'none',
+      splitterHidden: getComputedStyle(document.querySelector('.panel-splitter')).display === 'none',
+      contentGridSingleColumn: getComputedStyle(document.querySelector('#contentGrid')).gridTemplateColumns.split(' ').length === 1,
       hasPerspectiveOnlyPage: document.body.textContent.includes('Z jakiej perspektywy oglądasz historię?') && !document.body.textContent.includes('Pacjenci demonstracyjni'),
       watermark: document.body.textContent.includes('DANE FIKCYJNE'),
       independence: document.body.textContent.includes('CeZ') && document.body.textContent.includes('NFZ') && document.body.textContent.includes('IKP')
@@ -269,6 +275,7 @@ async function main() {
     assert(initial.activeView === "roleStart", `Expected roleStart view, got ${initial.activeView}`);
     assert(initial.register === "app", `Expected neutral app register on role start, got ${initial.register}`);
     assert(initial.hasPerspectiveDemo && initial.hasPerspectiveOnlyPage && initial.scenarioChoicesVisible === 0, "Demo should start with a perspective-only page and no patient choices");
+    assert(initial.patientSwitcherHidden && initial.globalSearchHidden && initial.roleSwitcherHidden && initial.evidencePanelHidden && initial.splitterHidden && initial.contentGridSingleColumn, `Demo start should hide topbar workflow controls and evidence panel visually: ${JSON.stringify(initial)}`);
     assert(initial.watermark, "Demo should show fictional data marker");
     assert(initial.independence, "Demo should show CeZ/NFZ/IKP independence");
 
