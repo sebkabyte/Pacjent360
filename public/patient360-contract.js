@@ -120,6 +120,11 @@
     "missingOrUncertain",
     "sourceIndex"
   ];
+  const DOCTOR_VIEWER_TYPES = ["guest_doctor", "known_clinician", "clinic_user_later"];
+  const DOCTOR_VIEWER_IDENTITY_STATUSES = ["unknown", "declared", "verified_later"];
+  const DOCTOR_SESSION_STATUSES = ["created", "opened", "expired", "revoked", "blocked"];
+  const DOCTOR_AUDIT_STATUSES = ["pending", "written", "failed_blocked"];
+  const DOCTOR_ALLOWED_READ_ACTIONS = ["open_packet", "view_summary", "view_source", "view_document_metadata", "close_session"];
   const FORBIDDEN_CLAIM_PHRASES = [
     "H" + "ITL",
     "AI " + "lekarz",
@@ -156,6 +161,11 @@
     VISIT_PACKET_PREPARED_BY_ROLES: Object.freeze([...VISIT_PACKET_PREPARED_BY_ROLES]),
     VISIT_PACKET_SOURCE_STATUSES: Object.freeze([...VISIT_PACKET_SOURCE_STATUSES]),
     VISIT_PACKET_SECTION_KEYS: Object.freeze([...VISIT_PACKET_SECTION_KEYS]),
+    DOCTOR_VIEWER_TYPES: Object.freeze([...DOCTOR_VIEWER_TYPES]),
+    DOCTOR_VIEWER_IDENTITY_STATUSES: Object.freeze([...DOCTOR_VIEWER_IDENTITY_STATUSES]),
+    DOCTOR_SESSION_STATUSES: Object.freeze([...DOCTOR_SESSION_STATUSES]),
+    DOCTOR_AUDIT_STATUSES: Object.freeze([...DOCTOR_AUDIT_STATUSES]),
+    DOCTOR_ALLOWED_READ_ACTIONS: Object.freeze([...DOCTOR_ALLOWED_READ_ACTIONS]),
     FORBIDDEN_CLAIM_PHRASES: Object.freeze([...FORBIDDEN_CLAIM_PHRASES])
   });
 });

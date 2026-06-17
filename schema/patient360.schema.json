@@ -494,6 +494,83 @@
         }
       }
     },
+    "doctorReadOnlySession": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "schemaVersion",
+        "contractVersion",
+        "sessionId",
+        "packetId",
+        "patientProfileId",
+        "viewerType",
+        "viewerIdentityStatus",
+        "consentGrantId",
+        "accessScopeId",
+        "createdAt",
+        "expiresAt",
+        "auditStatus",
+        "sessionStatus",
+        "readOnly",
+        "dataVisible",
+        "visibleScope",
+        "allowedActions",
+        "auditTrail"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 7
+        },
+        "contractVersion": {
+          "const": "0.1"
+        },
+        "viewerType": {
+          "enum": [
+            "guest_doctor",
+            "known_clinician",
+            "clinic_user_later"
+          ]
+        },
+        "viewerIdentityStatus": {
+          "enum": [
+            "unknown",
+            "declared",
+            "verified_later"
+          ]
+        },
+        "auditStatus": {
+          "enum": [
+            "pending",
+            "written",
+            "failed_blocked"
+          ]
+        },
+        "sessionStatus": {
+          "enum": [
+            "created",
+            "opened",
+            "expired",
+            "revoked",
+            "blocked"
+          ]
+        },
+        "readOnly": {
+          "const": true
+        },
+        "allowedActions": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "open_packet",
+              "view_summary",
+              "view_source",
+              "view_document_metadata",
+              "close_session"
+            ]
+          }
+        }
+      }
+    },
     "sourceQuality": {
       "type": "object",
       "additionalProperties": false,

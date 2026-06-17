@@ -1,0 +1,125 @@
+{
+  "fixtureVersion": 1,
+  "validCases": [
+    {
+      "id": "opened-guest-read-only",
+      "session": {
+        "schemaVersion": 7,
+        "contractVersion": "0.1",
+        "sessionId": "doc-session-demo-001",
+        "packetId": "vp-demo-001",
+        "patientProfileId": "patient-demo-001",
+        "viewerType": "guest_doctor",
+        "viewerIdentityStatus": "declared",
+        "consentGrantId": "consent-demo-doctor-001",
+        "accessScopeId": "scope-demo-visit-001",
+        "createdAt": "2026-06-17T09:10:00.000Z",
+        "expiresAt": "2026-06-24T09:00:00.000Z",
+        "openedAt": "2026-06-17T09:11:00.000Z",
+        "lastSeenAt": "2026-06-17T09:12:00.000Z",
+        "auditStatus": "written",
+        "sessionStatus": "opened",
+        "readOnly": true,
+        "dataVisible": true,
+        "visibleScope": "visit_packet",
+        "visibleSections": ["summary90s", "topMatters", "questionsForDoctor", "sourceIndex"],
+        "allowedActions": ["open_packet", "view_summary", "view_source", "view_document_metadata", "close_session"],
+        "attemptedMutations": [],
+        "auditTrail": [
+          {
+            "id": "audit-doc-open-001",
+            "action": "doctor_session.open_attempted",
+            "actorRole": "doctor",
+            "resourceType": "visitPacket",
+            "resourceId": "vp-demo-001",
+            "policyDecision": "allowed",
+            "createdAt": "2026-06-17T09:11:00.000Z"
+          },
+          {
+            "id": "audit-doc-view-001",
+            "action": "doctor_session.packet_viewed",
+            "actorRole": "doctor",
+            "resourceType": "visitPacket",
+            "resourceId": "vp-demo-001",
+            "policyDecision": "allowed",
+            "createdAt": "2026-06-17T09:11:01.000Z"
+          }
+        ],
+        "safetyNotice": "Widok jest tylko do odczytu i pokazuje zakres udostępnionego pakietu wizyty."
+      }
+    },
+    {
+      "id": "expired-blocked-no-data",
+      "session": {
+        "schemaVersion": 7,
+        "contractVersion": "0.1",
+        "sessionId": "doc-session-demo-expired",
+        "packetId": "vp-demo-001",
+        "patientProfileId": "patient-demo-001",
+        "viewerType": "known_clinician",
+        "viewerIdentityStatus": "declared",
+        "consentGrantId": "consent-demo-doctor-001",
+        "accessScopeId": "scope-demo-visit-001",
+        "createdAt": "2026-06-10T09:10:00.000Z",
+        "expiresAt": "2026-06-11T09:00:00.000Z",
+        "auditStatus": "written",
+        "sessionStatus": "expired",
+        "readOnly": true,
+        "dataVisible": false,
+        "visibleScope": "none",
+        "visibleSections": [],
+        "allowedActions": ["close_session"],
+        "attemptedMutations": [],
+        "auditTrail": [
+          {
+            "id": "audit-doc-expired-001",
+            "action": "doctor_session.open_attempted",
+            "actorRole": "doctor",
+            "resourceType": "visitPacket",
+            "resourceId": "vp-demo-001",
+            "policyDecision": "blocked",
+            "createdAt": "2026-06-17T09:11:00.000Z"
+          }
+        ],
+        "safetyNotice": "Dostęp wygasł. Dane pakietu nie są pokazywane."
+      }
+    }
+  ],
+  "negativeCases": [
+    {
+      "id": "data-visible-without-audit",
+      "mutate": "removeAuditTrail",
+      "expectedError": "audit.open_attempt.missing"
+    },
+    {
+      "id": "write-action-present",
+      "mutate": "addWriteAction",
+      "expectedError": "allowedActions.write_or_unknown:edit_patient_data"
+    },
+    {
+      "id": "mutation-attempt-present",
+      "mutate": "addMutationAttempt",
+      "expectedError": "attemptedMutations.not_allowed"
+    },
+    {
+      "id": "full-vault-visible",
+      "mutate": "fullVault",
+      "expectedError": "visibleScope.full_vault_not_allowed"
+    },
+    {
+      "id": "audit-failed-but-data-visible",
+      "mutate": "auditFailedDataVisible",
+      "expectedError": "dataVisible.auditStatus.not_written"
+    },
+    {
+      "id": "packet-mismatch",
+      "mutate": "packetMismatch",
+      "expectedError": "packetId.mismatch"
+    },
+    {
+      "id": "invalid-viewer-type",
+      "mutate": "invalidViewerType",
+      "expectedError": "viewerType.invalid"
+    }
+  ]
+}
