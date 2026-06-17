@@ -57,6 +57,7 @@ $nodeCheckFiles = @(
   "tools/validate-visit-packet.js",
   "tools/validate-doctor-session.js",
   "tools/validate-audit-catalog.js",
+  "tools/validate-sh0-contracts.js",
   "tools/validate-demo-coherence.js",
   "tools/validate-a11y.js",
   "tools/validate-brand-contrast.js",
@@ -90,6 +91,7 @@ $powerShellCheckFiles = @(
   "tools/validate-visit-packet.ps1",
   "tools/validate-doctor-session.ps1",
   "tools/validate-audit-catalog.ps1",
+  "tools/validate-sh0-contracts.ps1",
   "tools/validate-demo-coherence.ps1",
   "tools/validate-a11y.ps1",
   "tools/validate-validation-pack.ps1",
@@ -135,6 +137,7 @@ Invoke-External "Consent draft validation" "powershell" @("-ExecutionPolicy", "B
 Invoke-External "VisitPacket validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-visit-packet.ps1"))
 Invoke-External "DoctorReadOnlySession validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-doctor-session.ps1"))
 Invoke-External "Audit catalog validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-audit-catalog.ps1"))
+Invoke-External "SH-0 cross-contract validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-sh0-contracts.ps1"))
 Invoke-External "Demo coherence validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-demo-coherence.ps1"))
 Invoke-External "Accessibility static validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-a11y.ps1"))
 Invoke-External "Brand contrast validation" "node" @("tools/validate-brand-contrast.js")
