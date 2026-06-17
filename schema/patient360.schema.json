@@ -637,6 +637,72 @@
         }
       }
     },
+    "sh0AuditEvent": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "auditEventId",
+        "requestId",
+        "actorRole",
+        "patientProfileId",
+        "action",
+        "resourceType",
+        "resourceId",
+        "policyDecision",
+        "scope",
+        "purpose",
+        "createdAt"
+      ],
+      "properties": {
+        "action": {
+          "enum": [
+            "profile.created",
+            "profile.switched",
+            "care_circle.member_added",
+            "consent.created",
+            "consent.revoked",
+            "consent.expired",
+            "document.metadata.created",
+            "document.file.uploaded",
+            "document.metadata.viewed",
+            "document.file.open_requested",
+            "medication.created",
+            "question.created",
+            "observation.created",
+            "visit_packet.generated",
+            "visit_packet.shared",
+            "doctor_session.created",
+            "doctor_session.open_attempted",
+            "doctor_session.packet_viewed",
+            "question.status_changed",
+            "access.blocked",
+            "audit.write_failed"
+          ]
+        },
+        "resourceType": {
+          "enum": [
+            "profile",
+            "careCircle",
+            "consent",
+            "document",
+            "medication",
+            "question",
+            "observation",
+            "visitPacket",
+            "doctorSession",
+            "access",
+            "audit"
+          ]
+        },
+        "policyDecision": {
+          "enum": [
+            "allowed",
+            "blocked",
+            "failed_closed"
+          ]
+        }
+      }
+    },
     "sourceQuality": {
       "type": "object",
       "additionalProperties": false,

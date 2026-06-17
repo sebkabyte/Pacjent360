@@ -147,6 +147,31 @@
   const CONSENT_GRANTEE_TYPES = ["self", "parent", "legal_guardian", "support_person", "doctor", "governance"];
   const CONSENT_GRANT_STATUSES = ["draft", "active", "revoked", "expired"];
   const CONSENT_PURPOSES = ["self_management", "care_support", "pre_visit_review", "admin_governance"];
+  const SH0_AUDIT_ACTIONS = [
+    "profile.created",
+    "profile.switched",
+    "care_circle.member_added",
+    "consent.created",
+    "consent.revoked",
+    "consent.expired",
+    "document.metadata.created",
+    "document.file.uploaded",
+    "document.metadata.viewed",
+    "document.file.open_requested",
+    "medication.created",
+    "question.created",
+    "observation.created",
+    "visit_packet.generated",
+    "visit_packet.shared",
+    "doctor_session.created",
+    "doctor_session.open_attempted",
+    "doctor_session.packet_viewed",
+    "question.status_changed",
+    "access.blocked",
+    "audit.write_failed"
+  ];
+  const SH0_AUDIT_POLICY_DECISIONS = ["allowed", "blocked", "failed_closed"];
+  const SH0_AUDIT_RESOURCE_TYPES = ["profile", "careCircle", "consent", "document", "medication", "question", "observation", "visitPacket", "doctorSession", "access", "audit"];
   const FORBIDDEN_CLAIM_PHRASES = [
     "H" + "ITL",
     "AI " + "lekarz",
@@ -193,6 +218,9 @@
     CONSENT_GRANTEE_TYPES: Object.freeze([...CONSENT_GRANTEE_TYPES]),
     CONSENT_GRANT_STATUSES: Object.freeze([...CONSENT_GRANT_STATUSES]),
     CONSENT_PURPOSES: Object.freeze([...CONSENT_PURPOSES]),
+    SH0_AUDIT_ACTIONS: Object.freeze([...SH0_AUDIT_ACTIONS]),
+    SH0_AUDIT_POLICY_DECISIONS: Object.freeze([...SH0_AUDIT_POLICY_DECISIONS]),
+    SH0_AUDIT_RESOURCE_TYPES: Object.freeze([...SH0_AUDIT_RESOURCE_TYPES]),
     FORBIDDEN_CLAIM_PHRASES: Object.freeze([...FORBIDDEN_CLAIM_PHRASES])
   });
 });
