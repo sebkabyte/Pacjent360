@@ -418,6 +418,82 @@
         }
       }
     },
+    "visitPacket": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "schemaVersion",
+        "contractVersion",
+        "packetId",
+        "version",
+        "generatedAt",
+        "generatedByUserId",
+        "patientProfileId",
+        "preparedByRole",
+        "status",
+        "visitContext",
+        "summary90s",
+        "topMatters",
+        "medicationsToConfirm",
+        "questionsForDoctor",
+        "timelineHighlights",
+        "documentsIncluded",
+        "missingOrUncertain",
+        "sourceIndex",
+        "excludedByScope",
+        "safetyNotice",
+        "auditPolicy"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 7
+        },
+        "contractVersion": {
+          "const": "0.1"
+        },
+        "packetId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "preparedByRole": {
+          "enum": [
+            "patient",
+            "parent",
+            "legal_guardian",
+            "support_person"
+          ]
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "ready_to_share",
+            "shared",
+            "revoked",
+            "expired",
+            "superseded"
+          ]
+        },
+        "auditPolicy": {
+          "type": "object",
+          "required": [
+            "mode",
+            "failClosed"
+          ],
+          "properties": {
+            "mode": {
+              "const": "audit-before-read"
+            },
+            "failClosed": {
+              "const": true
+            }
+          }
+        }
+      }
+    },
     "sourceQuality": {
       "type": "object",
       "additionalProperties": false,

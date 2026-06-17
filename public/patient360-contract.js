@@ -96,6 +96,30 @@
   const RELATION_TYPES = ["powiązane czasowo", "powiązane źródłem"];
   const CONSENT_STATUSES = ["aktywny", "cofnięty", "wygasły"];
   const AUDIT_ACTION_TYPES = ["local_demo_audit", "ditl_status_change", "consent_change", "export", "import", "validation"];
+  const SH0_SCHEMA_VERSION = 7;
+  const VISIT_PACKET_STATUSES = ["draft", "ready_to_share", "shared", "revoked", "expired", "superseded"];
+  const VISIT_PACKET_PREPARED_BY_ROLES = ["patient", "parent", "legal_guardian", "support_person"];
+  const VISIT_PACKET_SOURCE_STATUSES = [
+    "confirmed",
+    "patient_reported",
+    "caregiver_observed",
+    "document_derived",
+    "to_verify",
+    "conflicting",
+    "missing_source",
+    "outdated",
+    "revoked_access"
+  ];
+  const VISIT_PACKET_SECTION_KEYS = [
+    "summary90s",
+    "topMatters",
+    "medicationsToConfirm",
+    "questionsForDoctor",
+    "timelineHighlights",
+    "documentsIncluded",
+    "missingOrUncertain",
+    "sourceIndex"
+  ];
   const FORBIDDEN_CLAIM_PHRASES = [
     "H" + "ITL",
     "AI " + "lekarz",
@@ -112,6 +136,7 @@
   return Object.freeze({
     DATA_SCHEMA_VERSION,
     DATA_CONTRACT_VERSION,
+    SH0_SCHEMA_VERSION,
     SOURCE_MISSING_REF,
     TIMELINE_TRACKS: Object.freeze([...TIMELINE_TRACKS]),
     TIMELINE_STATUS_META: Object.freeze(TIMELINE_STATUS_META),
@@ -127,6 +152,10 @@
     RELATION_TYPES: Object.freeze([...RELATION_TYPES]),
     CONSENT_STATUSES: Object.freeze([...CONSENT_STATUSES]),
     AUDIT_ACTION_TYPES: Object.freeze([...AUDIT_ACTION_TYPES]),
+    VISIT_PACKET_STATUSES: Object.freeze([...VISIT_PACKET_STATUSES]),
+    VISIT_PACKET_PREPARED_BY_ROLES: Object.freeze([...VISIT_PACKET_PREPARED_BY_ROLES]),
+    VISIT_PACKET_SOURCE_STATUSES: Object.freeze([...VISIT_PACKET_SOURCE_STATUSES]),
+    VISIT_PACKET_SECTION_KEYS: Object.freeze([...VISIT_PACKET_SECTION_KEYS]),
     FORBIDDEN_CLAIM_PHRASES: Object.freeze([...FORBIDDEN_CLAIM_PHRASES])
   });
 });
