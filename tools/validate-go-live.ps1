@@ -45,6 +45,7 @@ $nodeCheckFiles = @(
   "public/patient360-consent-model.js",
   "public/patient360-visitpacket.js",
   "public/patient360-doctor-session.js",
+  "public/patient360-audit-catalog.js",
   "public/patient360-demo-data.js",
   "tools/validate-data-contract.js",
   "tools/validate-format.js",
@@ -55,6 +56,7 @@ $nodeCheckFiles = @(
   "tools/validate-consent-draft.js",
   "tools/validate-visit-packet.js",
   "tools/validate-doctor-session.js",
+  "tools/validate-audit-catalog.js",
   "tools/validate-demo-coherence.js",
   "tools/validate-a11y.js",
   "tools/validate-brand-contrast.js",
@@ -87,6 +89,7 @@ $powerShellCheckFiles = @(
   "tools/validate-consent-draft.ps1",
   "tools/validate-visit-packet.ps1",
   "tools/validate-doctor-session.ps1",
+  "tools/validate-audit-catalog.ps1",
   "tools/validate-demo-coherence.ps1",
   "tools/validate-a11y.ps1",
   "tools/validate-validation-pack.ps1",
@@ -119,7 +122,7 @@ Invoke-Step "PowerShell syntax parse for publication scripts" {
 
 Invoke-External "JSON fixture and schema parse" "node" @(
   "-e",
-  "const fs=require('fs'); ['schema/patient360.schema.json','fixtures/patient-map-model.snapshot.json','fixtures/patient-map-model-edgecases.json','fixtures/previsit-workflow-edgecases.json','fixtures/caregiver-scope-edgecases.json','fixtures/consent-draft-edgecases.json','fixtures/visit-packet.snapshot.json','fixtures/visit-packet-edgecases.json','fixtures/doctor-session-edgecases.json'].forEach((file)=>JSON.parse(fs.readFileSync(file,'utf8')));"
+  "const fs=require('fs'); ['schema/patient360.schema.json','fixtures/patient-map-model.snapshot.json','fixtures/patient-map-model-edgecases.json','fixtures/previsit-workflow-edgecases.json','fixtures/caregiver-scope-edgecases.json','fixtures/consent-draft-edgecases.json','fixtures/visit-packet.snapshot.json','fixtures/visit-packet-edgecases.json','fixtures/doctor-session-edgecases.json','fixtures/audit-catalog-edgecases.json'].forEach((file)=>JSON.parse(fs.readFileSync(file,'utf8')));"
 )
 
 Invoke-External "Data Contract validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-data-contract.ps1"))
@@ -131,6 +134,7 @@ Invoke-External "Caregiver scope validation" "powershell" @("-ExecutionPolicy", 
 Invoke-External "Consent draft validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-consent-draft.ps1"))
 Invoke-External "VisitPacket validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-visit-packet.ps1"))
 Invoke-External "DoctorReadOnlySession validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-doctor-session.ps1"))
+Invoke-External "Audit catalog validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-audit-catalog.ps1"))
 Invoke-External "Demo coherence validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-demo-coherence.ps1"))
 Invoke-External "Accessibility static validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-a11y.ps1"))
 Invoke-External "Brand contrast validation" "node" @("tools/validate-brand-contrast.js")

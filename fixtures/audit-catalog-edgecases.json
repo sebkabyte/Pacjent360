@@ -1,0 +1,170 @@
+{
+  "fixtureVersion": 1,
+  "validTrail": [
+    {
+      "auditEventId": "audit-consent-created-001",
+      "requestId": "req-audit-001",
+      "actorUserId": "user-demo-patient",
+      "actorRole": "patient",
+      "patientProfileId": "patient-demo-001",
+      "action": "consent.created",
+      "resourceType": "consent",
+      "resourceId": "consent-demo-doctor-001",
+      "policyDecision": "allowed",
+      "scope": ["report.view"],
+      "purpose": "pre_visit_review",
+      "createdAt": "2026-06-17T09:00:00.000Z",
+      "metadata": {
+        "policyVersion": "sh0-v0.1"
+      }
+    },
+    {
+      "auditEventId": "audit-packet-shared-001",
+      "requestId": "req-audit-002",
+      "actorUserId": "user-demo-patient",
+      "actorRole": "patient",
+      "patientProfileId": "patient-demo-001",
+      "action": "visit_packet.shared",
+      "resourceType": "visitPacket",
+      "resourceId": "vp-demo-001",
+      "policyDecision": "allowed",
+      "scope": ["report.view", "documents.metadata.view"],
+      "purpose": "pre_visit_review",
+      "createdAt": "2026-06-17T09:05:00.000Z",
+      "metadata": {
+        "packetVersion": "0.1.0"
+      }
+    },
+    {
+      "auditEventId": "audit-doctor-view-001",
+      "requestId": "req-audit-003",
+      "actorUserId": "doctor-declared-demo",
+      "actorRole": "doctor",
+      "patientProfileId": "patient-demo-001",
+      "action": "doctor_session.packet_viewed",
+      "resourceType": "visitPacket",
+      "resourceId": "vp-demo-001",
+      "policyDecision": "allowed",
+      "scope": ["report.view"],
+      "purpose": "pre_visit_review",
+      "createdAt": "2026-06-17T09:11:00.000Z",
+      "metadata": {
+        "sessionId": "doc-session-demo-001"
+      }
+    }
+  ],
+  "validScenarios": [
+    {
+      "id": "doctor-view-visible-after-audit",
+      "resourceId": "vp-demo-001",
+      "requiredAction": "doctor_session.packet_viewed",
+      "policyAllowed": true,
+      "auditWriteStatus": "written",
+      "dataVisible": true,
+      "auditTrailRef": "validTrail"
+    },
+    {
+      "id": "blocked-no-data-after-policy-denial",
+      "resourceId": "vp-demo-001",
+      "requiredAction": "doctor_session.packet_viewed",
+      "policyAllowed": false,
+      "auditWriteStatus": "written",
+      "dataVisible": false,
+      "auditTrail": [
+        {
+          "auditEventId": "audit-access-blocked-001",
+          "requestId": "req-audit-004",
+          "actorRole": "doctor",
+          "patientProfileId": "patient-demo-001",
+          "action": "access.blocked",
+          "resourceType": "visitPacket",
+          "resourceId": "vp-demo-001",
+          "policyDecision": "blocked",
+          "scope": ["report.view"],
+          "purpose": "pre_visit_review",
+          "createdAt": "2026-06-17T09:12:00.000Z",
+          "metadata": {
+            "reason": "revoked"
+          }
+        }
+      ]
+    }
+  ],
+  "negativeEvents": [
+    {
+      "id": "unknown-action",
+      "event": {
+        "auditEventId": "audit-bad-action",
+        "requestId": "req-bad-001",
+        "actorRole": "doctor",
+        "patientProfileId": "patient-demo-001",
+        "action": "doctor_session.ai_summary_generated",
+        "resourceType": "visitPacket",
+        "resourceId": "vp-demo-001",
+        "policyDecision": "allowed",
+        "scope": ["report.view"],
+        "purpose": "pre_visit_review",
+        "createdAt": "2026-06-17T09:13:00.000Z"
+      },
+      "expectedError": "action.invalid"
+    },
+    {
+      "id": "phi-in-metadata",
+      "event": {
+        "auditEventId": "audit-phi",
+        "requestId": "req-bad-002",
+        "actorRole": "doctor",
+        "patientProfileId": "patient-demo-001",
+        "action": "doctor_session.packet_viewed",
+        "resourceType": "visitPacket",
+        "resourceId": "vp-demo-001",
+        "policyDecision": "allowed",
+        "scope": ["report.view"],
+        "purpose": "pre_visit_review",
+        "createdAt": "2026-06-17T09:14:00.000Z",
+        "metadata": {
+          "documentText": "nie wolno zapisywać treści dokumentu"
+        }
+      },
+      "expectedError": "metadata.phi_key:documentText"
+    },
+    {
+      "id": "missing-request-id",
+      "event": {
+        "auditEventId": "audit-missing-request",
+        "actorRole": "doctor",
+        "patientProfileId": "patient-demo-001",
+        "action": "doctor_session.packet_viewed",
+        "resourceType": "visitPacket",
+        "resourceId": "vp-demo-001",
+        "policyDecision": "allowed",
+        "scope": ["report.view"],
+        "purpose": "pre_visit_review",
+        "createdAt": "2026-06-17T09:15:00.000Z"
+      },
+      "expectedError": "requestId.missing"
+    }
+  ],
+  "negativeScenarios": [
+    {
+      "id": "data-visible-with-audit-failed",
+      "resourceId": "vp-demo-001",
+      "requiredAction": "doctor_session.packet_viewed",
+      "policyAllowed": true,
+      "auditWriteStatus": "failed",
+      "dataVisible": true,
+      "auditTrailRef": "validTrail",
+      "expectedError": "dataVisible.fail_closed_violation"
+    },
+    {
+      "id": "data-visible-without-read-event",
+      "resourceId": "vp-demo-001",
+      "requiredAction": "doctor_session.packet_viewed",
+      "policyAllowed": true,
+      "auditWriteStatus": "written",
+      "dataVisible": true,
+      "auditTrail": [],
+      "expectedError": "dataVisible.audit_event_missing"
+    }
+  ]
+}
