@@ -1,0 +1,160 @@
+{
+  "fixtureVersion": 1,
+  "validCases": [
+    {
+      "id": "draft-minimal-source-missing",
+      "packet": {
+        "schemaVersion": 7,
+        "contractVersion": "0.1",
+        "packetId": "vp-edge-draft-001",
+        "version": "0.1.0",
+        "generatedAt": "2026-06-17T09:00:00.000Z",
+        "generatedByUserId": "user-demo-parent",
+        "patientProfileId": "patient-demo-child",
+        "preparedByRole": "parent",
+        "status": "draft",
+        "visitContext": {
+          "goal": "Przygotowanie listy pytań przed wizytą.",
+          "ditlStatus": "do wyjaśnienia",
+          "sourceMissing": true
+        },
+        "summary90s": {
+          "text": "Pakiet jest szkicem i wymaga uzupełnienia źródeł.",
+          "ditlStatus": "do wyjaśnienia",
+          "sourceMissing": true
+        },
+        "topMatters": [],
+        "medicationsToConfirm": [],
+        "questionsForDoctor": [],
+        "timelineHighlights": [],
+        "documentsIncluded": [],
+        "missingOrUncertain": [
+          {
+            "id": "missing-edge-001",
+            "title": "Brak dokumentów źródłowych w szkicu.",
+            "ditlStatus": "do wyjaśnienia",
+            "sourceMissing": true
+          }
+        ],
+        "sourceIndex": [
+          {
+            "ref": "source_missing",
+            "type": "missing",
+            "title": "Źródło nieuzupełnione",
+            "status": "missing_source"
+          }
+        ],
+        "excludedByScope": {
+          "count": 0,
+          "categories": []
+        },
+        "safetyNotice": "Szkic porządkuje pytania i braki. Decyzje medyczne podejmuje lekarz.",
+        "auditPolicy": {
+          "mode": "audit-before-read",
+          "failClosed": true
+        }
+      }
+    },
+    {
+      "id": "shared-caregiver-observed",
+      "packet": {
+        "schemaVersion": 7,
+        "contractVersion": "0.1",
+        "packetId": "vp-edge-shared-001",
+        "version": "0.1.1",
+        "generatedAt": "2026-06-17T10:00:00.000Z",
+        "generatedByUserId": "user-demo-support",
+        "patientProfileId": "patient-demo-adult",
+        "preparedByRole": "support_person",
+        "consentGrantId": "consent-edge-001",
+        "accessScopeId": "scope-edge-001",
+        "expiresAt": "2026-06-18T10:00:00.000Z",
+        "status": "shared",
+        "visitContext": {
+          "goal": "Pokazanie lekarzowi pytań przygotowanych przez osobę wspierającą.",
+          "ditlStatus": "do wyjaśnienia",
+          "sourceRefs": ["observation:caregiver-note-001"]
+        },
+        "summary90s": {
+          "text": "Osoba wspierająca dodała obserwacje organizacyjne i pytania do rozmowy.",
+          "ditlStatus": "do wyjaśnienia",
+          "sourceRefs": ["observation:caregiver-note-001"]
+        },
+        "topMatters": [
+          {
+            "id": "matter-edge-001",
+            "title": "Potwierdzić z pacjentem, czy opis obserwacji jest aktualny.",
+            "ditlStatus": "do wyjaśnienia",
+            "sourceRefs": ["observation:caregiver-note-001"]
+          }
+        ],
+        "medicationsToConfirm": [],
+        "questionsForDoctor": [
+          {
+            "id": "question-edge-001",
+            "question": "Czy lista dokumentów jest wystarczająca do rozmowy?",
+            "ditlStatus": "do wyjaśnienia",
+            "sourceRefs": ["observation:caregiver-note-001"]
+          }
+        ],
+        "timelineHighlights": [],
+        "documentsIncluded": [],
+        "missingOrUncertain": [],
+        "sourceIndex": [
+          {
+            "ref": "observation:caregiver-note-001",
+            "type": "observation",
+            "title": "Obserwacja osoby wspierającej",
+            "status": "caregiver_observed"
+          }
+        ],
+        "excludedByScope": {
+          "count": 2,
+          "categories": ["documents", "medications"]
+        },
+        "safetyNotice": "Pakiet pokazuje zakres udostępniony przez pacjenta. Decyzje medyczne podejmuje lekarz.",
+        "auditPolicy": {
+          "mode": "audit-before-read",
+          "failClosed": true
+        }
+      }
+    }
+  ],
+  "negativeCases": [
+    {
+      "id": "missing-source-on-summary",
+      "mutate": "removeSummarySources",
+      "expectedError": "summary90s.source.missing"
+    },
+    {
+      "id": "unknown-source-ref",
+      "mutate": "unknownSourceRef",
+      "expectedError": "topMatters.matter-001.source.unknown:doc:missing"
+    },
+    {
+      "id": "forbidden-clinical-word",
+      "mutate": "forbiddenPhrase",
+      "expectedErrorIncludes": "forbiddenPhrase"
+    },
+    {
+      "id": "shared-without-consent",
+      "mutate": "removeConsent",
+      "expectedError": "consentGrantId.missing_for_share"
+    },
+    {
+      "id": "too-many-top-matters",
+      "mutate": "tooManyMatters",
+      "expectedError": "topMatters.max_three"
+    },
+    {
+      "id": "audit-policy-not-fail-closed",
+      "mutate": "auditOpen",
+      "expectedError": "auditPolicy.audit_before_read.missing"
+    },
+    {
+      "id": "invalid-ditl-status",
+      "mutate": "invalidDitlStatus",
+      "expectedError": "visitContext.ditlStatus.invalid"
+    }
+  ]
+}

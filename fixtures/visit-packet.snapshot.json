@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 7,
+  "contractVersion": "0.1",
+  "packetId": "vp-demo-001",
+  "version": "0.1.0",
+  "generatedAt": "2026-06-17T09:00:00.000Z",
+  "generatedByUserId": "user-demo-patient",
+  "patientProfileId": "patient-demo-001",
+  "preparedByRole": "patient",
+  "consentGrantId": "consent-demo-doctor-001",
+  "accessScopeId": "scope-demo-visit-001",
+  "expiresAt": "2026-06-24T09:00:00.000Z",
+  "status": "ready_to_share",
+  "visitContext": {
+    "visitId": "visit-demo-001",
+    "type": "consultation",
+    "date": "2026-06-20",
+    "goal": "Uporządkowanie pytań i dokumentów przed rozmową z lekarzem.",
+    "ditlStatus": "do wyjaśnienia",
+    "sourceRefs": ["interview:visit-goal-demo"]
+  },
+  "summary90s": {
+    "text": "Pacjent przygotował dokumenty, listę leków do potwierdzenia i pytania do omówienia podczas wizyty.",
+    "ditlStatus": "do wyjaśnienia",
+    "sourceRefs": ["interview:visit-goal-demo", "doc:lab-demo-001", "medication:med-demo-001"]
+  },
+  "topMatters": [
+    {
+      "id": "matter-001",
+      "title": "Omówić najnowszy wynik badania z dokumentu demo.",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceRefs": ["doc:lab-demo-001"]
+    },
+    {
+      "id": "matter-002",
+      "title": "Potwierdzić aktualną listę leków.",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceRefs": ["medication:med-demo-001"]
+    },
+    {
+      "id": "matter-003",
+      "title": "Wyjaśnić, których dokumentów brakuje przed kolejną rozmową.",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceMissing": true
+    }
+  ],
+  "medicationsToConfirm": [
+    {
+      "id": "med-demo-001",
+      "name": "Lek demo A",
+      "description": "Wpis ręczny pacjenta, do potwierdzenia z lekarzem.",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceRefs": ["medication:med-demo-001"]
+    }
+  ],
+  "questionsForDoctor": [
+    {
+      "id": "question-demo-001",
+      "question": "Które dokumenty warto omówić podczas tej wizyty?",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceRefs": ["interview:visit-goal-demo"]
+    }
+  ],
+  "timelineHighlights": [
+    {
+      "id": "timeline-demo-001",
+      "title": "Dodano dokument badania demo.",
+      "date": "2026-06-10",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceRefs": ["doc:lab-demo-001"]
+    }
+  ],
+  "documentsIncluded": [
+    {
+      "documentId": "doc-demo-001",
+      "title": "Wynik badania demo",
+      "type": "lab_result",
+      "date": "2026-06-10",
+      "fileIncluded": true,
+      "ditlStatus": "do wyjaśnienia",
+      "sourceRef": "doc:lab-demo-001"
+    }
+  ],
+  "missingOrUncertain": [
+    {
+      "id": "missing-demo-001",
+      "title": "Brak dokumentu z poprzedniej konsultacji.",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceMissing": true
+    }
+  ],
+  "sourceIndex": [
+    {
+      "ref": "interview:visit-goal-demo",
+      "type": "interview",
+      "title": "Cel wizyty wpisany przez pacjenta",
+      "status": "patient_reported"
+    },
+    {
+      "ref": "doc:lab-demo-001",
+      "type": "document",
+      "title": "Wynik badania demo",
+      "status": "document_derived"
+    },
+    {
+      "ref": "medication:med-demo-001",
+      "type": "medication",
+      "title": "Lek demo A",
+      "status": "patient_reported"
+    }
+  ],
+  "excludedByScope": {
+    "count": 1,
+    "categories": ["observations"],
+    "detail": "Poza zakresem pokazujemy tylko liczbę i kategorię, bez treści."
+  },
+  "safetyNotice": "Pakiet porządkuje kontekst, źródła, braki i pytania. Decyzje medyczne podejmuje lekarz.",
+  "auditPolicy": {
+    "mode": "audit-before-read",
+    "failClosed": true
+  }
+}
