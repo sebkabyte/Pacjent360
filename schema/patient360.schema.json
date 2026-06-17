@@ -401,6 +401,72 @@
         }
       }
     },
+    "consentGrant": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "consentGrantId",
+        "patientProfileId",
+        "grantorUserId",
+        "granteeType",
+        "purpose",
+        "scopes",
+        "validFrom",
+        "validUntil",
+        "status"
+      ],
+      "properties": {
+        "granteeType": {
+          "enum": [
+            "self",
+            "parent",
+            "legal_guardian",
+            "support_person",
+            "doctor",
+            "governance"
+          ]
+        },
+        "purpose": {
+          "enum": [
+            "self_management",
+            "care_support",
+            "pre_visit_review",
+            "admin_governance"
+          ]
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "profile.view",
+              "documents.metadata.view",
+              "documents.file.view",
+              "documents.upload",
+              "medications.view",
+              "medications.edit",
+              "observations.view",
+              "observations.add",
+              "questions.view",
+              "questions.add",
+              "questions.status.mark",
+              "timeline.view",
+              "report.generate",
+              "report.share",
+              "report.view",
+              "audit.view"
+            ]
+          }
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "active",
+            "revoked",
+            "expired"
+          ]
+        }
+      }
+    },
     "auditEntry": {
       "type": "object",
       "additionalProperties": true,

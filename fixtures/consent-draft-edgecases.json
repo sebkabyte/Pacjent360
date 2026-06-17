@@ -117,5 +117,132 @@
         "errorCode": "missing_area"
       }
     }
+  ],
+  "consentGrantCases": [
+    {
+      "id": "doctor-visit-packet-consent",
+      "grant": {
+        "consentGrantId": "consent-demo-doctor-001",
+        "patientProfileId": "patient-demo-001",
+        "grantorUserId": "user-demo-patient",
+        "granteeType": "doctor",
+        "granteeIdOrTokenRef": "doctor-token-demo-001",
+        "purpose": "pre_visit_review",
+        "scopes": ["report.view", "documents.metadata.view", "documents.file.view", "medications.view", "questions.view", "timeline.view"],
+        "resourceFilters": {
+          "packetId": "vp-demo-001",
+          "packetVersion": "0.1.0"
+        },
+        "validFrom": "2026-06-17T09:00:00.000Z",
+        "validUntil": "2026-06-24T09:00:00.000Z",
+        "status": "active"
+      },
+      "accessRequests": [
+        {
+          "id": "doctor-report-view",
+          "actorRole": "doctor",
+          "scope": "report.view",
+          "packetId": "vp-demo-001",
+          "at": "2026-06-17T10:00:00.000Z",
+          "expectAllowed": true
+        },
+        {
+          "id": "doctor-file-view",
+          "actorRole": "doctor",
+          "scope": "documents.file.view",
+          "packetId": "vp-demo-001",
+          "at": "2026-06-17T10:00:00.000Z",
+          "expectAllowed": true
+        }
+      ]
+    },
+    {
+      "id": "support-person-limited-consent",
+      "grant": {
+        "consentGrantId": "consent-support-001",
+        "patientProfileId": "patient-demo-001",
+        "grantorUserId": "user-demo-patient",
+        "granteeType": "support_person",
+        "granteeIdOrTokenRef": "support-demo-001",
+        "purpose": "care_support",
+        "scopes": ["documents.metadata.view", "questions.add", "report.generate"],
+        "resourceFilters": {
+          "categories": ["documents", "questions", "report"]
+        },
+        "validFrom": "2026-06-17T09:00:00.000Z",
+        "validUntil": "2026-07-17T09:00:00.000Z",
+        "status": "active"
+      },
+      "accessRequests": [
+        {
+          "id": "support-document-metadata",
+          "actorRole": "support_person",
+          "scope": "documents.metadata.view",
+          "at": "2026-06-20T10:00:00.000Z",
+          "expectAllowed": true
+        },
+        {
+          "id": "support-file-denied",
+          "actorRole": "support_person",
+          "scope": "documents.file.view",
+          "at": "2026-06-20T10:00:00.000Z",
+          "expectAllowed": false,
+          "reason": "grant_scope.denied"
+        }
+      ]
+    }
+  ],
+  "negativeConsentGrantCases": [
+    {
+      "id": "doctor-report-without-consent",
+      "grant": null,
+      "expectedError": "consentGrant.missing"
+    },
+    {
+      "id": "doctor-consent-without-packet-filter",
+      "grant": {
+        "consentGrantId": "consent-bad-doctor-001",
+        "patientProfileId": "patient-demo-001",
+        "grantorUserId": "user-demo-patient",
+        "granteeType": "doctor",
+        "purpose": "pre_visit_review",
+        "scopes": ["report.view"],
+        "validFrom": "2026-06-17T09:00:00.000Z",
+        "validUntil": "2026-06-24T09:00:00.000Z",
+        "status": "active"
+      },
+      "expectedError": "doctor.packet_filter.required"
+    },
+    {
+      "id": "expired-active-grant",
+      "grant": {
+        "consentGrantId": "consent-expired-001",
+        "patientProfileId": "patient-demo-001",
+        "grantorUserId": "user-demo-patient",
+        "granteeType": "support_person",
+        "purpose": "care_support",
+        "scopes": ["documents.metadata.view"],
+        "validFrom": "2026-05-01T09:00:00.000Z",
+        "validUntil": "2026-05-02T09:00:00.000Z",
+        "status": "active"
+      },
+      "now": "2026-06-17T09:00:00.000Z",
+      "expectedError": "validUntil.expired"
+    },
+    {
+      "id": "unknown-scope",
+      "grant": {
+        "consentGrantId": "consent-unknown-scope",
+        "patientProfileId": "patient-demo-001",
+        "grantorUserId": "user-demo-patient",
+        "granteeType": "support_person",
+        "purpose": "care_support",
+        "scopes": ["vault.full"],
+        "validFrom": "2026-06-17T09:00:00.000Z",
+        "validUntil": "2026-07-17T09:00:00.000Z",
+        "status": "active"
+      },
+      "expectedError": "scopes.unknown:vault.full"
+    }
   ]
 }

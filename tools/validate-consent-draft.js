@@ -74,6 +74,26 @@ function validateCase(fixture, testCase) {
   return { id: testCase.id, valid: true, areas: consent.areas, role: consent.role };
 }
 
+function validateConsentGrantCase(testCase) {
+  const validation = consentModel.validateConsentGrant(testCase.grant, { now: testCase.now });
+  assert(validation.valid, `${testCase.id}: consent grant should be valid: ${validation.errors.join("; ")}`);
+  (testCase.accessRequests || []).forEach((request) => {
+    const decision = consentModel.canAccess(testCase.grant, request);
+    assert(decision.allowed === request.expectAllowed, `${testCase.id}/${request.id}: expected allowed=${request.expectAllowed}, got ${decision.allowed} (${decision.reasons.join("; ")})`);
+    if (!request.expectAllowed && request.reason) {
+      assert(decision.reasons.includes(request.reason), `${testCase.id}/${request.id}: expected denial reason ${request.reason}, got ${decision.reasons.join("; ")}`);
+    }
+  });
+  return { id: testCase.id, valid: true, accessChecks: (testCase.accessRequests || []).length };
+}
+
+function validateNegativeConsentGrantCase(testCase) {
+  const validation = consentModel.validateConsentGrant(testCase.grant, { now: testCase.now });
+  assert(!validation.valid, `${testCase.id}: expected invalid consent grant`);
+  assert(validation.errors.includes(testCase.expectedError), `${testCase.id}: expected ${testCase.expectedError}, got ${validation.errors.join("; ")}`);
+  return { id: testCase.id, valid: false, errors: validation.errors };
+}
+
 function main() {
   assert(fs.existsSync(fixturePath), `Missing fixture: ${fixturePath}`);
   const fixture = JSON.parse(fs.readFileSync(fixturePath, "utf8"));
@@ -82,9 +102,16 @@ function main() {
   assert(options.some((option) => option.value === "tasks" && option.label === "Zadania organizacyjne"), "tasks label should be user-facing");
 
   const results = fixture.cases.map((testCase) => validateCase(fixture, testCase));
+  const grantResults = (fixture.consentGrantCases || []).map(validateConsentGrantCase);
+  const negativeGrantResults = (fixture.negativeConsentGrantCases || []).map(validateNegativeConsentGrantCase);
+  assert(consentModel.ACCESS_SCOPE_KEYS.includes("report.view"), "consent matrix should include report.view");
+  assert(consentModel.ROLE_SCOPE_MATRIX.doctor.includes("report.view"), "doctor should be able to view report only through grant");
+  assert(!consentModel.ROLE_SCOPE_MATRIX.doctor.includes("report.share"), "doctor must not share report");
   results.forEach((result) => {
     console.log(`${result.id}: ${result.valid ? `valid areas=${result.areas.join(",")} role=${result.role}` : `invalid errors=${result.errors.join(",")}`}`);
   });
+  grantResults.forEach((result) => console.log(`${result.id}: valid accessChecks=${result.accessChecks}`));
+  negativeGrantResults.forEach((result) => console.log(`${result.id}: invalid errors=${result.errors.join(",")}`));
   console.log("Consent draft validation passed");
 }
 

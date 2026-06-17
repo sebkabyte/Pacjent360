@@ -5,6 +5,64 @@
   }
   root.Patient360ConsentModel = consentModel;
 })(typeof globalThis !== "undefined" ? globalThis : this, function buildPatient360ConsentModel() {
+  const contract =
+    typeof require === "function" ? require("./patient360-contract.js") : null;
+
+  const ACCESS_SCOPE_KEYS = Object.freeze(contract?.ACCESS_SCOPE_KEYS || [
+    "profile.view",
+    "documents.metadata.view",
+    "documents.file.view",
+    "documents.upload",
+    "medications.view",
+    "medications.edit",
+    "observations.view",
+    "observations.add",
+    "questions.view",
+    "questions.add",
+    "questions.status.mark",
+    "timeline.view",
+    "report.generate",
+    "report.share",
+    "report.view",
+    "audit.view"
+  ]);
+  const CONSENT_ACTOR_ROLES = Object.freeze(contract?.CONSENT_ACTOR_ROLES || ["patient", "parent", "legal_guardian", "support_person", "doctor", "admin_governance"]);
+  const CONSENT_GRANTEE_TYPES = Object.freeze(contract?.CONSENT_GRANTEE_TYPES || ["self", "parent", "legal_guardian", "support_person", "doctor", "governance"]);
+  const CONSENT_GRANT_STATUSES = Object.freeze(contract?.CONSENT_GRANT_STATUSES || ["draft", "active", "revoked", "expired"]);
+  const CONSENT_PURPOSES = Object.freeze(contract?.CONSENT_PURPOSES || ["self_management", "care_support", "pre_visit_review", "admin_governance"]);
+  const ROLE_SCOPE_MATRIX = Object.freeze({
+    patient: ACCESS_SCOPE_KEYS,
+    parent: ACCESS_SCOPE_KEYS.filter((scope) => scope !== "audit.view"),
+    legal_guardian: ACCESS_SCOPE_KEYS.filter((scope) => scope !== "audit.view"),
+    support_person: [
+      "profile.view",
+      "documents.metadata.view",
+      "documents.upload",
+      "medications.view",
+      "medications.edit",
+      "observations.view",
+      "observations.add",
+      "questions.view",
+      "questions.add",
+      "timeline.view",
+      "report.generate",
+      "report.share",
+      "report.view"
+    ],
+    doctor: [
+      "profile.view",
+      "documents.metadata.view",
+      "documents.file.view",
+      "medications.view",
+      "observations.view",
+      "questions.view",
+      "questions.status.mark",
+      "timeline.view",
+      "report.view"
+    ],
+    admin_governance: ["audit.view"]
+  });
+
   const FALLBACK_AREA_DEFINITIONS = Object.freeze([
     { key: "medications", label: "Leki" },
     { key: "visits", label: "Wizyty" },
@@ -150,12 +208,75 @@
     return { valid: errors.length === 0, errors, warnings };
   }
 
+  function normalizeScopes(scopes) {
+    return [...new Set((Array.isArray(scopes) ? scopes : []).map(String).filter(Boolean))];
+  }
+
+  function validateConsentGrant(grant, options = {}) {
+    const errors = [];
+    const warnings = [];
+    if (!grant || typeof grant !== "object") return { valid: false, errors: ["consentGrant.missing"], warnings };
+    ["consentGrantId", "patientProfileId", "grantorUserId", "granteeType", "purpose", "validFrom", "validUntil", "status"].forEach((field) => {
+      if (!grant[field]) errors.push(`${field}.missing`);
+    });
+    if (!CONSENT_GRANTEE_TYPES.includes(grant.granteeType)) errors.push("granteeType.invalid");
+    if (!CONSENT_PURPOSES.includes(grant.purpose)) errors.push("purpose.invalid");
+    if (!CONSENT_GRANT_STATUSES.includes(grant.status)) errors.push("status.invalid");
+    const scopes = normalizeScopes(grant.scopes);
+    if (!scopes.length) errors.push("scopes.empty");
+    scopes.forEach((scope) => {
+      if (!ACCESS_SCOPE_KEYS.includes(scope)) errors.push(`scopes.unknown:${scope}`);
+    });
+    if (grant.status === "active") {
+      if (!grant.validUntil) errors.push("validUntil.required_for_active");
+      if (options.now && grant.validUntil <= options.now) errors.push("validUntil.expired");
+    }
+    if (grant.granteeType === "doctor") {
+      if (grant.purpose !== "pre_visit_review") errors.push("doctor.purpose.invalid");
+      if (!grant.resourceFilters?.packetId && !grant.resourceFilters?.packetVersion) errors.push("doctor.packet_filter.required");
+      if (!scopes.includes("report.view")) errors.push("doctor.report_view.required");
+    }
+    if (grant.granteeType === "support_person" && scopes.includes("documents.file.view")) {
+      warnings.push("support_person.documents_file_view.requires_explicit_review");
+    }
+    return { valid: errors.length === 0, errors, warnings };
+  }
+
+  function canAccess(grant, request = {}) {
+    const validation = validateConsentGrant(grant, { now: request.at });
+    if (!validation.valid) return { allowed: false, reasons: validation.errors };
+    const actorRole = request.actorRole;
+    const requestedScope = request.scope;
+    const reasons = [];
+    if (!CONSENT_ACTOR_ROLES.includes(actorRole)) reasons.push("actorRole.invalid");
+    if (!ACCESS_SCOPE_KEYS.includes(requestedScope)) reasons.push("scope.invalid");
+    if (grant.status !== "active") reasons.push(`status.${grant.status}`);
+    if (request.at && grant.validUntil <= request.at) reasons.push("validUntil.expired");
+    const roleAllowed = new Set(ROLE_SCOPE_MATRIX[actorRole] || []);
+    if (!roleAllowed.has(requestedScope)) reasons.push("role_scope.denied");
+    const grantScopes = new Set(normalizeScopes(grant.scopes));
+    if (!grantScopes.has(requestedScope)) reasons.push("grant_scope.denied");
+    if (actorRole === "doctor") {
+      if (grant.granteeType !== "doctor") reasons.push("doctor.granteeType.required");
+      if (request.packetId && grant.resourceFilters?.packetId && grant.resourceFilters.packetId !== request.packetId) reasons.push("packet.scope_mismatch");
+    }
+    return { allowed: reasons.length === 0, reasons };
+  }
+
   return Object.freeze({
     FALLBACK_AREA_DEFINITIONS,
+    ACCESS_SCOPE_KEYS,
+    CONSENT_ACTOR_ROLES,
+    CONSENT_GRANTEE_TYPES,
+    CONSENT_GRANT_STATUSES,
+    CONSENT_PURPOSES,
+    ROLE_SCOPE_MATRIX,
     consentAreaOptions,
     parseLegacyAreas,
     selectedConsentAreas,
     buildConsentDraft,
-    validateConsentDraft
+    validateConsentDraft,
+    validateConsentGrant,
+    canAccess
   });
 });
