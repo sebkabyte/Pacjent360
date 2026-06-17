@@ -125,6 +125,28 @@
   const DOCTOR_SESSION_STATUSES = ["created", "opened", "expired", "revoked", "blocked"];
   const DOCTOR_AUDIT_STATUSES = ["pending", "written", "failed_blocked"];
   const DOCTOR_ALLOWED_READ_ACTIONS = ["open_packet", "view_summary", "view_source", "view_document_metadata", "close_session"];
+  const ACCESS_SCOPE_KEYS = [
+    "profile.view",
+    "documents.metadata.view",
+    "documents.file.view",
+    "documents.upload",
+    "medications.view",
+    "medications.edit",
+    "observations.view",
+    "observations.add",
+    "questions.view",
+    "questions.add",
+    "questions.status.mark",
+    "timeline.view",
+    "report.generate",
+    "report.share",
+    "report.view",
+    "audit.view"
+  ];
+  const CONSENT_ACTOR_ROLES = ["patient", "parent", "legal_guardian", "support_person", "doctor", "admin_governance"];
+  const CONSENT_GRANTEE_TYPES = ["self", "parent", "legal_guardian", "support_person", "doctor", "governance"];
+  const CONSENT_GRANT_STATUSES = ["draft", "active", "revoked", "expired"];
+  const CONSENT_PURPOSES = ["self_management", "care_support", "pre_visit_review", "admin_governance"];
   const FORBIDDEN_CLAIM_PHRASES = [
     "H" + "ITL",
     "AI " + "lekarz",
@@ -166,6 +188,11 @@
     DOCTOR_SESSION_STATUSES: Object.freeze([...DOCTOR_SESSION_STATUSES]),
     DOCTOR_AUDIT_STATUSES: Object.freeze([...DOCTOR_AUDIT_STATUSES]),
     DOCTOR_ALLOWED_READ_ACTIONS: Object.freeze([...DOCTOR_ALLOWED_READ_ACTIONS]),
+    ACCESS_SCOPE_KEYS: Object.freeze([...ACCESS_SCOPE_KEYS]),
+    CONSENT_ACTOR_ROLES: Object.freeze([...CONSENT_ACTOR_ROLES]),
+    CONSENT_GRANTEE_TYPES: Object.freeze([...CONSENT_GRANTEE_TYPES]),
+    CONSENT_GRANT_STATUSES: Object.freeze([...CONSENT_GRANT_STATUSES]),
+    CONSENT_PURPOSES: Object.freeze([...CONSENT_PURPOSES]),
     FORBIDDEN_CLAIM_PHRASES: Object.freeze([...FORBIDDEN_CLAIM_PHRASES])
   });
 });
