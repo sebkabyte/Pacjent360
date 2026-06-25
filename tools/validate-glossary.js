@@ -9,6 +9,7 @@ const FILES = [
   "public/disclaimer.html",
   "public/privacy.html",
   "public/app.js",
+  "public/p360-result-series.js",
   "public/patient360-previsit-model.js",
   "public/patient360-consent-model.js",
   "public/patient360-demo-data.js"
@@ -46,7 +47,7 @@ const REQUIRED = [
   { file: "public/app.js", text: "Historia leków" },
   { file: "public/app.js", text: "Przypadki demonstracyjne" },
   { file: "public/app.js", text: "Scenariusz rozmowy kontekstowej" },
-  { file: "public/app.js", text: "poza zakresem referencyjnym" },
+  { file: "public/p360-result-series.js", text: "poza zakresem ze zrodla" },
   { file: "public/patient360-previsit-model.js", text: "Zgody" },
   { file: "public/patient360-previsit-model.js", text: "Ten widok porządkuje dane" },
   { file: "public/index.html", text: "Znane, nieznane, niepewne i do weryfikacji" },

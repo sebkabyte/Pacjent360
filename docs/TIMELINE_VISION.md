@@ -601,6 +601,34 @@ No-go po v0.3:
 - nie ukrywac zrodel w trybie skroconym,
 - nie robic osobnej historii dla lekarza i pacjenta.
 
+## Wyniki w Czasie
+
+Wyniki w czasie sa projekcja z danych zrodlowych, nie nowa prawda kliniczna.
+
+W MVP nie migrujemy Data Contract v7. Budujemy wspolna warstwe `ResultSeries` nad obecnymi rekordami `observations[]` oraz lokalnym store `wyniki` w Mojej Historii. Ten sam punkt wyniku ma byc widoczny jako:
+
+- rekord w tabeli wynikow,
+- punkt na wykresie skalibrowanym do zakresu ze zrodla,
+- zdarzenie typu `result` w filmie zycia,
+- wiersz w raporcie pacjenta.
+
+Zasady prezentacji:
+
+- pasmo normy istnieje tylko wtedy, gdy zrodlo podaje `normalMin` i `normalMax` albo opisowy `rangeLabel`,
+- brak domyslnego katalogu norm i brak przeliczen jednostek w tym sprincie,
+- serie z roznymi jednostkami nie sa laczone,
+- domena wykresu obejmuje zarowno wszystkie punkty, jak i caly zakres ze zrodla, z marginesem,
+- wynik poza zakresem jest opisany jako "poza zakresem ze zrodla", bez diagnozy, triage, pilnosci i rekomendacji.
+
+Kierunek wykresu:
+
+- panel wartosci pokazuje realna liczbe i jednostke, jak linia ceny,
+- panel pozycji pokazuje `Norm Position Index`: `-1` dolna granica zakresu, `0` srodek, `+1` gorna granica,
+- ekstrema sa kompresowane skala adaptacyjna i moga byc capowane wizualnie, ale tooltip zawsze pokazuje prawdziwa wartosc i zrodlo,
+- pas `-1..+1` ma zostac czytelny nawet przy outlierach typu CRP 240 przy waskim zakresie zrodlowym.
+
+W filmie zycia wynik jest zdarzeniem z data, wartoscia, jednostka i linkiem do zrodla. Film nie dopisuje wniosku klinicznego. Jesli punkt pochodzi z recznego wpisu uzytkownika, ten wpis jest jawnie oznaczony jako zrodlo.
+
 ## Antywzorce
 
 - Jeden dlugi feed zdarzen bez warstw.

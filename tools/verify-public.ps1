@@ -85,6 +85,14 @@ $expectedFiles = @(
   "app.js",
   "robots.txt",
   "sitemap.xml",
+  "moja-historia.html",
+  "moja-historia.css",
+  "moja-historia.js",
+  "p360-store.js",
+  "p360-result-series.js",
+  "p360-report.js",
+  "historia-zycia.js",
+  "historia-zycia.css",
   "assets/hero-clinical-context.png",
   "assets/story.css",
   "assets/story.js",
@@ -135,6 +143,16 @@ Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-con
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-demo-data.js"
 & node --check (Join-Path $target "app.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public app.js"
+& node --check (Join-Path $target "moja-historia.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public moja-historia.js"
+& node --check (Join-Path $target "p360-store.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public p360-store.js"
+& node --check (Join-Path $target "p360-result-series.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public p360-result-series.js"
+& node --check (Join-Path $target "p360-report.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public p360-report.js"
+& node --check (Join-Path $target "historia-zycia.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public historia-zycia.js"
 
 $htaccess = Get-Content -LiteralPath (Join-Path $target ".htaccess") -Raw
 $securityTxt = Get-Content -LiteralPath (Join-Path $target ".well-known/security.txt") -Raw
@@ -183,6 +201,7 @@ Assert-ScriptLoaded -Html $demo -File "patient360-previsit-model.js"
 Assert-ScriptLoaded -Html $demo -File "patient360-caregiver-model.js"
 Assert-ScriptLoaded -Html $demo -File "patient360-consent-model.js"
 Assert-ScriptLoaded -Html $demo -File "patient360-demo-data.js"
+Assert-ScriptLoaded -Html $demo -File "p360-result-series.js"
 Assert-ScriptLoaded -Html $demo -File "app.js"
 $scriptIndex = @{
   lucide = Get-ScriptRefIndex -Html $demo -File "assets/lucide.min.js"
@@ -194,6 +213,7 @@ $scriptIndex = @{
   caregiver = Get-ScriptRefIndex -Html $demo -File "patient360-caregiver-model.js"
   consent = Get-ScriptRefIndex -Html $demo -File "patient360-consent-model.js"
   demoData = Get-ScriptRefIndex -Html $demo -File "patient360-demo-data.js"
+  resultSeries = Get-ScriptRefIndex -Html $demo -File "p360-result-series.js"
   app = Get-ScriptRefIndex -Html $demo -File "app.js"
 }
 Assert-True ($scriptIndex.lucide -lt $scriptIndex.app) "demo.html should load local Lucide before app.js"
@@ -213,6 +233,7 @@ Assert-True ($scriptIndex.caregiver -lt $scriptIndex.app) "demo.html should load
 Assert-True ($scriptIndex.caregiver -lt $scriptIndex.consent) "demo.html should load patient360-caregiver-model.js before patient360-consent-model.js"
 Assert-True ($scriptIndex.consent -lt $scriptIndex.app) "demo.html should load patient360-consent-model.js before app.js"
 Assert-True ($scriptIndex.demoData -lt $scriptIndex.app) "demo.html should load patient360-demo-data.js before app.js"
+Assert-True ($scriptIndex.resultSeries -lt $scriptIndex.app) "demo.html should load p360-result-series.js before app.js"
 Assert-True (-not ($index.Contains("frame-ancestors") -or $demo.Contains("frame-ancestors") -or $privacy.Contains("frame-ancestors") -or $disclaimer.Contains("frame-ancestors"))) "frame-ancestors must be configured as an HTTP header, not as a meta CSP directive"
 
 $lucidePinned = "assets/lucide.min.js"

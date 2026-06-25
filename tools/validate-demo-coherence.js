@@ -4,6 +4,7 @@ const root = path.resolve(__dirname, "..");
 const publicRoot = path.join(root, "public");
 const demoData = require(path.join(publicRoot, "patient360-demo-data.js"));
 const contract = require(path.join(publicRoot, "patient360-contract.js"));
+const resultSeries = require(path.join(publicRoot, "p360-result-series.js"));
 
 const SOURCE_MISSING_REF = contract.SOURCE_MISSING_REF;
 const VALIDATION_TODAYS = [...new Set([process.env.P360_DEMO_TODAY || "2026-06-11", "2026-07-01"])];
@@ -32,6 +33,11 @@ function compareDate(a, b) {
 
 function normalize(value) {
   return String(value || "").toLowerCase();
+}
+
+function formatResultNumber(value) {
+  if (value == null || value === "") return "";
+  return Number(value).toLocaleString("pl-PL", { maximumFractionDigits: 3 });
 }
 
 function parseSourceRef(ref) {
@@ -197,12 +203,73 @@ function validatePatientSummaryCounts(state, today) {
   });
 }
 
+function validateObservationResultSeries(state, today) {
+  const forbiddenResultText = /\b(zly wynik|zle wyniki|zła wartość|zla wartosc|pilne|triage|rekomendacja)\b/i;
+
+  state.observations.forEach((observation) => {
+    const values = observation.values || [];
+    assert(values.length > 0, `${today}: observation ${observation.id} has no values`);
+
+    const hasMin = observation.normalMin != null && observation.normalMin !== "";
+    const hasMax = observation.normalMax != null && observation.normalMax !== "";
+    assert(hasMin === hasMax, `${today}: observation ${observation.id} must define both normalMin and normalMax or neither`);
+    if (hasMin && hasMax) {
+      assert(Number.isFinite(Number(observation.normalMin)), `${today}: observation ${observation.id} normalMin is not numeric`);
+      assert(Number.isFinite(Number(observation.normalMax)), `${today}: observation ${observation.id} normalMax is not numeric`);
+      assert(Number(observation.normalMin) < Number(observation.normalMax), `${today}: observation ${observation.id} normalMin must be below normalMax`);
+    }
+
+    values.forEach((point, index) => {
+      assert(parseDate(point.date), `${today}: observation ${observation.id} point ${index} has invalid date`);
+      assert(point.value != null && point.value !== "", `${today}: observation ${observation.id} point ${index} has no value`);
+      const refs = normalizeSourceRefs(point.sourceRefs);
+      assert(refs.length > 0, `${today}: observation ${observation.id} point ${index} has no sourceRefs`);
+      refs.forEach((ref) => {
+        assert(ref !== SOURCE_MISSING_REF, `${today}: observation ${observation.id} point ${index} uses missing source instead of explicit source`);
+      });
+    });
+
+    const series = resultSeries.buildSeries(observation);
+    const svg = resultSeries.renderChart(series);
+    if (hasMin && hasMax && series.chartDomain) {
+      assert(series.chartDomain.min <= Number(observation.normalMin), `${today}: observation ${observation.id} chart domain excludes normalMin`);
+      assert(series.chartDomain.max >= Number(observation.normalMax), `${today}: observation ${observation.id} chart domain excludes normalMax`);
+      assert(series.normDomain, `${today}: observation ${observation.id} has numeric range without normDomain`);
+      assert(series.normDomain.min <= -1 && series.normDomain.max >= 1, `${today}: observation ${observation.id} normDomain excludes neutral source band`);
+      assert(series.normDomain.min >= -4 && series.normDomain.max <= 4, `${today}: observation ${observation.id} normDomain exceeds adaptive visual limits`);
+    }
+    series.points.forEach((point) => {
+      if (Number.isFinite(point.value) && series.chartDomain) {
+        assert(series.chartDomain.min <= point.value, `${today}: observation ${observation.id} chart domain excludes point ${point.id}`);
+        assert(series.chartDomain.max >= point.value, `${today}: observation ${observation.id} chart domain excludes point ${point.id}`);
+      }
+      if (Number.isFinite(point.visualIndex) && series.normDomain) {
+        assert(series.normDomain.min <= point.visualIndex && series.normDomain.max >= point.visualIndex, `${today}: observation ${observation.id} normDomain excludes point ${point.id}`);
+      }
+      normalizeSourceRefs(point.sourceRefs).forEach((ref) => {
+        assert(svg.includes(ref), `${today}: observation ${observation.id} chart tooltip omits sourceRef ${ref}`);
+      });
+      if (point.value != null && point.value !== "") {
+        assert(svg.includes(formatResultNumber(point.value)), `${today}: observation ${observation.id} chart tooltip omits true value ${point.value}`);
+      }
+    });
+
+    const resultCopy = [
+      resultSeries.statusLabel(series.status, series.range),
+      series.range?.label || "",
+      svg,
+    ].join(" ");
+    assert(!forbiddenResultText.test(normalize(resultCopy)), `${today}: observation ${observation.id} result view text contains forbidden clinical wording`);
+  });
+}
+
 function validateState(today) {
   const state = demoData.buildDemoState({ today });
   validateChronology(state, today);
   validateMedicationInterviewContent(state, today);
   validateSourceRefs(state, today);
   validatePatientSummaryCounts(state, today);
+  validateObservationResultSeries(state, today);
   console.log(`${today}: demo coherence passed`);
 }
 

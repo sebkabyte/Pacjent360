@@ -57,7 +57,15 @@ $files = @(
   "styles.css",
   "app.js",
   "robots.txt",
-  "sitemap.xml"
+  "sitemap.xml",
+  "moja-historia.html",
+  "moja-historia.css",
+  "moja-historia.js",
+  "p360-store.js",
+  "p360-result-series.js",
+  "p360-report.js",
+  "historia-zycia.js",
+  "historia-zycia.css"
 )
 
 foreach ($file in $files) {
