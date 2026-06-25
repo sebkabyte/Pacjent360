@@ -14,9 +14,18 @@ build/
 TEMP/
 TEMP_REVIEW_OUTPUT/
 BLUEPRINT/
+docs/product-delivery/
+VC_ADVISORY/
 CLAUDE.md
 CODEX_*.md
 HANDOVER.md
 STATE.md
 prints/
 *.patch
+
+# Prywatny kokpit foundera - lokalny, nigdy nie publikowany
+blueprint-hub/
+
+# Graphify generated output and cache
+graphify-out/
+

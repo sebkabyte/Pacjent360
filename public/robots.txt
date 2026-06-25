@@ -1,5 +1,12 @@
 User-agent: *
 Allow: /
+Disallow: /demo.html
+Disallow: /app.js
+Disallow: /styles.css
 Disallow: /maintenance.html
+Disallow: /p360-store.js
+Disallow: /p360-result-series.js
+Disallow: /p360-report.js
+Disallow: /patient360-*.js
 
 Sitemap: https://pacjent360.com.pl/sitemap.xml

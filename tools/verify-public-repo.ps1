@@ -122,6 +122,8 @@ Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient36
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-consent-model.js"
 & node --check (Join-Path $target "public/patient360-demo-data.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-demo-data.js"
+& node --check (Join-Path $target "public/p360-result-series.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/p360-result-series.js"
 & node --check (Join-Path $target "public/app.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/app.js"
 & node --check (Join-Path $target "tools/validate-data-contract.js") | Out-Null

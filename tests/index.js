@@ -3,3 +3,4 @@ require("./map-model.test.js");
 require("./previsit-model.test.js");
 require("./caregiver-model.test.js");
 require("./consent-model.test.js");
+require("./result-series.test.js");

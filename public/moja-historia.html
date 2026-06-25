@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="theme-color" content="#0f766e" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Pacjent360™ | Moja Historia Medyczna</title>
+    <meta name="description" content="Zbieraj i porządkuj swoją historię medyczną przed wizytą. Wszystko na Twoim urządzeniu, bezpiecznie i lokalnie." />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="brand/tokens.css" />
+    <link rel="stylesheet" href="brand/components.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="moja-historia.css" />
+    <link rel="stylesheet" href="historia-zycia.css" />
+    <script
+      src="assets/lucide.min.js"
+      integrity="sha384-uTYyvsSSUZeaPhb5RbKlQa0zY/WpX/QHfvg2mczXyBQOpkWPEDy9lczyp+w7SKXu"
+      crossorigin="anonymous"
+      defer
+    ></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#viewRoot">Przejdź do treści</a>
+    <div class="demo-watermark" role="note">
+      <strong>PROTOTYP LOKALNY — TWOJE DANE SĄ PRZECHOWYWANE TYLKO NA TYM URZĄDZENIU I NIE OPUSZCZAJĄ PRZEGLĄDARKI</strong>
+    </div>
+
+    <div class="app-shell">
+      <!-- ============ SIDEBAR ============ -->
+      <aside class="sidebar" aria-label="Nawigacja">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">360°</div>
+          <div>
+            <strong class="brand-name">Pacjent360<sup class="brand-legal-mark">™</sup></strong>
+            <span>Moja Historia</span>
+          </div>
+        </div>
+
+        <nav class="nav-list" aria-label="Widoki i sekcje">
+          <div class="nav-section-label">Kokpit</div>
+          <button class="nav-item active" data-nav="start" title="Panel główny">
+            <i data-lucide="home"></i>
+            <span>Start</span>
+          </button>
+          <button class="nav-item" data-nav="biography" title="Historia Twojego życia">
+            <i data-lucide="hourglass"></i>
+            <span>Historia Życia</span>
+          </button>
+
+          <div class="nav-section-label">Moje Dane</div>
+          <button class="nav-item" data-nav="documents" title="Wyniki badań, wypisy i dokumenty">
+            <i data-lucide="files"></i>
+            <span style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+              Dokumenty
+              <span class="p360-badge" id="navCountDocs" style="padding: 1px 6px; min-height: 18px; font-size: 10px;"></span>
+            </span>
+          </button>
+          <button class="nav-item" data-nav="results" title="Wyniki w czasie i zakresy ze źródła">
+            <i data-lucide="activity"></i>
+            <span style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+              Wyniki
+              <span class="p360-badge" id="navCountResults" style="padding: 1px 6px; min-height: 18px; font-size: 10px;"></span>
+            </span>
+          </button>
+          <button class="nav-item" data-nav="medications" title="Lista przyjmowanych leków">
+            <i data-lucide="pill"></i>
+            <span style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+              Leki
+              <span class="p360-badge" id="navCountMeds" style="padding: 1px 6px; min-height: 18px; font-size: 10px;"></span>
+            </span>
+          </button>
+          <button class="nav-item" data-nav="symptoms" title="Zapisane objawy i obserwacje">
+            <i data-lucide="activity"></i>
+            <span style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+              Objawy
+              <span class="p360-badge" id="navCountSymptoms" style="padding: 1px 6px; min-height: 18px; font-size: 10px;"></span>
+            </span>
+          </button>
+          <button class="nav-item" data-nav="visits" title="Planowane i przeszłe wizyty">
+            <i data-lucide="calendar"></i>
+            <span style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+              Wizyty
+              <span class="p360-badge" id="navCountVisits" style="padding: 1px 6px; min-height: 18px; font-size: 10px;"></span>
+            </span>
+          </button>
+
+          <div class="nav-section-label">Przygotowanie wizyty</div>
+          <button class="nav-item" data-nav="questions" title="Pytania do zadania lekarzowi">
+            <i data-lucide="messages-square"></i>
+            <span style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+              Pytania
+              <span class="p360-badge" id="navCountQuestions" style="padding: 1px 6px; min-height: 18px; font-size: 10px;"></span>
+            </span>
+          </button>
+          <button class="nav-item" data-nav="report" title="Podsumowanie dla lekarza">
+            <i data-lucide="clipboard-list"></i>
+            <span>Raport przed wizytą</span>
+          </button>
+
+          <div class="nav-section-label">Ustawienia</div>
+          <button class="nav-item" data-nav="profile" title="Dane pacjenta">
+            <i data-lucide="user"></i>
+            <span>Mój profil</span>
+          </button>
+          <button class="nav-item" data-nav="data" title="Kopia zapasowa i zarządzanie pamięcią">
+            <i data-lucide="database"></i>
+            <span>Eksport / Import</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <p>Niezależny prototyp. Dane przechowywane są lokalnie za pomocą IndexedDB w przeglądarce.</p>
+          <div>
+            <span class="status-dot"></span>
+            <span>Przechowywanie lokalne</span>
+          </div>
+          <a href="disclaimer.html">Zastrzeżenie medyczne</a>
+          <a href="privacy.html">Prywatność</a>
+        </div>
+      </aside>
+
+      <!-- ============ WORKSPACE ============ -->
+      <main class="workspace">
+        <header class="topbar" style="grid-template-columns: 1fr auto; padding: 14px 18px;">
+          <div class="topbar-title">
+            <h2 id="topbarSectionTitle" style="margin: 0; font-size: 18px; font-weight: 800; color: var(--ink);">Witaj w Twojej Historii</h2>
+          </div>
+          <div class="topbar-actions">
+            <span class="p360-status p360-status-info" style="font-size: 11px; font-weight: 700; text-transform: none; border-radius: 6px; padding: 4px 10px; margin-right: 8px;">
+              🔒 Bezpieczne dane offline
+            </span>
+          </div>
+        </header>
+
+        <!-- ============ CONTENT GRID ============ -->
+        <div class="content-grid" id="contentGrid">
+          
+          <!-- VIEW PANEL -->
+          <section class="view-panel" id="viewRoot" aria-live="polite">
+
+            <!-- ======== SECTION: START (DASHBOARD) ======== -->
+            <section class="mh-section active" data-section="start">
+              <p class="mh-section-subtitle">Twój osobisty asystent porządkowania historii leczenia.</p>
+
+              <div class="mh-dash-grid">
+                <div class="mh-dash-card" data-quick-nav="documents">
+                  <span class="mh-dash-icon">📄</span>
+                  <span class="mh-dash-value" id="statDocs">0</span>
+                  <span class="mh-dash-label">dokumentów</span>
+                </div>
+                <div class="mh-dash-card" data-quick-nav="results">
+                  <span class="mh-dash-icon">📈</span>
+                  <span class="mh-dash-value" id="statResults">0</span>
+                  <span class="mh-dash-label">serii wyników</span>
+                </div>
+                <div class="mh-dash-card" data-quick-nav="medications">
+                  <span class="mh-dash-icon">💊</span>
+                  <span class="mh-dash-value" id="statMeds">0</span>
+                  <span class="mh-dash-label">aktywnych leków</span>
+                </div>
+                <div class="mh-dash-card" data-quick-nav="questions">
+                  <span class="mh-dash-icon">❓</span>
+                  <span class="mh-dash-value" id="statQuestions">0</span>
+                  <span class="mh-dash-label">pytań do lekarza</span>
+                </div>
+                <div class="mh-dash-card" data-quick-nav="symptoms">
+                  <span class="mh-dash-icon">🌡️</span>
+                  <span class="mh-dash-value" id="statSymptoms">0</span>
+                  <span class="mh-dash-label">zapisanych objawów</span>
+                </div>
+                <div class="mh-dash-card mh-dash-card--visit" data-quick-nav="visits">
+                  <span class="mh-dash-icon">📅</span>
+                  <div>
+                    <span class="mh-dash-label">Najbliższa wizyta</span>
+                    <span class="mh-dash-value" id="statNextVisit" style="font-size:1.1rem; font-weight:800; margin-top: 4px;">Brak zaplanowanych wizyt</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mh-quick-actions" style="margin-bottom: 24px;">
+                <button class="p360-btn p360-btn-primary" data-toggle-form="documentForm">📄 Dodaj dokument</button>
+                <button class="p360-btn p360-btn-secondary" data-toggle-form="resultForm">📈 Dodaj wynik</button>
+                <button class="p360-btn p360-btn-secondary" data-toggle-form="medicationForm">💊 Dodaj lek</button>
+                <button class="p360-btn p360-btn-secondary" data-toggle-form="symptomForm">🌡️ Dodaj objaw</button>
+              </div>
+
+              <div class="mh-motiv-banner">
+                <div class="mh-motiv-icon">💡 Dlaczego warto?</div>
+                Pacjent360 nie zastępuje lekarza ani nie diagnozuje. Pomaga za to wejść w rozmowę w gabinecie z mniejszym chaosem i pełniejszym kontekstem. Zadbaj o swoją historię medyczną, zanim będzie za późno.
+              </div>
+            </section>
+
+            <!-- ======== SECTION: BIOGRAPHY ======== -->
+            <section class="mh-section" data-section="biography" hidden>
+              <p class="mh-section-subtitle">Przewijaj w dół, aby zobaczyć linię czasu życia i podsumowania zdrowotne dla każdego etapu.</p>
+              <div id="biographyContainer"></div>
+            </section>
+
+            <!-- ======== SECTION: DOCUMENTS ======== -->
+            <section class="mh-section" data-section="documents" hidden>
+              <p class="mh-section-subtitle">Wypisy szpitalne, wyniki laboratoryjne, recepty i skierowania.</p>
+
+              <div class="mh-toolbar" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; align-items: center;">
+                <button class="p360-btn p360-btn-primary" data-toggle-form="documentForm">📄 Dodaj dokument</button>
+                <div style="flex-grow: 1;"></div>
+                <select id="filterDocType" style="max-width: 180px;">
+                  <option value="all">Wszystkie typy</option>
+                  <option value="Wypis">Wypis</option>
+                  <option value="Wynik badania">Wynik badania</option>
+                  <option value="Skierowanie">Skierowanie</option>
+                  <option value="Recepta">Recepta</option>
+                  <option value="Inne">Inne</option>
+                </select>
+              </div>
+
+              <!-- Inline Form for Document Add/Edit -->
+              <form id="documentForm" class="p360-panel" style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 12px; padding: 20px;" hidden>
+                <h3 style="margin: 0 0 6px 0; font-weight: 800; font-size: 1.05rem;">📄 Dodaj / Edytuj dokument</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Nazwa dokumentu</label>
+                    <input type="text" name="docTitle" placeholder="np. Morfologia krwi, Wypis z neurologii" required />
+                  </div>
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Typ dokumentu</label>
+                    <select name="docType">
+                      <option value="Wynik badania">Wynik badania</option>
+                      <option value="Wypis">Wypis</option>
+                      <option value="Skierowanie">Skierowanie</option>
+                      <option value="Recepta">Recepta</option>
+                      <option value="Inne">Inne</option>
+                    </select>
+                  </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Data wykonania / wydania</label>
+                    <input type="date" name="docDate" />
+                  </div>
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Wybierz plik (zdjęcie/skan)</label>
+                    <input type="file" name="docFile" accept="image/*" />
+                  </div>
+                </div>
+                <div>
+                  <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Wnioski / opis</label>
+                  <textarea name="docDescription" placeholder="np. Wszystko w normie, lekka anemia..."></textarea>
+                </div>
+                <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                  <button type="button" class="p360-btn p360-btn-ghost" data-toggle-form="documentForm">Anuluj</button>
+                  <button type="submit" class="p360-btn p360-btn-primary">Zapisz</button>
+                </div>
+              </form>
+
+              <div class="mh-card-list" id="documentsList">
+                <!-- Dynamic List -->
+              </div>
+            </section>
+
+            <!-- ======== SECTION: RESULTS ======== -->
+            <section class="mh-section" data-section="results" hidden>
+              <p class="mh-section-subtitle">Śledź wartości wyników na osi czasu względem zakresu podanego przez źródło. Widok nie interpretuje klinicznie wyników.</p>
+
+              <div class="mh-toolbar" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; align-items: center;">
+                <button class="p360-btn p360-btn-primary" data-toggle-form="resultForm">📈 Dodaj wynik</button>
+              </div>
+
+              <form id="resultForm" class="p360-panel" style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 12px; padding: 20px;" hidden>
+                <h3 style="margin: 0 0 6px 0; font-weight: 800; font-size: 1.05rem;">📈 Dodaj wynik do serii</h3>
+                <div>
+                  <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Istniejący parametr</label>
+                  <select name="resultSeriesId" id="resultSeriesId">
+                    <option value="">Nowy parametr</option>
+                  </select>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Parametr</label>
+                    <input type="text" name="resultName" placeholder="np. CRP, Glukoza, Kreatynina" required />
+                  </div>
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Typ</label>
+                    <input type="text" name="resultType" value="laboratorium" />
+                  </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Data wyniku</label>
+                    <input type="date" name="resultDate" required />
+                  </div>
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Wartość</label>
+                    <input type="number" step="any" name="resultValue" required />
+                  </div>
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Jednostka</label>
+                    <input type="text" name="resultUnit" placeholder="np. mg/l" required />
+                  </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Zakres min ze źródła</label>
+                    <input type="number" step="any" name="resultNormalMin" />
+                  </div>
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Zakres max ze źródła</label>
+                    <input type="number" step="any" name="resultNormalMax" />
+                  </div>
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Zakres opisowy</label>
+                    <input type="text" name="resultRangeLabel" placeholder="np. skala opisowa" />
+                  </div>
+                </div>
+                <div>
+                  <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Źródło</label>
+                  <input type="text" name="resultSourceNote" placeholder="np. wpis ręczny z wyniku papierowego / dokument z dnia..." />
+                </div>
+                <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                  <button type="button" class="p360-btn p360-btn-ghost" data-toggle-form="resultForm">Anuluj</button>
+                  <button type="submit" class="p360-btn p360-btn-primary">Zapisz wynik</button>
+                </div>
+              </form>
+
+              <div class="mh-card-list" id="resultsList">
+                <!-- Dynamic List -->
+              </div>
+            </section>
+
+            <!-- ======== SECTION: MEDICATIONS ======== -->
+            <section class="mh-section" data-section="medications" hidden>
+              <p class="mh-section-subtitle">Aktualne leki stałe, okresowe oraz suplementy diety.</p>
+
+              <div class="p360-alert" style="margin-bottom: 16px; border-left-color: var(--amber);">
+                <strong>⚠️ Zastrzeżenie:</strong> Lista ma charakter pomocniczy. Zawsze skonsultuj zmiany w dawkowaniu leków ze swoim lekarzem prowadzącym.
+              </div>
+
+              <div class="mh-toolbar" style="margin-bottom: 16px;">
+                <button class="p360-btn p360-btn-primary" data-toggle-form="medicationForm">💊 Dodaj lek</button>
+              </div>
+
+              <!-- Inline Form for Medication Add/Edit -->
+              <form id="medicationForm" class="p360-panel" style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 12px; padding: 20px;" hidden>
+                <h3 style="margin: 0 0 6px 0; font-weight: 800; font-size: 1.05rem;">💊 Dodaj / Edytuj lek</h3>
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px;">
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Nazwa leku</label>
+                    <input type="text" name="medName" placeholder="np. Euthyrox, Metformina" required />
+                  </div>
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Typ</label>
+                    <select name="medType">
+                      <option value="przepisany">Przepisany</option>
+                      <option value="OTC">Bez recepty (OTC)</option>
+                      <option value="suplement">Suplement</option>
+                    </select>
+                  </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Dawka</label>
+                    <input type="text" name="medDose" placeholder="np. 25 mg, 1 tabl." />
+                  </div>
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Częstość</label>
+                    <input type="text" name="medFrequency" placeholder="np. 1-0-0 (rano)" />
+                  </div>
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Lekarz zalecający</label>
+                    <input type="text" name="medPrescribedBy" placeholder="np. endokrynolog" />
+                  </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Data rozpoczęcia</label>
+                    <input type="date" name="medStartDate" />
+                  </div>
+                  <div></div>
+                </div>
+                <div>
+                  <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Uwagi</label>
+                  <textarea name="medNotes" placeholder="np. Przyjmować na czczo 30 min przed śniadaniem..."></textarea>
+                </div>
+                <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                  <button type="button" class="p360-btn p360-btn-ghost" data-toggle-form="medicationForm">Anuluj</button>
+                  <button type="submit" class="p360-btn p360-btn-primary">Zapisz lek</button>
+                </div>
+              </form>
+
+              <div class="mh-card-list" id="medsActiveList">
+                <!-- Dynamic List Leki Aktywne -->
+              </div>
+              <div class="mh-card-list" id="medsArchiveList" style="margin-top: 24px;">
+                <!-- Dynamic List Leki Archiwalne -->
+              </div>
+            </section>
+
+            <!-- ======== SECTION: SYMPTOMS ======== -->
+            <section class="mh-section" data-section="symptoms" hidden>
+              <p class="mh-section-subtitle">Notuj niepokojące objawy oraz ich nasilenie, aby przekazać lekarzowi konkretne fakty.</p>
+
+              <div class="mh-toolbar" style="margin-bottom: 16px;">
+                <button class="p360-btn p360-btn-primary" data-toggle-form="symptomForm">🌡️ Dodaj objaw</button>
+              </div>
+
+              <!-- Inline Form for Symptom Add/Edit -->
+              <form id="symptomForm" class="p360-panel" style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 12px; padding: 20px;" hidden>
+                <h3 style="margin: 0 0 6px 0; font-weight: 800; font-size: 1.05rem;">🌡️ Dodaj / Edytuj objaw</h3>
+                <div>
+                  <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Opis objawu</label>
+                  <input type="text" name="symDescription" placeholder="np. Zawroty głowy, ból w prawym boku" required />
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Obszar ciała</label>
+                    <input type="text" name="symBodyArea" placeholder="np. głowa, brzuch" />
+                  </div>
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Nasilenie (1-5)</label>
+                    <select name="symSeverity">
+                      <option value="1">1 - Bardzo słabe</option>
+                      <option value="2">2 - Łagodne</option>
+                      <option value="3">3 - Umiarkowane</option>
+                      <option value="4">4 - Silne</option>
+                      <option value="5">5 - Bardzo silne</option>
+                    </select>
+                  </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Data pierwszego wystąpienia</label>
+                    <input type="date" name="symStartDate" />
+                  </div>
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Częstość</label>
+                    <input type="text" name="symFrequency" placeholder="np. rano, przy wysiłku, stale" />
+                  </div>
+                </div>
+                <div>
+                  <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Notatki / czynniki nasilające</label>
+                  <textarea name="symNotes" placeholder="np. Przechodzi po odpoczynku..."></textarea>
+                </div>
+                <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                  <button type="button" class="p360-btn p360-btn-ghost" data-toggle-form="symptomForm">Anuluj</button>
+                  <button type="submit" class="p360-btn p360-btn-primary">Zapisz objaw</button>
+                </div>
+              </form>
+
+              <div class="mh-card-list" id="symptomsList">
+                <!-- Dynamic List -->
+              </div>
+            </section>
+
+            <!-- ======== SECTION: VISITS ======== -->
+            <section class="mh-section" data-section="visits" hidden>
+              <p class="mh-section-subtitle">Planowanie nadchodzących wizyt i archiwizacja przeszłych konsultacji medycznych.</p>
+
+              <div class="mh-toolbar" style="margin-bottom: 16px;">
+                <button class="p360-btn p360-btn-primary" data-toggle-form="visitForm">📅 Zaplanuj wizytę</button>
+              </div>
+
+              <!-- Inline Form for Visit Add/Edit -->
+              <form id="visitForm" class="p360-panel" style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 12px; padding: 20px;" hidden>
+                <h3 style="margin: 0 0 6px 0; font-weight: 800; font-size: 1.05rem;">📅 Dodaj / Edytuj wizytę</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Data wizyty</label>
+                    <input type="date" name="visitDate" required />
+                  </div>
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Status</label>
+                    <select name="visitStatus">
+                      <option value="planowana">Planowana</option>
+                      <option value="odbyta">Odbyta</option>
+                      <option value="odwołana">Odwołana</option>
+                    </select>
+                  </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Lekarz (Imię i nazwisko)</label>
+                    <input type="text" name="visitDoctor" placeholder="np. dr Jan Kowalski" />
+                  </div>
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Specjalizacja</label>
+                    <input type="text" name="visitSpecialty" placeholder="np. Kardiolog" />
+                  </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Placówka medyczna</label>
+                    <input type="text" name="visitFacility" placeholder="np. Przychodnia Medyczna" />
+                  </div>
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Cel wizyty</label>
+                    <input type="text" name="visitPurpose" placeholder="np. Kontrola wyników, recepta" />
+                  </div>
+                </div>
+                <div>
+                  <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Notatki / przygotowanie</label>
+                  <textarea name="visitNotes" placeholder="np. Przygotować listę leków..."></textarea>
+                </div>
+                <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                  <button type="button" class="p360-btn p360-btn-ghost" data-toggle-form="visitForm">Anuluj</button>
+                  <button type="submit" class="p360-btn p360-btn-primary">Zapisz wizytę</button>
+                </div>
+              </form>
+
+              <div class="mh-card-list" id="visitsList">
+                <!-- Dynamic List -->
+              </div>
+            </section>
+
+            <!-- ======== SECTION: QUESTIONS ======== -->
+            <section class="mh-section" data-section="questions" hidden>
+              <p class="mh-section-subtitle">Przygotuj listę pytań, aby gabinet opuścić z jasną wiedzą, a nie z wątpliwościami.</p>
+
+              <div class="mh-quick-add" style="display: flex; gap: 8px; margin-bottom: 16px;">
+                <input type="text" id="quickQuestionInput" placeholder="Zapisz pytanie (np. Czy mogę odstawić ten lek?)..." style="flex-grow: 1;" />
+                <button class="p360-btn p360-btn-primary" id="quickQuestionBtn">Dodaj szybko</button>
+              </div>
+
+              <div class="mh-suggestions" style="margin-bottom: 20px;">
+                <p style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-bottom: 8px;">💡 Sugerowane pytania:</p>
+                <div class="mh-suggestions-list" style="display: flex; gap: 6px; flex-wrap: wrap;">
+                  <button class="p360-badge" style="cursor:pointer;" onclick="document.getElementById('quickQuestionInput').value=this.textContent; document.getElementById('quickQuestionInput').focus();">Czy ten objaw wymaga pilnej diagnostyki?</button>
+                  <button class="p360-badge" style="cursor:pointer;" onclick="document.getElementById('quickQuestionInput').value=this.textContent; document.getElementById('quickQuestionInput').focus();">Jak długo powinienem przyjmować ten lek?</button>
+                  <button class="p360-badge" style="cursor:pointer;" onclick="document.getElementById('quickQuestionInput').value=this.textContent; document.getElementById('quickQuestionInput').focus();">Czy ten lek koliduje z innymi?</button>
+                  <button class="p360-badge" style="cursor:pointer;" onclick="document.getElementById('quickQuestionInput').value=this.textContent; document.getElementById('quickQuestionInput').focus();">Co dokładnie oznacza ten wynik badania?</button>
+                </div>
+              </div>
+
+              <div class="mh-toolbar" style="margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
+                <button class="p360-btn p360-btn-secondary" data-toggle-form="questionFormFull">💬 Zaawansowane pytanie</button>
+                <select id="questionFilterCat" style="max-width: 180px;">
+                  <option value="">Wszystkie kategorie</option>
+                  <option value="Do lekarza">Do lekarza</option>
+                  <option value="Do farmaceuty">Do farmaceuty</option>
+                  <option value="Do wyjaśnienia">Do wyjaśnienia</option>
+                </select>
+              </div>
+
+              <!-- Inline Form for Question Add/Edit -->
+              <form id="questionFormFull" class="p360-panel" style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 12px; padding: 20px;" hidden>
+                <h3 style="margin: 0 0 6px 0; font-weight: 800; font-size: 1.05rem;">💬 Dodaj pytanie</h3>
+                <div>
+                  <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Pytanie</label>
+                  <input type="text" name="qText" placeholder="np. Czy istnieje alternatywny lek?" required />
+                </div>
+                <div>
+                  <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Kategoria</label>
+                  <select name="qCategory">
+                    <option value="Do lekarza">Do lekarza</option>
+                    <option value="Do farmaceuty">Do farmaceuty</option>
+                    <option value="Do wyjaśnienia">Do wyjaśnienia</option>
+                  </select>
+                </div>
+                <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                  <button type="button" class="p360-btn p360-btn-ghost" data-toggle-form="questionFormFull">Anuluj</button>
+                  <button type="submit" class="p360-btn p360-btn-primary">Dodaj</button>
+                </div>
+              </form>
+
+              <div class="mh-card-list" id="questionsList">
+                <!-- Dynamic List -->
+              </div>
+            </section>
+
+            <!-- ======== SECTION: REPORT ======== -->
+            <section class="mh-section" data-section="report" hidden>
+              <p class="mh-section-subtitle">Wygeneruj czysty, gotowy do druku lub zapisania raport dla lekarza z podsumowaniem Twojej historii.</p>
+
+              <div id="reportPreview">
+                <!-- Dynamic Report Preview -->
+              </div>
+            </section>
+
+            <!-- ======== SECTION: PROFILE ======== -->
+            <section class="mh-section" data-section="profile" hidden>
+              <p class="mh-section-subtitle">Twoje podstawowe parametry zdrowotne. Te dane służą do obliczenia etapów życia w biografii.</p>
+
+              <div class="p360-alert" style="margin-bottom: 20px; border-left-color: var(--teal);">
+                🔒 <strong>Prywatność przede wszystkim:</strong> Wszystkie dane profilu oraz historii medycznej są przechowywane wyłącznie w pamięci Twojego urządzenia i nie są przesyłane do serwerów zewnętrznych.
+              </div>
+
+              <form id="profileForm" class="p360-panel" style="display: flex; flex-direction: column; gap: 16px; padding: 24px;">
+                <h3 style="margin: 0; font-weight: 800; font-size: 1.05rem;">👤 Karta Profilu Pacjenta</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Imię i nazwisko / Pseudonim</label>
+                    <input type="text" name="profileName" placeholder="np. Jan Kowalski" required />
+                  </div>
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Rok urodzenia</label>
+                    <input type="number" name="profileBirthYear" min="1900" max="2026" placeholder="np. 1985" required />
+                  </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Grupa krwi</label>
+                    <select name="profileBloodType">
+                      <option value="">Nieznana / Nie podano</option>
+                      <option value="A Rh+">A Rh+</option>
+                      <option value="A Rh-">A Rh-</option>
+                      <option value="B Rh+">B Rh+</option>
+                      <option value="B Rh-">B Rh-</option>
+                      <option value="AB Rh+">AB Rh+</option>
+                      <option value="AB Rh-">AB Rh-</option>
+                      <option value="0 Rh+">0 Rh+</option>
+                      <option value="0 Rh-">0 Rh-</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Kontakt alarmowy (ICE)</label>
+                    <input type="text" name="profileEmergencyContact" placeholder="np. Anna Kowalska (żona) - 600 111 222" />
+                  </div>
+                </div>
+
+                <div>
+                  <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Alergie i uczulenia</label>
+                  <input type="text" id="profileAllergies" placeholder="np. Penicylina, pyłki traw, orzeszki (rozdziel przecinkami)" />
+                </div>
+
+                <div>
+                  <label style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Choroby przewlekłe i stałe obciążenia</label>
+                  <input type="text" id="profileConditions" placeholder="np. Nadciśnienie tętnicze, niedoczynność tarczycy (rozdziel przecinkami)" />
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+                  <button type="submit" class="p360-btn p360-btn-primary">💾 Zapisz profil</button>
+                </div>
+              </form>
+            </section>
+
+            <!-- ======== SECTION: EXPORT / IMPORT ======== -->
+            <section class="mh-section" data-section="data" hidden>
+              <p class="mh-section-subtitle">Twórz kopie zapasowe swoich danych zdrowotnych lub przenoś je między urządzeniami.</p>
+
+              <div class="p360-panel" style="padding: 24px; display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px;">
+                <h3 style="margin:0; font-weight:800; font-size:1.05rem;">📥 Kopia zapasowa</h3>
+                <p style="margin: 0; font-size: 13px; color: var(--muted); line-height:1.5;">
+                  Eksport wygeneruje plik <code>JSON</code> zawierający wszystkie wprowadzone przez Ciebie dokumenty, wizyty, leki, objawy i profil. Możesz go zapisać na dysku w bezpiecznym miejscu.
+                </p>
+                <div style="display: flex; gap: 8px;">
+                  <button class="p360-btn p360-btn-primary" id="btnExport">📥 Pobierz dane (JSON)</button>
+                </div>
+              </div>
+
+              <div class="p360-panel" style="padding: 24px; display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px;">
+                <h3 style="margin:0; font-weight:800; font-size:1.05rem;">📤 Przywracanie danych</h3>
+                <p style="margin: 0; font-size: 13px; color: var(--muted); line-height:1.5;">
+                  Wczytaj plik kopii zapasowej <code>JSON</code>, aby zastąpić aktualne dane w pamięci tej przeglądarki.
+                </p>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <button class="p360-btn p360-btn-secondary" id="btnImport">📤 Wczytaj plik JSON</button>
+                  <input type="file" id="importFile" accept=".json" style="display: none;" />
+                </div>
+              </div>
+
+              <div class="p360-panel" style="padding: 24px; border-color: var(--red); display: flex; flex-direction: column; gap: 16px;">
+                <h3 style="margin:0; font-weight:800; font-size:1.05rem; color: var(--red);">⚠️ Czyszczenie bazy</h3>
+                <p style="margin: 0; font-size: 13px; color: var(--muted); line-height:1.5;">
+                  Usunięcie bazy danych jest bezpowrotne. Dane zostaną skasowane z pamięci tego urządzenia. Upewnij się, że posiadasz aktualną kopię zapasową.
+                </p>
+                <div>
+                  <button class="p360-btn p360-btn-ghost" id="btnClearAll" style="color: var(--red); border-color: var(--red);">
+                    🗑️ Wyczyść wszystkie dane
+                  </button>
+                </div>
+              </div>
+            </section>
+
+          </section>
+
+          <!-- PANEL SPLITTER -->
+          <div class="panel-splitter" id="panelSplitter" role="separator" aria-orientation="vertical" tabindex="0" aria-valuemin="260" aria-valuemax="620" aria-valuenow="330"
+               aria-label="Szerokość panelu źródeł" title="Przeciągnij, aby zmienić szerokość panelu źródeł"></div>
+
+          <!-- EVIDENCE PANEL (SOURCES VIEW) -->
+          <aside class="evidence-panel" aria-label="Indeks źródeł" id="evidencePanel">
+            <div class="panel-head">
+              <div class="panel-head-copy">
+                <p class="eyebrow" id="evidencePanelCategory">Skąd to wiemy</p>
+                <h2 id="evidencePanelTitle">Wybierz wpis</h2>
+              </div>
+              <div class="panel-head-actions">
+                <button class="icon-button compact" id="toggleEvidence" title="Zwiń panel źródeł" aria-label="Zwiń panel źródeł" aria-expanded="true">
+                  <i data-lucide="chevrons-right"></i>
+                </button>
+                <button class="icon-button compact" id="closeEvidence" title="Wyczyść wybór" aria-label="Wyczyść wybór">
+                  <i data-lucide="x"></i>
+                </button>
+              </div>
+            </div>
+            <div id="evidenceRoot" style="padding: 14px 18px; overflow-y: auto;">
+              <p style="color: var(--muted); font-size: 13px; text-align: center; margin-top: 40px; line-height: 1.5;">
+                Kliknij <strong>link źródła</strong> w Biografii lub <strong>podgląd</strong> dokumentu, aby wyświetlić szczegóły w tym panelu.
+              </p>
+            </div>
+          </aside>
+
+        </div>
+      </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="p360-store.js"></script>
+    <script src="p360-result-series.js"></script>
+    <script src="p360-report.js"></script>
+    <script src="historia-zycia.js"></script>
+    <script src="moja-historia.js"></script>
+  </body>
+</html>

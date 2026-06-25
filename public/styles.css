@@ -904,6 +904,94 @@ td {
   stroke-linejoin: round;
 }
 
+.result-chart-cell {
+  min-width: 260px;
+}
+
+.p360-result-chart {
+  display: block;
+  width: min(100%, 420px);
+  height: auto;
+  margin-bottom: 6px;
+}
+
+.p360-result-chart-axis {
+  stroke: var(--line-strong, #d3dde2);
+  stroke-width: 1;
+}
+
+.p360-result-chart-band {
+  fill: rgba(15, 118, 110, .11);
+}
+
+.p360-result-chart-norm-band {
+  fill: rgba(34, 197, 94, .12);
+}
+
+.p360-result-chart-range-line {
+  stroke: rgba(15, 118, 110, .35);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+
+.p360-result-chart-midline {
+  stroke: rgba(71, 85, 105, .3);
+  stroke-width: 1;
+}
+
+.p360-result-chart-line {
+  fill: none;
+  stroke: var(--teal);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.p360-result-chart-norm-line {
+  stroke: var(--blue);
+}
+
+.p360-result-chart-point {
+  fill: var(--paper);
+  stroke: var(--teal);
+  stroke-width: 2.5;
+}
+
+.p360-result-chart-point.capped {
+  fill: var(--amber);
+}
+
+.p360-result-chart-point.status-within {
+  stroke: var(--green);
+}
+
+.p360-result-chart-point.status-above,
+.p360-result-chart-point.status-below {
+  stroke: var(--amber);
+}
+
+.p360-result-chart-point.status-descriptive,
+.p360-result-chart-point.status-unknown {
+  stroke: var(--blue);
+}
+
+.p360-result-chart-label {
+  fill: var(--muted);
+  font: 700 11px/1 var(--font-sans, system-ui, sans-serif);
+}
+
+.p360-result-chart-panel-label,
+.p360-result-chart-tick-label {
+  fill: var(--muted);
+  font: 700 10px/1 var(--font-sans, system-ui, sans-serif);
+}
+
+.p360-result-chart-cap {
+  fill: var(--amber);
+  stroke: var(--paper);
+  stroke-width: 1;
+}
+
 .risk-map {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));

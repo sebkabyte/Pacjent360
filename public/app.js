@@ -1263,41 +1263,25 @@ function trendDirection(observation) {
   return diff > 0 ? "wzrost" : "spadek";
 }
 
+function resultSeriesForObservation(observation) {
+  return P360ResultSeries.buildSeries(observation || {});
+}
+
 function observationRangeState(observation) {
-  const latest = latestValue(observation);
-  if (!latest) return "unknown";
-  if (observation.rangeLabel) return "descriptive";
-  const value = Number(latest.value);
-  const min = Number(observation.normalMin);
-  const max = Number(observation.normalMax);
-  if (!Number.isFinite(value) || !Number.isFinite(min) || !Number.isFinite(max)) return "unknown";
-  if (value < min) return "below";
-  if (value > max) return "above";
-  return "within";
+  return resultSeriesForObservation(observation).status;
 }
 
 function observationStatus(observation) {
-  const state = observationRangeState(observation);
-  if (state === "descriptive") return observation.rangeLabel;
-  if (state === "below") return "poza zakresem referencyjnym - poniżej zakresu ze źródła";
-  if (state === "above") return "poza zakresem referencyjnym - powyżej zakresu ze źródła";
-  if (state === "within") return "w zakresie ze źródła";
-  return "brak danych";
+  const series = resultSeriesForObservation(observation);
+  return P360ResultSeries.statusLabel(series.status, series.range);
 }
 
 function observationStatusClass(observation) {
-  const state = observationRangeState(observation);
-  if (state === "within") return "done";
-  if (state === "unknown" || state === "descriptive") return "info";
-  return "pending";
+  return P360ResultSeries.statusClass(observationRangeState(observation));
 }
 
 function observationRangeLabel(observation) {
-  if (observation.rangeLabel) return observation.rangeLabel;
-  if (!Number.isFinite(Number(observation.normalMin)) || !Number.isFinite(Number(observation.normalMax))) {
-    return "brak zakresu referencyjnego";
-  }
-  return `${observation.normalMin}-${observation.normalMax} ${observation.unit}`;
+  return resultSeriesForObservation(observation).range.label;
 }
 
 function qualityScore() {
@@ -4546,7 +4530,7 @@ function renderObservations() {
     <section class="section-band flush">
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Parametr</th><th>Ostatni wynik</th><th>Trend</th><th>Zakres podany przez źródło</th><th>Źródło</th></tr></thead>
+          <thead><tr><th>Parametr</th><th>Ostatni wynik</th><th>Wykres względem normy</th><th>Zakres podany przez źródło</th><th>Źródło</th></tr></thead>
           <tbody>
             ${observations.map((obs) => {
               const latest = latestValue(obs);
@@ -4554,7 +4538,7 @@ function renderObservations() {
                 <tr>
                   <td><strong>${escapeHtml(obs.name)}</strong><br><span class="muted">${escapeHtml(obs.type)}</span></td>
                   <td>${escapeHtml(latest?.value ?? "brak")} ${escapeHtml(obs.unit)}<br><span class="muted">${formatDate(latest?.date)}</span></td>
-                  <td>${renderSparkline(obs)}<br><span class="status-chip ${observationStatusClass(obs)}">${escapeHtml(observationStatus(obs))}</span></td>
+                  <td class="result-chart-cell">${renderResultChart(obs)}<br><span class="status-chip ${observationStatusClass(obs)}">${escapeHtml(observationStatus(obs))}</span></td>
                   <td>${escapeHtml(observationRangeLabel(obs))}<br><span class="muted">Bez oceny klinicznej.</span></td>
                   <td>${sourceChips(latest?.sourceRefs || [`observation:${obs.id}`])}</td>
                 </tr>
@@ -4567,20 +4551,10 @@ function renderObservations() {
   `;
 }
 
-function renderSparkline(observation) {
-  const values = observation.values.map((point) => Number(point.value));
-  if (values.length < 3) return `<span class="muted">Za mało punktów na trend</span>`;
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const span = max - min || 1;
-  const points = values
-    .map((value, index) => {
-      const x = (index / (values.length - 1)) * 112 + 4;
-      const y = 30 - ((value - min) / span) * 24;
-      return `${x},${y}`;
-    })
-    .join(" ");
-  return `<svg class="sparkline" viewBox="0 0 120 34" role="img" aria-label="Trend ${escapeHtml(observation.name)}"><polyline points="${points}"></polyline></svg>`;
+function renderResultChart(observation) {
+  const series = resultSeriesForObservation(observation);
+  if (!series.points.length) return `<span class="muted">Brak punktów do wykresu</span>`;
+  return P360ResultSeries.renderChart(series);
 }
 
 function renderRisks() {
