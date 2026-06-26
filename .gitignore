@@ -29,3 +29,14 @@ blueprint-hub/
 
 # Graphify generated output and cache
 graphify-out/
+docs/legal/PHASE_2_LEGAL_BRIEF_FOR_REVIEW.md
+docs/legal/MDR_CLASSIFICATION_MEMO_REQUEST.md
+docs/legal/WHOLE_PROJECT_LEGAL_COMPLIANCE_BRIEF_FOR_REVIEW.md
+docs/legal/GPT_PRO_*.md
+docs/legal/FOUNDER*.txt
+# Opinie prawne, DPIA, DPA, vendor due diligence, negocjacje - prywatne
+docs/legal/DPIA*.md
+docs/legal/DPA_*.md
+docs/legal/LLM_VENDOR_*.md
+docs/legal/SUBPROCESSOR_*.md
+docs/legal/PILOT_PROTOCOL_*.md
