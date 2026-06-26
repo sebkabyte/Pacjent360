@@ -116,7 +116,7 @@ function validateModelForPatient(state, patient, expected = {}) {
   const model = caregiverModel.buildCaregiverModel({ state: activeState, patientId: patient.id });
   const validation = caregiverModel.validateCaregiverModel(model);
   assert(validation.valid, `${patient.id} caregiver model invalid: ${validation.errors.join("; ")}`);
-  assert(model.safetyCopy.includes("tylko zakres danych"), `${patient.id} safety copy should mention scoped access`);
+  assert(model.safetyCopy.includes("elementy udostępnione"), `${patient.id} safety copy should mention shared visible data`);
   assert(model.safetyCopy.includes("nie diagnozuje"), `${patient.id} safety copy should reject diagnosis`);
   assert(model.safetyCopy.includes("nie tworzy zaleceń terapeutycznych"), `${patient.id} safety copy should reject therapy recommendations`);
   if (expected.activeScopes !== undefined) assert(model.activeScopes.length === expected.activeScopes, `${patient.id} active scope count mismatch`);

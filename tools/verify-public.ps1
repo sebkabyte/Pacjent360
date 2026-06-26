@@ -80,6 +80,11 @@ $expectedFiles = @(
   "patient360-previsit-model.js",
   "patient360-caregiver-model.js",
   "patient360-consent-model.js",
+  "patient360-a1-core.js",
+  "patient360-a3-a5-quality.js",
+  "patient360-a4-consent-guard.js",
+  "patient360-a6-checklist.js",
+  "patient360-agent-policy.js",
   "patient360-demo-data.js",
   "styles.css",
   "app.js",
@@ -139,6 +144,16 @@ Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-pre
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-caregiver-model.js"
 & node --check (Join-Path $target "patient360-consent-model.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-consent-model.js"
+& node --check (Join-Path $target "patient360-a1-core.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-a1-core.js"
+& node --check (Join-Path $target "patient360-a3-a5-quality.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-a3-a5-quality.js"
+& node --check (Join-Path $target "patient360-a4-consent-guard.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-a4-consent-guard.js"
+& node --check (Join-Path $target "patient360-a6-checklist.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-a6-checklist.js"
+& node --check (Join-Path $target "patient360-agent-policy.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-agent-policy.js"
 & node --check (Join-Path $target "patient360-demo-data.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-demo-data.js"
 & node --check (Join-Path $target "app.js") | Out-Null
@@ -200,6 +215,10 @@ Assert-ScriptLoaded -Html $demo -File "patient360-map-view.js"
 Assert-ScriptLoaded -Html $demo -File "patient360-previsit-model.js"
 Assert-ScriptLoaded -Html $demo -File "patient360-caregiver-model.js"
 Assert-ScriptLoaded -Html $demo -File "patient360-consent-model.js"
+Assert-ScriptLoaded -Html $demo -File "patient360-a1-core.js"
+Assert-ScriptLoaded -Html $demo -File "patient360-a3-a5-quality.js"
+Assert-ScriptLoaded -Html $demo -File "patient360-a4-consent-guard.js"
+Assert-ScriptLoaded -Html $demo -File "patient360-a6-checklist.js"
 Assert-ScriptLoaded -Html $demo -File "patient360-demo-data.js"
 Assert-ScriptLoaded -Html $demo -File "p360-result-series.js"
 Assert-ScriptLoaded -Html $demo -File "app.js"
@@ -212,6 +231,10 @@ $scriptIndex = @{
   previsit = Get-ScriptRefIndex -Html $demo -File "patient360-previsit-model.js"
   caregiver = Get-ScriptRefIndex -Html $demo -File "patient360-caregiver-model.js"
   consent = Get-ScriptRefIndex -Html $demo -File "patient360-consent-model.js"
+  a1Core = Get-ScriptRefIndex -Html $demo -File "patient360-a1-core.js"
+  a3a5 = Get-ScriptRefIndex -Html $demo -File "patient360-a3-a5-quality.js"
+  a4Consent = Get-ScriptRefIndex -Html $demo -File "patient360-a4-consent-guard.js"
+  a6Checklist = Get-ScriptRefIndex -Html $demo -File "patient360-a6-checklist.js"
   demoData = Get-ScriptRefIndex -Html $demo -File "patient360-demo-data.js"
   resultSeries = Get-ScriptRefIndex -Html $demo -File "p360-result-series.js"
   app = Get-ScriptRefIndex -Html $demo -File "app.js"
@@ -232,7 +255,19 @@ Assert-True ($scriptIndex.previsit -lt $scriptIndex.caregiver) "demo.html should
 Assert-True ($scriptIndex.caregiver -lt $scriptIndex.app) "demo.html should load patient360-caregiver-model.js before app.js"
 Assert-True ($scriptIndex.caregiver -lt $scriptIndex.consent) "demo.html should load patient360-caregiver-model.js before patient360-consent-model.js"
 Assert-True ($scriptIndex.consent -lt $scriptIndex.app) "demo.html should load patient360-consent-model.js before app.js"
+Assert-True ($scriptIndex.a1Core -lt $scriptIndex.app) "demo.html should load patient360-a1-core.js before app.js"
+Assert-True ($scriptIndex.consent -lt $scriptIndex.a1Core) "demo.html should load patient360-consent-model.js before patient360-a1-core.js"
+Assert-True ($scriptIndex.a3a5 -lt $scriptIndex.app) "demo.html should load patient360-a3-a5-quality.js before app.js"
+Assert-True ($scriptIndex.a1Core -lt $scriptIndex.a3a5) "demo.html should load patient360-a1-core.js before patient360-a3-a5-quality.js"
+Assert-True ($scriptIndex.a4Consent -lt $scriptIndex.app) "demo.html should load patient360-a4-consent-guard.js before app.js"
+Assert-True ($scriptIndex.a3a5 -lt $scriptIndex.a4Consent) "demo.html should load patient360-a3-a5-quality.js before patient360-a4-consent-guard.js"
+Assert-True ($scriptIndex.a6Checklist -lt $scriptIndex.app) "demo.html should load patient360-a6-checklist.js before app.js"
+Assert-True ($scriptIndex.a4Consent -lt $scriptIndex.a6Checklist) "demo.html should load patient360-a4-consent-guard.js before patient360-a6-checklist.js"
 Assert-True ($scriptIndex.demoData -lt $scriptIndex.app) "demo.html should load patient360-demo-data.js before app.js"
+Assert-True ($scriptIndex.a1Core -lt $scriptIndex.demoData) "demo.html should load patient360-a1-core.js before patient360-demo-data.js"
+Assert-True ($scriptIndex.a3a5 -lt $scriptIndex.demoData) "demo.html should load patient360-a3-a5-quality.js before patient360-demo-data.js"
+Assert-True ($scriptIndex.a4Consent -lt $scriptIndex.demoData) "demo.html should load patient360-a4-consent-guard.js before patient360-demo-data.js"
+Assert-True ($scriptIndex.a6Checklist -lt $scriptIndex.demoData) "demo.html should load patient360-a6-checklist.js before patient360-demo-data.js"
 Assert-True ($scriptIndex.resultSeries -lt $scriptIndex.app) "demo.html should load p360-result-series.js before app.js"
 Assert-True (-not ($index.Contains("frame-ancestors") -or $demo.Contains("frame-ancestors") -or $privacy.Contains("frame-ancestors") -or $disclaimer.Contains("frame-ancestors"))) "frame-ancestors must be configured as an HTTP header, not as a meta CSP directive"
 

@@ -1,0 +1,268 @@
+{
+  "agentPolicies": [
+    {
+      "id": "policy-data-quality-v1",
+      "agentType": "DataQualityAgent",
+      "class": "safe",
+      "version": "0.1",
+      "allowedInputs": ["sources", "claims", "timelineEvents", "domainData"],
+      "allowedOutputs": ["missing_data", "discrepancy", "preparation_task"],
+      "forbiddenOutputs": ["diagnosis", "triage", "therapy_recommendation", "urgency_assessment", "dose_change", "clinical_decision", "risk_score", "drug_substitution"],
+      "requiredSourceTypes": ["document", "interview", "observation", "medication", "source_missing"],
+      "requiredConsentScopes": ["audit.view"],
+      "ditlStatusRequired": true,
+      "requiresHumanAcceptance": false,
+      "maxAutonomyLevel": "dry_run",
+      "validatorRules": ["source_required", "forbidden_output_block", "no_clinical_interpretation"]
+    },
+    {
+      "id": "policy-source-grounding-v1",
+      "agentType": "SourceGroundingAgent",
+      "class": "safe",
+      "version": "0.1",
+      "allowedInputs": ["claims", "sources", "reports"],
+      "allowedOutputs": ["missing_data", "discrepancy", "audit_event"],
+      "forbiddenOutputs": ["diagnosis", "triage", "therapy_recommendation", "urgency_assessment", "dose_change", "clinical_decision", "risk_score", "drug_substitution"],
+      "requiredSourceTypes": ["document", "interview", "transcript", "source_missing"],
+      "requiredConsentScopes": ["report.view", "audit.view"],
+      "ditlStatusRequired": true,
+      "requiresHumanAcceptance": false,
+      "maxAutonomyLevel": "dry_run",
+      "validatorRules": ["source_required", "no_memory_facts", "forbidden_output_block"]
+    },
+    {
+      "id": "policy-demo-safety-lint-v1",
+      "agentType": "DemoSafetyLintAgent",
+      "class": "safe",
+      "version": "0.1",
+      "allowedInputs": ["publicCopy", "demoData", "validationOutput"],
+      "allowedOutputs": ["missing_data", "audit_event"],
+      "forbiddenOutputs": ["diagnosis", "triage", "therapy_recommendation", "urgency_assessment", "dose_change", "clinical_decision", "risk_score", "drug_substitution"],
+      "requiredSourceTypes": ["system", "source_missing"],
+      "requiredConsentScopes": ["audit.view"],
+      "ditlStatusRequired": true,
+      "requiresHumanAcceptance": false,
+      "maxAutonomyLevel": "dry_run",
+      "validatorRules": ["forbidden_text_scan", "fictional_data_only", "no_real_patient_data"]
+    },
+    {
+      "id": "policy-consent-guard-v1",
+      "agentType": "ConsentGuardAgent",
+      "class": "safe",
+      "version": "0.1",
+      "allowedInputs": ["consents", "actor", "requestedScope"],
+      "allowedOutputs": ["visibility_decision", "preparation_task", "audit_event"],
+      "forbiddenOutputs": ["diagnosis", "triage", "therapy_recommendation", "urgency_assessment", "dose_change", "clinical_decision", "risk_score", "drug_substitution"],
+      "requiredSourceTypes": ["consent", "system"],
+      "requiredConsentScopes": ["audit.view"],
+      "ditlStatusRequired": true,
+      "requiresHumanAcceptance": false,
+      "maxAutonomyLevel": "policy_gate",
+      "validatorRules": ["consent_scope_required", "no_hidden_data_leakage", "audit_before_read"]
+    },
+    {
+      "id": "policy-visit-checklist-v1",
+      "agentType": "VisitChecklistAgent",
+      "class": "caution",
+      "version": "0.1",
+      "allowedInputs": ["visitPacket", "documents", "questions"],
+      "allowedOutputs": ["preparation_task", "ditl_question", "missing_data"],
+      "forbiddenOutputs": ["diagnosis", "triage", "therapy_recommendation", "urgency_assessment", "dose_change", "clinical_decision", "risk_score", "drug_substitution"],
+      "requiredSourceTypes": ["document", "interview", "source_missing"],
+      "requiredConsentScopes": ["questions.view", "timeline.view"],
+      "ditlStatusRequired": true,
+      "requiresHumanAcceptance": true,
+      "maxAutonomyLevel": "preview_only",
+      "validatorRules": ["source_required", "human_acceptance_required", "forbidden_output_block"]
+    },
+    {
+      "id": "policy-ditl-question-v1",
+      "agentType": "DITLQuestionAgent",
+      "class": "caution",
+      "version": "0.1",
+      "allowedInputs": ["missingData", "discrepancies", "sourceRefs"],
+      "allowedOutputs": ["ditl_question"],
+      "forbiddenOutputs": ["diagnosis", "triage", "therapy_recommendation", "urgency_assessment", "dose_change", "clinical_decision", "risk_score", "drug_substitution"],
+      "requiredSourceTypes": ["document", "interview", "observation", "source_missing"],
+      "requiredConsentScopes": ["questions.add"],
+      "ditlStatusRequired": true,
+      "requiresHumanAcceptance": true,
+      "maxAutonomyLevel": "preview_only",
+      "validatorRules": ["neutral_question_only", "source_required", "human_acceptance_required"]
+    },
+    {
+      "id": "policy-medication-support-v1",
+      "agentType": "MedicationSupportAgent",
+      "class": "caution",
+      "version": "0.1",
+      "allowedInputs": ["medications", "documents", "interviews"],
+      "allowedOutputs": ["discrepancy", "ditl_question", "preparation_task"],
+      "forbiddenOutputs": ["diagnosis", "triage", "therapy_recommendation", "urgency_assessment", "dose_change", "clinical_decision", "risk_score", "drug_substitution"],
+      "requiredSourceTypes": ["document", "medication", "interview", "source_missing"],
+      "requiredConsentScopes": ["medications.view"],
+      "ditlStatusRequired": true,
+      "requiresHumanAcceptance": true,
+      "maxAutonomyLevel": "preview_only",
+      "validatorRules": ["no_dose_change", "source_required", "human_acceptance_required"]
+    },
+    {
+      "id": "policy-report-drafting-v1",
+      "agentType": "ReportDraftingAgent",
+      "class": "caution",
+      "version": "0.1",
+      "allowedInputs": ["visitPacket", "sourceIndex", "claims"],
+      "allowedOutputs": ["report_draft", "ditl_question", "missing_data"],
+      "forbiddenOutputs": ["diagnosis", "triage", "therapy_recommendation", "urgency_assessment", "dose_change", "clinical_decision", "risk_score", "drug_substitution"],
+      "requiredSourceTypes": ["document", "interview", "observation", "medication", "source_missing"],
+      "requiredConsentScopes": ["report.generate", "report.view"],
+      "ditlStatusRequired": true,
+      "requiresHumanAcceptance": true,
+      "maxAutonomyLevel": "preview_only",
+      "validatorRules": ["source_required", "draft_label_required", "forbidden_output_block"]
+    },
+    {
+      "id": "policy-plain-language-v1",
+      "agentType": "VisitPlainLanguageAgent",
+      "class": "caution",
+      "version": "0.1",
+      "allowedInputs": ["VisitArtifact", "Encounter"],
+      "allowedOutputs": ["plain_language_summary", "ditl_question", "missing_data"],
+      "forbiddenOutputs": ["diagnosis", "triage", "therapy_recommendation", "urgency_assessment", "dose_change", "clinical_decision", "risk_score", "drug_substitution"],
+      "requiredSourceTypes": ["transcript", "document", "patient_entry", "source_missing"],
+      "requiredConsentScopes": ["timeline.view", "report.generate"],
+      "ditlStatusRequired": true,
+      "requiresHumanAcceptance": true,
+      "maxAutonomyLevel": "preview_only",
+      "validatorRules": ["no_added_facts", "source_required", "human_acceptance_required"]
+    },
+    {
+      "id": "policy-post-visit-router-v1",
+      "agentType": "PostVisitTaskRouter",
+      "class": "caution",
+      "version": "0.1",
+      "allowedInputs": ["VisitSummary", "PostVisitPlan"],
+      "allowedOutputs": ["post_visit_task", "ditl_question"],
+      "forbiddenOutputs": ["diagnosis", "triage", "therapy_recommendation", "urgency_assessment", "dose_change", "clinical_decision", "risk_score", "drug_substitution"],
+      "requiredSourceTypes": ["document", "transcript", "source_missing"],
+      "requiredConsentScopes": ["questions.add", "timeline.view"],
+      "ditlStatusRequired": true,
+      "requiresHumanAcceptance": true,
+      "maxAutonomyLevel": "preview_only",
+      "validatorRules": ["source_required", "task_is_draft", "human_acceptance_required"]
+    },
+    {
+      "id": "policy-medication-access-v1",
+      "agentType": "MedicationAccessAgent",
+      "class": "caution",
+      "version": "0.1",
+      "allowedInputs": ["PostVisitPlan", "CareTask"],
+      "allowedOutputs": ["post_visit_task", "missing_data"],
+      "forbiddenOutputs": ["diagnosis", "triage", "therapy_recommendation", "urgency_assessment", "dose_change", "clinical_decision", "risk_score", "drug_substitution"],
+      "requiredSourceTypes": ["document", "medication", "source_missing"],
+      "requiredConsentScopes": ["medications.view"],
+      "ditlStatusRequired": true,
+      "requiresHumanAcceptance": true,
+      "maxAutonomyLevel": "handoff_only",
+      "validatorRules": ["no_drug_substitution", "source_required", "human_acceptance_required"]
+    },
+    {
+      "id": "policy-care-navigation-v1",
+      "agentType": "CareNavigationAgent",
+      "class": "caution",
+      "version": "0.1",
+      "allowedInputs": ["PostVisitPlan", "CareTask"],
+      "allowedOutputs": ["post_visit_task", "missing_data"],
+      "forbiddenOutputs": ["diagnosis", "triage", "therapy_recommendation", "urgency_assessment", "dose_change", "clinical_decision", "risk_score", "drug_substitution"],
+      "requiredSourceTypes": ["document", "transcript", "source_missing"],
+      "requiredConsentScopes": ["timeline.view"],
+      "ditlStatusRequired": true,
+      "requiresHumanAcceptance": true,
+      "maxAutonomyLevel": "handoff_only",
+      "validatorRules": ["no_booking_without_confirmation", "source_required", "human_acceptance_required"]
+    }
+  ],
+  "afterVisitBundle": {
+    "encounters": [
+      {
+        "id": "enc-demo-001",
+        "patientId": "p-demo-a0",
+        "occurredAt": "2026-06-20T10:00:00.000Z",
+        "encounterType": "teleconsultation",
+        "providerLabel": "Lekarz demo",
+        "specialtyLabel": "konsultacja kontrolna",
+        "sourceRefs": ["doc:a0-visit-note"],
+        "status": "completed"
+      }
+    ],
+    "visitArtifacts": [
+      {
+        "id": "artifact-demo-001",
+        "encounterId": "enc-demo-001",
+        "type": "patient_note",
+        "sourceId": "doc:a0-visit-note",
+        "speakerMap": { "patient": "Pacjent demo", "clinician": "Lekarz demo" },
+        "consentStatus": "confirmed",
+        "confidenceLabel": "medium",
+        "retentionPolicy": "synthetic_fixture_only"
+      }
+    ],
+    "visitSummaries": [
+      {
+        "id": "summary-demo-001",
+        "encounterId": "enc-demo-001",
+        "sourceRefs": ["doc:a0-visit-note"],
+        "plainLanguageSummary": "Draft porzadkuje ustalenia z wizyty i wskazuje elementy do sprawdzenia z dokumentem zrodlowym.",
+        "statedByDoctor": ["Kontrola dokumentow przed kolejna rozmowa."],
+        "statedByPatient": ["Pacjent demo chce uporzadkowac pytania przed kontaktem."],
+        "statedByCaregiver": [],
+        "unclearItems": ["Brak potwierdzonej daty kolejnego kontaktu."],
+        "ditlQuestions": ["Co trzeba doprecyzowac z lekarzem przy kolejnym kontakcie?"],
+        "status": "draft"
+      }
+    ],
+    "postVisitPlans": [
+      {
+        "id": "plan-demo-001",
+        "encounterId": "enc-demo-001",
+        "summaryId": "summary-demo-001",
+        "careTaskIds": ["task-demo-001", "task-demo-002"],
+        "medicationRefs": [],
+        "referralRefs": [],
+        "labOrderRefs": [],
+        "documentRefs": ["doc:a0-visit-note"],
+        "nextContactContext": "Do ustalenia z osoba prowadzaca po sprawdzeniu dokumentow.",
+        "status": "draft"
+      }
+    ],
+    "careTasks": [
+      {
+        "id": "task-demo-001",
+        "type": "document_upload",
+        "title": "Dodaj dokument z wizyty do demo",
+        "description": "Zadanie organizacyjne: dolaczyc fikcyjna notatke do zestawu zrodel.",
+        "ownerRole": "patient",
+        "sourceRefs": ["doc:a0-visit-note"],
+        "consentScopeId": "scope-demo-a0",
+        "status": "draft",
+        "dueContext": "przed kolejnym testem UX",
+        "ditlStatus": "do wyjaśnienia",
+        "createdBy": "PostVisitTaskRouter",
+        "createdFromAgentRunId": "agent-run-demo-a0"
+      },
+      {
+        "id": "task-demo-002",
+        "type": "question_to_confirm",
+        "title": "Przygotuj neutralne pytanie do rozmowy",
+        "description": "Zadanie organizacyjne: zachowac pytanie jako draft do recznego przegladu.",
+        "ownerRole": "patient",
+        "sourceRefs": ["doc:a0-visit-note"],
+        "consentScopeId": "scope-demo-a0",
+        "status": "draft",
+        "dueContext": "przed spotkaniem z lekarzem",
+        "ditlStatus": "do wyjaśnienia",
+        "createdBy": "DITLQuestionAgent",
+        "createdFromAgentRunId": "agent-run-demo-a0"
+      }
+    ]
+  }
+}

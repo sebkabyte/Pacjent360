@@ -1667,6 +1667,210 @@ td {
   line-height: 1.4;
 }
 
+.a6-checklist-panel {
+  display: grid;
+  gap: 14px;
+  border-color: #cbd8e6;
+  background: #ffffff;
+}
+
+.status-chip.a6-neutral,
+.status-chip.a6-status {
+  border-color: #cbd8e6;
+  background: #f4f7fb;
+  color: #40505d;
+}
+
+.status-chip.a6-status.missing {
+  border-color: #ead3a7;
+  background: #fff8e8;
+  color: #725112;
+}
+
+.status-chip.a6-status.confirm {
+  border-color: #cbd8e6;
+  background: #f5f8fc;
+  color: #425466;
+}
+
+.status-chip.a6-status.ready {
+  border-color: #cddbd7;
+  background: #f5f9f8;
+  color: #40584f;
+}
+
+.a6-checklist-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.a6-checklist-summary span {
+  padding: 10px;
+  border: 1px solid #d8e1ea;
+  border-radius: 8px;
+  background: #f7fafc;
+  color: #465767;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.a6-checklist-summary strong {
+  display: block;
+  color: #24313d;
+  font-size: 20px;
+  line-height: 1.1;
+}
+
+.a6-section-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.a6-checklist-section {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #d8e1ea;
+  border-radius: 8px;
+  background: #fbfcfe;
+}
+
+.a6-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.a6-section-head h3 {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: #263746;
+  font-size: 15px;
+}
+
+.a6-section-head svg {
+  width: 18px;
+  height: 18px;
+  color: #4f6b82;
+}
+
+.a6-section-head span {
+  min-width: 28px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #eef3f8;
+  color: #40505d;
+  font-size: 12px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.a6-checklist-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 7px;
+}
+
+.a6-checklist-item {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 8px;
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid #dde5ec;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.a6-checklist-item.missing {
+  border-color: #ead3a7;
+  background: #fffaf0;
+}
+
+.a6-checklist-item.confirm {
+  border-color: #ccd9e5;
+  background: #f8fbfd;
+}
+
+.a6-checklist-item.ready {
+  border-color: #d4dfdc;
+  background: #f8fbfa;
+}
+
+.a6-check-marker {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #edf3f8;
+  color: #4f6b82;
+}
+
+.a6-checklist-item.missing .a6-check-marker {
+  background: #fff0d6;
+  color: #8b681f;
+}
+
+.a6-item-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.a6-item-head strong {
+  min-width: 0;
+  line-height: 1.3;
+}
+
+.a6-checklist-item p {
+  margin: 4px 0 6px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.35;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.a6-checklist-item .record-meta {
+  gap: 5px;
+}
+
+.a6-checklist-item .record-meta .tag {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.a6-checklist-item .source-line {
+  margin-top: 5px;
+}
+
+.a6-checklist-item .inline-actions.compact {
+  margin-top: 5px;
+}
+
+.a6-checklist-item .small-action.icon-only {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  justify-content: center;
+}
+
+.a6-overflow-note {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
 .patient-result-list {
   display: grid;
   gap: 8px;
@@ -4521,6 +4725,14 @@ dialog::backdrop {
 
 /* Mobile-first: kokpit pacjenta i opiekuna */
 @media (max-width: 768px) {
+  .a6-checklist-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .a6-item-head {
+    display: grid;
+  }
+
   html,
   body {
     max-width: 100%;
@@ -5876,6 +6088,208 @@ dialog::backdrop {
   color: var(--blue);
 }
 
+.a1-core-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.72fr);
+  gap: 16px;
+  align-items: stretch;
+  border-left: 5px solid var(--teal);
+  background:
+    linear-gradient(90deg, rgba(217, 240, 238, 0.72), rgba(255, 255, 255, 0.96)),
+    #ffffff;
+}
+
+.a1-core-hero h2 {
+  margin: 0 0 8px;
+  font-size: clamp(1.4rem, 2.4vw, 2.15rem);
+}
+
+.a1-core-hero p {
+  max-width: 920px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.a1-core-policy {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.a1-core-policy article {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.a1-core-policy span,
+.a1-core-policy strong,
+.a1-core-policy small {
+  display: block;
+}
+
+.a1-core-policy span {
+  margin-bottom: 5px;
+  color: var(--teal);
+  font-size: 0.76rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.a1-core-policy strong {
+  color: var(--ink);
+  font-size: 1.3rem;
+}
+
+.a1-core-policy small {
+  margin-top: 3px;
+  color: var(--muted);
+  line-height: 1.3;
+}
+
+.a1-core-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.72fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.a1-core-card {
+  border-left: 4px solid var(--teal);
+}
+
+.a1-core-card.inspector-only {
+  border-left-color: var(--blue);
+  background: #fbfdff;
+}
+
+.projection-tag {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: 11px;
+}
+
+.a1-core-results code,
+.a1-core-ledger code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  color: #174f4a;
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.a1-core-ledger table {
+  min-width: 980px;
+}
+
+.a1-core-results table {
+  min-width: 880px;
+}
+
+.a1-core-blocked {
+  border-color: #c79a44;
+  background: #fffaf0;
+}
+
+.a3-a5-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.72fr);
+  gap: 16px;
+  align-items: stretch;
+  border-left: 5px solid var(--blue);
+  background:
+    linear-gradient(90deg, rgba(232, 242, 255, 0.72), rgba(255, 255, 255, 0.96)),
+    #ffffff;
+}
+
+.a3-a5-hero h2 {
+  margin: 0 0 8px;
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+}
+
+.a3-a5-hero p {
+  max-width: 920px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.a3-a5-policy {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.a3-a5-policy article {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.a3-a5-policy span,
+.a3-a5-policy strong,
+.a3-a5-policy small {
+  display: block;
+}
+
+.a3-a5-policy span {
+  margin-bottom: 5px;
+  color: var(--blue);
+  font-size: 0.76rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.a3-a5-policy strong {
+  color: var(--ink);
+  font-size: 1.3rem;
+}
+
+.a3-a5-policy small {
+  margin-top: 3px;
+  color: var(--muted);
+  line-height: 1.3;
+}
+
+.a3-a5-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.74fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.a3-a5-card {
+  border-left: 4px solid var(--blue);
+}
+
+.a3-a5-card.inspector-only {
+  border-left-color: var(--teal);
+  background: #fbfdff;
+}
+
+.a3-a5-ledger code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  color: #174f4a;
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.a3-a5-ledger table {
+  min-width: 940px;
+}
+
+.a3-a5-blocked {
+  border-color: #c79a44;
+  background: #fffaf0;
+}
+
 .patient-now-panel {
   border-left: 4px solid var(--teal);
 }
@@ -5944,7 +6358,16 @@ dialog::backdrop {
   }
 
   .care-contract-roles,
-  .care-contract-grid {
+  .care-contract-grid,
+  .a1-core-hero,
+  .a1-core-grid,
+  .a3-a5-hero,
+  .a3-a5-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .a1-core-policy,
+  .a3-a5-policy {
     grid-template-columns: 1fr;
   }
 

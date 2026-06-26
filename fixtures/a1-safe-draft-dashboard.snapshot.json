@@ -1,0 +1,165 @@
+{
+  "id": "a1-safe-draft-dashboard-snapshot",
+  "sprint": "A1",
+  "status": "pending_kickoff",
+  "dataMode": "synthetic_fixture_only",
+  "runtimeLlmEnabled": false,
+  "persistence": {
+    "indexedDbWrites": false,
+    "localStorageWrites": false,
+    "networkWrites": false
+  },
+  "interactionPolicy": {
+    "userMedicalInputEnabled": false,
+    "downloadAuditJsonEnabled": true,
+    "allowedSorts": ["chronological", "alphabetical"],
+    "defaultSort": "chronological",
+    "blockedActionIds": ["apply_plan", "book_visit", "buy_medication", "call_external_api"]
+  },
+  "displayPolicy": {
+    "exposeAgentTypeLabels": false,
+    "mainFeedAllowedCardTypes": ["source_summary", "consent_scope"],
+    "assistantOutputsSurface": "inspector",
+    "progressMetricsEnabled": false,
+    "stickyContextDisclaimerRequired": true,
+    "sourceQuotesRequired": true
+  },
+  "visualPolicy": {
+    "tone": "calm_neutral",
+    "blockedSemanticColors": ["red", "green"],
+    "allowedStatusTones": ["neutral", "source", "review"],
+    "allowedIconIds": ["document", "paperclip", "calendar", "search", "question"],
+    "blockedIconIds": ["alert", "warning", "exclamation", "medical-cross", "heart", "siren"]
+  },
+  "uiCopy": {
+    "title": "Pulpit bezpiecznego podgladu",
+    "demoLabel": "Dane syntetyczne",
+    "banner": "Widok porzadkuje dokumenty, szkice i zrodla przed rozmowa z lekarzem.",
+    "sourceMissingLabel": "Brak wskazanego zrodla",
+    "draftLabel": "Szkic do omowienia",
+    "reviewLabel": "Do omowienia z lekarzem",
+    "emptyState": "Nie wczytano dokumentow w tym obszarze."
+  },
+  "scenarios": [
+    {
+      "id": "a1-case-patient-001",
+      "label": "Przypadek syntetyczny: przygotowanie rozmowy",
+      "synthetic": true,
+      "sources": [
+        {
+          "id": "doc:a1-note-001",
+          "type": "document",
+          "label": "Dokument syntetyczny z wizyty kontrolnej",
+          "date": "2026-06-01"
+        },
+        {
+          "id": "interview:a1-001",
+          "type": "interview",
+          "label": "Wywiad syntetyczny pacjenta",
+          "date": "2026-06-02"
+        }
+      ],
+      "roleViews": [
+        {
+          "role": "patient",
+          "lens": "plain",
+          "sortMode": "chronological",
+          "hiddenAreas": [],
+          "cards": [
+            {
+              "id": "a1-card-001",
+              "date": "2026-06-01",
+              "type": "source_summary",
+              "surface": "feed",
+              "iconId": "document",
+              "agentType": "SourceGroundingAgent",
+              "policyRef": "policy-source-grounding-v1",
+              "title": "Dokument dodany do historii",
+              "description": "Szkic pokazuje, z ktorego dokumentu pochodzi wpis.",
+              "status": "draft",
+              "ditlStatus": "do wyjasnienia",
+              "sourceRefs": ["doc:a1-note-001"],
+              "primaryAction": "Pokaz zrodlo"
+            },
+            {
+              "id": "a1-card-002",
+              "date": "2026-06-02",
+              "type": "ditl_question",
+              "surface": "inspector",
+              "iconId": "question",
+              "agentType": "DITLQuestionAgent",
+              "policyRef": "policy-ditl-question-v1",
+              "title": "Pytanie do rozmowy",
+              "description": "Szkic pytania powstal z roznicy miedzy dokumentem a wywiadem.",
+              "status": "needs_review",
+              "ditlStatus": "do wyjasnienia",
+              "sourceRefs": ["doc:a1-note-001", "interview:a1-001"],
+              "primaryAction": "Oznacz do omowienia"
+            },
+            {
+              "id": "a1-card-003",
+              "date": "2026-06-03",
+              "type": "missing_data",
+              "surface": "inspector",
+              "iconId": "paperclip",
+              "agentType": "DataQualityAgent",
+              "policyRef": "policy-data-quality-v1",
+              "title": "Brak wskazanego zrodla",
+              "description": "Ten element pozostaje szkicem do omowienia, dopoki nie ma zrodla.",
+              "status": "source_missing",
+              "ditlStatus": "do wyjasnienia",
+              "sourceStatus": "source_missing",
+              "primaryAction": "Oznacz do omowienia"
+            }
+          ]
+        },
+        {
+          "role": "caregiver",
+          "lens": "consent_scoped",
+          "sortMode": "chronological",
+          "hiddenAreas": ["report"],
+          "cards": [
+            {
+              "id": "a1-card-004",
+              "date": "2026-06-02",
+              "type": "consent_scope",
+              "surface": "feed",
+              "iconId": "document",
+              "agentType": "ConsentGuardAgent",
+              "policyRef": "policy-consent-guard-v1",
+              "title": "Zakres zgody sprawdzony",
+              "description": "Widok pokazuje tylko obszary udostepnione w fikcyjnej zgodzie.",
+              "status": "draft",
+              "ditlStatus": "do wyjasnienia",
+              "sourceRefs": ["interview:a1-001"],
+              "primaryAction": "Pokaz zakres"
+            }
+          ]
+        },
+        {
+          "role": "doctor",
+          "lens": "review_dense",
+          "sortMode": "chronological",
+          "hiddenAreas": [],
+          "cards": [
+            {
+              "id": "a1-card-005",
+              "date": "2026-06-02",
+              "type": "discrepancy",
+              "surface": "inspector",
+              "iconId": "search",
+              "agentType": "DataQualityAgent",
+              "policyRef": "policy-data-quality-v1",
+              "title": "Rozbieznosc w zapisach",
+              "description": "Widok pokazuje konflikt zrodel bez wskazywania zwycieskiej wersji.",
+              "status": "needs_review",
+              "ditlStatus": "do wyjasnienia",
+              "sourceRefs": ["doc:a1-note-001", "interview:a1-001"],
+              "primaryAction": "Porownaj zrodla"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

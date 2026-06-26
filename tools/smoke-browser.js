@@ -198,6 +198,7 @@ async function waitForReady(client) {
       window.Patient360CaregiverModel &&
       document.querySelector('nav button[data-view="patientPortal"]') &&
       document.querySelector('nav button[data-view="caregiverPortal"]') &&
+      document.querySelector('nav button[data-view="visitChecklist"]') &&
       document.querySelector('#viewRoot')?.children.length
     )`);
     if ((ready === "complete" || ready === "interactive") && hasApp) return;
@@ -256,6 +257,10 @@ async function main() {
       hasPreVisitModel: Boolean(window.Patient360PreVisitModel),
       hasCaregiverModel: Boolean(window.Patient360CaregiverModel),
       hasConsentModel: Boolean(window.Patient360ConsentModel),
+      hasA1Core: Boolean(window.Patient360A1Core),
+      hasA3A5: Boolean(window.Patient360A3A5Quality),
+      hasA4ConsentGuard: Boolean(window.Patient360A4ConsentGuard),
+      hasA6Checklist: Boolean(window.Patient360A6Checklist),
       activeView: document.querySelector('nav button.active')?.dataset.view || null,
       register: document.body.dataset.register || '',
       hasPerspectiveDemo: document.body.textContent.includes('Jedna historia, trzy perspektywy') && document.querySelectorAll('[data-select-role]').length === 3,
@@ -271,7 +276,7 @@ async function main() {
       independence: document.body.textContent.includes('CeZ') && document.body.textContent.includes('NFZ') && document.body.textContent.includes('IKP')
     }))()`);
     assert(initial.title.includes("Pacjent360"), "Demo title should contain Pacjent360");
-    assert(initial.hasContract && initial.hasFormat && initial.hasMapModel && initial.hasDemoData && initial.hasPreVisitModel && initial.hasCaregiverModel && initial.hasConsentModel, "Browser globals should expose contract, format, map model, demo data, pre-visit model, caregiver model and consent model");
+    assert(initial.hasContract && initial.hasFormat && initial.hasMapModel && initial.hasDemoData && initial.hasPreVisitModel && initial.hasCaregiverModel && initial.hasConsentModel && initial.hasA1Core && initial.hasA3A5 && initial.hasA4ConsentGuard && initial.hasA6Checklist, "Browser globals should expose contract, format, map model, demo data, pre-visit model, caregiver model, consent model, A1-Core, A3+A5, A4 consent guard and A6 checklist projections");
     assert(initial.activeView === "roleStart", `Expected roleStart view, got ${initial.activeView}`);
     assert(initial.register === "app", `Expected neutral app register on role start, got ${initial.register}`);
     assert(initial.hasPerspectiveDemo && initial.hasPerspectiveOnlyPage && initial.scenarioChoicesVisible === 0, "Demo should start with a perspective-only page and no patient choices");
@@ -326,6 +331,50 @@ async function main() {
     assert(core.register === "doctor", `Core dashboard should use doctor visual register, got ${core.register}`);
     assert(core.hasLedgerSourceChip, "Core dashboard should render Trust OS ledger source chips");
     assert(core.journeyStepCount === 6 && core.activeJourneyStep === "Kokpit" && core.hasJourneyBack && core.hasJourneyNext && core.hasMapAction, `Core dashboard should expose guided demo journey: ${JSON.stringify(core)}`);
+
+    const a1Core = await client.evaluate(`(() => {
+      document.querySelector('nav button[data-view="a1Core"]')?.click();
+      const text = document.querySelector('#viewRoot')?.textContent || '';
+      return {
+        activeView: document.querySelector('nav button.active')?.dataset.view || null,
+        hasGlobal: Boolean(window.Patient360A1Core),
+        feedCards: document.querySelectorAll('[data-a1-surface="feed"]').length,
+        inspectorCards: document.querySelectorAll('[data-a1-surface="inspector"]').length,
+        resultRows: document.querySelectorAll('.a1-core-results tbody tr[data-projection-id]').length,
+        ledgerRows: document.querySelectorAll('.a1-core-ledger tbody tr').length,
+        hasReadOnlyCopy: text.includes('read-only') && text.includes('LLM off'),
+        hasProjectionCopy: text.includes('Jeden ID') && text.includes('projection:result:'),
+        leaksAgentNames: text.includes('DataQualityAgent') || text.includes('SourceGroundingAgent') || text.includes('DITLQuestionAgent'),
+        hasForbiddenCopy: ['pilne', 'triage', 'diagnoza', 'rekomendacja'].some((phrase) => text.toLowerCase().includes(phrase))
+      };
+    })()`);
+    assert(a1Core.activeView === "a1Core" && a1Core.hasGlobal, `A1-Core view should open and expose projection module: ${JSON.stringify(a1Core)}`);
+    assert(a1Core.feedCards >= 1 && a1Core.inspectorCards >= 1, `A1-Core should render source feed and DITL inspector: ${JSON.stringify(a1Core)}`);
+    assert(a1Core.resultRows >= 1 && a1Core.ledgerRows >= a1Core.resultRows, `A1-Core should render result table and projection ledger: ${JSON.stringify(a1Core)}`);
+    assert(a1Core.hasReadOnlyCopy && a1Core.hasProjectionCopy, `A1-Core should show read-only and projection-gate copy: ${JSON.stringify(a1Core)}`);
+    assert(!a1Core.leaksAgentNames && !a1Core.hasForbiddenCopy, `A1-Core should not expose agent names or forbidden copy: ${JSON.stringify(a1Core)}`);
+
+    const a3a5 = await client.evaluate(`(() => {
+      document.querySelector('nav button[data-view="risks"]')?.click();
+      const text = document.querySelector('#viewRoot')?.textContent || '';
+      return {
+        activeView: document.querySelector('nav button.active')?.dataset.view || null,
+        hasGlobal: Boolean(window.Patient360A3A5Quality),
+        questionCards: document.querySelectorAll('[data-a3a5-question="true"]').length,
+        gapCards: document.querySelectorAll('[data-a3a5-gap]').length,
+        ledgerRows: document.querySelectorAll('.a3-a5-ledger tbody tr').length,
+        hasReadOnlyCopy: text.includes('read-only') && text.includes('LLM off'),
+        hasProjectionCopy: text.includes('Jedna projekcja') && text.includes('projection:ditl:gap-'),
+        leaksAgentNames: text.includes('DataQualityAgent') || text.includes('SourceGroundingAgent') || text.includes('DITLQuestionAgent'),
+        hasForbiddenCopy: ['pilne', 'triage', 'diagnoza', 'rekomendacja', 'zalecenie'].some((phrase) => text.toLowerCase().includes(phrase))
+      };
+    })()`);
+    assert(a3a5.activeView === "risks" && a3a5.hasGlobal, `A3+A5 questions view should open and expose projection module: ${JSON.stringify(a3a5)}`);
+    assert(a3a5.questionCards >= 1 && a3a5.gapCards >= 1, `A3+A5 should render question list and gap inspector: ${JSON.stringify(a3a5)}`);
+    assert(a3a5.ledgerRows >= a3a5.questionCards, `A3+A5 should render projection ledger rows: ${JSON.stringify(a3a5)}`);
+    assert(a3a5.hasReadOnlyCopy && a3a5.hasProjectionCopy, `A3+A5 should show read-only and projection-gate copy: ${JSON.stringify(a3a5)}`);
+    assert(!a3a5.leaksAgentNames && !a3a5.hasForbiddenCopy, `A3+A5 should not expose agent names or forbidden copy: ${JSON.stringify(a3a5)}`);
+    await client.evaluate(`document.querySelector('nav button[data-view="core"]')?.click()`);
 
     const specialtyLens = await client.evaluate(`(() => {
       const stateFromStorage = () => JSON.parse(localStorage.getItem('pacjent360-state-v11') || '{}');
@@ -426,8 +475,8 @@ async function main() {
     assert(cockpitSidebar.doctor.text !== cockpitSidebar.patient.text && cockpitSidebar.patient.text !== cockpitSidebar.caregiver.text, "Sidebar cockpit switches should visibly change cockpit content");
     assert(cockpitSidebar.finalDoctor.role === "doctor" && cockpitSidebar.finalDoctor.activeView === "core", "Sidebar should switch back to Lekarz360 for later smoke checks");
     assert(cockpitSidebar.doctor.libraryHeading === "Dane i źródła" && cockpitSidebar.doctor.libraryLabels.includes("Pytania") && cockpitSidebar.doctor.libraryLabels.includes("Podsumowanie"), `Doctor sidebar library should expose context items with canonical labels: ${JSON.stringify(cockpitSidebar.doctor.libraryLabels)}`);
-    assert(cockpitSidebar.patient.libraryHeading === "Dane i źródła" && cockpitSidebar.patient.libraryLabels.includes("Dokumenty") && !cockpitSidebar.patient.libraryLabels.includes("Pytania") && !cockpitSidebar.patient.libraryLabels.includes("Podsumowanie"), `Patient sidebar library should hide doctor-only items but keep canonical labels: ${JSON.stringify(cockpitSidebar.patient.libraryLabels)}`);
-    assert(cockpitSidebar.caregiver.libraryHeading === "Dane i źródła" && cockpitSidebar.caregiver.libraryLabels.includes("Zgody") && !cockpitSidebar.caregiver.libraryLabels.includes("Pytania") && !cockpitSidebar.caregiver.libraryLabels.includes("Podsumowanie"), `Caregiver sidebar library should be scoped to consent with canonical labels: ${JSON.stringify(cockpitSidebar.caregiver.libraryLabels)}`);
+    assert(cockpitSidebar.patient.libraryHeading === "Dane i źródła" && cockpitSidebar.patient.libraryLabels.includes("Dokumenty") && cockpitSidebar.patient.libraryLabels.includes("Pytania") && !cockpitSidebar.patient.libraryLabels.includes("Podsumowanie"), `Patient sidebar library should expose pre-visit questions but hide summary: ${JSON.stringify(cockpitSidebar.patient.libraryLabels)}`);
+    assert(cockpitSidebar.caregiver.libraryHeading === "Dane i źródła" && cockpitSidebar.caregiver.libraryLabels.includes("Zgody") && cockpitSidebar.caregiver.libraryLabels.includes("Pytania") && !cockpitSidebar.caregiver.libraryLabels.includes("Podsumowanie"), `Caregiver sidebar library should expose scoped pre-visit questions but hide summary: ${JSON.stringify(cockpitSidebar.caregiver.libraryLabels)}`);
 
     const caregiverNoConsentSidebar = await client.evaluate(`(() => {
       const setPatient = (patientId) => {
@@ -438,15 +487,20 @@ async function main() {
       };
       setPatient('p2');
       document.querySelector('nav button[data-view="caregiverPortal"]')?.click();
+      const text = (document.querySelector('#viewRoot')?.textContent || '').toLowerCase();
       const labels = [...document.querySelectorAll('nav .nav-item:not(.cockpit-nav):not([data-view="roleStart"])')]
         .filter((button) => !button.hidden && button.getAttribute('aria-hidden') !== 'true')
         .map((button) => button.querySelector('span')?.textContent.trim() || '');
       const heading = document.querySelector('[data-nav-section="library"]')?.textContent.trim() || '';
+      const deniedCards = document.querySelectorAll('.caregiver-access-card.denied').length;
+      const hasZeroKnowledgeCopy = text.includes('nie wczytano element') || text.includes('nie ma jeszcze udost');
+      const leaksZeroKnowledge = ['brak dost', 'zablok', 'ukryt', 'cofni', 'wymagana zgoda', '3 z 10'].some((phrase) => text.includes(phrase));
       setPatient('p1');
       document.querySelector('nav button[data-view="core"]')?.click();
-      return { heading, labels };
+      return { heading, labels, deniedCards, hasZeroKnowledgeCopy, leaksZeroKnowledge };
     })()`);
     assert(caregiverNoConsentSidebar.heading === "Dane i źródła" && caregiverNoConsentSidebar.labels.length === 1 && caregiverNoConsentSidebar.labels[0] === "Zgody", `Caregiver without active consent should only see consent scope in sidebar: ${JSON.stringify(caregiverNoConsentSidebar)}`);
+    assert(caregiverNoConsentSidebar.deniedCards === 0 && caregiverNoConsentSidebar.hasZeroKnowledgeCopy && !caregiverNoConsentSidebar.leaksZeroKnowledge, `Caregiver without active consent should render zero-knowledge empty state: ${JSON.stringify(caregiverNoConsentSidebar)}`);
 
     const patientSwitch = await client.evaluate(`(() => {
       const setPatient = (patientId) => {
@@ -475,27 +529,29 @@ async function main() {
 
     const patient = await client.evaluate(`(() => {
       document.querySelector('[data-role-switch="patient"]')?.click();
-      const steps = [...document.querySelectorAll('.previsit-step')].map((step) => step.textContent.trim().replace(/\\s+/g, ' '));
+      const sections = [...document.querySelectorAll('.a6-checklist-section')].map((section) => section.textContent.trim().replace(/\\s+/g, ' '));
       return {
         activeView: document.querySelector('nav button.active')?.dataset.view || null,
         register: document.body.dataset.register || '',
         scrollHeight: document.body.scrollHeight,
-        stepCount: steps.length,
-        hasNowPanel: Boolean(document.querySelector('.patient-now-panel')),
+        viewScrollHeight: document.querySelector('#viewRoot')?.scrollHeight || 0,
+        sectionCount: sections.length,
+        itemCount: document.querySelectorAll('.a6-checklist-item').length,
+        hasChecklistPanel: Boolean(document.querySelector('.a6-checklist-panel')),
         hasEmbeddedMap: Boolean(document.querySelector('.patient-map360.embedded')),
-        hasSafetyCopy: document.body.textContent.toLowerCase().includes('nie diagnozuje'),
-        hasDocumentsStep: steps.some((text) => text.includes('Dokumenty')),
-        hasConsentStep: steps.some((text) => text.includes('Zgody')),
+        hasSafetyCopy: document.body.textContent.toLowerCase().includes('nie ocenia medycznie'),
+        hasAskSection: sections.some((text) => text.includes('O co zapytać')),
+        hasConfirmSection: sections.some((text) => text.includes('Co potwierdzić')),
         hasHorizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
       };
     })()`);
-    assert(patient.activeView === "patientPortal", `Expected patientPortal view, got ${patient.activeView}`);
-    assert(patient.register === "patient", `Patient portal should use patient visual register, got ${patient.register}`);
-    assert(patient.scrollHeight <= 3500, `Patient portal desktop should stay within first-screen workflow budget, got ${patient.scrollHeight}px`);
-    assert(patient.hasNowPanel && !patient.hasEmbeddedMap, "Patient portal should show next-step panel and avoid embedding full map");
-    assert(patient.stepCount === 6, `Expected 6 pre-visit steps, got ${patient.stepCount}`);
-    assert(patient.hasSafetyCopy, "Patient pre-visit flow should keep safety copy");
-    assert(patient.hasDocumentsStep && patient.hasConsentStep, "Patient pre-visit flow should include documents and consent steps");
+    assert(patient.activeView === "visitChecklist", `Expected visitChecklist view, got ${patient.activeView}`);
+    assert(patient.register === "patient", `A6 patient checklist should use patient visual register, got ${patient.register}`);
+    assert(patient.viewScrollHeight <= 3800, `A6 patient checklist desktop should stay within workflow budget, got view=${patient.viewScrollHeight}px body=${patient.scrollHeight}px`);
+    assert(patient.hasChecklistPanel && patient.itemCount >= 1 && !patient.hasEmbeddedMap, "A6 patient checklist should render items and avoid embedding full map");
+    assert(patient.sectionCount >= 2, `Expected multiple A6 sections, got ${patient.sectionCount}`);
+    assert(patient.hasSafetyCopy, "A6 patient checklist should keep safety copy");
+    assert(patient.hasAskSection && patient.hasConfirmSection, "A6 patient checklist should include questions and confirmations");
     assert(!patient.hasHorizontalOverflow, "Desktop patient view should not create body horizontal overflow");
 
     const guardianPatient = await client.evaluate(`(() => {
@@ -505,6 +561,7 @@ async function main() {
         patientSelect.dispatchEvent(new Event('change', { bubbles: true }));
       }
       document.querySelector('[data-role-switch="patient"]')?.click();
+      document.querySelector('nav button[data-view="patientPortal"]')?.click();
       const text = document.body.textContent || '';
       const result = {
         patient: document.querySelector('#patientSelect')?.value || '',
@@ -524,6 +581,7 @@ async function main() {
     assert(guardianPatient.hasGuardianTitle && guardianPatient.hasChildAccessCopy && guardianPatient.hasNowPanel && !guardianPatient.hasEmbeddedMap, "p3 patient portal should use parent/child copy without embedded full map");
 
     const dialog = await client.evaluate(`(() => {
+      document.querySelector('nav button[data-view="patientPortal"]')?.click();
       document.querySelector('.previsit-step [data-open-dialog="document"]').click();
       const openBefore = Boolean(document.querySelector('dialog[open]'));
       const title = document.querySelector('dialog[open] h2')?.textContent.trim() || '';
@@ -688,27 +746,34 @@ async function main() {
 
     const caregiver = await client.evaluate(`(() => {
       document.querySelector('[data-role-switch="caregiver"]')?.click();
+      const root = document.querySelector('#viewRoot');
+      const text = root?.textContent || '';
+      const lowerText = text.toLowerCase();
+      const leakIndex = lowerText.indexOf('cofni');
       return {
         activeView: document.querySelector('nav button.active')?.dataset.view || null,
         register: document.body.dataset.register || '',
-        hasHeader: document.body.textContent.includes('Opiekun360'),
-        hasSafetyCopy: document.body.textContent.includes('tylko zakres danych') && document.body.textContent.includes('nie diagnozuje'),
-        scopeCount: document.querySelectorAll('.caregiver-scope').length,
-        accessCardCount: document.querySelectorAll('.caregiver-access-card').length,
-        taskCount: document.querySelectorAll('.caregiver-tasks .record').length,
-        revocationCount: document.querySelectorAll('.caregiver-revocation .record').length,
-        hasSupportingPerson: document.body.textContent.includes('osoba wspierająca'),
-        hasRevokedCaregiver: document.body.textContent.includes('cofnięty')
+        hasHeader: text.includes('Opiekun360'),
+        hasSafetyCopy: text.includes('elementy udost') && text.includes('nie diagnozuje'),
+        scopeCount: root?.querySelectorAll('.caregiver-scope').length || 0,
+        accessCardCount: root?.querySelectorAll('.caregiver-access-card').length || 0,
+        deniedAccessCardCount: root?.querySelectorAll('.caregiver-access-card.denied').length || 0,
+        taskCount: root?.querySelectorAll('.caregiver-tasks .record').length || 0,
+        revocationCount: root?.querySelectorAll('.caregiver-revocation .record').length || 0,
+        hasSupportingPerson: text.includes('osoba wspierająca'),
+        hasRevokedCaregiver: text.includes('cofnięty'),
+        leaksZeroKnowledge: ['brak dost', 'zablok', 'ukryt', 'cofni', 'wymagana zgoda', '3 z 10'].some((phrase) => lowerText.includes(phrase)),
+        leakSnippet: leakIndex >= 0 ? text.slice(Math.max(0, leakIndex - 80), leakIndex + 120).replace(/\\s+/g, ' ').trim() : ''
       };
     })()`);
     assert(caregiver.activeView === "caregiverPortal", `Expected caregiverPortal view, got ${caregiver.activeView}`);
     assert(caregiver.register === "caregiver", `Caregiver portal should use caregiver visual register, got ${caregiver.register}`);
     assert(caregiver.hasHeader && caregiver.hasSafetyCopy, "Caregiver view should show scoped-access safety copy");
-    assert(caregiver.scopeCount >= 3, `Caregiver view expected at least 3 scopes, got ${caregiver.scopeCount}`);
-    assert(caregiver.accessCardCount >= 6, `Caregiver view expected access cards, got ${caregiver.accessCardCount}`);
+    assert(caregiver.scopeCount >= 1, `Caregiver view expected visible active scopes, got ${caregiver.scopeCount}`);
+    assert(caregiver.accessCardCount >= 1 && caregiver.deniedAccessCardCount === 0, `Caregiver view should render only allowed access cards: ${JSON.stringify(caregiver)}`);
     assert(caregiver.taskCount >= 4, `Caregiver view expected organizational tasks, got ${caregiver.taskCount}`);
-    assert(caregiver.revocationCount >= 1, "Caregiver view should show revocation effect");
-    assert(caregiver.hasSupportingPerson && caregiver.hasRevokedCaregiver, "Caregiver view should show human relation role and revoked access status");
+    assert(caregiver.revocationCount === 0 && !caregiver.hasRevokedCaregiver && !caregiver.leaksZeroKnowledge, `Caregiver view should not leak inactive scopes or hidden counters: ${JSON.stringify(caregiver)}`);
+    assert(caregiver.hasSupportingPerson, "Caregiver view should show human relation role");
 
     const consent = await client.evaluate(`(() => {
       document.querySelector('nav button[data-view="consent"]').click();
@@ -811,7 +876,7 @@ async function main() {
       const stored = JSON.parse(localStorage.getItem('pacjent360-state-v11') || '{}');
       return {
         activeView: document.querySelector('nav button.active')?.dataset.view || null,
-        hasSafetyCopy: document.body.textContent.includes('tylko zakres danych') && document.body.textContent.includes('nie diagnozuje'),
+        hasSafetyCopy: document.body.textContent.includes('elementy udost') && document.body.textContent.includes('nie diagnozuje'),
         hasMatrix: Boolean(document.querySelector('.consent-scope-table table')),
         hasDeniedState: [...document.querySelectorAll('.consent-scope-table .status-chip')].some((node) => node.textContent.trim() === 'nie'),
         consentSourceChipCount,
@@ -937,23 +1002,23 @@ async function main() {
     const mobile = await client.evaluate(`(() => {
       document.querySelector('[data-select-role="patient"]')?.click();
       document.querySelector('[data-start-role="patient"][data-start-patient="p1"]')?.click();
-      const grid = document.querySelector('.previsit-step-grid');
+      const grid = document.querySelector('.a6-section-grid');
       const contentGrid = document.querySelector('#contentGrid');
       const evidence = document.querySelector('.evidence-panel');
       return {
         activeView: document.querySelector('nav button.active')?.dataset.view || null,
-        stepCount: document.querySelectorAll('.previsit-step').length,
+        itemCount: document.querySelectorAll('.a6-checklist-item').length,
         hasHorizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
         gridColumns: grid ? getComputedStyle(grid).gridTemplateColumns : '',
         evidenceHasSelection: Boolean(contentGrid?.classList.contains('evidence-has-selection')),
         evidenceVisible: Boolean(evidence && getComputedStyle(evidence).display !== 'none' && evidence.getBoundingClientRect().height > 0)
       };
     })()`);
-    assert(mobile.activeView === "patientPortal", "Mobile smoke should open patient portal");
-    assert(mobile.stepCount === 6, `Mobile smoke expected 6 steps, got ${mobile.stepCount}`);
+    assert(mobile.activeView === "visitChecklist", "Mobile smoke should open A6 visit checklist");
+    assert(mobile.itemCount >= 1, `Mobile smoke expected A6 checklist items, got ${mobile.itemCount}`);
     assert(!mobile.hasHorizontalOverflow, "Mobile patient view should not create body horizontal overflow");
     assert(!mobile.evidenceHasSelection && !mobile.evidenceVisible, "Mobile patient cockpit should keep sources panel on demand before a source click");
-    assert(!mobile.gridColumns.includes(" ") || mobile.gridColumns.split(" ").length <= 1, `Mobile pre-visit grid should be one column, got ${mobile.gridColumns}`);
+    assert(!mobile.gridColumns.includes(" ") || mobile.gridColumns.split(" ").length <= 1, `Mobile A6 checklist grid should be one column, got ${mobile.gridColumns}`);
 
     const mobileTimeline = await client.evaluate(`(() => {
       document.querySelector('nav button[data-view="timeline"]').click();

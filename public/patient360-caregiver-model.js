@@ -219,7 +219,7 @@
       count: counts[area.key] || 0,
       caption: canView.has(area.key)
         ? `${formatCount(counts[area.key] || 0, "element", "elementy", "elementów")} w zakresie zgody`
-        : "Brak aktywnej zgody na ten obszar"
+        : "Nie wczytano elementów w tym obszarze"
     }));
   }
 
@@ -251,7 +251,7 @@
       accessCards: accessCards(counts, canView),
       tasks,
       counts,
-      safetyCopy: "Opiekun widzi tylko zakres danych, na który pacjent udzielił zgody. Widok pokazuje zadania organizacyjne, braki i statusy dostępu; nie diagnozuje, nie ocenia pilności i nie tworzy zaleceń terapeutycznych.",
+      safetyCopy: "Widok opiekuna pokazuje elementy udostępnione w aktualnym zakresie. Służy do organizacji wizyty; nie diagnozuje, nie ocenia pilności i nie tworzy zaleceń terapeutycznych.",
       revocationEffects: inactiveScopes.map((scope) => ({
         id: `revoked-${scope.id}`,
         subject: scope.subject,

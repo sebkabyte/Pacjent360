@@ -120,6 +120,16 @@ Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient36
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-caregiver-model.js"
 & node --check (Join-Path $target "public/patient360-consent-model.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-consent-model.js"
+& node --check (Join-Path $target "public/patient360-a1-core.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-a1-core.js"
+& node --check (Join-Path $target "public/patient360-a3-a5-quality.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-a3-a5-quality.js"
+& node --check (Join-Path $target "public/patient360-a4-consent-guard.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-a4-consent-guard.js"
+& node --check (Join-Path $target "public/patient360-a6-checklist.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-a6-checklist.js"
+& node --check (Join-Path $target "public/patient360-agent-policy.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-agent-policy.js"
 & node --check (Join-Path $target "public/patient360-demo-data.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-demo-data.js"
 & node --check (Join-Path $target "public/p360-result-series.js") | Out-Null
@@ -144,6 +154,20 @@ Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-c
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-demo-coherence.js"
 & node --check (Join-Path $target "tools/validate-a11y.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-a11y.js"
+& node --check (Join-Path $target "tools/validate-a0-agent-policy.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-a0-agent-policy.js"
+& node --check (Join-Path $target "tools/validate-a1-safe-draft-dashboard.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-a1-safe-draft-dashboard.js"
+& node --check (Join-Path $target "tools/validate-a1-core-dashboard.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-a1-core-dashboard.js"
+& node --check (Join-Path $target "tools/validate-a3-a5-quality.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-a3-a5-quality.js"
+& node --check (Join-Path $target "tools/validate-a4-consent-guard.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-a4-consent-guard.js"
+& node --check (Join-Path $target "tools/validate-a6-checklist.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-a6-checklist.js"
+& node --check (Join-Path $target "tools/validate-safety-gate-matrix.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-safety-gate-matrix.js"
 & node --check (Join-Path $target "tools/validate-validation-pack.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-validation-pack.js"
 & node --check (Join-Path $target "tools/smoke-browser.js") | Out-Null

@@ -160,10 +160,10 @@
       "id": "rn-p2-caregiver",
       "patientId": "p2",
       "role": "caregiver",
-      "title": "Andrzej K.: brak aktywnego opiekuna",
-      "summary": "W tym scenariuszu nie ma aktywnej zgody dla opiekuna. Demo pokazuje, że brak zgody oznacza brak dostępu.",
-      "mapTitle": "Brak udostępnionej mapy dla opiekuna",
-      "mapSummary": "Opiekun nie powinien widzieć historii Andrzeja bez zgody. Aplikacja pokazuje stan braku dostępu zamiast danych."
+      "title": "Andrzej K.: widok opiekuna bez elementów",
+      "summary": "W tym scenariuszu widok opiekuna pozostaje neutralnym stanem pustym. Demo pokazuje tylko elementy gotowe do wyświetlenia w aktualnym zakresie.",
+      "mapTitle": "Neutralny widok opiekuna",
+      "mapSummary": "Aplikacja pokazuje wyłącznie elementy udostępnione do bieżącego widoku."
     },
     {
       "id": "rn-p3-doctor",
@@ -195,13 +195,13 @@
   ],
   "roleGoals": [
     { "id": "rg-p1-doctor", "patientId": "p1", "role": "doctor", "goal": "W 90 sekund zobaczyć leki, braki i pytania przed procedurą.", "primaryView": "core" },
-    { "id": "rg-p1-patient", "patientId": "p1", "role": "patient", "goal": "Przygotować dokumenty, pytania i listę leków do omówienia.", "primaryView": "patientPortal" },
+    { "id": "rg-p1-patient", "patientId": "p1", "role": "patient", "goal": "Przygotować dokumenty, pytania i listę leków do omówienia.", "primaryView": "visitChecklist" },
     { "id": "rg-p1-caregiver", "patientId": "p1", "role": "caregiver", "goal": "Pomóc ojcu w lekach, transporcie i dokumentach w zakresie zgody.", "primaryView": "caregiverPortal" },
     { "id": "rg-p2-doctor", "patientId": "p2", "role": "doctor", "goal": "Zobaczyć kontekst kontroli kardiologicznej i pytania pacjenta.", "primaryView": "core" },
-    { "id": "rg-p2-patient", "patientId": "p2", "role": "patient", "goal": "Przygotować pytanie o echo i potwierdzenie leku.", "primaryView": "patientPortal" },
+    { "id": "rg-p2-patient", "patientId": "p2", "role": "patient", "goal": "Przygotować pytanie o echo i potwierdzenie leku.", "primaryView": "visitChecklist" },
     { "id": "rg-p2-caregiver", "patientId": "p2", "role": "caregiver", "goal": "Zobaczyć, że bez zgody opiekun nie ma dostępu do danych.", "primaryView": "caregiverPortal" },
     { "id": "rg-p3-doctor", "patientId": "p3", "role": "doctor", "goal": "Oddzielić dokumenty dziecka od obserwacji rodzica i pytań na kontrolę.", "primaryView": "core" },
-    { "id": "rg-p3-patient", "patientId": "p3", "role": "patient", "goal": "Jako rodzic przygotować kontrolę dziecka po infekcji.", "primaryView": "patientPortal" },
+    { "id": "rg-p3-patient", "patientId": "p3", "role": "patient", "goal": "Jako rodzic przygotować kontrolę dziecka po infekcji.", "primaryView": "visitChecklist" },
     { "id": "rg-p3-caregiver", "patientId": "p3", "role": "caregiver", "goal": "Wiedzieć, co mama i tata widzą w zakresie zgody.", "primaryView": "caregiverPortal" }
   ],
   "roleVisibleSections": [
@@ -515,7 +515,7 @@
         "symptoms": "Opiekun nie zgłasza nowych objawów alarmowych w rozmowie demo; aktualny stan wymaga potwierdzenia przez lekarza.",
         "function": "Do ustalenia pozostaje transport na procedurę i plan kontaktu po wizycie.",
         "medications": "Córka widzi rozbieżność między listą leków w dokumentach a tym, co ojciec opisuje jako faktycznie przyjmowane.",
-        "family": "Madeline ma zgodę na leki i zadania organizacyjne; cofnięty dostęp innej osoby nie powinien być używany w raporcie."
+        "family": "Madeline ma zgodę na leki i zadania organizacyjne; raport powinien korzystać wyłącznie z aktywnych zakresów udostępnienia."
       },
       "transcript": "Madeline, córka: Tata ma procedurę i boję się, że coś zgubimy. Pomagam mu z lekami i dokumentami. Chcę wiedzieć, które leki ma potwierdzić z lekarzem, czy potrzebne jest EKG, kto organizuje transport i co mamy zrobić po wizycie. To są moje obserwacje jako opiekuna, nie wynik badania.",
       "sourceRefs": [
@@ -2318,7 +2318,7 @@
       "caregiverGets": [
         "dokumenty, mapę, leki, wyniki, gotowy wywiad i zadania organizacyjne w zakresie zgody",
         "pytania o dokumenty, transport i plan po wizycie",
-        "brak dostępu do obszarów poza zgodą"
+        "tylko elementy udostępnione w aktualnym zakresie"
       ],
       "caregiverAdds": [
         "obserwacje opiekuna",

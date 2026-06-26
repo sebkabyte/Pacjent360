@@ -30,6 +30,10 @@
     <script src="patient360-previsit-model.js?v=20260613-role-data" defer></script>
     <script src="patient360-caregiver-model.js?v=20260613-role-data" defer></script>
     <script src="patient360-consent-model.js?v=20260613-role-data" defer></script>
+    <script src="patient360-a1-core.js?v=20260613-role-data" defer></script>
+    <script src="patient360-a3-a5-quality.js?v=20260613-role-data" defer></script>
+    <script src="patient360-a4-consent-guard.js?v=20260613-role-data" defer></script>
+    <script src="patient360-a6-checklist.js?v=20260613-role-data" defer></script>
     <script src="patient360-demo-data.js?v=20260613-role-data" defer></script>
     <script src="p360-result-series.js?v=20260613-role-data" defer></script>
     <script src="app.js?v=20260613-role-data" defer></script>
@@ -68,7 +72,15 @@
             <i data-lucide="users-round"></i>
             <span>Opiekun360</span>
           </button>
+          <button class="nav-item cockpit-nav" data-view="a1Core" title="A1-Core: bezpieczny pulpit zrodel">
+            <i data-lucide="shield-check"></i>
+            <span>A1-Core</span>
+          </button>
           <div class="nav-section-label" data-nav-section="library">Dane i źródła</div>
+          <button class="nav-item" data-view="visitChecklist" title="Checklista przed wizytą">
+            <i data-lucide="clipboard-check"></i>
+            <span>Przed wizytą</span>
+          </button>
           <button class="nav-item" data-view="interview" title="Wywiad pacjenta i opiekuna">
             <i data-lucide="messages-square"></i>
             <span>Wywiad</span>
