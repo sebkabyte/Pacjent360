@@ -14,6 +14,7 @@ const captureEvidence = Boolean(args.capture || args.writeEvidence);
 
 const VIEWS = [
   "core",
+  "visitChecklist",
   "patientPortal",
   "caregiverPortal",
   "interview",
@@ -67,9 +68,14 @@ const VIEW_SENTINELS = {
     p2: ["kardiologiczn", "atorwastatyn"],
     p3: ["danych dziecka", "infekcj"]
   },
+  visitChecklist: {
+    p1: ["przed wizyta", "aktualne ekg"],
+    p2: ["przed wizyta", "atorwastatyn"],
+    p3: ["przed wizyta", "kontrola pediatryczna"]
+  },
   caregiverPortal: {
     p1: ["madeline", "corka"],
-    p2: ["brak aktywnego zakresu"],
+    p2: ["nie wczytano element"],
     p3: ["marta", "pawel"]
   },
   interview: {
@@ -372,6 +378,7 @@ async function waitForReady(client) {
       window.Patient360PreVisitModel &&
       window.Patient360CaregiverModel &&
       document.querySelector('nav button[data-view="patientPortal"]') &&
+      document.querySelector('nav button[data-view="visitChecklist"]') &&
       document.querySelector('#viewRoot')?.children.length
     )`);
     if ((ready === "complete" || ready === "interactive") && hasApp) return;
@@ -393,7 +400,7 @@ async function capture(client, name) {
 
 async function setPatientAndView(client, patientId, viewId) {
   await client.evaluate(`(() => {
-    const roleByView = { core: 'doctor', patientPortal: 'patient', caregiverPortal: 'caregiver' };
+    const roleByView = { core: 'doctor', visitChecklist: 'patient', patientPortal: 'patient', caregiverPortal: 'caregiver' };
     if (typeof state === 'object') {
       state.activeRole = roleByView[${JSON.stringify(viewId)}] || 'doctor';
     }
@@ -649,16 +656,27 @@ async function checkDitlStatus(client) {
   await setPatientAndView(client, "p1", "risks");
   const result = await client.evaluate(`(() => {
     const beforeAudit = JSON.parse(localStorage.getItem('pacjent360-state-v11') || '{}').audit?.length || 0;
+    const readOnlyQuestions = document.querySelectorAll('[data-a3a5-question="true"]').length;
     const selected = document.querySelector('[data-ditl-status].selected');
-    const target = [...document.querySelectorAll('[data-ditl-status]')].find((button) => button !== selected);
-    const beforeText = document.querySelector('#viewRoot')?.textContent || '';
+    if (!selected) {
+      const afterAudit = JSON.parse(localStorage.getItem('pacjent360-state-v11') || '{}').audit?.length || 0;
+      return { found: false, readOnlyQuestions, changed: readOnlyQuestions > 0 && afterAudit === beforeAudit, beforeAudit, afterAudit };
+    }
+    const type = selected?.dataset.ditlType || '';
+    const id = selected?.dataset.ditlId || '';
+    const beforeStatus = selected?.dataset.ditlStatus || null;
+    const target = [...document.querySelectorAll('[data-ditl-status]')]
+      .find((button) => button.dataset.ditlType === type && button.dataset.ditlId === id && !button.classList.contains('selected'));
     if (target) target.click();
-    const afterText = document.querySelector('#viewRoot')?.textContent || '';
+    const afterSelected = [...document.querySelectorAll('[data-ditl-status].selected')]
+      .find((button) => button.dataset.ditlType === type && button.dataset.ditlId === id);
     const afterAudit = JSON.parse(localStorage.getItem('pacjent360-state-v11') || '{}').audit?.length || 0;
-    return { found: Boolean(target), status: target?.dataset.ditlStatus || null, changed: beforeText !== afterText, beforeAudit, afterAudit };
+    const afterStatus = afterSelected?.dataset.ditlStatus || null;
+    return { found: Boolean(target), readOnlyQuestions, beforeStatus, targetStatus: target?.dataset.ditlStatus || null, afterStatus, changed: afterStatus && afterStatus !== beforeStatus, beforeAudit, afterAudit };
   })()`);
   await pause(90);
   counters.controlChecks += 1;
+  if (result.readOnlyQuestions > 0 && !result.found && result.changed) return;
   if (!result.found || !result.changed || result.afterAudit <= result.beforeAudit) {
     await capture(client, "before_fail_ditl_status");
     reportFailure("R1-5", "DITL status action did not update card and audit", result);

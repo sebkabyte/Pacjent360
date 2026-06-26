@@ -307,7 +307,7 @@ async function assertLandingRoutes(client, baseUrl) {
 async function assertPerspectiveRoutes(client, baseUrl) {
   const cases = [
     ["doctor", "p1", "core", "Lekarz360"],
-    ["patient", "p2", "patientPortal", "Pacjent360"],
+    ["patient", "p2", "visitChecklist", "Przed wizytą"],
     ["caregiver", "p1", "caregiverPortal", "Opiekun360"],
     ["caregiver", "p2", "caregiverPortal", "Opiekun360"],
     ["caregiver", "p3", "caregiverPortal", "Opiekun360"]
@@ -330,7 +330,9 @@ async function assertCaregiverNoConsent(client, baseUrl) {
   const leakedActions = snap.visibleSetViews.filter((item) => protectedViews.has(item.view));
   assert(snap.visibleLibrary.length === 1 && snap.visibleLibrary[0] === "Zgody", `Caregiver without consent should only see consent in sidebar: ${JSON.stringify(snap.visibleLibrary)}`);
   assert(!leakedActions.length, `Caregiver without consent should not see data action buttons: ${JSON.stringify(leakedActions)}`);
-  assert(snap.text.includes("Brak aktywnego dostępu") || snap.text.includes("Brak aktywnego zakresu"), "Caregiver without consent should explain missing active access");
+  const lower = snap.text.toLowerCase();
+  assert(lower.includes("nie wczytano element") || lower.includes("nie ma jeszcze udost"), "Caregiver without consent should render neutral zero-knowledge empty state");
+  assert(!["brak dost", "zablok", "ukryt", "wymagana zgoda", "3 z 10"].some((phrase) => lower.includes(phrase)), "Caregiver without consent should not expose access-denied or hidden-count copy");
 
   await client.evaluate(`document.querySelector('#viewRoot [data-set-view="consent"]')?.click()`);
   await waitForCondition(client, "document.querySelector('nav button.active')?.dataset.view === 'consent'", "Caregiver consent action did not open consent view");

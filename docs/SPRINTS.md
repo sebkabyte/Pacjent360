@@ -1,6 +1,6 @@
 # Sprinty LLM i asystentow operacyjnych
 
-Status: plan wdrozenia funkcji eksperymentalnych w prototypie Pacjent360™.
+Status: plan wdrozenia funkcji eksperymentalnych w prototypie Pacjent360™. **[AUDYT 26.06.2026]** Sprint A0 byl oznaczony jako nieukonczony po audycie zewnetrznym. **[AKTUALIZACJA 26.06.2026]** brakujace artefakty techniczne A0 zostaly domkniete lokalnie: `public/patient360-agent-policy.js`, `fixtures/a0-agent-policy-edgecases.json`, `tools/validate-a0-agent-policy.ps1`. Decyzja A0: `continue_with_conditions` - wolno przejsc do planowania A1, ale A1-A8 pozostaja zablokowane do osobnego uruchomienia sprintu i review human safety/privacy/security.
 
 Normatywne zrodlo: `SSOT.md`. Obowiazuja tez `docs/legal/DISCLAIMER.md`, `SECURITY.md`, `docs/deployment/GO_LIVE_CHECKLIST.md`, `docs/governance/RISKS.md` i `CONTRIBUTING.md`.
 
@@ -38,22 +38,20 @@ Klasyfikacja agentow jest normatywnie opisana w `SSOT.md`.
 
 ## Aktywny backlog wdrozenia
 
-Wdrozenie jest aktywowane od Sprint A0. Aktywny jest tylko zakres A0; A1-A6 sa zablokowane do czasu zamkniecia A0 i review safety/privacy/security.
+Wdrozenie jest aktywowane od Sprint A0. Aktywny jest tylko zakres A0; A1-A8 sa zablokowane do czasu zamkniecia A0 i review safety/privacy/security.
 
 | ID | Sprint | Zadanie | Status | Zaleznosc | Kryterium zamkniecia |
 | --- | --- | --- | --- | --- | --- |
-| A0-01 | A0 | Ujednolicic kontrakty outputow: `source_id`, `source_type`, `ditl_status`, `source_status`, `user_visible_label` oraz modele After Visit Loop | active | `SSOT.md`, `ARCHITECTURE.md` | Jeden slownik enumow i labeli UI; kontrakty `Encounter`, `VisitArtifact`, `VisitSummary`, `PostVisitPlan`, `CareTask`. |
-| A0-02 | A0 | Przygotowac prototyp `AgentPolicy` dla agentow `safe` i `caution` | active | A0-01 | Kazdy agent ma allowed/forbidden outputs. |
-| A0-03 | A0 | Zaprojektowac walidator zakazanych outputow i slow klinicznych | active | A0-01 | Testy negatywne blokuja diagnoze, triage, pilnosc, terapie. |
-| A0-04 | A0 | Zbudowac syntetyczne fixtures demo dla pacjenta, opiekuna, lekarza, dokumentu, lekow i transkrypcji wizyty | active | brak | Zero realnych danych i zero historii prywatnych. |
-| A0-05 | A0 | Dopisac ryzyka LLM do `RISKS.md` i procedury review do `SECURITY.md` | active | `SSOT.md` | Risk register zawiera halucynacje, leakage, prompt injection i ton autorytatywny. |
-| A0-06 | A0 | Zrobic go/no-go review A0 przed jakimkolwiek UI dry-run | active | A0-01..A0-05 | Decyzja: continue, redesign albo no-go. |
-| A1-01 | A1 | Manual Agent Dry-Run UI | blocked | A0 complete | Dry-run bez zapisu i bez realnych danych. |
-| A2-01 | A2 | `DataQualityAgent` + `SourceGroundingAgent` | blocked | A1 complete | 100% source coverage albo `source_missing`. |
-| A3-01 | A3 | `VisitChecklistAgent` + `DITLQuestionAgent` | blocked | A2 complete | Pytania neutralne, bez odpowiedzi klinicznej. |
-| A4-01 | A4 | `ConsentGuardAgent` + zakresy opiekuna | blocked | A2 complete | Brak leakage poza zakresem zgody. |
-| A5-01 | A5 | `MedicationSupportAgent` dry-run | blocked | A4 complete | Brak dawkowania, odstawiania, interakcji jako wniosku klinicznego. |
-| A6-01 | A6 | `ReportDraftingAgent` + walidacja | blocked | A5 complete | Draft raportu z review i metrykami walidacji. |
+| A0-01 | A0 | Ujednolicic kontrakty outputow oraz modele After Visit Loop | done | `SSOT.md`, `ARCHITECTURE.md` | Kontrakty ujednolicone i walidowalne: `Encounter`, `VisitArtifact`, `VisitSummary`, `PostVisitPlan`, `CareTask` w `public/patient360-agent-policy.js` + fixture A0. |
+| A0-02 | A0 | Przygotowac prototyp `AgentPolicy` dla agentow `safe` i `caution` | done | A0-01 | Kazdy agent A0 ma `allowedOutputs`, komplet `forbiddenOutputs`, klase `safe/caution`, consent scopes i reguly walidatora. |
+| A0-03 | A0 | Zaprojektowac walidator zakazanych outputow i slow klinicznych | done | A0-01 | Testy negatywne blokuja diagnoze, triage, pilnosc, terapie. |
+| A0-04 | A0 | Zbudowac syntetyczne fixtures demo dla pacjenta, opiekuna, lekarza, dokumentu, lekow i transkrypcji wizyty | done | brak | Zero realnych danych i zero historii prywatnych. |
+| A0-05 | A0 | Dopisac ryzyka LLM do `RISKS.md` i procedury review do `SECURITY.md` | done | `SSOT.md` | Risk register zawiera halucynacje, leakage, prompt injection i ton autorytatywny. |
+| A0-06 | A0 | Zrobic go/no-go review A0 przed jakimkolwiek UI dry-run | done_with_conditions | A0-01..A0-05 | Decyzja: `continue_with_conditions`; brak UI dry-run w A0, A1 wymaga osobnego kickoffu i review human safety/privacy/security. |
+| A1-01 | A1-Core | Pulpit Bezpiecznego Podgladu Pacjenta + Source Grounding | done | A0 complete | `public/patient360-a1-core.js`, `tools/validate-a1-core-dashboard.ps1`; projekcje read-only, source grounded. |
+| A3-A5-01 | A3+A5 | Data Quality + neutralne pytania DITL | done | A1-Core complete | `public/patient360-a3-a5-quality.js`, `tools/validate-a3-a5-quality.ps1`; luki danych jako pytania, bez wagi klinicznej. |
+| A4-01 | A4 | Consent Guard / Zero-Knowledge UI | done | A3+A5 complete | `public/patient360-a4-consent-guard.js`, `tools/validate-a4-consent-guard.ps1`; fail-safe `requiredArea`, orphan cleanup, brak licznikow ukrycia. |
+| A6-01 | A6 | Visit Checklist / Pre-Visit One-Pager | done | A1-Core + A3+A5 + A4 complete | `public/patient360-a6-checklist.js`, `tools/validate-a6-checklist.ps1`; operacyjna checklista "zabierz / zapytaj / potwierdz". |
 | A7-01 | A7 | After Visit Loop: `VisitPlainLanguageAgent` + `PostVisitTaskRouter` | blocked | A6 complete | Podsumowanie prostym jezykiem i zadania po wizycie jako draft z review. |
 | A8-01 | A8 | Logistyka po wizycie: `MedicationAccessAgent` + `CareNavigationAgent` | blocked | A7 complete | Tylko handoff organizacyjny, bez bookingu/zakupu bez czlowieka. |
 
@@ -104,267 +102,390 @@ Przejscie dalej tylko jesli kazdy output jest opisany jako kontekst operacyjny, 
 - Testy wykrywaja diagnoze, triage, terapie albo ocene pilnosci.
 - Do testow trafiaja realne dane pacjentow.
 
-## Sprint A1 Manual Agent Dry-Run UI
+### A0 Go/No-Go Review 2026-06-26
 
-Klasa: infrastruktura safety; kazdy uruchamiany agent musi byc oznaczony jako `safe`, `caution` albo `forbidden` zgodnie z `SSOT.md`.
+Decyzja: `continue_with_conditions`.
+
+Dowody techniczne:
+
+- `public/patient360-agent-policy.js` - walidowalny kontrakt A0 dla `AgentPolicy` oraz modeli `Encounter`, `VisitArtifact`, `VisitSummary`, `PostVisitPlan`, `CareTask`.
+- `fixtures/a0-agent-policy-edgecases.json` - syntetyczny fixture pokrywajacy wszystkie agenty A0: safe i caution.
+- `tools/validate-a0-agent-policy.ps1` - walidator pozytywny i negatywny: komplet polityk, forbidden outputs, source refs, DITL status i blokada zakazanego jezyka.
+- `tools/validate-go-live.ps1` uruchamia walidator A0 przed `SH-0 cross-contract validation`.
+
+Warunki przejscia dalej:
+
+- A1 moze byc planowany jako osobny sprint, ale nie jest automatycznie odblokowany przez sam wpis w backlogu.
+- Jakikolwiek UI dry-run wymaga zachowania dry-run only, danych fikcyjnych, braku zapisu produkcyjnego i osobnego review human safety/privacy/security.
+- Brak runtime LLM i brak danych realnych pacjentow do czasu osobnej decyzji.
+
+### A1 Kickoff Intake 2026-06-26
+
+Status: `pending_kickoff`, nie aktywacja sprintu.
+
+Po zewnetrznym przegladzie UX/red-team powstal oczyszczony pakiet wejscia do A1:
+
+- `docs/product/A1_SAFE_DRAFT_DASHBOARD_BRIEF.md` - brief Safe Draft Dashboard podporzadkowany `SSOT.md` i zasadom A0.
+- `fixtures/a1-safe-draft-dashboard.snapshot.json` - syntetyczny fixture pod przyszly pulpit A1.
+- `tools/validate-a1-safe-draft-dashboard.ps1` - walidator blokujacy runtime LLM, zapis do profilu, brak zrodel, sortowanie po pilnosci i zakazane copy.
+- Po przegladzie UX/safety Gemini doprecyzowano gate'y: brak nazw agentow w UI pacjenta, brak ikon ostrzegawczych/medycznych, brak progress barow oraz pytania/rozbieznosci tylko w inspektorze, nie jako fakty w glownym feedzie.
+
+Ten pakiet nie odblokowuje A1-A8. A1 nadal wymaga osobnego kickoffu oraz review human safety/privacy/security przed jakimkolwiek UI dry-run.
+
+### Strategic Roadmap Reframe 2026-06-26
+
+Status: `strategic_guardrail`, nie aktywacja sprintu.
+
+Po interdyscyplinarnym przegladzie strategicznym utrwalono warstwe decyzji
+systemowych ponad A1-A8:
+
+- `docs/product/PACJENT360_NORTH_STAR.md` - Pacjent360 jako sekretariat
+  kontekstu, nie system decyzji medycznych.
+- `docs/product/A1_A8_ROADMAP_REFRAME.md` - podzial na Phase 1 Context
+  Secretariat oraz Phase 2 High-Risk Assistance.
+- `docs/governance/SAFETY_GATE_MATRIX.md` - macierz bramek blokujaca m.in.
+  duplikaty prawdy, leakage zgod, Phase 2 w Phase 1 i overclaim komercyjny.
+- `fixtures/system-wide-red-team-cases.json` - syntetyczne przypadki red-team
+  dla bramek systemowych.
+- `tools/validate-safety-gate-matrix.ps1` - walidator uruchamiany w go-live
+  validation.
+
+Decyzja strategiczna:
+
+- A1 i A2 powinny byc traktowane jako jeden tor `A1-Core`: bezpieczny dashboard
+  ma sens dopiero z source groundingiem, a source grounding wymaga walidowalnego
+  UI.
+- A7 Plain Language oraz A8 booking/apteki/nawigacja pozostaja Phase 2
+  High-Risk Assistance i sa zablokowane do osobnej decyzji privacy/legal/clinical
+  safety/founder.
+- `TimelineEvent`, wykres wyniku, karta dashboardu i raport sa projekcjami ze
+  zrodel. Nie moga byc osobna prawda kliniczna.
+- Komercjalizacja ma opierac sie na oszczednosci czasu i weryfikowalnosci
+  zrodel, nie na automatycznej diagnozie lub rekomendacji.
+
+Ten wpis nie odblokowuje A1-A8 i nie zmienia Data Contract v7. Dodaje bramke,
+ktora ma zatrzymac niekontrolowane rozszerzenie zakresu przed UI lub runtime.
+
+## Sprint A1 Pulpit Bezpiecznego Podgladu Pacjenta (Safe Draft Dashboard)
+
+Klasa: infrastruktura safety zorientowana na pacjenta; kazdy agent musi byc oznaczony jako `safe`, `caution` albo `forbidden` zgodnie z `SSOT.md`.
 
 ### Cel
 
-Zbudowac reczny tryb dry-run, w ktorym zespol moze wkleic syntetyczne wejscie, uruchomic lub zasymulowac asystenta i obejrzec wynik bez zapisu produkcyjnego.
+Zbudowac przyjazny dla pacjenta pulpit, na ktorym uzytkownik moze wybrac jeden z syntetycznych przypadkow testowych (fixtures) i zobaczyc, jak asystenci operacyjni wizualizuja bezpieczne wersje robocze (drafts), statusy DITL oraz zrodla danych, bez zapisywania zmian w profilu produkcyjnym.
 
 ### Zakres
 
-- Panel dry-run dla danych demo i fixtures.
-- Widok wejscia, wyniku, zrodel, statusow DITL i walidacji safety.
-- Manualny wybor agenta i wersji promptu.
-- Oznaczenie kazdej odpowiedzi jako `draft`.
-- Brak automatycznego wplywu na glowny stan pacjenta.
-- Eksport wyniku dry-run jako JSON do review.
+- Panel wyboru syntetycznego pacjenta/przypadku testowego dla celow demonstracyjnych i walidacyjnych.
+- Przyjazna dla pacjenta wizualizacja bezpiecznych statusow (`draft`, `do weryfikacji przez lekarza`, `brak zrodla`).
+- Integracja z `AgentPolicy` (blokowanie wyswietlania niedozwolonych tresci, np. diagnoz, bezposrednio w interfejsie).
+- Brak formularzy typu "developer console" – interfejs odzwierciedla realny wyglad aplikacji Pacjent360.
+- Mozliwosc pobrania raportu z przeprowadzonego podgladu jako plik JSON do celow audytowych.
 
 ### DoD
 
-- Uzytkownik testowy moze przejsc pelny dry-run bez realnych danych.
-- Wynik pokazuje zrodla, braki zrodel i status DITL.
-- UI jasno oddziela dry-run od funkcji aplikacyjnych.
-- Nie ma zapisu do profilu pacjenta, localStorage z danymi realnymi ani zewnetrznych wysylek danych.
-- Walidator blokuje output poza kontraktem.
+- Pacjent testowy moze zaladowac fixture i przejrzec projekt interfejsu z bezpiecznymi oznaczeniami.
+- Wszystkie teksty i etykiety sa sformulowane prostym jezykiem pacjenta (brak slownictwa technicznego w glownym widoku).
+- Kazdy element pochodzacy z LLM ma jasne wizualne wyroznienie oraz link do dokumentu zrodlowego.
+- Brak mutacji stanu glownego bazy danych lub localStorage.
+- Walidator safety blokuje renderowanie jakichkolwiek fraz zakazanych.
 
 ### Testy
 
-- Testy UI dla pustego wejscia, poprawnego wejscia i outputu poza kontraktem.
-- Testy braku mutacji glownego stanu aplikacji.
-- Testy eksportu JSON bez danych identyfikujacych.
-- Testy copy: brak slow diagnoza, triage, terapia, zalecenie.
-- Manualny scenariusz: reviewer odrzuca output i widzi przyczyne.
+- Testy interfejsu (UI) pod katem przejrzystosci oznaczen bezpieczeństwa.
+- Testy blokowania renderowania zakazanych fraz w UI (np. "diagnoza").
+- Testy poprawnosci wyswietlania linkow do zrodel przy twierdzeniach.
+- Scenariusz manualny: weryfikacja przez pacjenta i lekarza, czy prezentacja danych nie sugeruje decyzji klinicznych.
 
 ### Clinical Safety Gate
 
-Dry-run moze byc dostepny tylko dla syntetycznych przypadkow i musi miec widoczne oznaczenie, ze wynik nie jest porada medyczna ani decyzja kliniczna. Kazdy wynik wymaga recznego zatwierdzenia jako material testowy.
+Pulpit musi jasno komunikowac pacjentowi, ze prezentowane dane maja charakter wylacznie pogladowy i pomocniczy. Kazdy widok draftu wymaga wyraznego naglowka "Wersja robocza asystenta".
 
 ### No-Go
 
-- UI pozwala wpisac albo zachowac realne dane pacjenta.
-- Output przenosi sie automatycznie do raportu pacjenta.
-- Brakuje widocznego statusu `draft` albo DITL.
-- Walidator safety jest opcjonalny lub mozna go pominac.
-- UI sugeruje, ze asystent cos rozstrzygnal klinicznie.
+- Interfejs pozwala na wprowadzanie rzeczywistych danych medycznych.
+- UI wyglada jak narzedzie programistyczne (konsole, logi systemowe jako glowny element).
+- Brak widocznych ostrzezen i statusow DITL przy generowanych elementach.
 
-## Sprint A2 DataQualityAgent + SourceGroundingAgent
+## Sprint A2 Pulpit Zgodnosci i Wiarygodnosci Danych (Data Integrity & Grounding UI)
 
 Klasa: `safe` dla `DataQualityAgent` i `SourceGroundingAgent`.
 
 ### Cel
 
-Wdrozyc pierwsze dwa asystenty operacyjne: wykrywanie brakow/jakosci danych oraz przypinanie twierdzen do zrodel.
+Umozliwic pacjentowi i opiekunowi pelne zrozumienie statusu ich danych: co jest potwierdzone dokumentem medycznym, czego brakuje (luki jakosciowe), a co wymaga wyjasnienia, z bezpośrednim linkowaniem do zrodel.
 
 ### Zakres
 
-- `DataQualityAgent`: identyfikuje puste pola, duplikaty, niespojne daty, niepelne wpisy i brak potwierdzenia.
-- `SourceGroundingAgent`: laczy kazde twierdzenie z dokumentem, wywiadem, transkrypcja, wynikiem albo statusem `source_missing`.
-- Raport rozbieznosci: co wiadomo, czego brakuje, co jest niepewne.
-- Brak interpretacji medycznej wartosci wynikow.
-- Blokada outputow bez zrodla, chyba ze sa jawnie oznaczone jako `source_missing`.
+- Wdrozenie `DataQualityAgent`: analiza profilu pod katem brakow (np. brak dawkowania przy leku, niepelna data badania) i prezentacja tego pacjentowi jako "Zadania do uzupelnienia".
+- Wdrozenie `SourceGroundingAgent`: kazdy fakt prezentowany w profilu pacjenta otrzymuje interaktywny znacznik zrodla (np. "Wypis ze szpitala z dnia X") lub status `source_missing` (czerwona flaga: "Brak oficjalnego dokumentu").
+- Wykluczenie jakichkolwiek interpretacji klinicznych wynikow (np. agent nie moze stwierdzic, czy wynik TSH jest "dobry" czy "zly").
 
 ### DoD
 
-- Agent jakosci danych zwraca tylko problemy operacyjne i kompletacyjnosc.
-- Agent zrodel nie tworzy nowych faktow bez referencji.
-- Kazde twierdzenie ma `source_id` albo `source_status: source_missing`.
-- UI pokazuje roznice miedzy faktem ze zrodla, brakiem danych i hipoteza niedozwolona.
-- Wyniki sa w pelni odtwarzalne na fixtures demo.
+- Pacjent widzi w swoim profilu czytelne podsumowanie jakosci danych: "Kompletne", "Wymaga uzupelnienia".
+- Kazde twierdzenie w UI ma klikalny odnosnik do dokumentu zrodlowego ( groundingu).
+- Brak generowania jakichkolwiek hipotez medycznych przy braku zrodel.
+- 100% pokrycia twierdzen w syntetycznych fixtures.
 
 ### Testy
 
-- Fixtures z brakujacymi datami, duplikatami dokumentow i niespojnymi nazwami lekow.
-- Testy halucynacji: agent nie moze dopisac nieobecnych faktow.
-- Testy source coverage: 100% twierdzen ma zrodlo albo `source_missing`.
-- Testy regresji na pustych i sprzecznych danych.
-- Manual clinical safety review 20 outputow.
+- Testy regresji na profilach z duplikatami i brakami w dokumentacji.
+- Testy halucynacji: weryfikacja, ze agent zrodel nie dopisuje faktow nieobecnych w fixtures.
+- Testy poprawnego linkowania elementu UI z plikiem fixture.
 
 ### Clinical Safety Gate
 
-Agent moze powiedziec, ze brakuje danych albo zrodla. Nie moze powiedziec, co brak oznacza klinicznie, jaka jest pilnosc ani jaka decyzja powinna nastapic.
+Agent jakosci danych moze wylacznie wskazywac braki formalne. Jesli sprobuje zinterpretowac brak jako zagrozenie zdrowotne (np. "brak dawki moze byc niebezpieczny"), Clinical Safety Gate blokuje wdrozenie.
 
 ### No-Go
 
-- Agent interpretuje wynik jako prawidlowy, nieprawidlowy albo alarmowy.
-- Agent sugeruje dzialanie terapeutyczne.
-- Agent generuje twierdzenia bez zrodla i bez jawnej etykiety braku zrodla.
-- Agent miesza dane pacjenta, opiekuna i lekarza bez kontroli zakresu.
-- Test source coverage spada ponizej 100%.
+- Sugerowanie interpretacji wynikow laboratoryjnych lub stanu klinicznego.
+- Ukrywanie faktu, ze jakies twierdzenie nie posiada zrodla (brak oznaczenia `source_missing`).
+- Wyswietlanie pacjentowi surowych logow JSON zamiast przyjaznych komunikatow.
 
-## Sprint A3 VisitChecklistAgent + DITLQuestionAgent
+## Sprint A3 Asystent Przygotowania Wizyty (Visit Preparation Checklist & Smart Questions)
 
 Klasa: `caution` dla `VisitChecklistAgent` i `DITLQuestionAgent`.
 
 ### Cel
 
-Przygotowac operacyjne wsparcie przed wizyta: checklisty dokumentow oraz pytania do omowienia z lekarzem.
+Wsparcie pacjenta w przygotowaniu sie do wizyty u lekarza poprzez wygenerowanie spersonalizowanej checklisty dokumentow/badan oraz neutralnych pytan ulatwiajacych dialog z lekarzem.
 
 ### Zakres
 
-- `VisitChecklistAgent`: lista dokumentow, wynikow, list lekow, zgod i pytan do przygotowania.
-- `DITLQuestionAgent`: generowanie neutralnych pytan do lekarza na podstawie brakow, rozbieznosci i niepewnosci.
-- Priorytety tylko organizacyjne: do przygotowania, do sprawdzenia, do omowienia.
-- Grupowanie pytan wedlug zrodel i statusow: known, unknown, uncertain, to verify.
-- Tryb pacjent/opiekun/lekarz z tym samym kontraktem safety.
+- `VisitChecklistAgent`: generowanie checklisty zadan (np. "Zabierz ze soba ostatnie badanie EKG", "Potwierdz liste przyjmowanych suplementow").
+- `DITLQuestionAgent`: tworzenie listy neutralnych pytan do lekarza na podstawie niespojnosci wykrytych przez A2 (np. "Zapytaj o roznice w dawkowaniu leku X miedzy zaleceniem A a B").
+- Filtrowanie pytan tak, aby nie sugerowaly one zadnej diagnozy ani terapii.
 
 ### DoD
 
-- Checklista nie zawiera diagnoz, porad terapeutycznych ani oceny pilnosci.
-- Kazde pytanie ma zrodlo lub powod braku zrodla.
-- Pytania sa sformulowane jako material do rozmowy z lekarzem, nie jako sugestie decyzji.
-- UI pozwala oznaczyc punkt jako przygotowany, odrzucony albo wymagajacy omowienia.
-- Output nadaje sie do walidacji w protokole DITL.
+- Checklista i pytania sa sformulowane jako material pomocniczy do rozmowy z lekarzem.
+- UI umozliwia pacjentowi odznaczanie punktow na checkliscie oraz eksport pytan do pliku PDF/druku.
+- Brak jakichkolwiek sugestii leczenia w tresci pytan.
+- Pytania sa scisle powiazane z wykrytymi niespojnosciami danych.
 
 ### Testy
 
-- Testy copy dla pytan neutralnych i niedyrektywnych.
-- Testy scenariuszy: brak dokumentu, sprzeczne daty, niepotwierdzona lista lekow, pytanie od opiekuna.
-- Testy zakresow widoku pacjent/opiekun/lekarz.
-- Testy zakazanych slow i sformulowan.
-- Sesja walidacyjna z fikcyjnym raportem wedlug protokolu walidacji.
+- Testy copy-editing: automatyczna weryfikacja pytan pod katem braku sformulowan dyrektywnych (np. "czy lekarz powinien zmienic...").
+- Testy scenariuszy: brak badan w historii, sprzeczne zalecenia lekow, brak planu kontroli.
+- Testy bezpieczenstwa pod katem wstrzykiwania pytan sugerujacych diagnoze.
 
 ### Clinical Safety Gate
 
-Pytanie jest dopuszczalne tylko wtedy, gdy pomaga przygotowac rozmowe z lekarzem i nie sugeruje odpowiedzi klinicznej. Checklisty moga porzadkowac zadania, ale nie moga wskazywac pilnosci medycznej.
+Pytania moga miec wylacznie charakter ulatwiajacy komunikacje (np. "O co zapytac lekarza"). Niedopuszczalne sa pytania sugerujace konkretne jednostki chorobowe lub terapie.
 
 ### No-Go
 
-- Pytanie brzmi jak rekomendacja, np. "czy nalezy wdrozyc...".
-- Checklista ustawia medyczna pilnosc.
-- Agent sugeruje, ze pacjent powinien zmienic leczenie, dawke albo zachowanie zdrowotne.
-- Output nie wskazuje zrodla rozbieznosci.
-- Opiekun widzi informacje poza swoim zakresem zgody.
+- Pytanie sugeruje diagnoze (np. "Zapytaj czy to moze byc borelioza").
+- Asystent narzuca pilnosc wizyty (np. "Musisz pilnie skonsultowac to badanie").
+- Uzytkownik widzi pytania bez podania zrodla niespojnosci.
 
-## Sprint A4 ConsentGuard + Caregiver scopes
+## Sprint A4 Pulpit Uprawnien Bliskich (Caregiver Access & Consent Guard)
 
-Klasa: `safe` dla `ConsentGuardAgent`; sprint jest bramka prywatnosci przed funkcjami dla opiekuna.
+Klasa: `safe` dla `ConsentGuardAgent`.
 
 ### Cel
 
-Wprowadzic bramke zgody i zakresy opiekuna, zanim asystenci zaczna wspierac zadania dla rodziny lub opiekunow.
+Zapewnienie pelnego bezpieczenstwa i kontroli nad dostepem opiekunow/rodziny do danych pacjenta, filtrujac wszelkie podsumowania i wyjscia asystentow przez pryzmat udzielonych zgod.
 
 ### Zakres
 
-- `ConsentGuard`: walidacja, czy dany output moze byc pokazany danej roli.
-- Zakresy opiekuna: wizyty, leki, dokumenty, zadania organizacyjne, raport tylko-do-omowienia.
-- Widoczne statusy zgody: aktywna, brak zgody, wygasla, ograniczona, do potwierdzenia.
-- Audit trail dla dry-run i decyzji widocznosci.
-- Blokada generowania podsumowan poza zakresem zgody.
+- `ConsentGuardAgent`: modul sprawdzajacy uprawnienia przed wyrenderowaniem jakiejkolwiek informacji w panelu opiekuna.
+- Interfejs zarzadzania zgodami dla pacjenta: pacjent moze okreslic, czy opiekun widzi sekcje lekow, wizyt, czy pelne podsumowania.
+- Zapewnienie, ze asystent operacyjny nie "ujawni" poufnych danych pacjenta w streszczeniu generowanym dla opiekuna.
 
 ### DoD
 
-- Kazdy agent sprawdza zakres odbiorcy przed pokazaniem outputu.
-- Opiekun widzi tylko dane objete zgoda pacjenta w syntetycznym scenariuszu.
-- Brak zgody skutkuje neutralnym komunikatem o braku dostepu, nie ujawnieniem faktu klinicznego.
-- Audit pokazuje, kto, kiedy i na jakiej podstawie zobaczyl output.
-- Cofniecie zgody ukrywa przyszle outputy dla danego zakresu.
+- Opiekun widzi w UI tylko te sekcje i dane, na ktore pacjent wyrazil zgode.
+- Proba wyswietlenia danych poza zakresem skutkuje neutralnym komunikatem, ktory nie zdradza zawartosci.
+- Pelny audit trail (logi bezpieczenstwa) rejestrujacy kazdy dostep opiekuna do danych.
+- Mozliwosc natychmiastowego cofniecia zgody przez pacjenta.
 
 ### Testy
 
-- Testy macierzy rol i zakresow: pacjent, osoba wspierajaca z obszarem lekow, osoba wspierajaca z obszarem wizyt, lekarz demo.
-- Testy negatywne dla wygaslej i ograniczonej zgody.
-- Testy leakage: komunikat odmowy nie moze ujawniac danych.
-- Testy audit trail na syntetycznych eventach.
-- Manual privacy review scenariuszy opiekuna.
+- Testy uprawnien: weryfikacja dla roznych poziomow dostepu (pelny, tylko leki, tylko wizyty, brak dostepu).
+- Testy leakage: sprawdzenie, czy streszczenia generowane dla opiekuna nie zawieraja faktow medycznych z zablokowanych obszarow.
+- Testy reakcji systemu na nagle cofniecie zgody w trakcie sesji.
 
 ### Clinical Safety Gate
 
-Zakres zgody jest warunkiem pokazania outputu. Asystent nie moze obchodzic zgody przez streszczenie, parafraze, komunikat bledu albo eksport.
+Zgoda pacjenta jest warunkiem bezwzglednym. Modul Consent Guard dziala na poziomie systemowym i zadne podsumowanie LLM nie moze go ominac ani sparafrazowac zablokowanych danych.
 
 ### No-Go
 
-- Jakikolwiek output ujawnia dane poza zakresem zgody.
-- Odmowa dostepu zdradza tresc ukrytej informacji.
-- Agent laczy role pacjenta i opiekuna bez jawnej zgody.
-- Audit jest niekompletny albo niemozliwy do odtworzenia.
-- Test leakage wykrywa obejscie przez streszczenie.
+- Opiekun dowiaduje sie o istnieniu zablokowanego dokumentu poprzez komunikat bledu (np. "Brak dostepu do dokumentu o nowotworze").
+- Streszczenie asystenta dla opiekuna zawiera informacje spoza obszaru udzielonej zgody.
+- Brak logowania zdarzen dostepu do danych.
 
-## Sprint A5 MedicationSupport dry-run
+## Sprint A5 Bezpieczne Uzgadnianie Lekow (Medication Reconciliation Assistant)
 
-Klasa: `caution` dla `MedicationSupportAgent`; tylko dry-run i tylko output operacyjny.
+Klasa: `caution` dla `MedicationSupportAgent`.
 
 ### Cel
 
-Przetestowac asystenta lekowego jako dry-run operacyjny: harmonogram, potwierdzenia, rozbieznosci i pytania do lekarza lub farmaceuty.
+Wsparcie pacjenta i lekarza w procesie uzgadniania lekow poprzez automatyczne zestawienie lekow przepisanych, wykupionych i zadeklarowanych jako przyjmowane, w celu przygotowania raportu rozbieznosci przed wizyta.
 
 ### Zakres
 
-- `MedicationSupportAgent` tylko w dry-run.
-- Porownanie: leki przepisane, wykupione, zgloszone jako przyjmowane, OTC/suplementy, odstawione.
-- Zadania operacyjne: potwierdz liste, uzupelnij brakujaca informacje o dawce ze zrodla albo oznacz `do potwierdzenia`, sprawdz opakowanie, przygotuj pytanie.
-- Pytania do lekarza/farmaceuty bez rekomendacji zmiany leczenia.
-- Brak przypomnien produkcyjnych i brak realnego harmonogramu pacjenta.
+- Zestawienie list lekow z roznych zrodel (recepty, ankieta pacjenta, zalecenia powizytowe).
+- Wykrywanie rozbieznosci formalnych: brakujace dawki, podwojne zapisy (ten sam lek pod roznymi nazwami handlowymi).
+- Generowanie roboczego zestawienia lekow z czytelnym oznaczeniem sprawdzonych pozycji.
+- Przygotowanie pytan do lekarza/farmaceuty w przypadku watpliwosci (np. "Przyjmujesz lek X i lek Y, ktore sa swoimi zamiennikami").
 
 ### DoD
 
-- Agent wykrywa rozbieznosci formalne bez oceny klinicznej.
-- Wszystkie elementy lekowe maja zrodlo albo status braku potwierdzenia.
-- Output jest widoczny jako dry-run i nie zmienia planu leczenia.
-- Pytania sa kierowane do rozmowy z lekarzem lub farmaceuta.
-- Brak integracji z apteka, IKP/P1 lub realnymi receptami.
+- Agent nie modyfikuje dawkowania ani nie sugeruje odstawienia lekow.
+- Kazdy wpis lekowy posiada przypisane zrodlo lub status `do wyjasnienia`.
+- Raport rozbieznosci lekowych prezentuje wylacznie fakty (brak ocen klinicznych interakcji).
+- UI pozwala na reczne zatwierdzenie listy przez pacjenta przed wyslaniem jej lekarzowi.
 
 ### Testy
 
-- Fixtures: lek przepisany ale niepotwierdzony, OTC bez dawki, odstawienie z wywiadu, rozne nazwy tego samego leku.
-- Testy zakazu: brak sugestii zmiany dawki, odstawienia, zamiany lub rozpoczecia leczenia.
-- Testy source grounding dla kazdego wpisu lekowego.
-- Testy zakresu dostepu do obszaru lekow i cofniecia zgody.
-- Manual review przez osobe z kompetencja clinical safety.
+- Testy wykrywania duplikatow lekow (np. rozne nazwy handlowe dla tej samej substancji czynnej).
+- Testy odpornosci na brakujace dawkowanie w zrodlach.
+- Testy blokady: asystent nie moze wyswietlic komunikatu sugerujacego przerwanie terapii.
 
 ### Clinical Safety Gate
 
-Asystent lekowy moze wskazac rozbieznosc i przygotowac pytanie. Nie moze rekomendowac dawki, pory przyjmowania, odstawienia, zamiany, interakcji ani oceny ryzyka. Wszystko zostaje w trybie dry-run.
+Asystent lekowy dziala wylacznie jako narzedzie porownawcze. Wszelkie sugestie dotyczace zmiany terapii, dawkowania, interakcji farmakologicznych sa zablokowane.
 
 ### No-Go
 
-- Agent sugeruje zmiane leczenia, dawki, pory przyjmowania albo odstawienie.
-- Agent opisuje interakcje jako kliniczny wniosek.
-- Output jest pokazany jako plan leczenia.
-- Dry-run zapisuje sie jako rzeczywisty harmonogram.
-- Do testow zostaja uzyte realne recepty, opakowania lub dane pacjentow.
+- Agent sugeruje pacjentowi zmiane por przyjmowania, dawki lub odstawienie leku.
+- Raport jest prezentowany jako "Aktualny Plan Leczenia" (musi byc oznaczony jako "Wersja Robocza do Konsultacji").
+- System automatycznie wysyla liste do systemow zewnetrznych bez akceptacji pacjenta.
 
-## Sprint A6 ReportDrafting + validation
+## Sprint A6 Visit Checklist / Pre-Visit One-Pager
 
-Klasa: `caution` dla `ReportDraftingAgent`; draft raportu nie jest dokumentacja medyczna ani rekomendacja.
+Klasa: `caution` dla `VisitChecklistAgent`; checklista jest projekcja
+logistyczna, nie dokumentacja medyczna, diagnoza ani rekomendacja.
 
 ### Cel
 
-Pozwolic asystentom stworzyc wersje robocza raportu kontekstowego i przejsc walidacje uzytecznosci oraz clinical safety na danych fikcyjnych.
+Zamknac Phase 1 Pre-Visit przez jeden ekran operacyjny, ktory agreguje
+A1-Core, A3+A5 i A4 w format: co zabrac, o co zapytac, co potwierdzic i co
+jest gotowe do pokazania podczas rozmowy.
 
 ### Zakres
 
-- `ReportDraftingAgent`: draft one-pagera `Known / Unknown / Uncertain / To verify`.
-- Wymagane przypisy do zrodel i statusy DITL.
-- Walidator safety przed pokazaniem draftu.
-- Workflow review: wygenerowano, odrzucono, poprawiono recznie, zaakceptowano do testu.
-- Sesja walidacyjna wedlug protokolu z lekarzami, pacjentami lub opiekunami na fikcyjnych przypadkach.
+- `public/patient360-a6-checklist.js`: `projectVisitChecklist()` jako czysta
+  projekcja nad obecnym demo state; bez migracji Data Contract i bez runtime LLM.
+- Wejscia: A1 feed/inspector, A3+A5 gaps/questions oraz A4 Consent Guard.
+- Wyjscia: `VisitChecklistItem` z `projectionId`, `category`, `status`,
+  `requiredArea`, `sourceRefs` i `linkedSurfaces`.
+- Role matrix: pacjent widzi "zabierz / zapytaj / potwierdz", opiekun widzi
+  tylko zakres po A4, lekarz widzi ten sam graf jako "dostarczono / pytania
+  pacjenta / do potwierdzenia".
+- Deduplikacja: pytanie DITL ma pierwszenstwo przed tym samym obiektem
+  biznesowym w sekcji gotowe.
 
 ### DoD
 
-- Draft raportu nie zawiera diagnozy, triage, terapii ani oceny pilnosci.
-- 100% twierdzen ma zrodlo albo jawny status `source_missing`.
-- Raport pokazuje tylko kontekst i pytania do wyjasnienia.
-- Wyniki walidacji sa zapisane jako feedback produktowy, nie jako dowod klinicznej skutecznosci.
-- Decyzja kontynuuj/pivot/no-go jest podjeta na podstawie metryk walidacji.
+- Kazdy item ma `sourceRefs` albo jawny `source_missing`.
+- Kazdy item ma `requiredArea`; brak pola blokuje item dla opiekuna.
+- Opiekun nie widzi licznikow ukrycia, kart odmowy ani tekstow typu "brak
+  dostepu".
+- Statusy sa logistyczne: `ready`, `confirm`, `missing`, `optional`; brak
+  skali klinicznej.
+- UI nie uzywa kolorow triage; statusy maja neutralna palete.
 
 ### Testy
 
-- Testy kontraktowe calego raportu.
-- Testy regresji na fixtures z A0-A5.
-- Testy czerwonych flag jezykowych: zakazane slowa i dyrektywne sformulowania.
-- Walidacja z uzytkownikami na danych fikcyjnych.
-- Review privacy/security/clinical safety przed jakimkolwiek pokazem publicznym.
+- `tests/a6-visit-checklist.test.js` - projekcja read-only, Jan, Maja,
+  ograniczony opiekun Andrzeja i blokada zakazanego copy.
+- `tools/validate-a6-checklist.ps1` - walidator go-live dla source gate,
+  projection gate, A4 zero-knowledge i safety gate.
+- `tools/smoke-browser.ps1` - domyslny start pacjenta otwiera A6.
+- `tools/verify-click-routes.js` - perspektywa pacjenta prowadzi do
+  `visitChecklist`.
 
 ### Clinical Safety Gate
 
-Raport jest dopuszczalny tylko jako draft kontekstowy do rozmowy z lekarzem. Jesli uczestnicy walidacji odczytuja raport jako diagnoze, triage albo zalecenie, funkcja wraca do projektowania.
+A6 moze porzadkowac tylko operacyjny pakiet przed rozmowa. Jezeli item
+zaczyna sugerowac znaczenie kliniczne, pilnosc, leczenie albo decyzje,
+walidator ma go zablokowac przed UI.
 
 ### No-Go
 
-- Mniej niz 100% source coverage.
-- Raport sugeruje decyzje kliniczna.
-- Dwie lub wiecej osob w walidacji interpretuja raport jako diagnoze, triage albo zalecenie.
-- Jakikolwiek realny przypadek lub realne dane trafiaja do walidacji.
-- Nie ma podpisanej decyzji safety dla pokazania wynikow poza zespolem.
+- Item bez `sourceRefs` lub `requiredArea`.
+- Automatyczne laczenie lub przeliczanie danych klinicznych.
+- Sortowanie po pilnosci lub ryzyku medycznym.
+- Tekst sugerujacy rozpoznanie, leczenie, pilna reakcje albo decyzje
+  kliniczna.
+
+## Sprint A7 After Visit Loop: VisitPlainLanguageAgent + PostVisitTaskRouter
+
+Klasa: `caution` dla `VisitPlainLanguageAgent` i `PostVisitTaskRouter`.
+
+### Cel
+
+Uproszczenie klinicznego podsumowania wizyty do prostego, zrozumialego dla pacjenta jezyka oraz wygenerowanie sugerowanych zadan organizacyjnych po wizycie bez autonomicznego podejmowania decyzji medycznych.
+
+### Zakres
+
+- `VisitPlainLanguageAgent`: tlumaczenie klinicznego `VisitSummary` oraz `Encounter` na prosty jezyk (Plain Language) dla pacjenta lub opiekuna.
+- `PostVisitTaskRouter`: analiza `PostVisitPlan` i generowanie roboczych zadan `CareTask` (np. kontrola cisnienia, umowienie USG, wykupienie leku) powiazanych ze zrodlem (`source_id`).
+- Prezentacja uproszczonego podsumowania i zadan w czytelnym panelu "Po wizycie" z opcja recznej edycji i akceptacji przez uzytkownika.
+- Wykorzystanie struktur After Visit Loop zdefiniowanych w Sprint A0.
+
+### DoD
+
+- Uproszczone podsumowanie nie zmienia sensu klinicznego zalecen ani dawkowania lekow.
+- Kazde zadanie `CareTask` ma status `draft`, przypisane zrodlo (`source_id`) oraz wymaga klikniecia "Zatwierdz" przez pacjenta.
+- System nie wysyla powiadomien ani nie modyfikuje kalendarza bez zgody uzytkownika.
+- Wyrazne oznaczenie w UI: "Wygenerowano automatycznie. Sprawdz zgodnosc z zaleceniami lekarza".
+
+### Testy
+
+- Testy transformacji tekstu: weryfikacja, ze uproszczony opis nie pomija ostrzezen (np. "zazywac ostroznie") ani nie zmienia wartosci numerycznych dawek.
+- Testy negatywne: blokada proby interpretacji wynikow badan (np. "wynik zly", "wynik w normie" sa odrzucane przez walidator).
+- Testy generowania `CareTask` na podstawie roznych planow wizyt (testy jednostkowe na fixtures).
+
+### Clinical Safety Gate
+
+Zmiana jezyka na prosty nie moze lagodzic ostrzezen lekarskich. Jezeli asystent pominie w tlumaczeniu kluczowe przeciwwskazanie lub ostrzezenie, testy bezpieczenstwa musza przerwac proces.
+
+### No-Go
+
+- Zadania sa zapisywane jako "aktywne/wymagane" bez zgody pacjenta.
+- Agent samodzielnie ustala medyczna pilnosc (triage) zadan powizytowych.
+- Uproszczona wersja sugeruje zmiane dawkowania lub interpretuje stan zdrowia pacjenta.
+
+## Sprint A8 Logistyka po wizycie: MedicationAccessAgent + CareNavigationAgent
+
+Klasa: `caution` dla `MedicationAccessAgent` i `CareNavigationAgent`.
+
+### Cel
+
+Wsparcie pacjenta w wyszukiwaniu placowek medycznych, terminow kontrolnych oraz aptek posiadajacych przepisane leki, w oparciu o syntetyczne dane i makiety API.
+
+### Zakres
+
+- `MedicationAccessAgent`: wyszukiwanie dostepnosci lekow z `PostVisitPlan` na bazie fikcyjnych danych aptek.
+- `CareNavigationAgent`: wyszukiwanie placowek specjalistycznych lub POZ realizujacych zalecenia/skierowania z `PostVisitPlan` i `Encounter`.
+- Prezentacja danych teleadresowych placowek i aptek bez rekomendacji jakosciowych.
+- Przygotowanie szablonu wiadomosci rezerwacyjnej lub skierowania dla uzytkownika (handoff organizacyjny).
+
+### DoD
+
+- Agent nie proponuje substytutow ani zamiennikow lekow (odsyla do lekarza/farmaceuty).
+- Kryteria wyszukiwania opieraja sie wylacznie na odleglosci, terminach i godzinach otwarcia, bez oceny klinicznej placowki.
+- UI wyraznie odroznia informacje logistyczne od porad zdrowotnych.
+- Brak realnych transakcji finansowych, rezerwacji czy zakupow bez udzialu czlowieka.
+
+### Testy
+
+- Testy blokady substytucji lekowej: w przypadku braku leku, agent zwraca rekomendacje konsultacji z farmaceuta, zabrania sie sugerowania innej substancji czynnej.
+- Testy obslugi pustych wynikow wyszukiwania placowek w syntetycznej bazie.
+- Weryfikacja braku jakichkolwiek wywolan do zewnetrznych, nieautoryzowanych API produkcyjnych.
+
+### Clinical Safety Gate
+
+Wyszukiwarka aptek i placowek musi miec staly disclaimer informujacy, ze asystent ulatwia jedynie logistyke i nie ocenia kompetencji placowek ani nie dobiera lekow zamiennych.
+
+### No-Go
+
+- Automatyczny zakup leku lub rezerwacja terminu bez zgody i potwierdzenia pacjenta.
+- Propozycja zamiany leku na inny preparat w przypadku braku dostepnosci.
+- Rankingowanie placowek pod katem ich jakosci medycznej przez LLM.

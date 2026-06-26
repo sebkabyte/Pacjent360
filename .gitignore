@@ -15,6 +15,7 @@ TEMP/
 TEMP_REVIEW_OUTPUT/
 BLUEPRINT/
 docs/product-delivery/
+docs/internal/
 VC_ADVISORY/
 CLAUDE.md
 CODEX_*.md
@@ -28,4 +29,3 @@ blueprint-hub/
 
 # Graphify generated output and cache
 graphify-out/
-

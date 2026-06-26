@@ -28,6 +28,22 @@ const PATIENT360_CONSENT_MODEL = globalThis.Patient360ConsentModel;
 if (!PATIENT360_CONSENT_MODEL) {
   throw new Error("Missing patient360-consent-model.js");
 }
+const PATIENT360_A1_CORE = globalThis.Patient360A1Core;
+if (!PATIENT360_A1_CORE) {
+  throw new Error("Missing patient360-a1-core.js");
+}
+const PATIENT360_A3_A5_QUALITY = globalThis.Patient360A3A5Quality;
+if (!PATIENT360_A3_A5_QUALITY) {
+  throw new Error("Missing patient360-a3-a5-quality.js");
+}
+const PATIENT360_A4_CONSENT_GUARD = globalThis.Patient360A4ConsentGuard;
+if (!PATIENT360_A4_CONSENT_GUARD) {
+  throw new Error("Missing patient360-a4-consent-guard.js");
+}
+const PATIENT360_A6_CHECKLIST = globalThis.Patient360A6Checklist;
+if (!PATIENT360_A6_CHECKLIST) {
+  throw new Error("Missing patient360-a6-checklist.js");
+}
 const PATIENT360_DEMO_DATA = globalThis.Patient360DemoData;
 if (!PATIENT360_DEMO_DATA) {
   throw new Error("Missing patient360-demo-data.js");
@@ -70,6 +86,8 @@ const PATIENT_SCOPED_COLLECTION_KEYS = [
 
 const VIEW_REGISTER = Object.freeze({
   roleStart: "app",
+  visitChecklist: "patient",
+  a1Core: "doctor",
   core: "doctor",
   interview: "doctor",
   documents: "doctor",
@@ -96,7 +114,7 @@ const ROLE_META = Object.freeze({
   patient: {
     label: "Pacjent360",
     icon: "user-round",
-    view: "patientPortal",
+    view: "visitChecklist",
     promise: "Chcę wiedzieć, co przygotować i co dalej.",
     cta: "Wejdź do Pacjent360"
   },
@@ -279,10 +297,10 @@ const EN_PATIENT_CONTEXT = Object.freeze({
     clarify: [
       "Current medication list and actual use",
       "Which results and documents should be visible before the visit",
-      "No active caregiver access is present in this scenario."
+      "The caregiver view shows a neutral empty state in this scenario."
     ],
     next: "Prepare results, medication history and questions before the cardiology conversation.",
-    caregiver: "There is no active caregiver consent for this patient in the demo."
+    caregiver: "The caregiver view has no shared items to display in this scenario."
   },
   p3: {
     label: "Maja N.",
@@ -305,14 +323,14 @@ const VIEW_ROLE_HINT = Object.freeze({
 });
 
 const ROLE_VIEW_ACCESS = Object.freeze({
-  doctor: new Set(["roleStart", "core", "interview", "documents", "timeline", "medications", "observations", "risks", "reports", "consent"]),
-  patient: new Set(["roleStart", "patientPortal", "interview", "documents", "timeline", "medications", "observations", "consent"]),
-  caregiver: new Set(["roleStart", "caregiverPortal", "interview", "documents", "timeline", "medications", "observations", "consent"])
+  doctor: new Set(["roleStart", "a1Core", "core", "visitChecklist", "interview", "documents", "timeline", "medications", "observations", "risks", "reports", "consent"]),
+  patient: new Set(["roleStart", "a1Core", "visitChecklist", "patientPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "consent"]),
+  caregiver: new Set(["roleStart", "a1Core", "visitChecklist", "caregiverPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "consent"])
 });
 
 const ROLE_HOME_VIEW = Object.freeze({
   doctor: "core",
-  patient: "patientPortal",
+  patient: "visitChecklist",
   caregiver: "caregiverPortal"
 });
 
@@ -327,6 +345,8 @@ const DEMO_JOURNEY_STEPS = Object.freeze([
 
 const VIEW_JOURNEY_STAGE = Object.freeze({
   core: "cockpit",
+  a1Core: "cockpit",
+  visitChecklist: "cockpit",
   patientPortal: "cockpit",
   caregiverPortal: "cockpit",
   timeline: "map",
@@ -342,6 +362,7 @@ const VIEW_JOURNEY_STAGE = Object.freeze({
 
 const ROLE_DATA_VISIBILITY = Object.freeze({
   doctor: [
+    ["visitChecklist", "Przed wizytą", "clipboard-check", "co dostarczono, o co pacjent pyta i co potwierdzić"],
     ["interview", "Wywiad", "messages-square", "pacjent, rodzina lub opiekun jako źródło rozmowy"],
     ["documents", "Dokumenty", "files", "wypisy, skierowania i źródła"],
     ["timeline", "Historia pacjenta", "git-branch", "skrót historii, źródła i pytania"],
@@ -352,20 +373,24 @@ const ROLE_DATA_VISIBILITY = Object.freeze({
     ["consent", "Zgody", "shield-check", "kto widzi dane i dlaczego"]
   ],
   patient: [
+    ["visitChecklist", "Przed wizytą", "clipboard-check", "zabierz, zapytaj i potwierdź"],
     ["documents", "Moje dokumenty", "files", "wypisy, skierowania, wyniki PDF"],
     ["timeline", "Historia pacjenta", "git-branch", "wizyty i zdarzenia w jednej historii"],
     ["interview", "Opis wywiadu", "messages-square", "rozmowa i pytania do omówienia"],
     ["medications", "Moje leki", "pill", "lista z dokumentów i wywiadu"],
     ["observations", "Moje wyniki", "activity", "badania i zakresy ze źródła"],
+    ["risks", "Pytania przed wizyta", "circle-help", "luki danych zamienione w pytania"],
     ["consent", "Zgody", "shield-check", "komu udostępniam dane"]
   ],
   caregiver: [
     ["caregiverPortal", "Opiekun360", "users-round", "kto udostępnił opiekę i nad kim ją sprawuję"],
+    ["visitChecklist", "Przed wizytą", "clipboard-check", "udostępnione elementy do przygotowania"],
     ["documents", "Dokumenty", "files", "widoczne w zakresie zgody"],
     ["timeline", "Historia pacjenta", "git-branch", "historia osoby pod opieką"],
     ["interview", "Gotowy wywiad", "messages-square", "informacje z rozmowy i obserwacji"],
     ["medications", "Leki", "pill", "lista do organizacyjnego dopilnowania"],
     ["observations", "Wyniki", "activity", "badania widoczne w zgodzie"],
+    ["risks", "Pytania przed wizyta", "circle-help", "pytania widoczne w zakresie zgody"],
     ["consent", "Zakres zgody", "shield-check", "kto co widzi i do kiedy"]
   ]
 });
@@ -378,7 +403,7 @@ const ROLE_SOURCE_VIEW = Object.freeze({
 
 const ROLE_SUMMARY_VIEW = Object.freeze({
   doctor: "reports",
-  patient: "patientPortal",
+  patient: "visitChecklist",
   caregiver: "caregiverPortal"
 });
 
@@ -425,6 +450,7 @@ const LIBRARY_HEADING = "Dane i źródła";
 
 const SIDEBAR_LIBRARY_LABELS = Object.freeze({
   interview: "Wywiad",
+  visitChecklist: "Przed wizytą",
   documents: "Dokumenty",
   timeline: "Historia pacjenta",
   medications: "Leki",
@@ -435,11 +461,13 @@ const SIDEBAR_LIBRARY_LABELS = Object.freeze({
 });
 
 const CAREGIVER_VIEW_AREAS = Object.freeze({
+  visitChecklist: ["documents", "results", "medications", "observations", "visits", "tasks", "report"],
   interview: ["observations", "report"],
   documents: ["documents"],
   timeline: ["documents", "results", "medications", "observations", "visits", "tasks", "report"],
   medications: ["medications"],
   observations: ["results", "observations"],
+  risks: ["report"],
   consent: ["documents", "results", "medications", "observations", "visits", "tasks", "report"]
 });
 
@@ -823,7 +851,7 @@ function loadState() {
       loaded.specialist = "internist";
     }
     loaded.roleSelectionConfirmed = Boolean(loaded.roleSelectionConfirmed);
-    const renderableViews = new Set(["roleStart", "core", "patientPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "reports", "caregiverPortal", "consent", "audit"]);
+    const renderableViews = new Set(["roleStart", "a1Core", "core", "visitChecklist", "patientPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "reports", "caregiverPortal", "consent", "audit"]);
     if (!renderableViews.has(loaded.activeView)) {
       loaded.activeView = "roleStart";
     }
@@ -1003,11 +1031,16 @@ function roleDataVisibility(role = activeRole()) {
 
 function activeCaregiverAreas() {
   if (activeRole() !== "caregiver") return new Set();
-  const model = PATIENT360_CAREGIVER_MODEL.buildCaregiverModel({
+  return new Set(PATIENT360_A4_CONSENT_GUARD.activeConsentAreas(state, state.activePatientId, todayInputValue()));
+}
+
+function activeConsentGuardContext() {
+  return PATIENT360_A4_CONSENT_GUARD.buildConsentContext({
     state,
-    patientId: state.activePatientId
+    patientId: state.activePatientId,
+    role: activeRole(),
+    today: todayInputValue()
   });
-  return new Set(model.activeAreas || []);
 }
 
 function caregiverModelForActivePatient() {
@@ -1022,7 +1055,7 @@ function caregiverHasActiveScope() {
 }
 
 function isCaregiverProtectedDataView(view) {
-  return ["interview", "documents", "timeline", "medications", "observations"].includes(view);
+  return ["visitChecklist", "interview", "documents", "timeline", "medications", "observations"].includes(view);
 }
 
 function caregiverCannotOpenDataView(view, role = activeRole()) {
@@ -1621,43 +1654,29 @@ function renderCriticalStrip() {
 
 function isCaregiverRestrictedView(view = state.activeView) {
   if (activeRole() !== "caregiver") return false;
-  if (!["interview", "documents", "timeline", "medications", "observations"].includes(view)) return false;
+  if (!["visitChecklist", "interview", "documents", "timeline", "medications", "observations", "risks"].includes(view)) return false;
   const activeAreas = activeCaregiverAreas();
   const requiredAreas = CAREGIVER_VIEW_AREAS[view] || [];
   return !requiredAreas.some((area) => activeAreas.has(area));
 }
 
 function renderCaregiverRestrictedData(view = state.activeView) {
-  const patient = activePatient();
-  const model = PATIENT360_CAREGIVER_MODEL.buildCaregiverModel({
-    state,
-    patientId: state.activePatientId
-  });
-  const label = {
-    interview: "wywiady i transkrypcje",
-    documents: "dokumenty",
-    timeline: "historię pacjenta",
-    medications: "leki",
-    observations: "wyniki",
-  }[view] || "dane";
+  const context = activeConsentGuardContext();
   return `
-    ${pageHeader("Brak aktywnej zgody", "Ten widok wymaga aktywnego udostępnienia opiekunowi. Bez zgody system pokazuje tylko informację o braku dostępu.", "shield-check")}
+    ${pageHeader("Udostępnione dane", "Widok pokazuje wyłącznie elementy dostępne w aktualnym zakresie udostępnienia.", "shield-check")}
     ${renderRoleContextBanner("caregiver")}
     <section class="section-band caregiver-guard">
       <div class="section-head">
         <div>
-          <p class="eyebrow">Dostęp opiekuna</p>
-          <h2>🔒 Brak dostępu: ${escapeHtml(label)}</h2>
+          <p class="eyebrow">Zakres widoku</p>
+          <h2>Nie wczytano elementów w tym obszarze</h2>
         </div>
-        <span class="status-chip pending">Wymagana zgoda pacjenta</span>
+        <span class="status-chip info">Widok pusty</span>
       </div>
-      <p class="record-body">${escapeHtml(model.safetyCopy)}</p>
-      <div class="caregiver-access-grid">
-        ${model.accessCards.map(renderCaregiverAccessCard).join("")}
-      </div>
+      <p class="record-body">${escapeHtml(context.emptyCopy)}</p>
       <div class="inline-actions">
         <button class="primary-button" data-set-view="caregiverPortal"><i data-lucide="users-round"></i>Wróć do kokpitu opiekuna</button>
-        <button class="ghost-button" data-set-view="consent"><i data-lucide="shield-check"></i>Kto może udostępnić dane</button>
+        <button class="ghost-button" data-set-view="consent"><i data-lucide="shield-check"></i>Zobacz udostępnienia</button>
       </div>
     </section>
   `;
@@ -1666,7 +1685,9 @@ function renderCaregiverRestrictedData(view = state.activeView) {
 function renderView() {
   const renderers = {
     roleStart: renderRoleStart,
+    a1Core: renderA1Core,
     core: renderCore,
+    visitChecklist: renderVisitChecklist,
     patientPortal: renderPatientPortal,
     interview: renderInterview,
     documents: renderDocuments,
@@ -2031,6 +2052,211 @@ function renderCore() {
   `;
 }
 
+function renderA1Core() {
+  const rawModel = PATIENT360_A1_CORE.projectSafeDashboard({
+    state,
+    patientId: state.activePatientId,
+    role: activeRole()
+  });
+  const model = PATIENT360_A4_CONSENT_GUARD.guardA1CoreProjection(rawModel, {
+    context: activeConsentGuardContext()
+  });
+  const validation = PATIENT360_A1_CORE.validateProjection(model);
+  const patient = activePatient();
+  const sourceCoverage = model.sourceCoverage || {};
+  const isCaregiverZeroKnowledge = model.consentGuard?.zeroKnowledge;
+  return `
+    ${pageHeader("A1-Core: bezpieczny pulpit zrodel", "Read-only widok syntetycznego pacjenta. Kazda karta przechodzi przez bramke UI przed renderem: zrodla, DITL, zgoda, brak Phase 2 i brak runtime LLM.", "shield-check")}
+    ${renderSafetyNote("A1-Core nie zapisuje profilu, nie uruchamia runtime LLM i nie wykonuje akcji zewnetrznych. To projekcja z danych demo, nie nowa prawda kliniczna.", "compact")}
+    <section class="section-band a1-core-hero">
+      <div>
+        <p class="eyebrow">A1-Core / A1 + A2</p>
+        <h2>${escapeHtml(patient?.name || "Pacjent syntetyczny")}</h2>
+        <p>Feed pokazuje tylko fakty z sourceRefs. Pytania, rozbieznosci i luki sa w inspektorze, aby nie wygladaly jak wnioski systemu.</p>
+      </div>
+      <div class="a1-core-policy">
+        <article><span>Tryb</span><strong>read-only</strong><small>bez zapisu profilu</small></article>
+        <article><span>Runtime</span><strong>LLM off</strong><small>fixture demo state</small></article>
+        <article><span>Zrodla</span><strong>${sourceCoverage.checkedCount || 0}</strong><small>sprawdzone referencje</small></article>
+        <article><span>Widok</span><strong>${model.feedCards.length + model.inspectorCards.length}</strong><small>${isCaregiverZeroKnowledge ? "elementy widoczne" : "elementy po bramce"}</small></article>
+      </div>
+    </section>
+    ${validation.valid ? "" : renderA1CoreGateErrors(validation.errors)}
+    <div class="a1-core-grid">
+      <section class="section-band a1-core-feed" aria-label="A1-Core feed">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Feed zrodlowy</p>
+            <h2>Timeline i wyniki jako projekcje</h2>
+          </div>
+          <span class="tag">${model.feedCards.length}</span>
+        </div>
+        <div class="record-list">
+          ${model.feedCards.map(renderA1CoreFeedCard).join("") || emptyState(isCaregiverZeroKnowledge ? model.consentGuard.emptyCopy : "Gate nie dopuscil kart do feedu.")}
+        </div>
+      </section>
+      <aside class="section-band a1-core-inspector" aria-label="A1-Core inspector">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Inspektor DITL / jakosc danych</p>
+            <h2>Pytania i luki poza feedem</h2>
+          </div>
+          <span class="tag">${model.inspectorCards.length}</span>
+        </div>
+        <div class="record-list">
+          ${model.inspectorCards.map(renderA1CoreInspectorCard).join("") || emptyState(isCaregiverZeroKnowledge ? model.consentGuard.emptyCopy : "Brak pytan lub luk dla wybranego pacjenta.")}
+        </div>
+      </aside>
+    </div>
+    ${renderA1CoreResults(model)}
+    ${renderA1CoreLedger(model)}
+    ${renderA1CoreBlocked(model)}
+  `;
+}
+
+function a1CoreStatusClass(card) {
+  if (card.isSourceMissing || normalize(card.status).includes("brak")) return "pending";
+  if (normalize(card.status).includes("do ") || normalize(card.ditlStatus).includes("do ")) return "pending";
+  return "info";
+}
+
+function renderA1ProjectionTag(card) {
+  return `<span class="tag projection-tag" title="Stabilny identyfikator projekcji">${escapeHtml(card.projectionId)}</span>`;
+}
+
+function renderA1CoreFeedCard(card) {
+  return `
+    <article class="record a1-core-card" data-projection-id="${escapeHtml(card.projectionId)}" data-a1-surface="feed">
+      <div class="record-head">
+        <div>
+          <p class="record-title">${escapeHtml(card.title)}</p>
+          <div class="record-meta">
+            <span class="status-chip ${a1CoreStatusClass(card)}">${escapeHtml(card.status || "draft")}</span>
+            <span class="tag">${escapeHtml(card.type === "result_series" ? "wynik w czasie" : "zdarzenie osi")}</span>
+            ${renderA1ProjectionTag(card)}
+          </div>
+        </div>
+      </div>
+      <p class="record-body">${escapeHtml(card.description)}</p>
+      <div class="source-line">${sourceChips(card.sourceRefs)}</div>
+    </article>
+  `;
+}
+
+function renderA1CoreInspectorCard(card) {
+  return `
+    <article class="record a1-core-card inspector-only" data-projection-id="${escapeHtml(card.projectionId)}" data-a1-surface="inspector">
+      <p class="record-title">${escapeHtml(card.title)}</p>
+      <p class="record-body">${escapeHtml(card.description)}</p>
+      <div class="record-meta">
+        <span class="status-chip ${a1CoreStatusClass(card)}">${escapeHtml(card.ditlStatus || card.status || "do wyjasnienia")}</span>
+        <span class="tag">inspektor, nie feed</span>
+        ${renderA1ProjectionTag(card)}
+      </div>
+      <div class="source-line">${sourceChips(card.sourceRefs)}</div>
+    </article>
+  `;
+}
+
+function renderA1CoreResults(model) {
+  return `
+    <section class="section-band a1-core-results">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Tabela i wykres</p>
+          <h2>Wyniki w czasie przez ten sam projectionId</h2>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Projection ID</th><th>Parametr</th><th>Wykres</th><th>Zrodla</th></tr></thead>
+          <tbody>
+            ${model.resultCards.map((card) => {
+              const observation = byPatient(state.observations).find((item) => item.id === card.recordId);
+              return `
+                <tr data-projection-id="${escapeHtml(card.projectionId)}">
+                  <td><code>${escapeHtml(card.projectionId)}</code><br><span class="muted">${escapeHtml(card.linkedSurfaces.table)}</span></td>
+                  <td><strong>${escapeHtml(card.title)}</strong><br><span class="muted">${escapeHtml(card.description)}</span></td>
+                  <td class="result-chart-cell">${observation ? renderResultChart(observation) : emptyState("Brak serii wyniku.")}<br><span class="muted">${escapeHtml(card.linkedSurfaces.chart || "bez wykresu")}</span></td>
+                  <td>${sourceChips(card.sourceRefs)}</td>
+                </tr>
+              `;
+            }).join("") || `<tr><td colspan="4">${emptyState("Brak serii wynikow w projekcji A1-Core.")}</td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  `;
+}
+
+function renderA1CoreLedger(model) {
+  return `
+    <section class="section-band a1-core-ledger">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Projection Gate</p>
+          <h2>Jeden ID na feed, tabele, wykres, film i raport</h2>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Projection ID</th><th>Feed / inspektor</th><th>Tabela</th><th>Wykres</th><th>Film zycia</th><th>Raport</th></tr></thead>
+          <tbody>
+            ${model.projectionLedger.map((row) => `
+              <tr>
+                <td><code>${escapeHtml(row.projectionId)}</code><br><span class="muted">${escapeHtml(row.label)}</span></td>
+                <td>${escapeHtml(row.linkedSurfaces.feed || row.linkedSurfaces.inspector || "-")}</td>
+                <td>${escapeHtml(row.linkedSurfaces.table || "-")}</td>
+                <td>${escapeHtml(row.linkedSurfaces.chart || "-")}</td>
+                <td>${escapeHtml(row.linkedSurfaces.timelineFilm || "-")}</td>
+                <td>${escapeHtml(row.linkedSurfaces.report || "-")}</td>
+              </tr>
+            `).join("") || `<tr><td colspan="6">${emptyState("Brak projekcji do pokazania.")}</td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  `;
+}
+
+function renderA1CoreBlocked(model) {
+  if (!model.blockedCards.length) return "";
+  return `
+    <section class="section-band a1-core-blocked">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">UI Gate</p>
+          <h2>Karty zatrzymane przed renderem</h2>
+        </div>
+      </div>
+      <div class="record-list">
+        ${model.blockedCards.map((card) => `
+          <article class="record">
+            <p class="record-title">${escapeHtml(card.title || card.id)}</p>
+            <p class="record-body">${escapeHtml((card.errors || []).join(", "))}</p>
+          </article>
+        `).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderA1CoreGateErrors(errors) {
+  return `
+    <section class="section-band a1-core-blocked">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Walidacja projekcji</p>
+          <h2>A1-Core wymaga poprawy przed pokazem</h2>
+        </div>
+      </div>
+      <ul class="plain-list">
+        ${errors.map((error) => `<li>${escapeHtml(error)}</li>`).join("")}
+      </ul>
+    </section>
+  `;
+}
+
 function renderSpecialtyLensPanel({ lens, highlightedSources }) {
   const highlightedLine = lens.id === "internist"
     ? "Pełny widok bez zawężania źródeł."
@@ -2113,16 +2339,30 @@ function renderCockpitDetails(summary, content) {
 function renderCareContractPanel(persona = "doctor") {
   const contract = activeCareContract();
   if (!contract) return "";
+  const caregiverModel = persona === "caregiver"
+    ? PATIENT360_CAREGIVER_MODEL.buildCaregiverModel({ state, patientId: state.activePatientId })
+    : null;
   const personaIntro = {
     doctor: "Lekarz widzi dokumenty, źródła, pytania i zakres zgód. Obserwacje opiekuna pozostają oznaczone jako wywiad.",
     patient: "Pacjent albo rodzic widzi, co jest zbierane przed wizytą i co zostało udostępnione innym osobom.",
-    caregiver: "Opiekun widzi tylko zakres zgody i może dopisać informacje organizacyjne lub obserwacje opiekuna."
+    caregiver: "Opiekun widzi elementy udostępnione w aktualnym zakresie i może dopisać informacje organizacyjne lub obserwacje opiekuna."
   }[persona] || "Ten widok pokazuje, kto wnosi informacje i kto co widzi.";
-  const groups = [
+  const caregiverItems = [...(contract.caregiverGets || []), ...(contract.caregiverAdds || [])]
+    .filter(PATIENT360_A4_CONSENT_GUARD.sanitizeZeroKnowledgeText)
+    .slice(0, 5);
+  const groups = persona === "caregiver" ? [
+    ["Opiekun wnosi / widzi", caregiverItems, "users-round"]
+  ] : [
     ["Lekarz dostaje", contract.doctorGets || [], "stethoscope"],
     ["Pacjent widzi", contract.patientGets || [], "user-round"],
-    ["Opiekun wnosi / widzi", [...(contract.caregiverGets || []), ...(contract.caregiverAdds || [])].slice(0, 5), "users-round"]
+    ["Opiekun wnosi / widzi", caregiverItems, "users-round"]
   ];
+  const visibleSourceRefs = persona === "caregiver"
+    ? [...new Set((caregiverModel?.activeScopes || []).flatMap((scope) => scope.sourceRefs || []))]
+    : contract.sourceRefs || [];
+  const emptyItemCopy = persona === "caregiver"
+    ? PATIENT360_A4_CONSENT_GUARD.ZERO_KNOWLEDGE_EMPTY_COPY
+    : "Brak danych w tym scenariuszu.";
   return `
     <section class="section-band care-contract-panel">
       <div class="section-head">
@@ -2148,13 +2388,13 @@ function renderCareContractPanel(persona = "doctor") {
           <article>
             <h3><i data-lucide="${escapeHtml(icon)}"></i>${escapeHtml(title)}</h3>
             <ul class="plain-list compact-list">
-              ${(items.length ? items : ["Brak danych w tym scenariuszu."]).map((item) => `<li><i data-lucide="dot"></i><span>${escapeHtml(item)}</span></li>`).join("")}
+              ${(items.length ? items : [emptyItemCopy]).map((item) => `<li><i data-lucide="dot"></i><span>${escapeHtml(item)}</span></li>`).join("")}
             </ul>
           </article>
         `).join("")}
       </div>
       <p class="safety-note inline-note"><i data-lucide="shield-alert"></i>${escapeHtml(contract.safetyBoundary)}</p>
-      <div class="source-line">${sourceChips(contract.sourceRefs || [])}</div>
+      <div class="source-line">${sourceChips(visibleSourceRefs)}</div>
     </section>
   `;
 }
@@ -2409,18 +2649,18 @@ function renderEnglishCaregiverCockpit() {
   if (!model.activeScopes.length) {
     return `
       ${pageHeader(
-        "Caregiver360: no active access",
-        `${context.label}. The caregiver view works only inside an active consent scope. This scenario does not grant caregiver access to patient data.`,
+        "Caregiver360: shared view",
+        `${context.label}. The caregiver view shows only items ready for the current shared scope.`,
         ""
       )}
       ${renderRoleContextBanner("caregiver")}
       ${renderEnglishContextCards({
-        title: "No active caregiver consent",
+        title: "No shared items to display",
         lead: context.caregiver,
         points: [
-          ["Access scope", "No active consent is present for this caregiver scenario."],
-          ["Data visibility", "Documents, medications, results, interview and patient history stay hidden."],
-          ["Next step", "Open the consent view to see how access is described."]
+          ["View", "No items are loaded in this area."],
+          ["Data", "The list shows only items ready to display."],
+          ["Next step", "Open the consent view to see the administrative description."]
         ],
         actions: [
           { label: "Open consents", icon: "shield-check", view: "consent", primary: true }
@@ -2999,7 +3239,7 @@ function renderPatientAppHome({ patient, preVisitModel, docs, observations, meds
             <span>${isGuardianView ? "Dostęp do danych dziecka" : "Opiekun i rodzina"}</span>
             <i data-lucide="users-round"></i>
           </div>
-          <strong>${activeScopes.length ? `${activeScopes.length} aktywne zakresy dostępu` : "Brak aktywnego dostępu"}</strong>
+          <strong>${activeScopes.length ? `${activeScopes.length} aktywne zakresy udostępnienia` : "Nie wczytano aktywnych zakresów"}</strong>
           <p>${isGuardianView ? "Widok pokazuje, kto ma dostęp do danych dziecka i w jakim zakresie." : "Pacjent decyduje, co opiekun widzi: leki, wizyty, dokumenty, zadania, obserwacje albo raport."}</p>
           <button class="ghost-button" data-set-view="consent"><i data-lucide="shield-check"></i>Zarządzaj zgodami</button>
         </article>
@@ -3070,62 +3310,157 @@ function renderPreVisitStep(step, stateInfo) {
 }
 
 function renderVisitChecklist() {
-  const model = PATIENT360_PREVISIT_MODEL.buildPreVisitModel({
+  const role = activeRole();
+  const model = PATIENT360_A6_CHECKLIST.projectVisitChecklist({
     state,
     patientId: state.activePatientId,
-    searchQuery: state.search
+    role,
+    today: todayInputValue()
   });
-  const checklist = model.checklist;
-  if (!checklist) {
+  const patient = activePatient();
+  const visibleSections = model.sections.filter((section) => section.count > 0);
+  const askCount = model.sections.find((section) => section.category === "to_ask")?.count || 0;
+  const bringCount = model.sections.find((section) => section.category === "to_bring")?.count || 0;
+  const confirmCount = model.sections.find((section) => section.category === "to_confirm")?.count || 0;
+  const readyCount = model.sections.find((section) => section.category === "ready")?.count || 0;
+  const persona = role === "doctor" ? "Lekarz360" : role === "caregiver" ? "Opiekun360" : "Pacjent360";
+  const title = role === "doctor"
+    ? "Pakiet przedwizytowy od pacjenta"
+    : role === "caregiver"
+      ? "Udostępniona checklista przed wizytą"
+      : "Karta pokładowa przed wizytą";
+  const lead = role === "doctor"
+    ? `${patient.name} · dostarczone elementy, pytania pacjenta i punkty do potwierdzenia.`
+    : `${patient.name} · zabierz, zapytaj i potwierdź bez interpretacji klinicznej.`;
+  const emptyCopy = role === "caregiver"
+    ? model.consentGuard?.emptyCopy || PATIENT360_A4_CONSENT_GUARD.ZERO_KNOWLEDGE_EMPTY_COPY
+    : "Brak przypisanych elementów przed wizytą.";
+
+  if (!model.items.length) {
     return `
-      <section class="section-band visit-checklist">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Przed wizytą</p>
-            <h2><i data-lucide="list-checks"></i> Checklista przygotowania</h2>
-          </div>
-        </div>
-        ${emptyState("Brak checklisty przygotowania w danych demo. Zacznij od dokumentu, wywiadu albo listy pytań.")}
-        <div class="inline-actions">
-          <button class="ghost-button" data-open-dialog="document"><i data-lucide="files"></i>Dodaj dokument</button>
-          <button class="ghost-button" data-open-dialog="interview"><i data-lucide="messages-square"></i>Dodaj wywiad</button>
-        </div>
+      ${pageHeader("Przed wizytą", "Organizacyjna checklista źródeł, pytań i potwierdzeń.", "clipboard-check")}
+      ${renderRoleContextBanner(role)}
+      ${renderDashboardOrchestrator({
+        persona,
+        icon: "clipboard-check",
+        title,
+        lead,
+        status: "Widok pusty",
+        steps: [
+          ["1", "Widok", "Nie wczytano elementów w tym obszarze."],
+          ["2", "Źródła", "Lista pokazuje tylko elementy gotowe do wyświetlenia."],
+          ["3", "Dalej", "Możesz przejść do dokumentów albo pytań."]
+        ],
+        actions: [
+          { label: "Pokaż źródła", icon: "files", view: "documents", primary: true },
+          { label: "Pytania", icon: "circle-help", view: "risks" }
+        ]
+      })}
+      <section class="section-band a6-checklist-panel">
+        ${emptyState(emptyCopy)}
       </section>
     `;
   }
-  const summary = model.checklistSummary;
 
   return `
-    <section class="section-band visit-checklist">
+    ${pageHeader("Przed wizytą", "Organizacyjna checklista źródeł, pytań i potwierdzeń. Nie ocenia medycznie i nie tworzy planu leczenia.", "clipboard-check")}
+    ${renderRoleContextBanner(role)}
+    ${renderDashboardOrchestrator({
+      persona,
+      icon: "clipboard-check",
+      title,
+      lead,
+      status: `${model.items.length} elementów logistycznych`,
+      steps: [
+        ["1", role === "doctor" ? "Dostarczono" : "Zabierz", formatCount(bringCount + readyCount, "element ze źródłem", "elementy ze źródłem", "elementów ze źródłem")],
+        ["2", role === "doctor" ? "Pytania pacjenta" : "Zapytaj", formatCount(askCount, "pytanie DITL", "pytania DITL", "pytań DITL")],
+        ["3", "Potwierdź", formatCount(confirmCount, "element do potwierdzenia", "elementy do potwierdzenia", "elementów do potwierdzenia")]
+      ],
+      actions: [
+        { label: role === "doctor" ? "Pytania pacjenta" : "O co zapytać", icon: "circle-help", view: "risks", primary: true },
+        { label: "Dokumenty", icon: "files", view: "documents" },
+        { label: "Historia", icon: "git-branch", view: "timeline" }
+      ]
+    })}
+    <section class="section-band a6-checklist-panel">
       <div class="section-head">
         <div>
-          <p class="eyebrow">Przed wizytą</p>
-            <h2><i data-lucide="list-checks"></i> Checklista przygotowania</h2>
-          </div>
-        <span class="status-chip ${escapeHtml(summary.status.className)}"><i data-lucide="${escapeHtml(summary.status.icon)}"></i>${escapeHtml(summary.status.label)}</span>
+          <p class="eyebrow">A6 · Visit Checklist</p>
+          <h2><i data-lucide="list-checks"></i>${escapeHtml(title)}</h2>
+        </div>
+        <span class="status-chip a6-neutral">${escapeHtml(model.scale)}</span>
       </div>
-      <div class="checklist-summary">
-        <span><strong>${summary.ready}</strong> gotowe</span>
-        <span><strong>${summary.confirm}</strong> do potwierdzenia</span>
-        <span><strong>${summary.missing}</strong> brak danych</span>
+      <p class="record-body">Ta lista składa dane z osi, dokumentów, wyników i pytań DITL w operacyjny pakiet przed rozmową. Nie ustala kolejności medycznej ani znaczenia klinicznego.</p>
+      <div class="a6-checklist-summary" aria-label="Podsumowanie checklisty przed wizytą">
+        <span><strong>${bringCount}</strong> ${role === "doctor" ? "dostarczone" : "do zabrania"}</span>
+        <span><strong>${askCount}</strong> pytań</span>
+        <span><strong>${confirmCount}</strong> do potwierdzenia</span>
+        <span><strong>${readyCount}</strong> gotowe</span>
       </div>
-      <div class="checklist-items">
-        ${model.checklistItems.map((item) => {
-          const itemState = item.state;
-          return `
-          <article class="checklist-item ${escapeHtml(itemState.key)}">
-            <span class="check-marker" aria-hidden="true"><i data-lucide="${escapeHtml(itemState.icon)}"></i></span>
-            <div>
-              <strong>${escapeHtml(item.label)}</strong>
-              <div class="record-meta"><span class="status-chip ${statusClass(item.status)}">${escapeHtml(itemState.label)}</span></div>
-              <p>${escapeHtml(itemState.description)}</p>
-              <div class="source-line">${sourceChips(item.sourceRefs || [])}</div>
-            </div>
-          </article>
-        `;
-        }).join("")}
+      <div class="a6-section-grid">
+        ${visibleSections.map((section) => renderA6ChecklistSection(section, role)).join("")}
       </div>
     </section>
+  `;
+}
+
+function renderA6ChecklistSection(section, role) {
+  const previewLimit = 5;
+  const previewItems = section.items.slice(0, previewLimit);
+  const overflowCount = Math.max(section.items.length - previewItems.length, 0);
+  const icon = {
+    to_bring: role === "doctor" ? "inbox" : "briefcase",
+    to_ask: "message-circle-question",
+    to_confirm: "clipboard-check",
+    ready: "check-circle-2"
+  }[section.category] || "list-checks";
+  return `
+    <section class="a6-checklist-section ${escapeHtml(section.category)}">
+      <div class="a6-section-head">
+        <h3><i data-lucide="${escapeHtml(icon)}"></i>${escapeHtml(section.label)}</h3>
+        <span>${escapeHtml(String(section.count))}</span>
+      </div>
+      <div class="a6-checklist-items">
+        ${previewItems.map((item) => renderA6ChecklistItem(item, role)).join("")}
+      </div>
+      ${overflowCount ? `<p class="a6-overflow-note">${escapeHtml(formatCount(overflowCount, "pozostały element", "pozostałe elementy", "pozostałych elementów"))} dostępne w powiązanym widoku.</p>` : ""}
+    </section>
+  `;
+}
+
+function renderA6ChecklistItem(item, role) {
+  const icon = {
+    ready: "check-circle-2",
+    confirm: "circle-help",
+    missing: "folder-search",
+    optional: "circle"
+  }[item.status] || "circle-help";
+  const targetView = item.category === "to_ask" ? "risks" : item.requiredArea === "medications" ? "medications" : item.requiredArea === "results" ? "observations" : item.requiredArea === "documents" ? "documents" : "timeline";
+  const statusLabel = {
+    ready: role === "doctor" ? "dostarczono" : "gotowe",
+    confirm: "do potwierdzenia",
+    missing: "do uzupełnienia",
+    optional: "opcjonalne"
+  }[item.status] || item.status;
+  return `
+    <article class="a6-checklist-item ${escapeHtml(item.status)}" data-projection-id="${escapeHtml(item.projectionId)}">
+      <span class="a6-check-marker" aria-hidden="true"><i data-lucide="${escapeHtml(icon)}"></i></span>
+      <div>
+        <div class="a6-item-head">
+          <strong>${escapeHtml(item.title)}</strong>
+          <span class="status-chip a6-status ${escapeHtml(item.status)}">${escapeHtml(statusLabel)}</span>
+        </div>
+        <p>${escapeHtml(item.description)}</p>
+        <div class="record-meta">
+          <span class="tag">${escapeHtml(item.requiredArea)}</span>
+          <span class="tag">${escapeHtml(item.projectionId)}</span>
+        </div>
+        <div class="source-line">${sourceChips(compactSourceRefs(item.sourceRefs || []))}</div>
+        <div class="inline-actions compact">
+          <button class="small-action icon-only" data-set-view="${escapeHtml(targetView)}" title="Otwórz powiązany widok" aria-label="Otwórz powiązany widok"><i data-lucide="arrow-right"></i></button>
+        </div>
+      </div>
+    </article>
   `;
 }
 
@@ -4558,16 +4893,193 @@ function renderResultChart(observation) {
 }
 
 function renderRisks() {
-  const flags = byPatient(state.flags).filter(matchesSearch);
-  const grouped = ["red", "amber", "green", "blue"];
+  const rawModel = PATIENT360_A3_A5_QUALITY.projectQualityQuestions({
+    state,
+    patientId: state.activePatientId,
+    role: activeRole(),
+    today: todayInputValue()
+  });
+  const model = PATIENT360_A4_CONSENT_GUARD.guardA3A5Projection(rawModel, {
+    context: activeConsentGuardContext()
+  });
+  const validation = PATIENT360_A3_A5_QUALITY.validateProjection(model);
+  const query = normalize(state.search);
+  const isCaregiverZeroKnowledge = model.consentGuard?.zeroKnowledge;
+  const questions = model.questions.filter((question) => {
+    if (!query) return true;
+    return normalize([question.questionText, question.reason, question.gapType, question.projectionId].join(" ")).includes(query);
+  });
+  const questionIds = new Set(questions.map((question) => question.gapId));
+  const gaps = model.gaps.filter((gap) => questionIds.has(gap.id));
   return `
-    ${pageHeader("Punkty do weryfikacji i luki", "Ten widok jest skrótem do pytań i luk w kontekście. Nie jest gotową oceną ani decyzją po stronie systemu i nie zastępuje lekarza.", "flag")}
-    <section class="flag-legend">
-      ${grouped.map((color) => `<span class="flag-badge ${FLAG_META[color].className}"><i data-lucide="${escapeHtml(FLAG_META[color].icon)}"></i>${escapeHtml(FLAG_META[color].label)}</span>`).join("")}
+    ${pageHeader("Pytania przed wizyta", "Luki danych sa zamieniane w spokojne pytania do rozmowy. Kolejnosc jest organizacyjna, bez oceny medycznej.", "circle-help")}
+    ${renderSafetyNote("A3+A5 dziala jako read-only projekcja nad danymi demo. Nie rozstrzyga znaczenia klinicznego i nie tworzy nowej prawdy obok zrodel.", "compact")}
+    <section class="section-band a3-a5-hero">
+      <div>
+        <p class="eyebrow">A3+A5 / Data Quality + DITL</p>
+        <h2>${escapeHtml(activePatient()?.name || "Pacjent syntetyczny")}</h2>
+        <p>Ten widok pokazuje, z jakiej luki powstalo pytanie i gdzie ta sama projekcja pojawia sie dalej: lista, inspektor, film zycia i raport.</p>
+      </div>
+      <div class="a3-a5-policy">
+        <article><span>Tryb</span><strong>read-only</strong><small>bez zapisu profilu</small></article>
+        <article><span>Runtime</span><strong>LLM off</strong><small>reguly JS nad fixture</small></article>
+        <article><span>Pytania</span><strong>${model.questions.length}</strong><small>po bramce UI</small></article>
+        <article><span>Widok</span><strong>${model.questions.length}</strong><small>${isCaregiverZeroKnowledge ? "elementy widoczne" : "elementy po bramce"}</small></article>
+      </div>
     </section>
-    <div class="flag-grid">
-      ${grouped.map((color) => renderFlagColumn(color, flags.filter((flag) => flag.color === color))).join("")}
+    ${validation.valid ? "" : renderA3A5GateErrors(validation.errors)}
+    <div class="a3-a5-grid">
+      <section class="section-band a3-a5-question-list" aria-label="Lista pytan DITL">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Lista pytan</p>
+            <h2>Do omowienia podczas wizyty</h2>
+          </div>
+          <span class="tag">${questions.length}</span>
+        </div>
+        <div class="record-list">
+          ${questions.map(renderA3A5QuestionCard).join("") || emptyState(isCaregiverZeroKnowledge ? model.consentGuard.emptyCopy : "Brak pytan dla aktualnego wyszukiwania.")}
+        </div>
+      </section>
+      <aside class="section-band a3-a5-inspector" aria-label="Inspektor luk danych">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Inspektor luki</p>
+            <h2>Dlaczego powstalo pytanie</h2>
+          </div>
+          <span class="tag">${gaps.length}</span>
+        </div>
+        <div class="record-list">
+          ${gaps.map(renderA3A5GapCard).join("") || emptyState(isCaregiverZeroKnowledge ? model.consentGuard.emptyCopy : "Brak luk dla aktualnego wyszukiwania.")}
+        </div>
+      </aside>
     </div>
+    ${renderA3A5Ledger(model, questions)}
+    ${renderA3A5Blocked(model)}
+  `;
+}
+
+function a3A5GapLabel(gapType) {
+  return PATIENT360_A3_A5_QUALITY.GAP_META[gapType]?.label || gapType || "Luka danych";
+}
+
+function a3A5GapClass(gapType) {
+  return {
+    conflict: "pending",
+    source_missing: "pending",
+    stale_data: "info",
+    missing_context: "info",
+    consent_limited: "info"
+  }[gapType] || "info";
+}
+
+function renderA3A5ProjectionTag(item) {
+  return `<span class="tag projection-tag" title="Stabilny identyfikator projekcji">${escapeHtml(item.projectionId)}</span>`;
+}
+
+function renderA3A5QuestionCard(question) {
+  return `
+    <article class="record a3-a5-card" data-a3a5-question="true" data-projection-id="${escapeHtml(question.projectionId)}">
+      <div class="record-head">
+        <div>
+          <p class="record-title">${escapeHtml(question.questionText)}</p>
+          <div class="record-meta">
+            <span class="status-chip ${a3A5GapClass(question.gapType)}">${escapeHtml(a3A5GapLabel(question.gapType))}</span>
+            <span class="tag">DITL draft</span>
+            ${renderA3A5ProjectionTag(question)}
+          </div>
+        </div>
+      </div>
+      <p class="record-body">${escapeHtml(question.reason || "Pytanie pochodzi z luki danych.")}</p>
+      <div class="source-line">${sourceChips(question.sourceRefs)}</div>
+    </article>
+  `;
+}
+
+function renderA3A5GapCard(gap) {
+  return `
+    <article class="record a3-a5-card inspector-only" data-a3a5-gap="${escapeHtml(gap.gapType)}" data-projection-id="${escapeHtml(gap.projectionId)}">
+      <p class="record-title">${escapeHtml(gap.title)}: ${escapeHtml(gap.label)}</p>
+      <p class="record-body">${escapeHtml(gap.description || "Element wymaga doprecyzowania w rozmowie.")}</p>
+      <div class="record-meta">
+        <span class="status-chip ${a3A5GapClass(gap.gapType)}">${escapeHtml(gap.status)}</span>
+        <span class="tag">priorytet organizacyjny ${escapeHtml(String(gap.priority))}</span>
+        ${renderA3A5ProjectionTag(gap)}
+      </div>
+      <div class="source-line">${sourceChips(gap.sourceRefs)}</div>
+    </article>
+  `;
+}
+
+function renderA3A5Ledger(model, questions) {
+  const ids = new Set(questions.map((question) => question.projectionId));
+  const rows = model.gaps
+    .filter((gap) => ids.has(gap.projectionId))
+    .map((gap) => ({ gap, question: questions.find((question) => question.gapId === gap.id) }));
+  return `
+    <section class="section-band a3-a5-ledger">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Projection Gate</p>
+          <h2>Jedna projekcja dla luki i pytania</h2>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Projection ID</th><th>Luka</th><th>Lista pytan</th><th>Inspektor</th><th>Film zycia</th><th>Raport</th></tr></thead>
+          <tbody>
+            ${rows.map(({ gap, question }) => `
+              <tr>
+                <td><code>${escapeHtml(gap.projectionId)}</code><br><span class="muted">${escapeHtml(question?.id || "-")}</span></td>
+                <td>${escapeHtml(gap.linkedSurfaces.gap || "-")}</td>
+                <td>${escapeHtml(gap.linkedSurfaces.questionList || "-")}</td>
+                <td>${escapeHtml(gap.linkedSurfaces.inspector || "-")}</td>
+                <td>${escapeHtml(gap.linkedSurfaces.timelineFilm || "-")}</td>
+                <td>${escapeHtml(gap.linkedSurfaces.report || "-")}</td>
+              </tr>
+            `).join("") || `<tr><td colspan="6">${emptyState("Brak projekcji do pokazania.")}</td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  `;
+}
+
+function renderA3A5Blocked(model) {
+  if (!model.blockedQuestions.length) return "";
+  return `
+    <section class="section-band a3-a5-blocked">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">UI Gate</p>
+          <h2>Pytania zatrzymane przed renderem</h2>
+        </div>
+      </div>
+      <div class="record-list">
+        ${model.blockedQuestions.map((question) => `
+          <article class="record">
+            <p class="record-title">${escapeHtml(question?.id || "question")}</p>
+            <p class="record-body">${escapeHtml((question?.errors || []).join(", "))}</p>
+          </article>
+        `).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderA3A5GateErrors(errors) {
+  return `
+    <section class="section-band a3-a5-blocked">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Walidacja projekcji</p>
+          <h2>A3+A5 wymaga poprawy przed pokazem</h2>
+        </div>
+      </div>
+      <ul class="plain-list">
+        ${errors.map((error) => `<li>${escapeHtml(error)}</li>`).join("")}
+      </ul>
+    </section>
   `;
 }
 
@@ -4761,7 +5273,6 @@ function renderCaregiverAssignmentPanel(model) {
   const patient = model.patient || activePatient();
   const patientName = patientDisplayName(patient);
   const activeScopes = model.activeScopes || [];
-  const inactiveScopes = model.inactiveScopes || [];
   const visibleAreas = [...new Set(activeScopes.flatMap((scope) => scope.areas || []))]
     .map(caregiverAreaLabel)
     .filter(Boolean);
@@ -4773,9 +5284,9 @@ function renderCaregiverAssignmentPanel(model) {
         <div class="section-head">
           <div>
             <p class="eyebrow">Relacja opieki</p>
-            <h2><i data-lucide="users-round"></i>Brak aktywnego udostępnienia</h2>
+            <h2><i data-lucide="users-round"></i>Nie wczytano elementów do pokazania</h2>
           </div>
-          <span class="status-chip pending">Brak dostępu</span>
+          <span class="status-chip info">Widok pusty</span>
         </div>
         <div class="care-contract-roles">
           <article>
@@ -4783,11 +5294,10 @@ function renderCaregiverAssignmentPanel(model) {
             <strong>${escapeHtml(patientName)}</strong>
           </article>
           <article>
-            <span>Widoczność danych</span>
-            <strong>Opiekun nie widzi danych bez aktywnej zgody.</strong>
+            <span>Widok</span>
+            <strong>${escapeHtml(PATIENT360_A4_CONSENT_GUARD.ZERO_KNOWLEDGE_EMPTY_COPY)}</strong>
           </article>
         </div>
-        ${inactiveScopes.length ? `<p class="record-body">W danych demo są cofnięte lub wygasłe zakresy: ${escapeHtml(inactiveScopes.map((scope) => scope.subject).join(", "))}.</p>` : ""}
       </section>
     `;
   }
@@ -4807,12 +5317,12 @@ function renderCaregiverAssignmentPanel(model) {
           <strong>${escapeHtml(patientName)}</strong>
         </article>
         <article>
-          <span>Dostęp udostępniony przez</span>
+          <span>Udostępnione przez</span>
           <strong>${escapeHtml(grantor)}</strong>
         </article>
         <article>
           <span>Widoczne obszary</span>
-          <strong>${escapeHtml(visibleAreas.join(", ") || "brak obszarów")}</strong>
+          <strong>${escapeHtml(visibleAreas.join(", ") || "Nie wczytano elementów")}</strong>
         </article>
       </div>
       <div class="caregiver-scope-list compact-list">
@@ -4825,7 +5335,7 @@ function renderCaregiverAssignmentPanel(model) {
             <span class="status-chip done">${escapeHtml(scope.status)}</span>
             <p>${escapeHtml(scope.scope)}</p>
             <div class="record-meta">
-              ${(scope.areas || []).map((area) => `<span class="tag">${escapeHtml(caregiverAreaLabel(area))}</span>`).join("") || `<span class="tag">brak zakresu</span>`}
+              ${(scope.areas || []).map((area) => `<span class="tag">${escapeHtml(caregiverAreaLabel(area))}</span>`).join("") || `<span class="tag">Nie opisano obszaru</span>`}
             </div>
             <div class="source-line">${sourceChips(scope.sourceRefs || [])}</div>
           </article>
@@ -4844,41 +5354,42 @@ function renderCaregiverPortal() {
   const validation = PATIENT360_CAREGIVER_MODEL.validateCaregiverModel(model);
   const patient = activePatient();
   const nextTask = model.tasks[0] || null;
+  const visibleAccessCards = model.accessCards.filter((card) => card.allowed);
   if (!model.activeScopes.length) {
     return `
-      ${pageHeader("Opiekun360", "Widok pomocy organizacyjnej działa wyłącznie w zakresie aktywnej zgody. W tym scenariuszu opiekun nie ma dostępu do danych.")}
+      ${pageHeader("Opiekun360", "Widok pomocy organizacyjnej pokazuje elementy udostępnione w aktualnym zakresie.")}
       ${renderRoleContextBanner("caregiver")}
       ${renderDashboardOrchestrator({
         persona: "Opiekun360",
         icon: "users-round",
-        title: "Brak aktywnego dostępu do danych",
-        lead: `${patient.name} · ${model.safetyCopy}`,
-        status: "Brak aktywnego zakresu",
+        title: "Nie wczytano elementów do pokazania",
+        lead: `${patient.name} · ${PATIENT360_A4_CONSENT_GUARD.ZERO_KNOWLEDGE_EMPTY_COPY}`,
+        status: "Widok pusty",
         steps: [
-          ["1", "Zakres zgody", "Brak aktywnej zgody w danych demo."],
-          ["2", "Widoczność danych", "Opiekun nie widzi dokumentów, leków, wyników, wywiadu ani mapy."],
-          ["3", "Następny krok", "Możesz zobaczyć, jak opisany jest zakres zgody."]
+          ["1", "Widok", "Nie wczytano elementów w tym obszarze."],
+          ["2", "Dane", "Lista pokazuje tylko elementy gotowe do wyświetlenia."],
+          ["3", "Dalej", "Możesz zobaczyć opis udostępnień."]
         ],
         actions: [
-          { label: "Zobacz zakres zgody", icon: "shield-check", view: "consent", primary: true }
+          { label: "Zobacz udostępnienia", icon: "shield-check", view: "consent", primary: true }
         ]
       })}
       ${renderCaregiverAssignmentPanel(model)}
     `;
   }
   return `
-    ${pageHeader("Opiekun360", "Widok pomocy organizacyjnej: zakres zgody, zadania, dokumenty, wizyty i obserwacje opiekuna. Nie pokazuje danych poza zakresem udostępnienia.", "consent")}
+    ${pageHeader("Opiekun360", "Widok pomocy organizacyjnej pokazuje elementy udostępnione w aktualnym zakresie.", "consent")}
     ${renderRoleContextBanner("caregiver")}
     ${renderDashboardOrchestrator({
       persona: "Opiekun360",
       icon: "users-round",
-      title: "Dopilnuj tylko tego, do czego masz dostęp",
+      title: "Dopilnuj udostępnionych spraw",
       lead: `${patient.name} · ${model.safetyCopy}`,
-      status: model.activeScopes.length ? formatCount(model.activeScopes.length, "aktywny zakres dostępu", "aktywne zakresy dostępu", "aktywnych zakresów dostępu") : "Brak aktywnego zakresu",
+      status: model.activeScopes.length ? formatCount(model.activeScopes.length, "aktywny zakres udostępnienia", "aktywne zakresy udostępnienia", "aktywnych zakresów udostępnienia") : "Widok pusty",
       steps: [
-        ["1", "Zakres zgody", model.activeScopes.length ? "Sprawdź, które obszary są widoczne." : "Brak aktywnej zgody w danych demo."],
-        ["2", "Najbliższe zadanie", nextTask ? nextTask.title : "Brak zadań w aktywnym zakresie zgody."],
-        ["3", "Po cofnięciu", model.revocationEffects[0]?.description || "Brak cofniętych zakresów w danych demo."]
+        ["1", "Zakres", model.activeScopes.length ? "Sprawdź elementy udostępnione w tym widoku." : "Nie wczytano elementów w tym obszarze."],
+        ["2", "Najbliższe zadanie", nextTask ? nextTask.title : PATIENT360_A4_CONSENT_GUARD.ZERO_KNOWLEDGE_EMPTY_COPY],
+        ["3", "Dalej", "Zobacz opis udostępnień albo wróć do listy zadań."]
       ],
       actions: [
         { label: "Zakres zgody", icon: "shield-check", view: "consent", primary: true },
@@ -4889,31 +5400,31 @@ function renderCaregiverPortal() {
     ${renderCaregiverAssignmentPanel(model)}
     ${renderFullDataAccess("caregiver")}
     ${renderCareContractPanel("caregiver")}
-    ${renderCockpitDetails("Pełne dane Opiekun360: zakresy, obszary, zadania i cofnięcia zgód", `
+    ${renderCockpitDetails("Pełne dane Opiekun360: udostępnienia, obszary i zadania", `
       <section class="section-band caregiver-overview">
         <div class="section-head">
           <div>
             <p class="eyebrow">Zakres zgody</p>
             <h2><i data-lucide="users-round"></i> Kto co widzi</h2>
           </div>
-          <span class="status-chip ${model.activeScopes.length ? "done" : "pending"}">${model.activeScopes.length ? formatCount(model.activeScopes.length, "aktywny zakres dostępu", "aktywne zakresy dostępu", "aktywnych zakresów dostępu") : "Brak aktywnego zakresu"}</span>
+          <span class="status-chip ${model.activeScopes.length ? "done" : "info"}">${model.activeScopes.length ? formatCount(model.activeScopes.length, "aktywny zakres udostępnienia", "aktywne zakresy udostępnienia", "aktywnych zakresów udostępnienia") : "Widok pusty"}</span>
         </div>
         <p class="record-body">${escapeHtml(model.safetyCopy)}</p>
-        <p class="safety-note inline-note"><i data-lucide="info"></i>Ten widok pokazuje przegląd zgód pacjenta. Docelowo opiekun zobaczy tylko zakres przypisany do swojej zgody.</p>
+        <p class="safety-note inline-note"><i data-lucide="info"></i>Ten widok pokazuje administracyjny opis aktualnego udostępnienia.</p>
         ${validation.valid ? "" : `<p class="form-warning">Model opiekuna wymaga sprawdzenia: ${escapeHtml(validation.errors.join("; "))}</p>`}
         <div class="caregiver-scope-list">
-          ${model.scopes.map(renderCaregiverScope).join("") || emptyState("Brak zgód opiekuna w danych demo.")}
+          ${model.activeScopes.map(renderCaregiverScope).join("") || emptyState(PATIENT360_A4_CONSENT_GUARD.ZERO_KNOWLEDGE_EMPTY_COPY)}
         </div>
       </section>
       <section class="section-band caregiver-access">
         <div class="section-head">
           <div>
-            <p class="eyebrow">Dostęp granularny</p>
+            <p class="eyebrow">Udostępnione obszary</p>
             <h2><i data-lucide="shield-check"></i> Obszary widoczne dla opiekuna</h2>
           </div>
         </div>
         <div class="caregiver-access-grid">
-          ${model.accessCards.map(renderCaregiverAccessCard).join("")}
+          ${visibleAccessCards.map(renderCaregiverAccessCard).join("") || emptyState(PATIENT360_A4_CONSENT_GUARD.ZERO_KNOWLEDGE_EMPTY_COPY)}
         </div>
       </section>
       <section class="section-band caregiver-tasks">
@@ -4924,23 +5435,18 @@ function renderCaregiverPortal() {
           </div>
         </div>
         <div class="record-list">
-          ${model.tasks.map(renderCaregiverTask).join("") || emptyState("Brak zadań w aktywnym zakresie zgody.")}
+          ${model.tasks.map(renderCaregiverTask).join("") || emptyState(PATIENT360_A4_CONSENT_GUARD.ZERO_KNOWLEDGE_EMPTY_COPY)}
         </div>
       </section>
       <section class="section-band caregiver-revocation">
         <div class="section-head">
           <div>
-            <p class="eyebrow">Cofnięcie zgody</p>
-            <h2><i data-lucide="shield-x"></i> Efekt cofnięcia dostępu</h2>
+            <p class="eyebrow">Historia udostępnień</p>
+            <h2><i data-lucide="shield-check"></i> Informacje administracyjne</h2>
           </div>
         </div>
         <div class="record-list">
-          ${model.revocationEffects.map((effect) => `
-            <article class="record">
-              <p class="record-title">${escapeHtml(effect.subject)}</p>
-              <p class="record-body">${escapeHtml(effect.description)}</p>
-            </article>
-          `).join("") || emptyState("Brak cofniętych lub wygasłych zakresów w danych demo.")}
+          ${emptyState("Historia zmian udostępnień jest dostępna w widoku pacjenta.")}
         </div>
       </section>
     `)}
@@ -4957,7 +5463,7 @@ function renderCaregiverScope(scope) {
       <span class="status-chip ${statusClass(scope.status)}">${escapeHtml(scope.status)}</span>
       <p>${escapeHtml(scope.scope)}</p>
       <div class="record-meta">
-        ${scope.areas.map((area) => `<span class="tag">${escapeHtml(area)}</span>`).join("") || `<span class="tag">brak zakresu</span>`}
+        ${scope.areas.map((area) => `<span class="tag">${escapeHtml(caregiverAreaLabel(area))}</span>`).join("") || `<span class="tag">Nie opisano obszaru</span>`}
       </div>
     </article>
   `;

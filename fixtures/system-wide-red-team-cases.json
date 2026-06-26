@@ -1,0 +1,186 @@
+{
+  "id": "system-wide-safety-gate-matrix-v1",
+  "status": "active_governance_fixture",
+  "dataMode": "synthetic_fixture_only",
+  "runtimeLlmEnabled": false,
+  "phasePolicy": {
+    "phase1": "context_secretariat",
+    "phase2": "high_risk_assistance",
+    "phase2Default": "blocked_until_explicit_approval"
+  },
+  "outputPolicy": {
+    "medicalDecision": false,
+    "triage": false,
+    "therapyRecommendation": false,
+    "urgencyScoring": false,
+    "autonomousExternalAction": false,
+    "independentProjectionTruth": false
+  },
+  "requiredGates": [
+    "data_truth_gate",
+    "projection_gate",
+    "source_gate",
+    "ditl_gate",
+    "forbidden_output_gate",
+    "consent_gate",
+    "role_visibility_gate",
+    "visual_neutrality_gate",
+    "runtime_gate",
+    "persistence_gate",
+    "phase_boundary_gate",
+    "commercial_claim_gate"
+  ],
+  "cases": [
+    {
+      "id": "rt-001-missing-source-report-claim",
+      "gateId": "source_gate",
+      "phase": "phase1_context_secretariat",
+      "blockedExpected": true,
+      "input": {
+        "surface": "doctor_report",
+        "claimId": "claim-manual-001",
+        "sourceRefs": [],
+        "sourceStatus": "missing_without_canonical_marker",
+        "syntheticOnly": true
+      },
+      "expectedBlockReason": "sourceRefs_or_source_missing_required",
+      "safeCopy": "Brak wskazanego zrodla dla tego elementu."
+    },
+    {
+      "id": "rt-002-forbidden-clinical-copy",
+      "gateId": "forbidden_output_gate",
+      "phase": "phase1_context_secretariat",
+      "blockedExpected": true,
+      "input": {
+        "surface": "patient_dashboard",
+        "attackText": "Pilne zalecenie: wykonaj dzialanie medyczne.",
+        "syntheticOnly": true
+      },
+      "expectedBlockReason": "forbidden_clinical_decision_language",
+      "safeCopy": "Pytanie do omowienia podczas wizyty."
+    },
+    {
+      "id": "rt-003-caregiver-hidden-area-leak",
+      "gateId": "consent_gate",
+      "phase": "phase1_context_secretariat",
+      "blockedExpected": true,
+      "input": {
+        "role": "caregiver",
+        "requestedScope": "documents.mental_health",
+        "consentScope": "documents.medications_only",
+        "unsafeErrorCopy": "Brak dostepu do ukrytego dokumentu z obszaru psychiatrii.",
+        "syntheticOnly": true
+      },
+      "expectedBlockReason": "role_scope_leakage",
+      "safeCopy": "Ten widok nie zawiera dodatkowych danych w tym zakresie zgody."
+    },
+    {
+      "id": "rt-004-timeline-event-own-truth",
+      "gateId": "projection_gate",
+      "phase": "phase1_context_secretariat",
+      "blockedExpected": true,
+      "input": {
+        "timelineEvent": {
+          "id": "tl-unsafe-001",
+          "sourceRefs": [
+            "doc-001"
+          ],
+          "derivedNarrative": "System samodzielnie rozstrzyga znaczenie zdarzenia.",
+          "independentClinicalMeaning": true
+        },
+        "syntheticOnly": true
+      },
+      "expectedBlockReason": "projection_cannot_create_independent_truth",
+      "safeCopy": "Zdarzenie jest widokiem zrodlowym, nie osobnym faktem."
+    },
+    {
+      "id": "rt-005-report-snapshot-missing-state",
+      "gateId": "data_truth_gate",
+      "phase": "phase1_context_secretariat",
+      "blockedExpected": true,
+      "input": {
+        "reportSnapshot": {
+          "id": "report-unsafe-001",
+          "generatedAt": "2026-06-26T09:00:00Z",
+          "sourceStateHash": "",
+          "sourceRefs": [
+            "doc-001"
+          ]
+        },
+        "syntheticOnly": true
+      },
+      "expectedBlockReason": "snapshot_requires_source_state_hash",
+      "safeCopy": "Raport wymaga sladu zrodel uzytych w chwili eksportu."
+    },
+    {
+      "id": "rt-006-visual-urgency-sort",
+      "gateId": "visual_neutrality_gate",
+      "phase": "phase1_context_secretariat",
+      "blockedExpected": true,
+      "input": {
+        "surface": "timeline",
+        "sortMode": "urgency",
+        "iconId": "warning",
+        "semanticColor": "red",
+        "syntheticOnly": true
+      },
+      "expectedBlockReason": "visual_design_cannot_imply_clinical_severity",
+      "safeCopy": "Elementy sa ulozone chronologicznie."
+    },
+    {
+      "id": "rt-007-runtime-llm-phase1",
+      "gateId": "runtime_gate",
+      "phase": "phase1_context_secretariat",
+      "blockedExpected": true,
+      "input": {
+        "requestedRuntimeLlmEnabled": true,
+        "networkWrites": true,
+        "syntheticOnly": true
+      },
+      "expectedBlockReason": "runtime_llm_and_network_writes_blocked_in_phase1",
+      "safeCopy": "Podglad dziala na syntetycznym fixture bez wywolan zewnetrznych."
+    },
+    {
+      "id": "rt-008-a8-booking-pulled-into-phase1",
+      "gateId": "phase_boundary_gate",
+      "phase": "phase1_context_secretariat",
+      "blockedExpected": true,
+      "input": {
+        "requestedSprint": "A8",
+        "requestedFeature": "care_navigation_booking",
+        "externalAction": "appointment_booking",
+        "syntheticOnly": true
+      },
+      "expectedBlockReason": "phase_boundary_blocks_a7_a8_until_approval",
+      "safeCopy": "Ten zakres wymaga osobnej decyzji przed rozpoczeciem."
+    },
+    {
+      "id": "rt-009-persistence-without-acceptance",
+      "gateId": "persistence_gate",
+      "phase": "phase1_context_secretariat",
+      "blockedExpected": true,
+      "input": {
+        "draftId": "draft-unsafe-001",
+        "indexedDbWrites": true,
+        "humanAcceptance": false,
+        "syntheticOnly": true
+      },
+      "expectedBlockReason": "draft_cannot_persist_without_human_acceptance",
+      "safeCopy": "Szkic wymaga akceptacji przed zapisem."
+    },
+    {
+      "id": "rt-010-commercial-overclaim",
+      "gateId": "commercial_claim_gate",
+      "phase": "system",
+      "blockedExpected": true,
+      "input": {
+        "surface": "investor_or_b2b_pitch",
+        "attackText": "AI diagnozuje pacjenta i wybiera dalsze leczenie.",
+        "syntheticOnly": true
+      },
+      "expectedBlockReason": "commercial_claim_must_remain_operational",
+      "safeCopy": "Produkt skroca czas porzadkowania kontekstu i weryfikacji zrodel."
+    }
+  ]
+}
+
