@@ -404,6 +404,111 @@ textarea {
   padding-left: 39px;
 }
 
+.legal-variant-panel {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 35;
+  width: min(560px, calc(100vw - 300px));
+  max-height: min(62vh, 620px);
+  overflow: auto;
+  margin: 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+}
+
+.legal-variant-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: start;
+}
+
+.legal-variant-head h2 {
+  margin: 2px 0 4px;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.legal-variant-head p {
+  max-width: 880px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.legal-variant-switch {
+  display: inline-grid;
+  grid-template-columns: repeat(3, 38px);
+  gap: 4px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--wash);
+}
+
+.legal-variant-switch button {
+  min-height: 34px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 900;
+}
+
+.legal-variant-switch button[aria-pressed="true"] {
+  background: var(--teal);
+  color: #ffffff;
+}
+
+.legal-variant-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.legal-variant-grid strong {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+}
+
+.legal-variant-grid ul {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legal-variant-grid li {
+  display: grid;
+  gap: 2px;
+  min-height: 48px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--wash);
+}
+
+.legal-variant-grid span {
+  font-size: 0.9rem;
+  font-weight: 850;
+}
+
+.legal-variant-grid small {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
 .topbar-actions,
 .inline-actions,
 .report-actions {
@@ -4478,6 +4583,25 @@ dialog::backdrop {
 }
 
 @media (max-width: 760px) {
+  .legal-variant-panel {
+    right: 12px;
+    bottom: 12px;
+    width: calc(100vw - 24px);
+    max-height: 52vh;
+    margin: 0;
+    padding: 12px;
+  }
+
+  .legal-variant-head,
+  .legal-variant-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .legal-variant-switch {
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .stage-film-summary {
     padding: 13px;
   }

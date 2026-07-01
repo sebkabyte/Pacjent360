@@ -71,6 +71,7 @@ $expectedFiles = @(
   "privacy.html",
   "maintenance.html",
   "health.txt",
+  "manifest.webmanifest",
   "brand/tokens.css",
   "brand/components.css",
   "patient360-contract.js",
@@ -85,7 +86,10 @@ $expectedFiles = @(
   "patient360-a4-consent-guard.js",
   "patient360-a6-checklist.js",
   "patient360-agent-policy.js",
+  "patient360-flags.js",
   "patient360-demo-data.js",
+  "p360-pwa.js",
+  "sw.js",
   "styles.css",
   "app.js",
   "robots.txt",
@@ -154,8 +158,14 @@ Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-a4-
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-a6-checklist.js"
 & node --check (Join-Path $target "patient360-agent-policy.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-agent-policy.js"
+& node --check (Join-Path $target "patient360-flags.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-flags.js"
 & node --check (Join-Path $target "patient360-demo-data.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-demo-data.js"
+& node --check (Join-Path $target "p360-pwa.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public p360-pwa.js"
+& node --check (Join-Path $target "sw.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public sw.js"
 & node --check (Join-Path $target "app.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public app.js"
 & node --check (Join-Path $target "moja-historia.js") | Out-Null
@@ -176,9 +186,18 @@ $demo = Get-Content -LiteralPath (Join-Path $target "demo.html") -Raw
 $privacy = Get-Content -LiteralPath (Join-Path $target "privacy.html") -Raw
 $disclaimer = Get-Content -LiteralPath (Join-Path $target "disclaimer.html") -Raw
 $health = Get-Content -LiteralPath (Join-Path $target "health.txt") -Raw
+$manifest = Get-Content -LiteralPath (Join-Path $target "manifest.webmanifest") -Raw
+$serviceWorker = Get-Content -LiteralPath (Join-Path $target "sw.js") -Raw
 $app = Get-Content -LiteralPath (Join-Path $target "app.js") -Raw
 
 Assert-True ($index.Contains("zast") -and $index.Contains("lekarza")) "index.html should state that Pacjent360 does not replace the doctor"
+Assert-True ($manifest.Contains('"display": "standalone"') -and $manifest.Contains('"start_url": "/index.html"')) "manifest.webmanifest should define standalone app shell"
+Assert-True ($serviceWorker.Contains('request.method !== "GET"') -and $serviceWorker.Contains('/api/')) "sw.js should cache only static GET shell and skip API calls"
+Assert-True (-not ($serviceWorker.Contains("localStorage") -or $serviceWorker.Contains("indexedDB") -or $serviceWorker.Contains("sessionStorage"))) "sw.js should avoid patient-state browser storage APIs"
+Assert-True ($index.Contains('rel="manifest" href="manifest.webmanifest"') -and $demo.Contains('rel="manifest" href="manifest.webmanifest"')) "index.html and demo.html should link the PWA manifest"
+Assert-True ($index.Contains('src="p360-pwa.js"') -and $demo.Contains('src="p360-pwa.js')) "index.html and demo.html should load PWA registration"
+Assert-True ($index.Contains('id="waitlist"') -and $index.Contains('data-waitlist-form') -and $index.Contains('double opt-in')) "index.html should expose front-end waitlist with double opt-in copy"
+Assert-True ($index.Contains("Nie wpisuj danych zdrowotnych") -and $index.Contains("NO_BACKEND_WAITLIST_PLACEHOLDER")) "waitlist should block health data and declare backend placeholder"
 Assert-True ($htaccess.Contains("Content-Security-Policy") -and $htaccess.Contains("frame-ancestors 'none'")) ".htaccess should configure CSP with frame-ancestors"
 Assert-True ($htaccess.Contains("Strict-Transport-Security") -and $htaccess.Contains("max-age=15552000")) ".htaccess should configure HSTS"
 Assert-True ($htaccess.Contains("script-src 'self'") -and -not $htaccess.Contains("https://unpkg.com")) ".htaccess should use self-hosted scripts only"
@@ -209,6 +228,7 @@ Assert-True ($privacy.Contains('rel="canonical" href="https://pacjent360.com.pl/
 Assert-True ($disclaimer.Contains('rel="canonical" href="https://pacjent360.com.pl/disclaimer.html"')) "disclaimer.html should include canonical URL"
 Assert-ScriptLoaded -Html $demo -File "assets/lucide.min.js"
 Assert-ScriptLoaded -Html $demo -File "patient360-contract.js"
+Assert-ScriptLoaded -Html $demo -File "patient360-flags.js"
 Assert-ScriptLoaded -Html $demo -File "patient360-format.js"
 Assert-ScriptLoaded -Html $demo -File "patient360-map-model.js"
 Assert-ScriptLoaded -Html $demo -File "patient360-map-view.js"
@@ -225,6 +245,7 @@ Assert-ScriptLoaded -Html $demo -File "app.js"
 $scriptIndex = @{
   lucide = Get-ScriptRefIndex -Html $demo -File "assets/lucide.min.js"
   contract = Get-ScriptRefIndex -Html $demo -File "patient360-contract.js"
+  flags = Get-ScriptRefIndex -Html $demo -File "patient360-flags.js"
   format = Get-ScriptRefIndex -Html $demo -File "patient360-format.js"
   mapModel = Get-ScriptRefIndex -Html $demo -File "patient360-map-model.js"
   mapView = Get-ScriptRefIndex -Html $demo -File "patient360-map-view.js"
@@ -241,6 +262,8 @@ $scriptIndex = @{
 }
 Assert-True ($scriptIndex.lucide -lt $scriptIndex.app) "demo.html should load local Lucide before app.js"
 Assert-True ($scriptIndex.contract -lt $scriptIndex.app) "demo.html should load patient360-contract.js before app.js"
+Assert-True ($scriptIndex.contract -lt $scriptIndex.flags) "demo.html should load patient360-contract.js before patient360-flags.js"
+Assert-True ($scriptIndex.flags -lt $scriptIndex.app) "demo.html should load patient360-flags.js before app.js"
 Assert-True ($scriptIndex.format -lt $scriptIndex.app) "demo.html should load patient360-format.js before app.js"
 Assert-True ($scriptIndex.contract -lt $scriptIndex.format) "demo.html should load patient360-contract.js before patient360-format.js"
 Assert-True ($scriptIndex.contract -lt $scriptIndex.mapModel) "demo.html should load patient360-contract.js before patient360-map-model.js"

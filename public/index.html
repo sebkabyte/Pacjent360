@@ -57,6 +57,9 @@
   </script>
   <link rel="alternate" hreflang="pl" href="https://pacjent360.com.pl/" />
   <link rel="alternate" hreflang="en" href="https://pacjent360.com.pl/?lang=en" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="brand/tokens.css" />
   <link rel="stylesheet" href="brand/components.css" />
@@ -261,6 +264,31 @@
       </div>
     </div>
   </section>
+
+  <section class="container section waitlist-section" id="waitlist" data-waitlist-section>
+    <div class="section-head split">
+      <div>
+        <p class="eyebrow" data-en="Closed beta waitlist">Waitlista bety</p>
+        <h2 data-en="Join the controlled validation list.">Dołącz do listy kontrolowanej walidacji.</h2>
+      </div>
+      <div class="section-copy">
+        <p data-en="Leave an e-mail address if you want to hear about the closed beta. The confirmation flow will use double opt-in. Do not enter personal health data in this form.">Zostaw e-mail, jeśli chcesz dostać informację o zamkniętej becie. Potwierdzenie będzie działało w modelu double opt-in. Nie wpisuj danych zdrowotnych ani danych pacjenta w tym formularzu.</p>
+      </div>
+    </div>
+    <form class="waitlist-form" data-waitlist-form data-waitlist-endpoint="NO_BACKEND_WAITLIST_PLACEHOLDER" novalidate>
+      <label for="waitlistEmail" data-en="E-mail for beta updates">E-mail do informacji o becie</label>
+      <div class="waitlist-row">
+        <input id="waitlistEmail" name="email" type="email" inputmode="email" autocomplete="email" placeholder="twoj@email.pl" aria-describedby="waitlistHelp waitlistStatus" data-waitlist-email />
+        <button class="button primary" type="submit" data-en="Join waitlist">Dołącz do waitlisty</button>
+      </div>
+      <label class="waitlist-check">
+        <input type="checkbox" required data-waitlist-confirm />
+        <span data-en="I confirm that I am not entering personal health data.">Potwierdzam, że nie wpisuję danych zdrowotnych ani danych pacjenta.</span>
+      </label>
+      <p class="waitlist-help" id="waitlistHelp" data-en="The production integration will send a confirmation e-mail before saving the address. In this static alpha page the form is a front-end placeholder only.">Integracja produkcyjna wyśle e-mail potwierdzający przed zapisem adresu. Na statycznej stronie alpha formularz jest wyłącznie placeholderem front-end.</p>
+      <p class="waitlist-status" id="waitlistStatus" role="status" aria-live="polite" data-waitlist-status></p>
+    </form>
+  </section>
 </main>
 
 <footer class="footer">
@@ -284,5 +312,6 @@
   </div>
 </footer>
 <script src="assets/story.js"></script>
+<script src="p360-pwa.js"></script>
 </body>
 </html>

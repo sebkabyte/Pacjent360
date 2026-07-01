@@ -1062,6 +1062,69 @@ body[data-register="story"] .footer a {
   margin-top: 32px;
 }
 
+.waitlist-section {
+  border-top: 1px solid rgba(16, 36, 42, 0.08);
+}
+
+.waitlist-form {
+  background: #ffffff;
+  border: 1px solid rgba(16, 36, 42, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 16px 40px rgba(16, 36, 42, 0.08);
+  display: grid;
+  gap: 12px;
+  padding: 24px;
+}
+
+.waitlist-form label {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.waitlist-row {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.waitlist-row input {
+  border: 1px solid rgba(16, 36, 42, 0.18);
+  border-radius: 8px;
+  color: var(--ink);
+  font: inherit;
+  min-height: 48px;
+  padding: 0 14px;
+}
+
+.waitlist-check {
+  align-items: flex-start;
+  display: flex;
+  gap: 10px;
+  line-height: 1.45;
+}
+
+.waitlist-check input {
+  margin-top: 4px;
+}
+
+.waitlist-help,
+.waitlist-status {
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.waitlist-status[data-state="ok"] {
+  color: #0f766e;
+  font-weight: 700;
+}
+
+.waitlist-status[data-state="error"] {
+  color: #9f1239;
+  font-weight: 700;
+}
+
 @media (max-width: 900px) {
   body[data-register="story"] .footer-grid {
     grid-template-columns: 1fr;
@@ -1084,6 +1147,15 @@ body[data-register="story"] .footer a {
   .contact-actions .button {
     width: 100%;
     justify-content: center;
+  }
+
+  .waitlist-row {
+    grid-template-columns: 1fr;
+  }
+
+  .waitlist-row .button {
+    justify-content: center;
+    width: 100%;
   }
 }
 

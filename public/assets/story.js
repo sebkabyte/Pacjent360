@@ -280,4 +280,27 @@ document.querySelectorAll("[data-language-switch]").forEach((button) => {
   });
 });
 
+const waitlistForm = document.querySelector("[data-waitlist-form]");
+if (waitlistForm) {
+  const waitlistEmail = waitlistForm.querySelector("[data-waitlist-email]");
+  const waitlistConfirm = waitlistForm.querySelector("[data-waitlist-confirm]");
+  const waitlistStatus = waitlistForm.querySelector("[data-waitlist-status]");
+  waitlistForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const email = String(waitlistEmail?.value || "").trim();
+    const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!validEmail || !waitlistConfirm?.checked) {
+      if (waitlistStatus) {
+        waitlistStatus.dataset.state = "error";
+        waitlistStatus.textContent = "Podaj poprawny e-mail i potwierdz brak danych zdrowotnych.";
+      }
+      return;
+    }
+    if (waitlistStatus) {
+      waitlistStatus.dataset.state = "ok";
+      waitlistStatus.textContent = "Front-end gotowy. Produkcyjny zapis wymaga jeszcze endpointu double opt-in.";
+    }
+  });
+}
+
 setLanguage(getInitialLanguage(), { persist: false });

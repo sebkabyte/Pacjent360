@@ -99,7 +99,7 @@ $privateTextPatterns = @(
 )
 
 $textFiles = Get-ChildItem -LiteralPath $target -Recurse -File | Where-Object {
-  $_.Extension -in @(".md", ".txt", ".html", ".css", ".js", ".json", ".xml", ".yml", ".yaml", ".ps1")
+  $_.Extension -in @(".md", ".txt", ".html", ".css", ".js", ".json", ".webmanifest", ".xml", ".yml", ".yaml", ".ps1")
 } | Where-Object {
   (Get-RelativePath -Base $target -Path $_.FullName) -ne "tools/verify-public-repo.ps1"
 }
@@ -130,8 +130,14 @@ Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient36
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-a6-checklist.js"
 & node --check (Join-Path $target "public/patient360-agent-policy.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-agent-policy.js"
+& node --check (Join-Path $target "public/patient360-flags.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-flags.js"
 & node --check (Join-Path $target "public/patient360-demo-data.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-demo-data.js"
+& node --check (Join-Path $target "public/p360-pwa.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/p360-pwa.js"
+& node --check (Join-Path $target "public/sw.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/sw.js"
 & node --check (Join-Path $target "public/p360-result-series.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/p360-result-series.js"
 & node --check (Join-Path $target "public/app.js") | Out-Null
@@ -148,6 +154,10 @@ Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-m
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-previsit-workflow.js"
 & node --check (Join-Path $target "tools/validate-caregiver-scope.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-caregiver-scope.js"
+& node --check (Join-Path $target "tools/validate-variant-flags.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-variant-flags.js"
+& node --check (Join-Path $target "tools/validate-pwa-baseline.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-pwa-baseline.js"
 & node --check (Join-Path $target "tools/validate-consent-draft.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-consent-draft.js"
 & node --check (Join-Path $target "tools/validate-demo-coherence.js") | Out-Null

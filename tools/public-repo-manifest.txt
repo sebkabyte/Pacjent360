@@ -38,6 +38,10 @@ tools/domain-diagnostics.js
 tools/release-readiness.js
 tools/prepare-public-repo.ps1
 tools/verify-public-repo.ps1
+tools/validate-variant-flags.ps1
+tools/validate-variant-flags.js
+tools/validate-pwa-baseline.ps1
+tools/validate-pwa-baseline.js
 tools/validate-data-contract.ps1
 tools/validate-data-contract.js
 tools/validate-format.ps1
@@ -84,6 +88,7 @@ fixtures/patient-map-model-edgecases.json
 fixtures/previsit-workflow-edgecases.json
 fixtures/caregiver-scope-edgecases.json
 fixtures/consent-draft-edgecases.json
+fixtures/variant-flags-edgecases.json
 fixtures/a0-agent-policy-edgecases.json
 fixtures/a1-safe-draft-dashboard.snapshot.json
 fixtures/system-wide-red-team-cases.json

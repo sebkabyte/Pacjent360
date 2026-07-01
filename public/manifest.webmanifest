@@ -1,0 +1,28 @@
+{
+  "name": "Pacjent360 - kontekst wizyty",
+  "short_name": "Pacjent360",
+  "description": "Prototyp administracyjno-kontekstowy do porzadkowania dokumentow, zrodel i pytan przed wizyta.",
+  "id": "/",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f7fbfa",
+  "theme_color": "#10242a",
+  "orientation": "portrait-primary",
+  "lang": "pl",
+  "categories": ["health", "productivity"],
+  "icons": [
+    {
+      "src": "assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/hero-clinical-context.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

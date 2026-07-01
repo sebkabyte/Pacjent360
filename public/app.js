@@ -4,6 +4,10 @@ const PATIENT360_CONTRACT = globalThis.Patient360Contract;
 if (!PATIENT360_CONTRACT) {
   throw new Error("Missing patient360-contract.js");
 }
+const PATIENT360_FLAGS = globalThis.Patient360Flags;
+if (!PATIENT360_FLAGS) {
+  throw new Error("Missing patient360-flags.js");
+}
 const PATIENT360_FORMAT = globalThis.Patient360Format;
 if (!PATIENT360_FORMAT) {
   throw new Error("Missing patient360-format.js");
@@ -714,6 +718,7 @@ const roleSwitcher = document.querySelector("#roleSwitcher");
 const demoLanguageSwitch = document.querySelector("#demoLanguageSwitch");
 const searchInput = document.querySelector("#searchInput");
 const criticalStrip = document.querySelector("#criticalStrip");
+const legalVariantPanel = document.querySelector("#legalVariantPanel");
 const entryDialog = document.querySelector("#entryDialog");
 const dialogTitle = document.querySelector("#dialogTitle");
 const dialogFields = document.querySelector("#dialogFields");
@@ -725,6 +730,7 @@ const confirmAction = document.querySelector("#confirmAction");
 const confirmSecondaryAction = document.querySelector("#confirmSecondaryAction");
 let pendingConsentRevokeId = null;
 let pendingConsentCreateDraft = null;
+let activeLegalVariant = PATIENT360_FLAGS.aktywnyWariant();
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
@@ -1182,6 +1188,72 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+function legalVariantFeatures(variant = activeLegalVariant) {
+  const config = PATIENT360_FLAGS.cloneFlags();
+  const resolvedVariant = PATIENT360_FLAGS.aktywnyWariant(variant, config);
+  return Object.entries(config.features || {}).map(([key, item]) => {
+    const enabled = PATIENT360_FLAGS.czyWlaczona(key, resolvedVariant, config);
+    const visibleInDemo = item.surfacesByVariant?.[resolvedVariant]?.demo === true;
+    const copy = PATIENT360_FLAGS.copyDlaWariantu(key, resolvedVariant, config);
+    return { key, item, enabled, visibleInDemo, copy };
+  });
+}
+
+function renderLegalVariantPanel() {
+  if (!legalVariantPanel) return;
+  const variant = PATIENT360_FLAGS.aktywnyWariant(activeLegalVariant);
+  const features = legalVariantFeatures(variant);
+  const visible = features.filter((feature) => feature.enabled && feature.visibleInDemo && feature.copy);
+  const hidden = features.filter((feature) => !feature.enabled || !feature.visibleInDemo || !feature.copy);
+  const activeCopy = visible[0]?.copy || {};
+  legalVariantPanel.innerHTML = `
+    <div class="legal-variant-head">
+      <div>
+        <p class="eyebrow">Legal Variant Switchboard</p>
+        <h2>Wariant ${escapeHtml(variant)}: ${escapeHtml(activeCopy.title || "konfiguracja demo")}</h2>
+        <p>${escapeHtml(activeCopy.body || "Panel pokazuje, ktore powierzchnie demo sa wlaczone dla wybranego wariantu prawnego.")}</p>
+      </div>
+      <div class="legal-variant-switch" role="group" aria-label="Przelacz wariant prawny">
+        ${PATIENT360_FLAGS.LEGAL_VARIANTS.map((item) => `
+          <button type="button" data-legal-variant="${escapeHtml(item)}" aria-pressed="${item === variant ? "true" : "false"}">
+            ${escapeHtml(item)}
+          </button>
+        `).join("")}
+      </div>
+    </div>
+    <div class="legal-variant-grid">
+      <div>
+        <strong>Widoczne w demo</strong>
+        <ul>
+          ${visible.map((feature) => `
+            <li>
+              <span>${escapeHtml(feature.item.label)}</span>
+              <small>${escapeHtml(feature.copy.disclaimer)}</small>
+            </li>
+          `).join("")}
+        </ul>
+      </div>
+      <div>
+        <strong>Wylaczone przez bramke</strong>
+        <ul>
+          ${hidden.map((feature) => `
+            <li>
+              <span>${escapeHtml(feature.item.label)}</span>
+              <small>${escapeHtml(feature.item.runtimeGate || "poza tym wariantem")}</small>
+            </li>
+          `).join("")}
+        </ul>
+      </div>
+    </div>
+  `;
+  legalVariantPanel.querySelectorAll("[data-legal-variant]").forEach((button) => {
+    button.addEventListener("click", () => {
+      activeLegalVariant = PATIENT360_FLAGS.aktywnyWariant(button.dataset.legalVariant);
+      renderLegalVariantPanel();
+    });
+  });
+}
+
 function formatDate(value) {
   if (!value) return "brak daty";
   const date = new Date(value);
@@ -1506,6 +1578,7 @@ function render() {
   renderRoleSwitcher();
   renderPatientSelect();
   renderCriticalStrip();
+  renderLegalVariantPanel();
   renderView();
   renderEvidence();
   refreshIcons();

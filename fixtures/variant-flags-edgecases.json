@@ -1,0 +1,77 @@
+{
+  "fixtureVersion": 1,
+  "validCases": [
+    {
+      "id": "default-safe-variant-b",
+      "activeVariant": "B",
+      "expectedEnabled": [
+        "patientContextOrganizer",
+        "visitPreparationChecklist",
+        "doctorReadOnlyPacket",
+        "waitlist",
+        "organizationalAiDrafting"
+      ],
+      "expectedDisabled": [
+        "aiDraftingFull",
+        "clinicalAssist"
+      ]
+    },
+    {
+      "id": "variant-a-full-config",
+      "activeVariant": "A",
+      "expectedEnabled": [
+        "patientContextOrganizer",
+        "visitPreparationChecklist",
+        "doctorReadOnlyPacket",
+        "waitlist",
+        "aiDraftingFull",
+        "organizationalAiDrafting"
+      ],
+      "expectedDisabled": [
+        "clinicalAssist"
+      ]
+    },
+    {
+      "id": "variant-c-core-only",
+      "activeVariant": "C",
+      "expectedEnabled": [
+        "patientContextOrganizer",
+        "visitPreparationChecklist",
+        "doctorReadOnlyPacket",
+        "waitlist"
+      ],
+      "expectedDisabled": [
+        "aiDraftingFull",
+        "organizationalAiDrafting",
+        "clinicalAssist"
+      ]
+    }
+  ],
+  "negativeCases": [
+    {
+      "id": "feature-without-full-variant-assignment",
+      "mutate": "removeVariantAssignment",
+      "expectedError": "patientContextOrganizer.variants.must_define_A_B_C"
+    },
+    {
+      "id": "forbidden-term-in-visible-copy",
+      "mutate": "forbiddenCopy",
+      "expectedErrorIncludes": "patientContextOrganizer.A.copy.forbiddenPhrase"
+    },
+    {
+      "id": "variant-c-exposes-borderline-feature",
+      "mutate": "variantCVisible",
+      "expectedError": "organizationalAiDrafting.C.must_be_disabled_for_core_only_variant"
+    },
+    {
+      "id": "enabled-feature-without-disclaimer",
+      "mutate": "missingDisclaimer",
+      "expectedError": "doctorReadOnlyPacket.B.disclaimer.missing"
+    },
+    {
+      "id": "disabled-feature-visible-in-navigation",
+      "mutate": "disabledReachable",
+      "expectedError": "clinicalAssist.C.disabled_surface_visible:navigation"
+    }
+  ]
+}
