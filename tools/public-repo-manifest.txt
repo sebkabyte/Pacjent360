@@ -105,6 +105,7 @@ fixtures/s2-data-model-edgecases.json
 fixtures/api-contract-edgecases.json
 fixtures/s2-runtime-contract-edgecases.json
 fixtures/s2-prototype-edgecases.json
+fixtures/sh-loop-state-edgecases.json
 fixtures/a0-agent-policy-edgecases.json
 fixtures/a1-safe-draft-dashboard.snapshot.json
 fixtures/system-wide-red-team-cases.json

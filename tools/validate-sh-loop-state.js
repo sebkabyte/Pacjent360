@@ -62,17 +62,11 @@ function assertContainsAll(label, text, fragments) {
   });
 }
 
-function main() {
-  if (!fs.existsSync(statePath)) {
-    console.log("SH loop state not present; validation skipped for public package.");
-    return;
-  }
-
-  const state = fs.readFileSync(statePath, "utf8");
+function validateState(state, options = {}) {
   const branchMatch = state.match(/^Galaz:\s*(.+)$/mi) || state.match(/^Branch:\s*(.+)$/mi);
   assert(branchMatch, "SH loop state must name the active branch");
   const expectedBranch = branchMatch[1].trim();
-  const actualBranch = currentBranch();
+  const actualBranch = options.actualBranch === undefined ? currentBranch() : options.actualBranch;
   if (actualBranch) {
     assert(expectedBranch === actualBranch, `SH loop branch mismatch: state=${expectedBranch}, git=${actualBranch}`);
   }
@@ -117,12 +111,13 @@ function main() {
   assert(km1.status.includes("READY-FOR-REVIEW"), "KM-1 code track must remain READY-FOR-REVIEW until human gate closes");
   assert(km1.status.includes("SCOPE_FREEZE_SIGNED") || km1.tests.includes("SCOPE_FREEZE_SIGNED"), "KM-1 must name SCOPE_FREEZE_SIGNED gate");
 
-  const gateOpen = backendGateOpen(state);
+  const gateOpen = options.backendGateOpen === undefined ? backendGateOpen(state) : options.backendGateOpen;
   const km2 = rows.find((row) => row.km === "KM-2 Backend Core");
   if (!gateOpen) {
     assert(km2.status.toLowerCase().includes("blocked"), "KM-2 must stay blocked while backend gate is closed");
     assert(km2.status.toLowerCase().includes("backend gate closed"), "KM-2 status must name backend gate closed");
-    assert(!fileExists("server"), "server/ must not exist before backend gate opens");
+    const hasFile = options.fileExists || fileExists;
+    assert(!hasFile("server"), "server/ must not exist before backend gate opens");
   }
 
   assertContainsAll("Human waiting list", state, [
@@ -135,14 +130,80 @@ function main() {
 
   const commitRefs = [...state.matchAll(/^Commit [^:\n]+:\s+([0-9a-f]{7,40})\b/gim)].map((match) => match[1]);
   assert(commitRefs.length >= 8, `expected S1/S2 commit references, found ${commitRefs.length}`);
-  commitRefs.forEach((sha) => {
-    const exists = runGit(["cat-file", "-e", `${sha}^{commit}`]);
-    assert(exists.status === 0, `loop-state commit does not resolve: ${sha}`);
-    const ancestor = runGit(["merge-base", "--is-ancestor", sha, "HEAD"]);
-    assert(ancestor.status === 0, `loop-state commit is not in current HEAD ancestry: ${sha}`);
-  });
+  if (options.checkGit !== false) {
+    commitRefs.forEach((sha) => {
+      const exists = runGit(["cat-file", "-e", `${sha}^{commit}`]);
+      assert(exists.status === 0, `loop-state commit does not resolve: ${sha}`);
+      const ancestor = runGit(["merge-base", "--is-ancestor", sha, "HEAD"]);
+      assert(ancestor.status === 0, `loop-state commit is not in current HEAD ancestry: ${sha}`);
+    });
+  }
 
-  console.log(`SH loop state validation passed: milestones=${rows.length}, commits=${commitRefs.length}, backendGateOpen=${gateOpen}`);
+  return { milestones: rows.length, commits: commitRefs.length, backendGateOpen: gateOpen };
+}
+
+function replaceFirst(state, from, to) {
+  assert(state.includes(from), `edgecase mutation source not found: ${from}`);
+  return state.replace(from, to);
+}
+
+function applyMutation(state, mutation) {
+  if (mutation.type === "replace") {
+    return replaceFirst(state, mutation.from, mutation.to);
+  }
+  if (mutation.type === "removeLineStartingWith") {
+    return state
+      .split(/\r?\n/)
+      .filter((line) => !line.startsWith(mutation.prefix))
+      .join("\n");
+  }
+  throw new Error(`unknown SH loop edgecase mutation type: ${mutation.type}`);
+}
+
+function runEdgeCases(baseState) {
+  const fixturePath = path.join(root, "fixtures", "sh-loop-state-edgecases.json");
+  if (!fs.existsSync(fixturePath)) return { total: 0, negatives: 0 };
+
+  const fixture = JSON.parse(fs.readFileSync(fixturePath, "utf8"));
+  let negatives = 0;
+  fixture.cases.forEach((testCase) => {
+    const mutated = testCase.mutation ? applyMutation(baseState, testCase.mutation) : baseState;
+    const options = {
+      actualBranch: testCase.actualBranch === undefined ? currentBranch() : testCase.actualBranch,
+      backendGateOpen: false,
+      checkGit: testCase.checkGit !== false,
+      fileExists: (relativePath) => testCase.files?.[relativePath] === true
+    };
+
+    if (testCase.valid) {
+      validateState(mutated, options);
+      return;
+    }
+
+    negatives += 1;
+    try {
+      validateState(mutated, options);
+      throw new Error(`edgecase did not fail: ${testCase.name}`);
+    } catch (error) {
+      assert(
+        error.message.includes(testCase.expectedError),
+        `${testCase.name}: expected error containing "${testCase.expectedError}", got "${error.message}"`
+      );
+    }
+  });
+  return { total: fixture.cases.length, negatives };
+}
+
+function main() {
+  if (!fs.existsSync(statePath)) {
+    console.log("SH loop state not present; validation skipped for public package.");
+    return;
+  }
+
+  const state = fs.readFileSync(statePath, "utf8");
+  const result = validateState(state);
+  const edgecases = runEdgeCases(state);
+  console.log(`SH loop state validation passed: milestones=${result.milestones}, commits=${result.commits}, backendGateOpen=${result.backendGateOpen}, edgecases=${edgecases.total}, negatives=${edgecases.negatives}`);
 }
 
 try {

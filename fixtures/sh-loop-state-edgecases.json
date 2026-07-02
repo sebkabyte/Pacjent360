@@ -1,0 +1,59 @@
+{
+  "cases": [
+    {
+      "name": "valid current state",
+      "valid": true,
+      "checkGit": true
+    },
+    {
+      "name": "missing KM-2 milestone",
+      "valid": false,
+      "checkGit": false,
+      "expectedError": "missing milestone row: KM-2 Backend Core",
+      "mutation": {
+        "type": "removeLineStartingWith",
+        "prefix": "| KM-2 Backend Core"
+      }
+    },
+    {
+      "name": "missing KM-1 DoE",
+      "valid": false,
+      "checkGit": false,
+      "expectedError": "KM-1 Evidence & Contracts: missing DoE",
+      "mutation": {
+        "type": "replace",
+        "from": "evidence table; decision continue/narrow/pivot; founder podpisuje scope freeze",
+        "to": ""
+      }
+    },
+    {
+      "name": "KM-2 opened without backend gate",
+      "valid": false,
+      "checkGit": false,
+      "expectedError": "KM-2 must stay blocked while backend gate is closed",
+      "mutation": {
+        "type": "replace",
+        "from": "blocked: backend gate closed",
+        "to": "in-progress; backend gate open"
+      }
+    },
+    {
+      "name": "branch mismatch",
+      "valid": false,
+      "checkGit": false,
+      "actualBranch": "codex/not-the-state-branch",
+      "expectedError": "SH loop branch mismatch"
+    },
+    {
+      "name": "commit does not resolve",
+      "valid": false,
+      "checkGit": true,
+      "expectedError": "loop-state commit does not resolve",
+      "mutation": {
+        "type": "replace",
+        "from": "2a658c3",
+        "to": "0000000"
+      }
+    }
+  ]
+}
