@@ -16,8 +16,20 @@ function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), "utf8");
 }
 
+function fileExists(relativePath) {
+  return fs.existsSync(path.join(root, relativePath));
+}
+
+function readIfExists(relativePath) {
+  return fileExists(relativePath) ? read(relativePath) : "";
+}
+
 function readJson(relativePath) {
   return JSON.parse(read(relativePath));
+}
+
+function readJsonIfExists(relativePath) {
+  return fileExists(relativePath) ? readJson(relativePath) : null;
 }
 
 function runNode(relativePath) {
@@ -44,6 +56,56 @@ function assertFileContains(relativePath, fragments) {
   fragments.forEach((fragment) => {
     assert(content.includes(fragment), `${relativePath} missing fragment: ${fragment}`);
   });
+}
+
+function backendGateEvidence() {
+  const scopeFreeze = readIfExists("BLUEPRINT/SH2_REVIEW_READY/SCOPE_FREEZE_SIGNED.md");
+  const loopState = readIfExists("BLUEPRINT/SH_LOOP_STATE.md");
+  const signedScopeFreeze = /ZATWIERDZAM/i.test(scopeFreeze) && /founder/i.test(scopeFreeze);
+  const s2Approved = /S2[^\n]*(accepted|approved|zaakceptowane|zatwierdzone)/i.test(loopState) ||
+    /(accepted|approved|zaakceptowane|zatwierdzone)[^\n]*S2/i.test(loopState);
+  return {
+    open: signedScopeFreeze && s2Approved,
+    signedScopeFreeze,
+    s2Approved,
+    loopState
+  };
+}
+
+function assertNoBackendImplementation(reason) {
+  const blockedPaths = [
+    "server",
+    "docker-compose.yml",
+    "docker-compose.yaml",
+    ".github/workflows/backend.yml",
+    ".github/workflows/backend.yaml"
+  ];
+  blockedPaths.forEach((relativePath) => {
+    assert(!fileExists(relativePath), `${reason}: unexpected backend artifact before gate opens: ${relativePath}`);
+  });
+
+  const packageJson = readJsonIfExists("package.json");
+  if (!packageJson) return;
+
+  const dependencyNames = Object.keys({
+    ...(packageJson.dependencies || {}),
+    ...(packageJson.devDependencies || {}),
+    ...(packageJson.optionalDependencies || {})
+  });
+  const backendDependencies = dependencyNames.filter((name) =>
+    name === "fastify" ||
+    name === "pg" ||
+    name === "postgres" ||
+    name === "testcontainers" ||
+    name === "minio" ||
+    name.startsWith("@fastify/") ||
+    name.startsWith("@prisma/") ||
+    name === "prisma" ||
+    name === "drizzle-orm" ||
+    name === "typeorm" ||
+    name === "sequelize"
+  );
+  assert(backendDependencies.length === 0, `${reason}: backend dependencies before gate opens: ${backendDependencies.join(", ")}`);
 }
 
 const criteria = [
@@ -121,7 +183,9 @@ const criteria = [
       assert(bundle.gates.backendOpen === false, "backend gate must remain closed in S2");
       assert(bundle.gates.aiRuntimeOpen === false, "AI runtime gate must remain closed in S2");
       assert(bundle.gates.usesRealPatientData === false, "real patient data must remain forbidden in S2");
-      assert(!fs.existsSync(path.join(root, "server")), "S2 must not introduce server/backend implementation");
+      if (!backendGateEvidence().open) {
+        assertNoBackendImplementation("S2 must not introduce server/backend implementation");
+      }
       assert(!read("public/patient360-s2-prototype.js").includes("fetch("), "S2 prototype must not call backend APIs");
     }
   },
@@ -142,6 +206,23 @@ const criteria = [
         "fixtures/s2-prototype-edgecases.json"
       ]);
       assertFileContains("tools/verify-public-repo.ps1", ["tools/acceptance/s2-acceptance.js"]);
+    }
+  },
+  {
+    id: "S2-AC-008",
+    title: "Backend transition remains blocked unless founder scope-freeze evidence exists",
+    assert() {
+      const evidence = backendGateEvidence();
+      if (!evidence.open) {
+        assertNoBackendImplementation("backend gate is closed");
+        assert(!/Biezacy sprint:\s*S3|Current sprint:\s*S3/i.test(evidence.loopState), "S3 cannot become the current sprint before backend gate evidence exists");
+      }
+
+      const deliveryPrompt = readIfExists("CODEX_SH_DELIVERY_LOOP_PROMPT.md");
+      if (deliveryPrompt) {
+        assert(deliveryPrompt.includes("SCOPE_FREEZE_SIGNED"), "delivery loop must name SCOPE_FREEZE_SIGNED as backend gate evidence");
+        assert(deliveryPrompt.includes("approved") || deliveryPrompt.includes("approved/scalone"), "delivery loop must require human S2 approval before S3");
+      }
     }
   }
 ];
