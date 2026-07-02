@@ -142,6 +142,7 @@ function addSource(sources, ref, type, title, record, date = "") {
       ...(Array.isArray(record?.sourceRefs) ? record.sourceRefs : []),
       ...(Array.isArray(record?.values) ? record.values.flatMap((value) => (Array.isArray(value?.sourceRefs) ? value.sourceRefs : [])) : [])
     ].some((refValue) => String(refValue).startsWith("doc:")),
+    rangeAssigned: (record?.normalMin !== undefined && record?.normalMin !== null) || (record?.normalMax !== undefined && record?.normalMax !== null),
     title: title || ref,
     patientId: record?.patientId || "",
     date: date || record?.date || record?.eventDate || record?.contactDate || record?.generatedAt || "",
@@ -380,6 +381,16 @@ function validateContract(contract) {
       if (source.type === "observation" && source.evidenceClass === "official_document" && source.hasDocumentRef !== true) {
         errors.push(`source ${source.ref} claims official_document evidence without doc: sourceRef`);
       }
+      // S2-R2: system nie moze nadac zakresu referencyjnego relacji opiekuna/pacjenta
+      // bez zrodla dokumentowego. Relacja to wywiad, nie wynik laboratoryjny.
+      if (
+        source.type === "observation" &&
+        ["caregiver_reported", "patient_reported"].includes(source.evidenceClass) &&
+        source.rangeAssigned === true &&
+        source.hasDocumentRef !== true
+      ) {
+        errors.push(`source ${source.ref} has system-assigned reference range on ${source.evidenceClass} observation without document source`);
+      }
     }
   });
 
@@ -497,6 +508,35 @@ function main() {
     console.error(allErrors.join("\n"));
     process.exit(1);
   }
+
+  // Negatywny self-check S2-R2: relacja opiekuna z nadanym normalMin/Max bez zrodla
+  // dokumentowego musi byc odrzucona.
+  const negativePatient = patients.find((patient) => patient.id === "p3") || patients[0];
+  const negativeState = buildActivePatientState(demoState, negativePatient);
+  const negativeInterview = (negativeState.interviews || [])[0];
+  if (!negativeInterview) throw new Error("negative self-check requires an interview source");
+  negativeState.observations = [
+    ...(negativeState.observations || []),
+    {
+      id: "neg-caregiver-range",
+      patientId: negativePatient.id,
+      name: "Obserwacja opiekuna z zakresem nadanym przez system",
+      type: "obserwacja opiekuna",
+      unit: "j",
+      normalMin: 1,
+      normalMax: 2,
+      evidenceClass: "caregiver_reported",
+      values: [{ date: "2026-06-01", value: 1.5, sourceRefs: [`interview:${negativeInterview.id}`] }]
+    }
+  ];
+  const negativeErrors = validateContract(buildContract(negativeState));
+  const expectedNegative = "system-assigned reference range";
+  if (!negativeErrors.some((error) => error.includes(expectedNegative))) {
+    console.error(`negative self-check failed: expected error containing "${expectedNegative}", got: ${negativeErrors.join("; ") || "none"}`);
+    process.exit(1);
+  }
+  console.log("negative self-check passed: caregiver observation with system-assigned range rejected");
+
   console.log(`Data Contract v${DATA_CONTRACT_VERSION} validation passed`);
   results.forEach((result) => {
     console.log(`- ${result.patientId}: ${result.sources} sources, ${result.claims} claims, ${result.events} events, ${result.sourceMissing} source_missing`);

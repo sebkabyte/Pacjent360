@@ -925,6 +925,19 @@ h3 {
   color: var(--blue);
 }
 
+/* S2-R2: wpisy relacjonowane przez opiekuna/pacjenta wygladaja inaczej niz wyniki lab */
+.relation-reported-row {
+  background: var(--blue-soft);
+}
+
+.relation-reported-row td:first-child {
+  border-left: 3px solid var(--blue);
+}
+
+.status-chip.relation-reported-badge {
+  border: 1px dashed var(--blue);
+}
+
 .timeline {
   position: relative;
   display: grid;

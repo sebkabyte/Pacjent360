@@ -1622,8 +1622,6 @@
       "name": "Temperatura zgłoszona przez rodzica",
       "type": "obserwacja opiekuna",
       "unit": "°C",
-      "normalMin": 36,
-      "normalMax": 37.5,
       "values": [
         {
           "date": {
@@ -1656,7 +1654,8 @@
           ]
         }
       ],
-      "evidenceClass": "caregiver_reported"
+      "evidenceClass": "caregiver_reported",
+      "rangeLabel": "pomiar domowy, bez zakresu referencyjnego"
     },
     {
       "id": "o8",

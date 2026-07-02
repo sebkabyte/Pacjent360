@@ -1382,6 +1382,22 @@ function observationRangeState(observation) {
   return resultSeriesForObservation(observation).status;
 }
 
+// S2-R2: obserwacje relacjonowane przez opiekuna/pacjenta nie dostaja chipu statusu
+// zakresowego. Jeden wspolny badge we wszystkich widokach, gdzie takie wpisy widac.
+function isRelationReportedObservation(observation) {
+  return ["caregiver_reported", "patient_reported"].includes(observation?.evidenceClass);
+}
+
+function relationReportedLabel(observation) {
+  return observation?.evidenceClass === "patient_reported"
+    ? "relacja pacjenta — do potwierdzenia w gabinecie"
+    : "relacja opiekuna — do potwierdzenia w gabinecie";
+}
+
+function relationReportedBadge(observation) {
+  return `<span class="status-chip info relation-reported-badge">${escapeHtml(relationReportedLabel(observation))}</span>`;
+}
+
 function observationStatus(observation) {
   const series = resultSeriesForObservation(observation);
   return P360ResultSeries.statusLabel(series.status, series.range);
@@ -1535,7 +1551,8 @@ function highlightedSourcesForLens(lens = activeSpecialtyLens(), limit = 4) {
     ...byPatient(state.documents).map((item) => ({ kind: "document", item, title: item.title || item.type, body: item.summary || item.source || "" })),
     ...byPatient(state.observations).map((item) => {
       const latest = latestValue(item);
-      return { kind: "observation", item, title: item.name, body: latest ? `${latest.value} ${item.unit} · ${observationStatus(item)}` : observationStatus(item) };
+      const observationBody = isRelationReportedObservation(item) ? relationReportedLabel(item) : observationStatus(item);
+      return { kind: "observation", item, title: item.name, body: latest ? `${latest.value} ${item.unit} · ${observationBody}` : observationBody };
     }),
     ...byPatient(state.medications).map((item) => ({ kind: "medication", item, title: item.name, body: item.question || item.story || "" })),
     ...byPatient(state.interviews).map((item) => ({ kind: "interview", item, title: item.scenario || "Wywiad", body: item.transcript || Object.values(item.answers || {}).join(" ") }))
@@ -3760,7 +3777,7 @@ function renderPatientResultRow(observation) {
       </div>
       <div>
         <strong>${escapeHtml(latest?.value ?? "brak")} ${escapeHtml(observation.unit)}</strong>
-        <span class="status-chip ${observationStatusClass(observation)}">${escapeHtml(observationStatus(observation))}</span>
+        ${isRelationReportedObservation(observation) ? relationReportedBadge(observation) : `<span class="status-chip ${observationStatusClass(observation)}">${escapeHtml(observationStatus(observation))}</span>`}
       </div>
       <div class="source-line">${sourceChips(latest?.sourceRefs || [`observation:${observation.id}`])}</div>
     </article>
@@ -5105,10 +5122,10 @@ function renderObservations() {
             ${observations.map((obs) => {
               const latest = latestValue(obs);
               return `
-                <tr>
+                <tr class="${isRelationReportedObservation(obs) ? "relation-reported-row" : ""}">
                   <td><strong>${escapeHtml(obs.name)}</strong><br><span class="muted">${escapeHtml(obs.type)}</span></td>
                   <td>${escapeHtml(latest?.value ?? "brak")} ${escapeHtml(obs.unit)}<br><span class="muted">${formatDate(latest?.date)}</span></td>
-                  <td class="result-chart-cell">${renderResultChart(obs)}<br><span class="status-chip ${observationStatusClass(obs)}">${escapeHtml(observationStatus(obs))}</span></td>
+                  <td class="result-chart-cell">${renderResultChart(obs)}<br>${isRelationReportedObservation(obs) ? relationReportedBadge(obs) : `<span class="status-chip ${observationStatusClass(obs)}">${escapeHtml(observationStatus(obs))}</span>`}</td>
                   <td>${escapeHtml(observationRangeLabel(obs))}<br><span class="muted">Bez oceny klinicznej.</span></td>
                   <td>${sourceChips(latest?.sourceRefs || [`observation:${obs.id}`])}</td>
                 </tr>
