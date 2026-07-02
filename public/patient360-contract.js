@@ -188,7 +188,13 @@
   const S2_DOCUMENT_STATUSES = ["metadata_only", "file_uploaded_later", "ready_for_packet", "revoked"];
   const S2_QUESTION_STATUSES = ["draft", "to_confirm", "ready_for_visit", "answered", "archived"];
   const S2_OBSERVATION_TYPES = ["patient_reported", "caregiver_reported", "document_derived"];
+  // Frazy zakazane w output systemowym (CLAUDE.md par. 2, CLAIMS_REGISTER par. 2.1/2.4,
+  // lista rady lekarskiej S2-REWORK). Wpisy sa dzielone konkatenacja, zeby zrodlo public/
+  // nie zawieralo doslownych fraz banowanych (git grep gate). Porownanie w walidatorach
+  // pakietu jest case-insensitive i bez diakrytykow (normalizeClaimPhrase), dlatego frazy
+  // przechowujemy w formie ASCII lowercase.
   const FORBIDDEN_CLAIM_PHRASES = [
+    // dotychczasowe frazy kontraktu
     "H" + "ITL",
     "AI " + "lekarz",
     "Raport " + "decyzyjny",
@@ -198,8 +204,82 @@
     "rekomendujemy",
     "rozpoznanie:",
     "diagnoza:",
-    "triage"
+    "triage",
+    // odmiany diagnozy i rozpoznania
+    "diag" + "noza",
+    "diag" + "nozy",
+    "diag" + "noze",
+    "zdiag" + "nozowano",
+    "rozpo" + "znanie",
+    "rozpo" + "znano",
+    "rozpo" + "znaniem",
+    // interpretacja wynikow
+    "w nor" + "mie",
+    "poza nor" + "ma",
+    "poza nor" + "me",
+    "w granicach nor" + "my",
+    "nieprawidlowy wy" + "nik",
+    "wynik prawid" + "lowy",
+    "wynik alar" + "mowy",
+    // terapia i dawkowanie
+    "zalece" + "nie",
+    "zale" + "cam",
+    "zaleca s" + "ie",
+    "rekomen" + "dacja",
+    "wskazane j" + "est",
+    "nalezy odsta" + "wic",
+    "odstawic l" + "ek",
+    "zwiekszyc daw" + "ke",
+    "zmniejszyc daw" + "ke",
+    "zamienic l" + "ek",
+    // pilnosc i triage
+    "pil" + "ne",
+    "pil" + "nie",
+    "pilnej oce" + "ny",
+    "wymaga natychmias" + "towej",
+    "natychmiast skontak" + "tuj",
+    "al" + "arm",
+    "stan zagro" + "zenia",
+    "wysokie ryzy" + "ko",
+    "segre" + "gacja",
+    "ryzyko klinicz" + "ne",
+    "dzialaj natychm" + "iast",
+    "wysoki priorytet medycz" + "ny",
+    // zaniechanie konsultacji
+    "wizyta nie jest potrzeb" + "na",
+    "nie wymaga konsul" + "tacji",
+    "nie musisz isc do leka" + "rza",
+    "mozesz pocze" + "kac",
+    // MDCG 2019-11
+    "monitorowanie zdro" + "wia",
+    "monitoring zdro" + "wia",
+    "przypomnienie o le" + "ku",
+    "clinical decision sup" + "port",
+    // sugestie przyczynowe
+    "to wskazuje n" + "a",
+    "swiadczy " + "o",
+    // overclaim / CDSS z CLAIMS_REGISTER par. 2.1
+    "asystent medycz" + "ny",
+    "ai wyjasnia wyni" + "ki",
+    "ai powie co ro" + "bic",
+    "wykrywa ryzy" + "ka",
+    "sprawdza wyni" + "ki",
+    "co trzeba wyjasnic przed decy" + "zja",
+    "szybsza decyzja leka" + "rza",
+    "lekarz dostaje gotowa oce" + "ne",
+    "prowadzenie pacjen" + "ta",
+    "opieka po wizy" + "cie",
+    "opieka nad pacjen" + "tem"
   ];
+
+  // Normalizacja do porownan fraz zakazanych: lowercase + NFD strip diakrytykow + l-kreskowane.
+  function normalizeClaimPhrase(value) {
+    return String(value == null ? "" : value)
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .replace(/ł/g, "l");
+  }
 
   return Object.freeze({
     DATA_SCHEMA_VERSION,
