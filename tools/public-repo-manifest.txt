@@ -23,6 +23,7 @@ docs/adr/
 docs/product/PACJENT360_NORTH_STAR.md
 docs/product/A1_A8_ROADMAP_REFRAME.md
 docs/product/A1_SAFE_DRAFT_DASHBOARD_BRIEF.md
+api/openapi.yaml
 tools/public-repo-manifest.txt
 tools/prepare-hosting-upload.ps1
 tools/prepare-public.ps1
@@ -42,6 +43,10 @@ tools/validate-variant-flags.ps1
 tools/validate-variant-flags.js
 tools/validate-pwa-baseline.ps1
 tools/validate-pwa-baseline.js
+tools/validate-s2-data-model.ps1
+tools/validate-s2-data-model.js
+tools/validate-api-contract.ps1
+tools/validate-api-contract.js
 tools/validate-data-contract.ps1
 tools/validate-data-contract.js
 tools/validate-format.ps1
@@ -89,6 +94,9 @@ fixtures/previsit-workflow-edgecases.json
 fixtures/caregiver-scope-edgecases.json
 fixtures/consent-draft-edgecases.json
 fixtures/variant-flags-edgecases.json
+fixtures/s2-data-model.snapshot.json
+fixtures/s2-data-model-edgecases.json
+fixtures/api-contract-edgecases.json
 fixtures/a0-agent-policy-edgecases.json
 fixtures/a1-safe-draft-dashboard.snapshot.json
 fixtures/system-wide-red-team-cases.json

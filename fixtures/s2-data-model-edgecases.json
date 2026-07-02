@@ -1,0 +1,35 @@
+{
+  "fixtureVersion": 1,
+  "negativeCases": [
+    {
+      "id": "wrong-model-version",
+      "mutate": "wrongModelVersion",
+      "expectedError": "modelVersion.invalid"
+    },
+    {
+      "id": "question-without-source",
+      "mutate": "questionWithoutSource",
+      "expectedError": "questions.question-demo-001.sourceRefs.empty"
+    },
+    {
+      "id": "doctor-consent-without-packet-filter",
+      "mutate": "doctorConsentWithoutPacketFilter",
+      "expectedError": "consentGrants.consent-grant-demo-doctor-001.doctor.packet_filter.required"
+    },
+    {
+      "id": "visit-packet-reference-mismatch",
+      "mutate": "visitPacketReferenceMismatch",
+      "expectedError": "visitPackets.packetId.mismatch"
+    },
+    {
+      "id": "audit-forbidden-metadata",
+      "mutate": "auditForbiddenMetadata",
+      "expectedError": "auditEvents.audit-demo-s2-001.metadata.phi_key:diagnosis"
+    },
+    {
+      "id": "forbidden-question-copy",
+      "mutate": "forbiddenQuestionCopy",
+      "expectedErrorIncludes": "forbiddenPhrase"
+    }
+  ]
+}

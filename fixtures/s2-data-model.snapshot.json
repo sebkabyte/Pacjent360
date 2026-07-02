@@ -1,0 +1,109 @@
+{
+  "modelVersion": "0.2",
+  "patientProfile": {
+    "modelVersion": "0.2",
+    "patientProfileId": "profile-demo-p1",
+    "displayName": "Jan K. (dane fikcyjne)",
+    "createdAt": "2026-07-02T09:00:00.000Z",
+    "sourceRefs": ["source_missing"],
+    "status": "active"
+  },
+  "careCircleMembers": [
+    {
+      "memberId": "care-demo-parent-001",
+      "patientProfileId": "profile-demo-p1",
+      "role": "support_person",
+      "displayName": "Opiekun wizyty",
+      "consentGrantId": "consent-grant-demo-doctor-001",
+      "status": "active",
+      "sourceRefs": ["consent:consent-grant-demo-doctor-001"]
+    }
+  ],
+  "consentGrants": [
+    {
+      "consentGrantId": "consent-grant-demo-doctor-001",
+      "patientProfileId": "profile-demo-p1",
+      "grantorUserId": "user-demo-patient-001",
+      "granteeType": "doctor",
+      "purpose": "pre_visit_review",
+      "scopes": [
+        "profile.view",
+        "documents.metadata.view",
+        "documents.file.view",
+        "medications.view",
+        "observations.view",
+        "questions.view",
+        "timeline.view",
+        "report.view"
+      ],
+      "resourceFilters": {
+        "packetId": "vp-demo-001"
+      },
+      "validFrom": "2026-07-02T09:00:00.000Z",
+      "validUntil": "2026-07-16T09:00:00.000Z",
+      "status": "active"
+    }
+  ],
+  "documents": [
+    {
+      "documentId": "doc-demo-lab-001",
+      "patientProfileId": "profile-demo-p1",
+      "title": "Morfologia - metadane dokumentu",
+      "status": "metadata_only",
+      "sourceRefs": ["doc:lab-2026-06-10"],
+      "fileStorage": "not_implemented_in_s2_contract"
+    }
+  ],
+  "medications": [
+    {
+      "medicationId": "med-demo-001",
+      "patientProfileId": "profile-demo-p1",
+      "name": "Lek do potwierdzenia z lekarzem",
+      "status": "active",
+      "sourceRefs": ["medication:jan-med-1"]
+    }
+  ],
+  "questions": [
+    {
+      "questionId": "question-demo-001",
+      "patientProfileId": "profile-demo-p1",
+      "text": "Co warto doprecyzowac podczas wizyty na podstawie dostepnych dokumentow?",
+      "status": "ready_for_visit",
+      "sourceRefs": ["doc:lab-2026-06-10"]
+    }
+  ],
+  "observations": [
+    {
+      "observationId": "observation-demo-001",
+      "patientProfileId": "profile-demo-p1",
+      "observationType": "patient_reported",
+      "text": "Pacjent chce uporzadkowac pytania i dokumenty przed wizyta.",
+      "sourceRefs": ["interview:jan-visit-goal"]
+    }
+  ],
+  "visitPackets": [
+    {
+      "fixtureRef": "fixtures/visit-packet.snapshot.json",
+      "packetId": "vp-demo-001"
+    }
+  ],
+  "auditEvents": [
+    {
+      "auditEventId": "audit-demo-s2-001",
+      "requestId": "req-demo-s2-001",
+      "actorRole": "doctor",
+      "patientProfileId": "profile-demo-p1",
+      "action": "doctor_session.packet_viewed",
+      "resourceType": "visitPacket",
+      "resourceId": "vp-demo-001",
+      "policyDecision": "allowed",
+      "scope": "report.view",
+      "purpose": "pre_visit_review",
+      "createdAt": "2026-07-02T09:05:00.000Z",
+      "metadata": {
+        "containsPatientData": false,
+        "fixtureOnly": true
+      }
+    }
+  ]
+}

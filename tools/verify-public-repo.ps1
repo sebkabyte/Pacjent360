@@ -158,6 +158,10 @@ Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-c
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-variant-flags.js"
 & node --check (Join-Path $target "tools/validate-pwa-baseline.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-pwa-baseline.js"
+& node --check (Join-Path $target "tools/validate-s2-data-model.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-s2-data-model.js"
+& node --check (Join-Path $target "tools/validate-api-contract.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-api-contract.js"
 & node --check (Join-Path $target "tools/validate-consent-draft.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-consent-draft.js"
 & node --check (Join-Path $target "tools/validate-demo-coherence.js") | Out-Null

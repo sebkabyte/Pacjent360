@@ -1,0 +1,29 @@
+{
+  "fixtureVersion": 1,
+  "negativeCases": [
+    {
+      "id": "read-endpoint-without-audit",
+      "operationId": "getPatientProfile",
+      "mutate": "removeAuditBeforeRead",
+      "expectedError": "getPatientProfile.auditBeforeRead.required"
+    },
+    {
+      "id": "read-endpoint-without-consent",
+      "operationId": "listDocuments",
+      "mutate": "removeConsentScopes",
+      "expectedError": "listDocuments.consentScopes.required"
+    },
+    {
+      "id": "endpoint-with-unknown-scope",
+      "operationId": "listQuestions",
+      "mutate": "unknownConsentScope",
+      "expectedError": "listQuestions.consentScopes.unknown:clinical.triage"
+    },
+    {
+      "id": "read-endpoint-without-source-grounding",
+      "operationId": "listObservations",
+      "mutate": "removeSourceGrounding",
+      "expectedError": "listObservations.sourceGrounded.required"
+    }
+  ]
+}

@@ -703,6 +703,229 @@
         }
       }
     },
+    "s2ModelVersion": {
+      "const": "0.2"
+    },
+    "patientProfile": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "modelVersion",
+        "patientProfileId",
+        "displayName",
+        "createdAt",
+        "sourceRefs"
+      ],
+      "properties": {
+        "modelVersion": {
+          "$ref": "#/$defs/s2ModelVersion"
+        },
+        "patientProfileId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceRefs": {
+          "$ref": "#/$defs/sourceRefs"
+        }
+      }
+    },
+    "careCircleMember": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "memberId",
+        "patientProfileId",
+        "role",
+        "consentGrantId",
+        "status",
+        "sourceRefs"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "draft",
+            "active",
+            "archived",
+            "revoked"
+          ]
+        },
+        "sourceRefs": {
+          "$ref": "#/$defs/sourceRefs"
+        }
+      }
+    },
+    "s2Document": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "documentId",
+        "patientProfileId",
+        "title",
+        "status",
+        "sourceRefs"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "metadata_only",
+            "file_uploaded_later",
+            "ready_for_packet",
+            "revoked"
+          ]
+        },
+        "sourceRefs": {
+          "$ref": "#/$defs/sourceRefs"
+        }
+      }
+    },
+    "s2Medication": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "medicationId",
+        "patientProfileId",
+        "name",
+        "status",
+        "sourceRefs"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "draft",
+            "active",
+            "archived",
+            "revoked"
+          ]
+        },
+        "sourceRefs": {
+          "$ref": "#/$defs/sourceRefs"
+        }
+      }
+    },
+    "s2Question": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "questionId",
+        "patientProfileId",
+        "text",
+        "status",
+        "sourceRefs"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "draft",
+            "to_confirm",
+            "ready_for_visit",
+            "answered",
+            "archived"
+          ]
+        },
+        "sourceRefs": {
+          "$ref": "#/$defs/sourceRefs"
+        }
+      }
+    },
+    "s2Observation": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "observationId",
+        "patientProfileId",
+        "observationType",
+        "text",
+        "sourceRefs"
+      ],
+      "properties": {
+        "observationType": {
+          "enum": [
+            "patient_reported",
+            "caregiver_reported",
+            "document_derived"
+          ]
+        },
+        "sourceRefs": {
+          "$ref": "#/$defs/sourceRefs"
+        }
+      }
+    },
+    "s2Slice": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "modelVersion",
+        "patientProfile",
+        "careCircleMembers",
+        "consentGrants",
+        "documents",
+        "medications",
+        "questions",
+        "observations",
+        "visitPackets",
+        "auditEvents"
+      ],
+      "properties": {
+        "modelVersion": {
+          "$ref": "#/$defs/s2ModelVersion"
+        },
+        "patientProfile": {
+          "$ref": "#/$defs/patientProfile"
+        },
+        "careCircleMembers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/careCircleMember"
+          }
+        },
+        "consentGrants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/consentGrant"
+          }
+        },
+        "documents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/s2Document"
+          }
+        },
+        "medications": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/s2Medication"
+          }
+        },
+        "questions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/s2Question"
+          }
+        },
+        "observations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/s2Observation"
+          }
+        },
+        "visitPackets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/visitPacket"
+          }
+        },
+        "auditEvents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sh0AuditEvent"
+          }
+        }
+      }
+    },
     "sourceQuality": {
       "type": "object",
       "additionalProperties": false,

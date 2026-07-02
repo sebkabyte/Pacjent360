@@ -1,0 +1,158 @@
+openapi: 3.1.0
+info:
+  title: Pacjent360 S2 Contracts API
+  version: 0.1.0
+  description: Contract-only OpenAPI for S2. No server implementation is created in this sprint.
+servers:
+  - url: https://api.example.invalid
+paths:
+  /v1/patient-profiles/{patientProfileId}:
+    get:
+      operationId: getPatientProfile
+      summary: Read synthetic patient profile context
+      x-p360-contract:
+        patientDataRead: true
+        auditBeforeRead: true
+        sourceGrounded: true
+        resourceType: profile
+        consentScopes:
+          - profile.view
+      responses:
+        '200':
+          description: PatientProfile
+    patch:
+      operationId: updatePatientProfile
+      summary: Update profile metadata in a future backend
+      x-p360-contract:
+        patientDataRead: false
+        auditBeforeRead: false
+        sourceGrounded: true
+        resourceType: profile
+        consentScopes:
+          - profile.view
+      responses:
+        '202':
+          description: Accepted by future implementation
+  /v1/patient-profiles/{patientProfileId}/documents:
+    get:
+      operationId: listDocuments
+      summary: Read document metadata for visit preparation
+      x-p360-contract:
+        patientDataRead: true
+        auditBeforeRead: true
+        sourceGrounded: true
+        resourceType: document
+        consentScopes:
+          - documents.metadata.view
+      responses:
+        '200':
+          description: Document metadata list
+    post:
+      operationId: createDocumentMetadata
+      summary: Create document metadata without OCR or clinical extraction
+      x-p360-contract:
+        patientDataRead: false
+        auditBeforeRead: false
+        sourceGrounded: true
+        resourceType: document
+        consentScopes:
+          - documents.upload
+      responses:
+        '202':
+          description: Metadata accepted by future implementation
+  /v1/patient-profiles/{patientProfileId}/medications:
+    get:
+      operationId: listMedications
+      summary: Read medication list for confirmation during visit
+      x-p360-contract:
+        patientDataRead: true
+        auditBeforeRead: true
+        sourceGrounded: true
+        resourceType: medication
+        consentScopes:
+          - medications.view
+      responses:
+        '200':
+          description: Medication list
+  /v1/patient-profiles/{patientProfileId}/questions:
+    get:
+      operationId: listQuestions
+      summary: Read DITL questions prepared for the visit
+      x-p360-contract:
+        patientDataRead: true
+        auditBeforeRead: true
+        sourceGrounded: true
+        resourceType: question
+        consentScopes:
+          - questions.view
+      responses:
+        '200':
+          description: Question list
+    post:
+      operationId: createQuestion
+      summary: Create a source-grounded question draft
+      x-p360-contract:
+        patientDataRead: false
+        auditBeforeRead: false
+        sourceGrounded: true
+        resourceType: question
+        consentScopes:
+          - questions.add
+      responses:
+        '202':
+          description: Question accepted by future implementation
+  /v1/patient-profiles/{patientProfileId}/observations:
+    get:
+      operationId: listObservations
+      summary: Read patient or caregiver observations as interview information
+      x-p360-contract:
+        patientDataRead: true
+        auditBeforeRead: true
+        sourceGrounded: true
+        resourceType: observation
+        consentScopes:
+          - observations.view
+      responses:
+        '200':
+          description: Observation list
+  /v1/patient-profiles/{patientProfileId}/visit-packets:
+    get:
+      operationId: listVisitPackets
+      summary: Read generated VisitPacket metadata
+      x-p360-contract:
+        patientDataRead: true
+        auditBeforeRead: true
+        sourceGrounded: true
+        resourceType: visitPacket
+        consentScopes:
+          - report.view
+      responses:
+        '200':
+          description: VisitPacket list
+    post:
+      operationId: generateVisitPacket
+      summary: Generate a source-grounded VisitPacket in a future backend
+      x-p360-contract:
+        patientDataRead: false
+        auditBeforeRead: false
+        sourceGrounded: true
+        resourceType: visitPacket
+        consentScopes:
+          - report.generate
+      responses:
+        '202':
+          description: VisitPacket generation accepted by future implementation
+  /v1/doctor-sessions/{sessionId}:
+    get:
+      operationId: getDoctorReadOnlySession
+      summary: Read a doctor read-only session after audit-before-read
+      x-p360-contract:
+        patientDataRead: true
+        auditBeforeRead: true
+        sourceGrounded: true
+        resourceType: doctorSession
+        consentScopes:
+          - report.view
+      responses:
+        '200':
+          description: DoctorReadOnlySession

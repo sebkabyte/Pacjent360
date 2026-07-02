@@ -7,6 +7,7 @@
 })(typeof globalThis !== "undefined" ? globalThis : this, function buildPatient360Contract() {
   const DATA_SCHEMA_VERSION = 7;
   const DATA_CONTRACT_VERSION = "0.1";
+  const S2_MODEL_VERSION = "0.2";
   const SOURCE_MISSING_REF = "source_missing";
 
   const TIMELINE_TRACKS = [
@@ -172,6 +173,21 @@
   ];
   const SH0_AUDIT_POLICY_DECISIONS = ["allowed", "blocked", "failed_closed"];
   const SH0_AUDIT_RESOURCE_TYPES = ["profile", "careCircle", "consent", "document", "medication", "question", "observation", "visitPacket", "doctorSession", "access", "audit"];
+  const S2_ENTITY_TYPES = [
+    "PatientProfile",
+    "CareCircleMember",
+    "ConsentGrant",
+    "Document",
+    "Medication",
+    "Question",
+    "Observation",
+    "VisitPacket",
+    "AuditEvent"
+  ];
+  const S2_RECORD_STATUSES = ["draft", "active", "archived", "revoked"];
+  const S2_DOCUMENT_STATUSES = ["metadata_only", "file_uploaded_later", "ready_for_packet", "revoked"];
+  const S2_QUESTION_STATUSES = ["draft", "to_confirm", "ready_for_visit", "answered", "archived"];
+  const S2_OBSERVATION_TYPES = ["patient_reported", "caregiver_reported", "document_derived"];
   const FORBIDDEN_CLAIM_PHRASES = [
     "H" + "ITL",
     "AI " + "lekarz",
@@ -188,6 +204,7 @@
   return Object.freeze({
     DATA_SCHEMA_VERSION,
     DATA_CONTRACT_VERSION,
+    S2_MODEL_VERSION,
     SH0_SCHEMA_VERSION,
     SOURCE_MISSING_REF,
     TIMELINE_TRACKS: Object.freeze([...TIMELINE_TRACKS]),
@@ -221,6 +238,11 @@
     SH0_AUDIT_ACTIONS: Object.freeze([...SH0_AUDIT_ACTIONS]),
     SH0_AUDIT_POLICY_DECISIONS: Object.freeze([...SH0_AUDIT_POLICY_DECISIONS]),
     SH0_AUDIT_RESOURCE_TYPES: Object.freeze([...SH0_AUDIT_RESOURCE_TYPES]),
+    S2_ENTITY_TYPES: Object.freeze([...S2_ENTITY_TYPES]),
+    S2_RECORD_STATUSES: Object.freeze([...S2_RECORD_STATUSES]),
+    S2_DOCUMENT_STATUSES: Object.freeze([...S2_DOCUMENT_STATUSES]),
+    S2_QUESTION_STATUSES: Object.freeze([...S2_QUESTION_STATUSES]),
+    S2_OBSERVATION_TYPES: Object.freeze([...S2_OBSERVATION_TYPES]),
     FORBIDDEN_CLAIM_PHRASES: Object.freeze([...FORBIDDEN_CLAIM_PHRASES])
   });
 });
