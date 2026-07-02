@@ -252,6 +252,24 @@ const criteria = [
         assert(loopState.includes(fragment), `Reviewer Checklist S2 missing gate marker: ${fragment}`);
       });
     }
+  },
+  {
+    id: "S2-AC-010",
+    title: "S2 loop-state acceptance evidence matches the executable criteria count",
+    assert() {
+      const loopState = readIfExists("BLUEPRINT/SH_LOOP_STATE.md");
+      if (!loopState) return;
+
+      const acceptanceCount = criteria.length;
+      const expectedRatio = `${acceptanceCount}/${acceptanceCount}`;
+      assert(loopState.includes(`acceptance ${expectedRatio}`), `loop state must mention acceptance ${expectedRatio}`);
+      assert(loopState.includes(`S2 acceptance criteria ${expectedRatio}`), `loop state validate-go-live evidence must mention S2 acceptance criteria ${expectedRatio}`);
+      const ratios = [...loopState.matchAll(/acceptance(?: criteria)?\s+(\d+\/\d+)/gi)].map((match) => match[1]);
+      assert(ratios.length > 0, "loop state must contain at least one acceptance ratio");
+      ratios.forEach((ratio) => {
+        assert(ratio === expectedRatio, `loop state contains stale acceptance ratio: ${ratio}, expected ${expectedRatio}`);
+      });
+    }
   }
 ];
 
