@@ -54,6 +54,27 @@
         "from": "2a658c3",
         "to": "0000000"
       }
+    },
+    {
+      "name": "missing SH2 review pack index",
+      "valid": false,
+      "checkGit": false,
+      "expectedError": "SH2_REVIEW_READY missing file: BLUEPRINT/SH2_REVIEW_READY/00_SH2_REVIEW_PACK_INDEX.md",
+      "files": {
+        "BLUEPRINT/SH2_REVIEW_READY/00_SH2_REVIEW_PACK_INDEX.md": false
+      }
+    },
+    {
+      "name": "unsigned scope freeze file cannot open S3",
+      "valid": false,
+      "checkGit": false,
+      "expectedError": "SCOPE_FREEZE_SIGNED exists but backend gate is not open",
+      "files": {
+        "BLUEPRINT/SH2_REVIEW_READY/SCOPE_FREEZE_SIGNED.md": true
+      },
+      "fileContents": {
+        "BLUEPRINT/SH2_REVIEW_READY/SCOPE_FREEZE_SIGNED.md": "draft without required founder approval"
+      }
     }
   ]
 }

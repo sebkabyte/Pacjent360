@@ -13,8 +13,22 @@ function fileExists(relativePath) {
   return fs.existsSync(path.join(root, relativePath));
 }
 
+function optionFileExists(relativePath, options = {}) {
+  if (Object.prototype.hasOwnProperty.call(options.files || {}, relativePath)) {
+    return options.files[relativePath] === true;
+  }
+  return fileExists(relativePath);
+}
+
 function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), "utf8");
+}
+
+function optionRead(relativePath, options = {}) {
+  if (Object.prototype.hasOwnProperty.call(options.fileContents || {}, relativePath)) {
+    return options.fileContents[relativePath];
+  }
+  return read(relativePath);
 }
 
 function runGit(args) {
@@ -26,9 +40,9 @@ function currentBranch() {
   return result.status === 0 ? result.stdout.trim() : "";
 }
 
-function backendGateOpen(state) {
-  const scopeFreeze = fileExists("BLUEPRINT/SH2_REVIEW_READY/SCOPE_FREEZE_SIGNED.md")
-    ? read("BLUEPRINT/SH2_REVIEW_READY/SCOPE_FREEZE_SIGNED.md")
+function backendGateOpen(state, options = {}) {
+  const scopeFreeze = optionFileExists("BLUEPRINT/SH2_REVIEW_READY/SCOPE_FREEZE_SIGNED.md", options)
+    ? optionRead("BLUEPRINT/SH2_REVIEW_READY/SCOPE_FREEZE_SIGNED.md", options)
     : "";
   const signedScopeFreeze = /ZATWIERDZAM/i.test(scopeFreeze) && /founder/i.test(scopeFreeze);
   const s2Approved = /S2[^\n]*(accepted|approved|zaakceptowane|zatwierdzone)/i.test(state) ||
@@ -60,6 +74,71 @@ function assertContainsAll(label, text, fragments) {
   fragments.forEach((fragment) => {
     assert(text.includes(fragment), `${label} missing: ${fragment}`);
   });
+}
+
+function validateSh2ReviewPack(state, options = {}, gateOpen = false) {
+  const stateClaimsPack = /SH2_REVIEW_READY/.test(state);
+  const packDirExists = optionFileExists("BLUEPRINT/SH2_REVIEW_READY", options);
+  if (!stateClaimsPack && !packDirExists) return;
+
+  assert(packDirExists, "SH2_REVIEW_READY pack missing");
+
+  const requiredFiles = [
+    "BLUEPRINT/SH2_REVIEW_READY/00_SH2_REVIEW_PACK_INDEX.md",
+    "BLUEPRINT/SH2_REVIEW_READY/01_SH1_FAST_VALIDATION_RUNBOOK.md",
+    "BLUEPRINT/SH2_REVIEW_READY/02_SH1_EVIDENCE_TABLE.md",
+    "BLUEPRINT/SH2_REVIEW_READY/03_SCOPE_FREEZE_SIGNED_TEMPLATE.md",
+    "BLUEPRINT/SH2_REVIEW_READY/04_SH1_RECRUITMENT_MESSAGES.md"
+  ];
+  requiredFiles.forEach((relativePath) => {
+    assert(optionFileExists(relativePath, options), `SH2_REVIEW_READY missing file: ${relativePath}`);
+  });
+
+  const index = optionRead(requiredFiles[0], options);
+  assertContainsAll("SH2 review pack index", index, [
+    "S2 technical review accepted",
+    "S3 backend gate still closed",
+    "03_SCOPE_FREEZE_SIGNED_TEMPLATE.md",
+    "04_SH1_RECRUITMENT_MESSAGES.md"
+  ]);
+
+  const runbook = optionRead(requiredFiles[1], options);
+  assertContainsAll("SH1 fast validation runbook", runbook, [
+    "No real patient data",
+    "Forbidden Material",
+    "Safety Stop Conditions",
+    "Decision Rules"
+  ]);
+
+  const evidence = optionRead(requiredFiles[2], options);
+  assertContainsAll("SH1 evidence table", evidence, [
+    "Status: empty template",
+    "SH1-DOC-01",
+    "SH1-PAT-01",
+    "Sessions with real data used | 0 | 0",
+    "Serious safety concerns | 0 | 0"
+  ]);
+
+  const freezeTemplate = optionRead(requiredFiles[3], options);
+  assertContainsAll("Scope freeze template", freezeTemplate, [
+    "Status: template only - not a gate file",
+    "SCOPE_FREEZE_SIGNED.md",
+    "ZATWIERDZAM - founder",
+    "evidence-debt: SH-1 pending"
+  ]);
+
+  const recruitment = optionRead(requiredFiles[4], options);
+  assertContainsAll("SH1 recruitment messages", recruitment, [
+    "Nie prosze o zadne realne dane medyczne",
+    "Pacjent360 nie diagnozuje",
+    "nie ocenia pilnosci",
+    "nie zaleca"
+  ]);
+
+  const signedFreezeExists = optionFileExists("BLUEPRINT/SH2_REVIEW_READY/SCOPE_FREEZE_SIGNED.md", options);
+  if (signedFreezeExists && !gateOpen) {
+    throw new Error("SCOPE_FREEZE_SIGNED exists but backend gate is not open");
+  }
 }
 
 function validateState(state, options = {}) {
@@ -111,13 +190,12 @@ function validateState(state, options = {}) {
   assert(km1.status.includes("READY-FOR-REVIEW"), "KM-1 code track must remain READY-FOR-REVIEW until human gate closes");
   assert(km1.status.includes("SCOPE_FREEZE_SIGNED") || km1.tests.includes("SCOPE_FREEZE_SIGNED"), "KM-1 must name SCOPE_FREEZE_SIGNED gate");
 
-  const gateOpen = options.backendGateOpen === undefined ? backendGateOpen(state) : options.backendGateOpen;
+  const gateOpen = options.backendGateOpen === undefined ? backendGateOpen(state, options) : options.backendGateOpen;
   const km2 = rows.find((row) => row.km === "KM-2 Backend Core");
   if (!gateOpen) {
     assert(km2.status.toLowerCase().includes("blocked"), "KM-2 must stay blocked while backend gate is closed");
     assert(km2.status.toLowerCase().includes("backend gate closed"), "KM-2 status must name backend gate closed");
-    const hasFile = options.fileExists || fileExists;
-    assert(!hasFile("server"), "server/ must not exist before backend gate opens");
+    assert(!optionFileExists("server", options), "server/ must not exist before backend gate opens");
   }
 
   assertContainsAll("Human waiting list", state, [
@@ -127,6 +205,8 @@ function validateState(state, options = {}) {
     "Contact aliases",
     "Deployed domain"
   ]);
+
+  validateSh2ReviewPack(state, options, gateOpen);
 
   const commitRefs = [...state.matchAll(/^Commit [^:\n]+:\s+([0-9a-f]{7,40})\b/gim)].map((match) => match[1]);
   assert(commitRefs.length >= 8, `expected S1/S2 commit references, found ${commitRefs.length}`);
@@ -172,7 +252,8 @@ function runEdgeCases(baseState) {
       actualBranch: testCase.actualBranch === undefined ? currentBranch() : testCase.actualBranch,
       backendGateOpen: false,
       checkGit: testCase.checkGit !== false,
-      fileExists: (relativePath) => testCase.files?.[relativePath] === true
+      files: testCase.files,
+      fileContents: testCase.fileContents
     };
 
     if (testCase.valid) {
