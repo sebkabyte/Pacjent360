@@ -224,6 +224,34 @@ const criteria = [
         assert(deliveryPrompt.includes("approved") || deliveryPrompt.includes("approved/scalone"), "delivery loop must require human S2 approval before S3");
       }
     }
+  },
+  {
+    id: "S2-AC-009",
+    title: "S2 review handoff names required reviewer domains and gate decision",
+    assert() {
+      const loopState = readIfExists("BLUEPRINT/SH_LOOP_STATE.md");
+      if (!loopState) return;
+
+      assert(loopState.includes("## Reviewer Checklist S2"), "loop state must include Reviewer Checklist S2 before S3 can be considered");
+      [
+        "Security + Data",
+        "API + Backend Readiness",
+        "Consent + Audit Runtime",
+        "UX + Medical Safety",
+        "QA + Release Engineering",
+        "Gate Boundary"
+      ].forEach((fragment) => {
+        assert(loopState.includes(fragment), `Reviewer Checklist S2 missing domain: ${fragment}`);
+      });
+      [
+        "accepted / rework / narrow",
+        "SCOPE_FREEZE_SIGNED",
+        "human S2 approval",
+        "AC-008"
+      ].forEach((fragment) => {
+        assert(loopState.includes(fragment), `Reviewer Checklist S2 missing gate marker: ${fragment}`);
+      });
+    }
   }
 ];
 
