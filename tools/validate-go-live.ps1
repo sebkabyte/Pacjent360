@@ -73,6 +73,7 @@ $nodeCheckFiles = @(
   "tools/validate-api-contract.js",
   "tools/validate-s2-runtime-contracts.js",
   "tools/validate-s2-prototypes.js",
+  "tools/acceptance/s2-acceptance.js",
   "tools/validate-a0-agent-policy.js",
   "tools/validate-a1-safe-draft-dashboard.js",
   "tools/validate-a1-core-dashboard.js",
@@ -186,6 +187,7 @@ Invoke-External "S2 data model validation" "powershell" @("-ExecutionPolicy", "B
 Invoke-External "API contract validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-api-contract.ps1"))
 Invoke-External "S2 runtime contract validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-s2-runtime-contracts.ps1"))
 Invoke-External "S2 prototype validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-s2-prototypes.ps1"))
+Invoke-External "S2 acceptance criteria" "node" @("tools/acceptance/s2-acceptance.js")
 Invoke-External "Demo coherence validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-demo-coherence.ps1"))
 Invoke-External "Accessibility static validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-a11y.ps1"))
 Invoke-External "Brand contrast validation" "node" @("tools/validate-brand-contrast.js")
