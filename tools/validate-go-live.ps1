@@ -101,6 +101,7 @@ $powerShellCheckFiles = @(
   "tools/verify-public.ps1",
   "tools/smoke-public.ps1",
   "tools/smoke-deployed-compare.ps1",
+  "tools/smoke-deployed-drift-report.ps1",
   "tools/smoke-browser.ps1",
   "tools/prepare-hosting-upload.ps1",
   "tools/prepare-public-repo.ps1",
@@ -223,6 +224,7 @@ Invoke-External "Verify release artifacts" "powershell" @("-ExecutionPolicy", "B
 Invoke-External "Prepare upload-ready hosting directory" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/prepare-hosting-upload.ps1"), "-SkipArtifactVerification")
 Invoke-External "HTTP smoke upload-ready hosting directory" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/smoke-public.ps1"), "-PackageDir", "dist/upload-ready", "-Port", "4194")
 Invoke-External "Local deployed compare upload-ready directory" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/smoke-deployed-compare.ps1"), "-PackageDir", "dist/upload-ready", "-Port", "4196")
+Invoke-External "Local deployed drift report negative smoke" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/smoke-deployed-drift-report.ps1"), "-PackageDir", "dist/upload-ready", "-Port", "4197")
 Invoke-External "Write upload manifest and deployment handoff" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/write-upload-manifest.ps1"))
 Invoke-External "Release readiness status report" "node" @("tools/release-readiness.js", "-ReportPath", "dist/go-live-status.txt")
 

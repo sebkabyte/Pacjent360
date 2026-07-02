@@ -30,6 +30,7 @@ tools/prepare-public.ps1
 tools/verify-public.ps1
 tools/smoke-public.ps1
 tools/smoke-deployed-compare.ps1
+tools/smoke-deployed-drift-report.ps1
 tools/smoke-browser.ps1
 tools/smoke-browser.js
 tools/verify-click-routes.js
