@@ -40,6 +40,13 @@ function runNode(relativePath) {
   assert(result.status === 0, `${relativePath} failed\n${result.stdout}\n${result.stderr}`);
 }
 
+function runGit(args) {
+  return childProcess.spawnSync("git", args, {
+    cwd: root,
+    encoding: "utf8"
+  });
+}
+
 function buildBundle(variant = "B", patientId = "p1") {
   const state = demoData.buildDemoState({ today: "2026-07-02" });
   state.activePatientId = patientId;
@@ -260,14 +267,33 @@ const criteria = [
       const loopState = readIfExists("BLUEPRINT/SH_LOOP_STATE.md");
       if (!loopState) return;
 
+      const currentEvidence = loopState.split(/\n## Historia przejsc/i)[0];
       const acceptanceCount = criteria.length;
       const expectedRatio = `${acceptanceCount}/${acceptanceCount}`;
-      assert(loopState.includes(`acceptance ${expectedRatio}`), `loop state must mention acceptance ${expectedRatio}`);
-      assert(loopState.includes(`S2 acceptance criteria ${expectedRatio}`), `loop state validate-go-live evidence must mention S2 acceptance criteria ${expectedRatio}`);
-      const ratios = [...loopState.matchAll(/acceptance(?: criteria)?\s+(\d+\/\d+)/gi)].map((match) => match[1]);
+      assert(currentEvidence.includes(`acceptance ${expectedRatio}`), `loop state must mention acceptance ${expectedRatio}`);
+      assert(currentEvidence.includes(`S2 acceptance criteria ${expectedRatio}`), `loop state validate-go-live evidence must mention S2 acceptance criteria ${expectedRatio}`);
+      const ratios = [...currentEvidence.matchAll(/acceptance(?: criteria)?\s+(\d+\/\d+)/gi)].map((match) => match[1]);
       assert(ratios.length > 0, "loop state must contain at least one acceptance ratio");
       ratios.forEach((ratio) => {
         assert(ratio === expectedRatio, `loop state contains stale acceptance ratio: ${ratio}, expected ${expectedRatio}`);
+      });
+    }
+  },
+  {
+    id: "S2-AC-011",
+    title: "S2 loop-state commit references resolve in current git ancestry",
+    assert() {
+      const loopState = readIfExists("BLUEPRINT/SH_LOOP_STATE.md");
+      if (!loopState || !fileExists(".git")) return;
+
+      const commitRefs = [...loopState.matchAll(/^Commit [^:\n]+:\s+([0-9a-f]{7,40})\b/gim)].map((match) => match[1]);
+      assert(commitRefs.length >= 8, `loop state should reference S1 plus S2 commit chain, found ${commitRefs.length}`);
+
+      commitRefs.forEach((sha) => {
+        const exists = runGit(["cat-file", "-e", `${sha}^{commit}`]);
+        assert(exists.status === 0, `loop-state commit does not resolve: ${sha}`);
+        const ancestor = runGit(["merge-base", "--is-ancestor", sha, "HEAD"]);
+        assert(ancestor.status === 0, `loop-state commit is not in current HEAD ancestry: ${sha}`);
       });
     }
   }
