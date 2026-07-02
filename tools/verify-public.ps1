@@ -85,6 +85,7 @@ $expectedFiles = @(
   "patient360-a3-a5-quality.js",
   "patient360-a4-consent-guard.js",
   "patient360-a6-checklist.js",
+  "patient360-s2-prototype.js",
   "patient360-agent-policy.js",
   "patient360-flags.js",
   "patient360-demo-data.js",
@@ -156,6 +157,8 @@ Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-a3-
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-a4-consent-guard.js"
 & node --check (Join-Path $target "patient360-a6-checklist.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-a6-checklist.js"
+& node --check (Join-Path $target "patient360-s2-prototype.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-s2-prototype.js"
 & node --check (Join-Path $target "patient360-agent-policy.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for public patient360-agent-policy.js"
 & node --check (Join-Path $target "patient360-flags.js") | Out-Null
@@ -239,6 +242,7 @@ Assert-ScriptLoaded -Html $demo -File "patient360-a1-core.js"
 Assert-ScriptLoaded -Html $demo -File "patient360-a3-a5-quality.js"
 Assert-ScriptLoaded -Html $demo -File "patient360-a4-consent-guard.js"
 Assert-ScriptLoaded -Html $demo -File "patient360-a6-checklist.js"
+Assert-ScriptLoaded -Html $demo -File "patient360-s2-prototype.js"
 Assert-ScriptLoaded -Html $demo -File "patient360-demo-data.js"
 Assert-ScriptLoaded -Html $demo -File "p360-result-series.js"
 Assert-ScriptLoaded -Html $demo -File "app.js"
@@ -256,6 +260,7 @@ $scriptIndex = @{
   a3a5 = Get-ScriptRefIndex -Html $demo -File "patient360-a3-a5-quality.js"
   a4Consent = Get-ScriptRefIndex -Html $demo -File "patient360-a4-consent-guard.js"
   a6Checklist = Get-ScriptRefIndex -Html $demo -File "patient360-a6-checklist.js"
+  s2Prototype = Get-ScriptRefIndex -Html $demo -File "patient360-s2-prototype.js"
   demoData = Get-ScriptRefIndex -Html $demo -File "patient360-demo-data.js"
   resultSeries = Get-ScriptRefIndex -Html $demo -File "p360-result-series.js"
   app = Get-ScriptRefIndex -Html $demo -File "app.js"
@@ -286,7 +291,10 @@ Assert-True ($scriptIndex.a4Consent -lt $scriptIndex.app) "demo.html should load
 Assert-True ($scriptIndex.a3a5 -lt $scriptIndex.a4Consent) "demo.html should load patient360-a3-a5-quality.js before patient360-a4-consent-guard.js"
 Assert-True ($scriptIndex.a6Checklist -lt $scriptIndex.app) "demo.html should load patient360-a6-checklist.js before app.js"
 Assert-True ($scriptIndex.a4Consent -lt $scriptIndex.a6Checklist) "demo.html should load patient360-a4-consent-guard.js before patient360-a6-checklist.js"
+Assert-True ($scriptIndex.s2Prototype -lt $scriptIndex.app) "demo.html should load patient360-s2-prototype.js before app.js"
+Assert-True ($scriptIndex.a6Checklist -lt $scriptIndex.s2Prototype) "demo.html should load patient360-a6-checklist.js before patient360-s2-prototype.js"
 Assert-True ($scriptIndex.demoData -lt $scriptIndex.app) "demo.html should load patient360-demo-data.js before app.js"
+Assert-True ($scriptIndex.s2Prototype -lt $scriptIndex.demoData) "demo.html should load patient360-s2-prototype.js before patient360-demo-data.js"
 Assert-True ($scriptIndex.a1Core -lt $scriptIndex.demoData) "demo.html should load patient360-a1-core.js before patient360-demo-data.js"
 Assert-True ($scriptIndex.a3a5 -lt $scriptIndex.demoData) "demo.html should load patient360-a3-a5-quality.js before patient360-demo-data.js"
 Assert-True ($scriptIndex.a4Consent -lt $scriptIndex.demoData) "demo.html should load patient360-a4-consent-guard.js before patient360-demo-data.js"
@@ -297,6 +305,7 @@ Assert-True (-not ($index.Contains("frame-ancestors") -or $demo.Contains("frame-
 $lucidePinned = "assets/lucide.min.js"
 Assert-True (-not ($index.Contains("unpkg.com"))) "index.html should not load external scripts (landing is self-contained)"
 Assert-True ($demo.Contains($lucidePinned)) "demo.html should use local Lucide"
+Assert-True ($demo.Contains('data-view="s2Prototype"')) "demo.html should expose S2 clickable prototype navigation"
 Assert-True ($privacy.Contains("assets/lucide.min.js") -and $privacy.Contains("0.468.0")) "privacy.html should disclose local pinned Lucide"
 Assert-True ($demo -match 'integrity="sha384-[^"]+"' -and $demo -match 'crossorigin="anonymous"') "demo.html should use SRI and crossorigin for Lucide"
 Assert-True (-not (($index + $demo + $privacy + $disclaimer) -match "unpkg\.com")) "Public HTML should not reference unpkg.com"

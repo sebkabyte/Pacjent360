@@ -47,6 +47,7 @@ $nodeCheckFiles = @(
   "public/patient360-a3-a5-quality.js",
   "public/patient360-a4-consent-guard.js",
   "public/patient360-a6-checklist.js",
+  "public/patient360-s2-prototype.js",
   "public/patient360-agent-policy.js",
   "public/patient360-visitpacket.js",
   "public/patient360-doctor-session.js",
@@ -71,6 +72,7 @@ $nodeCheckFiles = @(
   "tools/validate-s2-data-model.js",
   "tools/validate-api-contract.js",
   "tools/validate-s2-runtime-contracts.js",
+  "tools/validate-s2-prototypes.js",
   "tools/validate-a0-agent-policy.js",
   "tools/validate-a1-safe-draft-dashboard.js",
   "tools/validate-a1-core-dashboard.js",
@@ -117,6 +119,7 @@ $powerShellCheckFiles = @(
   "tools/validate-s2-data-model.ps1",
   "tools/validate-api-contract.ps1",
   "tools/validate-s2-runtime-contracts.ps1",
+  "tools/validate-s2-prototypes.ps1",
   "tools/validate-a0-agent-policy.ps1",
   "tools/validate-a1-safe-draft-dashboard.ps1",
   "tools/validate-a1-core-dashboard.ps1",
@@ -156,7 +159,7 @@ Invoke-Step "PowerShell syntax parse for publication scripts" {
 
 Invoke-External "JSON fixture and schema parse" "node" @(
   "-e",
-  "const fs=require('fs'); ['schema/patient360.schema.json','fixtures/patient-map-model.snapshot.json','fixtures/patient-map-model-edgecases.json','fixtures/previsit-workflow-edgecases.json','fixtures/caregiver-scope-edgecases.json','fixtures/consent-draft-edgecases.json','fixtures/visit-packet.snapshot.json','fixtures/visit-packet-edgecases.json','fixtures/doctor-session-edgecases.json','fixtures/audit-catalog-edgecases.json','fixtures/variant-flags-edgecases.json','fixtures/s2-data-model.snapshot.json','fixtures/s2-data-model-edgecases.json','fixtures/api-contract-edgecases.json','fixtures/s2-runtime-contract-edgecases.json','fixtures/a0-agent-policy-edgecases.json','fixtures/a1-safe-draft-dashboard.snapshot.json','fixtures/system-wide-red-team-cases.json'].forEach((file)=>JSON.parse(fs.readFileSync(file,'utf8')));"
+  "const fs=require('fs'); ['schema/patient360.schema.json','fixtures/patient-map-model.snapshot.json','fixtures/patient-map-model-edgecases.json','fixtures/previsit-workflow-edgecases.json','fixtures/caregiver-scope-edgecases.json','fixtures/consent-draft-edgecases.json','fixtures/visit-packet.snapshot.json','fixtures/visit-packet-edgecases.json','fixtures/doctor-session-edgecases.json','fixtures/audit-catalog-edgecases.json','fixtures/variant-flags-edgecases.json','fixtures/s2-data-model.snapshot.json','fixtures/s2-data-model-edgecases.json','fixtures/api-contract-edgecases.json','fixtures/s2-runtime-contract-edgecases.json','fixtures/s2-prototype-edgecases.json','fixtures/a0-agent-policy-edgecases.json','fixtures/a1-safe-draft-dashboard.snapshot.json','fixtures/system-wide-red-team-cases.json'].forEach((file)=>JSON.parse(fs.readFileSync(file,'utf8')));"
 )
 
 Invoke-External "Data Contract validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-data-contract.ps1"))
@@ -182,6 +185,7 @@ Invoke-External "PWA baseline validation" "powershell" @("-ExecutionPolicy", "By
 Invoke-External "S2 data model validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-s2-data-model.ps1"))
 Invoke-External "API contract validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-api-contract.ps1"))
 Invoke-External "S2 runtime contract validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-s2-runtime-contracts.ps1"))
+Invoke-External "S2 prototype validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-s2-prototypes.ps1"))
 Invoke-External "Demo coherence validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-demo-coherence.ps1"))
 Invoke-External "Accessibility static validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-a11y.ps1"))
 Invoke-External "Brand contrast validation" "node" @("tools/validate-brand-contrast.js")

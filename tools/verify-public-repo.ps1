@@ -128,6 +128,8 @@ Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient36
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-a4-consent-guard.js"
 & node --check (Join-Path $target "public/patient360-a6-checklist.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-a6-checklist.js"
+& node --check (Join-Path $target "public/patient360-s2-prototype.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-s2-prototype.js"
 & node --check (Join-Path $target "public/patient360-agent-policy.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo public/patient360-agent-policy.js"
 & node --check (Join-Path $target "public/patient360-flags.js") | Out-Null
@@ -164,6 +166,8 @@ Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-s
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-api-contract.js"
 & node --check (Join-Path $target "tools/validate-s2-runtime-contracts.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-s2-runtime-contracts.js"
+& node --check (Join-Path $target "tools/validate-s2-prototypes.js") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-s2-prototypes.js"
 & node --check (Join-Path $target "tools/validate-consent-draft.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-consent-draft.js"
 & node --check (Join-Path $target "tools/validate-demo-coherence.js") | Out-Null

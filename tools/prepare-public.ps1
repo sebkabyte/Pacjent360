@@ -58,6 +58,7 @@ $files = @(
   "patient360-a3-a5-quality.js",
   "patient360-a4-consent-guard.js",
   "patient360-a6-checklist.js",
+  "patient360-s2-prototype.js",
   "patient360-agent-policy.js",
   "patient360-flags.js",
   "patient360-demo-data.js",

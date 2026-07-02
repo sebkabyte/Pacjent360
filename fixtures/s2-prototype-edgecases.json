@@ -1,0 +1,36 @@
+{
+  "fixtureVersion": 1,
+  "validVariants": ["A", "B", "C"],
+  "negativeCases": [
+    {
+      "id": "doctor-write-action-present",
+      "mutate": "doctorWriteAction",
+      "expectedError": "doctor.allowedActions.write_or_unknown:edit_patient_data"
+    },
+    {
+      "id": "doctor-data-visible-without-written-audit",
+      "mutate": "doctorAuditFailedVisible",
+      "expectedError": "doctor.audit.fail_closed"
+    },
+    {
+      "id": "doctor-missing-document-drawer",
+      "mutate": "removeDocumentDrawer",
+      "expectedError": "doctor.section.missing:documentDrawer"
+    },
+    {
+      "id": "flow-without-consent-step",
+      "mutate": "removeConsentStep",
+      "expectedError": "flow.step.missing:consent"
+    },
+    {
+      "id": "flow-profile-without-source",
+      "mutate": "removeProfileSources",
+      "expectedError": "flow.profile.sourceRefs.empty"
+    },
+    {
+      "id": "backend-gate-opened",
+      "mutate": "openBackendGate",
+      "expectedError": "gates.backend.must_stay_closed"
+    }
+  ]
+}

@@ -196,6 +196,7 @@ async function waitForReady(client) {
       window.Patient360MapModel &&
       window.Patient360PreVisitModel &&
       window.Patient360CaregiverModel &&
+      window.Patient360S2Prototype &&
       document.querySelector('nav button[data-view="patientPortal"]') &&
       document.querySelector('nav button[data-view="caregiverPortal"]') &&
       document.querySelector('nav button[data-view="visitChecklist"]') &&
@@ -261,6 +262,7 @@ async function main() {
       hasA3A5: Boolean(window.Patient360A3A5Quality),
       hasA4ConsentGuard: Boolean(window.Patient360A4ConsentGuard),
       hasA6Checklist: Boolean(window.Patient360A6Checklist),
+      hasS2Prototype: Boolean(window.Patient360S2Prototype),
       activeView: document.querySelector('nav button.active')?.dataset.view || null,
       register: document.body.dataset.register || '',
       hasPerspectiveDemo: document.body.textContent.includes('Jedna historia, trzy perspektywy') && document.querySelectorAll('[data-select-role]').length === 3,
@@ -276,7 +278,7 @@ async function main() {
       independence: document.body.textContent.includes('CeZ') && document.body.textContent.includes('NFZ') && document.body.textContent.includes('IKP')
     }))()`);
     assert(initial.title.includes("Pacjent360"), "Demo title should contain Pacjent360");
-    assert(initial.hasContract && initial.hasFormat && initial.hasMapModel && initial.hasDemoData && initial.hasPreVisitModel && initial.hasCaregiverModel && initial.hasConsentModel && initial.hasA1Core && initial.hasA3A5 && initial.hasA4ConsentGuard && initial.hasA6Checklist, "Browser globals should expose contract, format, map model, demo data, pre-visit model, caregiver model, consent model, A1-Core, A3+A5, A4 consent guard and A6 checklist projections");
+    assert(initial.hasContract && initial.hasFormat && initial.hasMapModel && initial.hasDemoData && initial.hasPreVisitModel && initial.hasCaregiverModel && initial.hasConsentModel && initial.hasA1Core && initial.hasA3A5 && initial.hasA4ConsentGuard && initial.hasA6Checklist && initial.hasS2Prototype, "Browser globals should expose contract, format, map model, demo data, pre-visit model, caregiver model, consent model, A1-Core, A3+A5, A4 consent guard, A6 checklist and S2 prototype projections");
     assert(initial.activeView === "roleStart", `Expected roleStart view, got ${initial.activeView}`);
     assert(initial.register === "app", `Expected neutral app register on role start, got ${initial.register}`);
     assert(initial.hasPerspectiveDemo && initial.hasPerspectiveOnlyPage && initial.scenarioChoicesVisible === 0, "Demo should start with a perspective-only page and no patient choices");

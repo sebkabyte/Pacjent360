@@ -14,6 +14,7 @@ const captureEvidence = Boolean(args.capture || args.writeEvidence);
 
 const VIEWS = [
   "core",
+  "s2Prototype",
   "visitChecklist",
   "patientPortal",
   "caregiverPortal",
@@ -62,6 +63,11 @@ const VIEW_SENTINELS = {
     p1: ["procedur", "lek wymagajacy"],
     p2: ["kardiologiczn", "atorwastatyn"],
     p3: ["infekcj", "dziecko"]
+  },
+  s2Prototype: {
+    p1: ["s2", "jan"],
+    p2: ["s2", "andrzej"],
+    p3: ["s2", "maja"]
   },
   patientPortal: {
     p1: ["procedur", "lek wymagajacy"],
@@ -377,6 +383,7 @@ async function waitForReady(client) {
       window.Patient360MapModel &&
       window.Patient360PreVisitModel &&
       window.Patient360CaregiverModel &&
+      window.Patient360S2Prototype &&
       document.querySelector('nav button[data-view="patientPortal"]') &&
       document.querySelector('nav button[data-view="visitChecklist"]') &&
       document.querySelector('#viewRoot')?.children.length
@@ -400,7 +407,7 @@ async function capture(client, name) {
 
 async function setPatientAndView(client, patientId, viewId) {
   await client.evaluate(`(() => {
-    const roleByView = { core: 'doctor', visitChecklist: 'patient', patientPortal: 'patient', caregiverPortal: 'caregiver' };
+    const roleByView = { core: 'doctor', s2Prototype: 'doctor', visitChecklist: 'patient', patientPortal: 'patient', caregiverPortal: 'caregiver' };
     if (typeof state === 'object') {
       state.activeRole = roleByView[${JSON.stringify(viewId)}] || 'doctor';
     }

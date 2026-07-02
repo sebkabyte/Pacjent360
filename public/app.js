@@ -48,6 +48,10 @@ const PATIENT360_A6_CHECKLIST = globalThis.Patient360A6Checklist;
 if (!PATIENT360_A6_CHECKLIST) {
   throw new Error("Missing patient360-a6-checklist.js");
 }
+const PATIENT360_S2_PROTOTYPE = globalThis.Patient360S2Prototype;
+if (!PATIENT360_S2_PROTOTYPE) {
+  throw new Error("Missing patient360-s2-prototype.js");
+}
 const PATIENT360_DEMO_DATA = globalThis.Patient360DemoData;
 if (!PATIENT360_DEMO_DATA) {
   throw new Error("Missing patient360-demo-data.js");
@@ -102,6 +106,7 @@ const VIEW_REGISTER = Object.freeze({
   reports: "doctor",
   patientPortal: "patient",
   caregiverPortal: "caregiver",
+  s2Prototype: "app",
   consent: "caregiver",
   audit: "caregiver"
 });
@@ -327,9 +332,9 @@ const VIEW_ROLE_HINT = Object.freeze({
 });
 
 const ROLE_VIEW_ACCESS = Object.freeze({
-  doctor: new Set(["roleStart", "a1Core", "core", "visitChecklist", "interview", "documents", "timeline", "medications", "observations", "risks", "reports", "consent"]),
-  patient: new Set(["roleStart", "a1Core", "visitChecklist", "patientPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "consent"]),
-  caregiver: new Set(["roleStart", "a1Core", "visitChecklist", "caregiverPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "consent"])
+  doctor: new Set(["roleStart", "a1Core", "core", "s2Prototype", "visitChecklist", "interview", "documents", "timeline", "medications", "observations", "risks", "reports", "consent"]),
+  patient: new Set(["roleStart", "a1Core", "s2Prototype", "visitChecklist", "patientPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "consent"]),
+  caregiver: new Set(["roleStart", "a1Core", "s2Prototype", "visitChecklist", "caregiverPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "consent"])
 });
 
 const ROLE_HOME_VIEW = Object.freeze({
@@ -353,6 +358,7 @@ const VIEW_JOURNEY_STAGE = Object.freeze({
   visitChecklist: "cockpit",
   patientPortal: "cockpit",
   caregiverPortal: "cockpit",
+  s2Prototype: "summary",
   timeline: "map",
   interview: "data",
   documents: "data",
@@ -857,7 +863,7 @@ function loadState() {
       loaded.specialist = "internist";
     }
     loaded.roleSelectionConfirmed = Boolean(loaded.roleSelectionConfirmed);
-    const renderableViews = new Set(["roleStart", "a1Core", "core", "visitChecklist", "patientPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "reports", "caregiverPortal", "consent", "audit"]);
+    const renderableViews = new Set(["roleStart", "a1Core", "core", "s2Prototype", "visitChecklist", "patientPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "reports", "caregiverPortal", "consent", "audit"]);
     if (!renderableViews.has(loaded.activeView)) {
       loaded.activeView = "roleStart";
     }
@@ -1760,6 +1766,7 @@ function renderView() {
     roleStart: renderRoleStart,
     a1Core: renderA1Core,
     core: renderCore,
+    s2Prototype: renderS2Prototype,
     visitChecklist: renderVisitChecklist,
     patientPortal: renderPatientPortal,
     interview: renderInterview,
@@ -2122,6 +2129,153 @@ function renderCore() {
       ${renderMapShortcut()}
       ${renderClinicianShortcuts()}
     `)}
+  `;
+}
+
+function activeS2PrototypeBundle() {
+  return PATIENT360_S2_PROTOTYPE.buildS2PrototypeBundle({
+    state,
+    patientId: state.activePatientId,
+    activeVariant: activeLegalVariant,
+    flags: PATIENT360_FLAGS
+  });
+}
+
+function renderS2Prototype() {
+  const bundle = activeS2PrototypeBundle();
+  const validation = PATIENT360_S2_PROTOTYPE.validateS2PrototypeBundle(bundle);
+  const patient = activePatient();
+  return `
+    ${pageHeader("S2: Contracts & prototypes", "Klikalny prototyp pakietu read-only dla lekarza oraz PWA flow pacjenta/opiekuna. Dane sa fikcyjne, bez backendu i bez runtime AI.", "route")}
+    ${renderRoleContextBanner(activeRole())}
+    <section class="section-band s2-prototype-shell" data-s2-prototype="bundle" data-s2-variant="${escapeHtml(bundle.activeVariant)}">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">WP2.4 prototype surface</p>
+          <h2>${escapeHtml(patientDisplayName(patient))} · wariant ${escapeHtml(bundle.activeVariant)}</h2>
+          <p class="record-body">Ten widok laczy kontrakty S2 z istniejacym demo: lekarz czyta tylko pakiet, a pacjent/opiekun przechodzi przez profil, cel wizyty, dokumenty, leki, pytania, zgode i gotowy pakiet.</p>
+        </div>
+        <span class="status-chip ${validation.valid ? "done" : "pending"}">${validation.valid ? "Prototype valid" : "Do sprawdzenia"}</span>
+      </div>
+      ${validation.valid ? "" : `<p class="form-warning">S2 prototype validation: ${escapeHtml(validation.errors.join("; "))}</p>`}
+      <div class="s2-gate-strip" aria-label="Bramki S2">
+        ${renderS2Gate("Backend", bundle.gates.backendOpen ? "open" : "closed", "closed")}
+        ${renderS2Gate("AI runtime", bundle.gates.aiRuntimeOpen ? "open" : "closed", "closed")}
+        ${renderS2Gate("Real patient data", bundle.gates.usesRealPatientData ? "open" : "closed", "closed")}
+        ${renderS2Gate("Audit-before-read", bundle.doctor.auditBeforeRead ? "on" : "off", "on")}
+      </div>
+      <div class="s2-prototype-grid">
+        ${renderS2DoctorReadOnly(bundle.doctor)}
+        ${renderS2PatientCaregiverFlow(bundle.flow)}
+      </div>
+    </section>
+  `;
+}
+
+function renderS2Gate(label, value, expected) {
+  const ok = value === expected;
+  return `
+    <article class="${ok ? "ok" : "warn"}">
+      <span>${escapeHtml(label)}</span>
+      <strong>${escapeHtml(value)}</strong>
+    </article>
+  `;
+}
+
+function renderS2DoctorReadOnly(doctor) {
+  const packetSection = doctor.sections.find((section) => section.id === "packet90s");
+  const sourceSection = doctor.sections.find((section) => section.id === "sources");
+  const questionSection = doctor.sections.find((section) => section.id === "questions");
+  const timelineSection = doctor.sections.find((section) => section.id === "timeline");
+  const documentSection = doctor.sections.find((section) => section.id === "documentDrawer");
+  return `
+    <article class="s2-doctor-panel" data-s2-doctor-readonly="true">
+      <div class="s2-panel-head">
+        <div>
+          <p class="eyebrow">Doctor web · read-only</p>
+          <h3>Packet 90s z audytem</h3>
+          <p>${escapeHtml(doctor.variantCopy?.disclaimer || doctor.safetyNotice)}</p>
+        </div>
+        <span class="status-chip ${doctor.dataVisible ? "done" : "pending"}">${doctor.dataVisible ? "audit written" : "fail closed"}</span>
+      </div>
+      <div class="s2-metric-row">
+        ${metric("Sekcje", doctor.sections.length, "packet, sources, questions, timeline, drawer", "layout-list")}
+        ${metric("Zrodla", sourceSection?.itemCount || 0, "w indeksie pakietu", "files")}
+        ${metric("Pytania", questionSection?.itemCount || 0, "DITL do rozmowy", "message-circle-question")}
+      </div>
+      <div class="s2-doctor-brief" data-s2-doctor-section="packet90s">
+        <strong>${escapeHtml(packetSection?.items?.[0]?.text || "Brak karty 90s.")}</strong>
+        <div class="source-line">${sourceChips(packetSection?.sourceRefs || [])}</div>
+      </div>
+      <div class="s2-section-grid">
+        ${renderS2SectionCard("sources", "Zrodla", sourceSection, "documents")}
+        ${renderS2SectionCard("questions", "Pytania", questionSection, "risks")}
+        ${renderS2SectionCard("timeline", "Timeline", timelineSection, "timeline")}
+        ${renderS2SectionCard("documentDrawer", "Document drawer", documentSection, "documents")}
+      </div>
+      <div class="inline-actions">
+        <button class="primary-button" data-set-view="reports"><i data-lucide="clipboard-list"></i>Podsumowanie</button>
+        <button class="ghost-button" data-set-view="timeline"><i data-lucide="git-branch"></i>Timeline</button>
+        <button class="ghost-button" data-set-view="documents"><i data-lucide="files"></i>Document drawer</button>
+      </div>
+    </article>
+  `;
+}
+
+function renderS2SectionCard(sectionId, title, section, targetView) {
+  const preview = (section?.items || []).slice(0, 3);
+  return `
+    <section class="s2-section-card" data-s2-doctor-section="${escapeHtml(sectionId)}">
+      <div>
+        <span>${escapeHtml(title)}</span>
+        <strong>${escapeHtml(String(section?.itemCount || 0))}</strong>
+      </div>
+      <ul class="plain-list compact-list">
+        ${preview.map((item) => `<li><i data-lucide="circle"></i><span>${escapeHtml(item.text || item.title || item.label || item.id || "Element pakietu")}</span></li>`).join("") || `<li><i data-lucide="circle"></i><span>Brak elementow w tej sekcji.</span></li>`}
+      </ul>
+      <div class="source-line">${sourceChips(section?.sourceRefs || [])}</div>
+      <button class="small-action" data-set-view="${escapeHtml(targetView)}">Otworz widok</button>
+    </section>
+  `;
+}
+
+function renderS2PatientCaregiverFlow(flow) {
+  return `
+    <article class="s2-flow-panel" data-s2-pwa-flow="patient-caregiver">
+      <div class="s2-panel-head">
+        <div>
+          <p class="eyebrow">Patient / caregiver PWA</p>
+          <h3>Flow przygotowania wizyty</h3>
+          <p>${escapeHtml(flow.variantCopy?.disclaimer || "Kazdy krok jest organizacyjny, zrodlowy i bez decyzji systemu.")}</p>
+        </div>
+        <span class="status-chip ${flow.featureEnabled ? "done" : "pending"}">${flow.featureEnabled ? "enabled" : "disabled"}</span>
+      </div>
+      <div class="s2-flow-steps">
+        ${flow.steps.map(renderS2FlowStep).join("")}
+      </div>
+      <div class="s2-caregiver-scope">
+        <span>Opiekun</span>
+        <strong>${flow.caregiver.activeConsentCount ? `${flow.caregiver.activeConsentCount} aktywne zakresy` : "zero-knowledge empty state"}</strong>
+        <p>Gdy nie ma aktywnej zgody, widok opiekuna nie zdradza ukrytych danych ani licznikow.</p>
+      </div>
+      <div class="inline-actions">
+        <button class="primary-button" data-set-view="patientPortal"><i data-lucide="smartphone"></i>Pacjent PWA</button>
+        <button class="ghost-button" data-set-view="caregiverPortal"><i data-lucide="users-round"></i>Opiekun PWA</button>
+        <button class="ghost-button" data-set-view="consent"><i data-lucide="shield-check"></i>Zgoda</button>
+      </div>
+    </article>
+  `;
+}
+
+function renderS2FlowStep(step, index) {
+  const sourceCount = (step.sourceRefs || []).filter(Boolean).length;
+  return `
+    <button class="s2-flow-step" type="button" data-s2-flow-step="${escapeHtml(step.id)}" data-set-view="${escapeHtml(step.view)}">
+      <span>${String(index + 1).padStart(2, "0")}</span>
+      <strong>${escapeHtml(step.label)}</strong>
+      <small>${escapeHtml(step.status)} · ${escapeHtml(String(step.count))}</small>
+      <em>${escapeHtml(formatCount(sourceCount, "zrodlo", "zrodla", "zrodel"))}</em>
+    </button>
   `;
 }
 

@@ -340,6 +340,44 @@ async function assertCaregiverNoConsent(client, baseUrl) {
   assert(afterConsent.activeView === "consent", `Consent action should open consent view: ${JSON.stringify(afterConsent)}`);
 }
 
+async function assertS2PrototypeRoutes(client, baseUrl) {
+  await openPerspective(client, baseUrl, "doctor", "p1");
+  await client.evaluate(`document.querySelector('nav button[data-view="s2Prototype"]')?.click()`);
+  await waitForCondition(client, "document.querySelector('nav button.active')?.dataset.view === 's2Prototype'", "S2 prototype navigation did not open");
+  const s2 = await client.evaluate(`(() => ({
+    activeView: document.querySelector('nav button.active')?.dataset.view || null,
+    heading: document.querySelector('#viewRoot h1')?.textContent.trim() || '',
+    hasBundle: Boolean(document.querySelector('[data-s2-prototype="bundle"]')),
+    doctorReadonly: document.querySelector('[data-s2-doctor-readonly]')?.dataset.s2DoctorReadonly || '',
+    doctorSections: [...document.querySelectorAll('[data-s2-doctor-section]')].map((item) => item.dataset.s2DoctorSection),
+    flowSteps: [...document.querySelectorAll('[data-s2-flow-step]')].map((item) => item.dataset.s2FlowStep),
+    writeDialogCount: document.querySelectorAll('[data-s2-prototype] [data-open-dialog]').length,
+    text: (document.querySelector('#viewRoot')?.textContent || '').replace(/\\s+/g, ' ').trim()
+  }))()`);
+  assert(s2.activeView === "s2Prototype" && s2.hasBundle, `S2 prototype should render bundle: ${JSON.stringify(s2)}`);
+  assert(s2.heading.includes("S2") && s2.doctorReadonly === "true", `S2 prototype should expose read-only doctor packet: ${JSON.stringify(s2)}`);
+  ["packet90s", "sources", "questions", "timeline", "documentDrawer"].forEach((section) => {
+    assert(s2.doctorSections.includes(section), `S2 doctor prototype missing section ${section}: ${JSON.stringify(s2)}`);
+  });
+  ["profile", "visitGoal", "documents", "medications", "questions", "consent", "packet"].forEach((step) => {
+    assert(s2.flowSteps.includes(step), `S2 PWA prototype missing step ${step}: ${JSON.stringify(s2)}`);
+  });
+  assert(s2.writeDialogCount === 0, `S2 prototype should not expose write dialogs: ${JSON.stringify(s2)}`);
+  assert(s2.text.includes("Backend") && s2.text.includes("closed") && s2.text.includes("AI runtime"), `S2 prototype should show closed gates: ${JSON.stringify(s2)}`);
+
+  await client.evaluate(`document.querySelector('[data-s2-flow-step="documents"]')?.click()`);
+  await waitForCondition(client, "document.querySelector('nav button.active')?.dataset.view === 'documents'", "S2 documents step did not navigate to documents");
+  const docs = await snapshotDemo(client);
+  assert(docs.activeView === "documents" && docs.text.toLowerCase().includes("dokument"), `S2 documents step should open documents view: ${JSON.stringify(docs)}`);
+
+  await client.evaluate(`document.querySelector('nav button[data-view="s2Prototype"]')?.click()`);
+  await waitForCondition(client, "document.querySelector('nav button.active')?.dataset.view === 's2Prototype'", "S2 prototype did not reopen");
+  await client.evaluate(`document.querySelector('[data-s2-pwa-flow] [data-set-view="caregiverPortal"]')?.click()`);
+  await waitForCondition(client, "document.querySelector('nav button.active')?.dataset.view === 'caregiverPortal'", "S2 caregiver PWA action did not navigate to caregiver portal");
+  const caregiver = await snapshotDemo(client);
+  assert(caregiver.activeView === "caregiverPortal" && caregiver.activeRole === "caregiver", `S2 caregiver action should switch to caregiver PWA: ${JSON.stringify(caregiver)}`);
+}
+
 async function main() {
   assert(fs.existsSync(packageDir), `Package does not exist: ${packageDir}`);
 
@@ -374,6 +412,7 @@ async function main() {
     await assertLandingRoutes(client, baseUrl);
     await assertPerspectiveRoutes(client, baseUrl);
     await assertCaregiverNoConsent(client, baseUrl);
+    await assertS2PrototypeRoutes(client, baseUrl);
 
     console.log(`Click route verification passed: ${baseUrl} -> ${packageDir}`);
   } finally {

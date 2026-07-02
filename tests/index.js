@@ -12,3 +12,4 @@ require("./a3-a5-quality.test.js");
 require("./a4-consent-guard.test.js");
 require("./a6-visit-checklist.test.js");
 require("./s2-runtime-contracts.test.js");
+require("./s2-prototype.test.js");
