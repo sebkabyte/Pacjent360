@@ -1,0 +1,50 @@
+{
+  "fixtureVersion": 1,
+  "blockedRuntimeTokens": [
+    "document.",
+    "window.",
+    "localStorage",
+    "sessionStorage",
+    "indexedDB",
+    "fetch(",
+    "XMLHttpRequest"
+  ],
+  "runtimeModules": [
+    "public/patient360-consent-model.js",
+    "public/patient360-audit-catalog.js",
+    "public/patient360-visitpacket.js",
+    "public/patient360-doctor-session.js"
+  ],
+  "negativeCases": [
+    {
+      "id": "audit-write-failed-but-visible",
+      "target": "auditVisibility",
+      "mutate": "auditFailedDataVisible",
+      "expectedError": "dataVisible.fail_closed_violation"
+    },
+    {
+      "id": "doctor-write-action-present",
+      "target": "doctorSession",
+      "mutate": "addWriteAction",
+      "expectedError": "allowedActions.write_or_unknown:edit_patient_data"
+    },
+    {
+      "id": "doctor-audit-failed-but-data-visible",
+      "target": "doctorSession",
+      "mutate": "auditFailedDataVisible",
+      "expectedError": "dataVisible.auditStatus.not_written"
+    },
+    {
+      "id": "doctor-consent-without-packet-filter",
+      "target": "consentGrant",
+      "mutate": "removePacketFilter",
+      "expectedError": "doctor.packet_filter.required"
+    },
+    {
+      "id": "audit-forbidden-medical-metadata",
+      "target": "auditEvent",
+      "mutate": "addForbiddenMetadata",
+      "expectedError": "metadata.phi_key:diagnosis"
+    }
+  ]
+}

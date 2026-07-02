@@ -70,6 +70,7 @@ $nodeCheckFiles = @(
   "tools/validate-pwa-baseline.js",
   "tools/validate-s2-data-model.js",
   "tools/validate-api-contract.js",
+  "tools/validate-s2-runtime-contracts.js",
   "tools/validate-a0-agent-policy.js",
   "tools/validate-a1-safe-draft-dashboard.js",
   "tools/validate-a1-core-dashboard.js",
@@ -115,6 +116,7 @@ $powerShellCheckFiles = @(
   "tools/validate-pwa-baseline.ps1",
   "tools/validate-s2-data-model.ps1",
   "tools/validate-api-contract.ps1",
+  "tools/validate-s2-runtime-contracts.ps1",
   "tools/validate-a0-agent-policy.ps1",
   "tools/validate-a1-safe-draft-dashboard.ps1",
   "tools/validate-a1-core-dashboard.ps1",
@@ -154,7 +156,7 @@ Invoke-Step "PowerShell syntax parse for publication scripts" {
 
 Invoke-External "JSON fixture and schema parse" "node" @(
   "-e",
-  "const fs=require('fs'); ['schema/patient360.schema.json','fixtures/patient-map-model.snapshot.json','fixtures/patient-map-model-edgecases.json','fixtures/previsit-workflow-edgecases.json','fixtures/caregiver-scope-edgecases.json','fixtures/consent-draft-edgecases.json','fixtures/visit-packet.snapshot.json','fixtures/visit-packet-edgecases.json','fixtures/doctor-session-edgecases.json','fixtures/audit-catalog-edgecases.json','fixtures/variant-flags-edgecases.json','fixtures/s2-data-model.snapshot.json','fixtures/s2-data-model-edgecases.json','fixtures/api-contract-edgecases.json','fixtures/a0-agent-policy-edgecases.json','fixtures/a1-safe-draft-dashboard.snapshot.json','fixtures/system-wide-red-team-cases.json'].forEach((file)=>JSON.parse(fs.readFileSync(file,'utf8')));"
+  "const fs=require('fs'); ['schema/patient360.schema.json','fixtures/patient-map-model.snapshot.json','fixtures/patient-map-model-edgecases.json','fixtures/previsit-workflow-edgecases.json','fixtures/caregiver-scope-edgecases.json','fixtures/consent-draft-edgecases.json','fixtures/visit-packet.snapshot.json','fixtures/visit-packet-edgecases.json','fixtures/doctor-session-edgecases.json','fixtures/audit-catalog-edgecases.json','fixtures/variant-flags-edgecases.json','fixtures/s2-data-model.snapshot.json','fixtures/s2-data-model-edgecases.json','fixtures/api-contract-edgecases.json','fixtures/s2-runtime-contract-edgecases.json','fixtures/a0-agent-policy-edgecases.json','fixtures/a1-safe-draft-dashboard.snapshot.json','fixtures/system-wide-red-team-cases.json'].forEach((file)=>JSON.parse(fs.readFileSync(file,'utf8')));"
 )
 
 Invoke-External "Data Contract validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-data-contract.ps1"))
@@ -179,6 +181,7 @@ Invoke-External "Legal variant flags validation" "powershell" @("-ExecutionPolic
 Invoke-External "PWA baseline validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-pwa-baseline.ps1"))
 Invoke-External "S2 data model validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-s2-data-model.ps1"))
 Invoke-External "API contract validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-api-contract.ps1"))
+Invoke-External "S2 runtime contract validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-s2-runtime-contracts.ps1"))
 Invoke-External "Demo coherence validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-demo-coherence.ps1"))
 Invoke-External "Accessibility static validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-a11y.ps1"))
 Invoke-External "Brand contrast validation" "node" @("tools/validate-brand-contrast.js")

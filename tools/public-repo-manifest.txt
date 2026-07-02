@@ -47,6 +47,8 @@ tools/validate-s2-data-model.ps1
 tools/validate-s2-data-model.js
 tools/validate-api-contract.ps1
 tools/validate-api-contract.js
+tools/validate-s2-runtime-contracts.ps1
+tools/validate-s2-runtime-contracts.js
 tools/validate-data-contract.ps1
 tools/validate-data-contract.js
 tools/validate-format.ps1
@@ -97,6 +99,7 @@ fixtures/variant-flags-edgecases.json
 fixtures/s2-data-model.snapshot.json
 fixtures/s2-data-model-edgecases.json
 fixtures/api-contract-edgecases.json
+fixtures/s2-runtime-contract-edgecases.json
 fixtures/a0-agent-policy-edgecases.json
 fixtures/a1-safe-draft-dashboard.snapshot.json
 fixtures/system-wide-red-team-cases.json
