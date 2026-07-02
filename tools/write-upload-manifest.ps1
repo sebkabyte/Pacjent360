@@ -98,6 +98,7 @@ $checklistLines.Add("- release-manifest.json") | Out-Null
 $checklistLines.Add("- upload-ready-manifest.json") | Out-Null
 $checklistLines.Add("- deployment-handoff.txt") | Out-Null
 $checklistLines.Add("- go-live-status.txt") | Out-Null
+$checklistLines.Add("- deployed-package-drift.txt") | Out-Null
 $checklistLines.Add("- domain-diagnostics.txt") | Out-Null
 $checklistLines.Add("- document-root-checklist.txt") | Out-Null
 $checklistLines.Add("") | Out-Null
@@ -175,6 +176,7 @@ if (-not $SkipDeploymentHandoff) {
   $handoffLines.Add("   powershell -ExecutionPolicy Bypass -File tools\verify-deployed-site.ps1 -BaseUrl `"$BaseUrl`" -CompareLocalPackage -LocalPublicPath `"$UploadDir`"") | Out-Null
   $handoffLines.Add("2. Run go-live status:") | Out-Null
   $handoffLines.Add("   node tools\release-readiness.js -ReportPath `"dist/go-live-status.txt`"") | Out-Null
+  $handoffLines.Add("   If deployed files differ, inspect dist/deployed-package-drift.txt for the full mismatch list.") | Out-Null
   $handoffLines.Add("3. After manual email receipt/reply tests, run the final strict gate:") | Out-Null
   $handoffLines.Add("   node tools\release-readiness.js -Strict -ReceiptConfirmed -MonitorOwner `"Name`" -ReportPath `"dist/go-live-status.txt`"") | Out-Null
   $handoffLines.Add("4. If the domain still returns 404 or www behaves differently, run:") | Out-Null

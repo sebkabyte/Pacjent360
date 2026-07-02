@@ -41,7 +41,7 @@ DirectoryIndex index.html
 RedirectMatch 404 (^|/)\.git(/|$)
 RedirectMatch 404 ^/(dist|docs|tools|prints|repo-push|TEMP|TEMP_REVIEW_OUTPUT)(/|$)
 
-<FilesMatch "^(\.env(\..*)?|.*\.zip(\.sha256)?|.*manifest.*\.json|deployment-handoff\.txt|go-live-status\.txt|domain-diagnostics\.txt|document-root-checklist\.txt)$">
+<FilesMatch "^(\.env(\..*)?|.*\.zip(\.sha256)?|.*manifest.*\.json|deployment-handoff\.txt|go-live-status\.txt|deployed-package-drift\.txt|domain-diagnostics\.txt|document-root-checklist\.txt)$">
   Require all denied
 </FilesMatch>
 

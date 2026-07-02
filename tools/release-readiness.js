@@ -19,6 +19,7 @@ const helperArtifactPaths = [
   "upload-ready-manifest.json",
   "deployment-handoff.txt",
   "go-live-status.txt",
+  "deployed-package-drift.txt",
   "domain-diagnostics.txt",
   "document-root-checklist.txt",
 ];
@@ -31,6 +32,7 @@ function parseArgs(argv) {
     receiptConfirmed: false,
     monitorOwner: "",
     reportPath: "",
+    driftReportPath: "dist/deployed-package-drift.txt",
     skipDomain: false,
     strict: false,
   };
@@ -46,6 +48,8 @@ function parseArgs(argv) {
     "--monitor-owner": "monitorOwner",
     "-ReportPath": "reportPath",
     "--report-path": "reportPath",
+    "-DriftReportPath": "driftReportPath",
+    "--drift-report-path": "driftReportPath",
   };
 
   const flags = {
@@ -303,6 +307,7 @@ function verifyDeploymentHandoff(localPublicPath) {
     "- .htaccess",
     "AFTER UPLOAD",
     "verify-deployed-site.ps1",
+    "deployed-package-drift.txt",
     "release-readiness.js",
   ];
 
@@ -325,6 +330,7 @@ function verifyDocumentRootChecklist(localPublicPath) {
     "WHAT MUST BE DIRECTLY IN DOCUMENT ROOT",
     "DO NOT LEAVE IN DOCUMENT ROOT",
     "pacjent360-upload-root.zip",
+    "deployed-package-drift.txt",
     "document-root-checklist.txt",
     "FIRST POST-UPLOAD CHECK",
     "health.txt should return project=pacjent360",
@@ -446,7 +452,12 @@ async function main() {
     addStatus(results, "Helper artifact exposure", "WARN", "Skipped by -SkipDomain. Run tools/domain-diagnostics.js after upload.");
   } else {
     invokeStatusCheck(results, "Deployed domain", () => {
-      runPowerShell("tools/verify-deployed-site.ps1", ["-BaseUrl", options.baseUrl, "-CompareLocalPackage", "-LocalPublicPath", options.localPublicPath]);
+      runPowerShell("tools/verify-deployed-site.ps1", [
+        "-BaseUrl", options.baseUrl,
+        "-CompareLocalPackage",
+        "-LocalPublicPath", options.localPublicPath,
+        "-DriftReportPath", options.driftReportPath,
+      ]);
       return `deployed domain matches ${options.localPublicPath}`;
     });
     const helperExposure = await assessHelperArtifactExposure(options.baseUrl);
@@ -463,7 +474,7 @@ async function main() {
   const nextActions = noGoCount > 0 ? [
     "1. Upload the contents of dist/upload-ready, including .htaccess, to the domain document root; alternatively extract dist/pacjent360-upload-root.zip in the document root and delete the ZIP after extraction.",
     "2. Confirm https://pacjent360.com.pl/health.txt returns project=pacjent360.",
-    `3. Run: powershell -ExecutionPolicy Bypass -File tools\\verify-deployed-site.ps1 -BaseUrl "${options.baseUrl}" -CompareLocalPackage -LocalPublicPath "${options.localPublicPath}"`,
+    `3. Run: powershell -ExecutionPolicy Bypass -File tools\\verify-deployed-site.ps1 -BaseUrl "${options.baseUrl}" -CompareLocalPackage -LocalPublicPath "${options.localPublicPath}" -DriftReportPath "${options.driftReportPath}"`,
     "4. Test security@pacjent360.com.pl and kontakt@pacjent360.com.pl: external send, receive, reply.",
     "5. Re-run final strict gate: node tools\\release-readiness.js -Strict -ReceiptConfirmed -MonitorOwner \"Name\"",
   ] : [];

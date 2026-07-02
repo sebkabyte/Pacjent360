@@ -2,7 +2,8 @@ param(
   [string]$BaseUrl = "https://pacjent360.com.pl",
   [switch]$AllowHttp,
   [switch]$CompareLocalPackage,
-  [string]$LocalPublicPath = "dist/upload-ready"
+  [string]$LocalPublicPath = "dist/upload-ready",
+  [string]$DriftReportPath = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -147,10 +148,51 @@ function Get-RelativePath {
   return $relative.Replace("\", "/")
 }
 
+function Write-DriftReport {
+  param(
+    [string]$ReportPath,
+    [string]$Base,
+    [string]$LocalRoot,
+    [System.Collections.Generic.List[string]]$Mismatches
+  )
+
+  if ([string]::IsNullOrWhiteSpace($ReportPath)) {
+    return ""
+  }
+
+  $fullPath = if ([System.IO.Path]::IsPathRooted($ReportPath)) { $ReportPath } else { Join-Path $root $ReportPath }
+  $directory = Split-Path -Parent $fullPath
+  if (-not (Test-Path -LiteralPath $directory)) {
+    New-Item -ItemType Directory -Force -Path $directory | Out-Null
+  }
+
+  $lines = New-Object System.Collections.Generic.List[string]
+  $lines.Add("Pacjent360 deployed package drift report") | Out-Null
+  $lines.Add("GeneratedAtUtc: $([DateTime]::UtcNow.ToString("s"))Z") | Out-Null
+  $lines.Add("BaseUrl: $Base") | Out-Null
+  $lines.Add("LocalPackage: $LocalRoot") | Out-Null
+  $lines.Add("Status: $(if ($Mismatches.Count -eq 0) { "MATCH" } else { "DRIFT" })") | Out-Null
+  $lines.Add("IssueCount: $($Mismatches.Count)") | Out-Null
+  $lines.Add("") | Out-Null
+  if ($Mismatches.Count -eq 0) {
+    $lines.Add("No deployed package drift detected.") | Out-Null
+  } else {
+    $lines.Add("ISSUES") | Out-Null
+    foreach ($mismatch in $Mismatches) {
+      $lines.Add("- $mismatch") | Out-Null
+    }
+  }
+
+  $utf8NoBom = New-Object System.Text.UTF8Encoding $false
+  [System.IO.File]::WriteAllLines($fullPath, $lines, $utf8NoBom)
+  return $fullPath
+}
+
 function Compare-DeployedFilesWithLocalPackage {
   param(
     [string]$Base,
-    [string]$LocalPath
+    [string]$LocalPath,
+    [string]$DriftReportPath = ""
   )
 
   Assert-True (Test-Path $LocalPath) "Local package does not exist: $LocalPath"
@@ -194,10 +236,14 @@ function Compare-DeployedFilesWithLocalPackage {
       }
     }
 
+    $driftReport = Write-DriftReport -ReportPath $DriftReportPath -Base $Base -LocalRoot $localRoot -Mismatches $mismatches
     if ($mismatches.Count -gt 0) {
       $sample = ($mismatches | Select-Object -First 12) -join "; "
       if ($mismatches.Count -gt 12) {
         $sample = "$sample; ... $($mismatches.Count - 12) more"
+      }
+      if ($driftReport) {
+        $sample = "$sample; full report: $driftReport"
       }
       throw "Deployed package differs from local package: $($mismatches.Count) issue(s): $sample"
     }
@@ -370,6 +416,7 @@ $blockedPaths = @(
   "upload-ready-manifest.json",
   "deployment-handoff.txt",
   "go-live-status.txt",
+  "deployed-package-drift.txt",
   "domain-diagnostics.txt",
   "document-root-checklist.txt"
 )
@@ -386,7 +433,7 @@ foreach ($path in $blockedPaths) {
 
 if ($CompareLocalPackage) {
   $resolvedLocalPublicPath = if ([System.IO.Path]::IsPathRooted($LocalPublicPath)) { $LocalPublicPath } else { Join-Path $root $LocalPublicPath }
-  Compare-DeployedFilesWithLocalPackage -Base $base -LocalPath $resolvedLocalPublicPath
+  Compare-DeployedFilesWithLocalPackage -Base $base -LocalPath $resolvedLocalPublicPath -DriftReportPath $DriftReportPath
 }
 
 Write-Host "Deployed site verification passed: $base"

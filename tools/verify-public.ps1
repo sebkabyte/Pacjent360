@@ -211,7 +211,7 @@ Assert-True ($htaccess.Contains("RewriteEngine On")) ".htaccess should enable re
 Assert-True ($htaccess.Contains('RewriteCond %{HTTPS} !=on')) ".htaccess should redirect HTTP to HTTPS"
 Assert-True ($htaccess.Contains('RewriteCond %{HTTP_HOST} !^pacjent360\.com\.pl$ [NC]')) ".htaccess should canonicalize host to pacjent360.com.pl"
 Assert-True ($htaccess.Contains('RewriteRule ^ https://pacjent360.com.pl%{REQUEST_URI} [R=301,L]')) ".htaccess should redirect to canonical HTTPS URL"
-Assert-True ($htaccess.Contains(".*\.zip") -and $htaccess.Contains("manifest") -and $htaccess.Contains("deployment-handoff") -and $htaccess.Contains("document-root-checklist")) ".htaccess should deny helper release artifacts left in document root"
+Assert-True ($htaccess.Contains(".*\.zip") -and $htaccess.Contains("manifest") -and $htaccess.Contains("deployment-handoff") -and $htaccess.Contains("deployed-package-drift") -and $htaccess.Contains("document-root-checklist")) ".htaccess should deny helper release artifacts left in document root"
 Assert-True ($index.Contains("CeZ") -and $index.Contains("NFZ") -and $index.Contains("IKP")) "index.html should show independence from CeZ/NFZ/IKP"
 Assert-True ($index.Contains('class="skip-link"') -and $index.Contains('href="#main-content"')) "index.html should expose skip link"
 Assert-True ($demo -match "DANE FIKCYJNE") "demo.html should show fictional data banner"

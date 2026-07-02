@@ -19,6 +19,7 @@ const helperArtifactPaths = [
   "upload-ready-manifest.json",
   "deployment-handoff.txt",
   "go-live-status.txt",
+  "deployed-package-drift.txt",
   "domain-diagnostics.txt",
   "document-root-checklist.txt",
 ];
