@@ -56,9 +56,12 @@
   // Klasa dowodowa: lekarz musi widziec, czy patrzy na dokument, relacje pacjenta,
   // obserwacje opiekuna czy zapis systemu. To nie jest ocena wiarygodnosci klinicznej.
   const EVIDENCE_CLASSES = ["official_document", "patient_reported", "caregiver_reported", "system_generated"];
+  // Obserwacja domyslnie dostaje najnizsza klase dowodowa (relacja opiekuna);
+  // klase "official_document" obserwacja moze miec tylko jawnie i tylko wtedy,
+  // gdy rekord cytuje zrodlo dokumentowe (gate w validate-data-contract).
   const SOURCE_TYPE_TO_EVIDENCE_CLASS = {
     document: "official_document",
-    observation: "official_document",
+    observation: "caregiver_reported",
     medication: "official_document",
     interview: "patient_reported",
     transcript: "patient_reported",

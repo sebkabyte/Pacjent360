@@ -194,7 +194,7 @@
     }
   ],
   "roleGoals": [
-    { "id": "rg-p1-doctor", "patientId": "p1", "role": "doctor", "goal": "W 90 sekund zobaczyć leki, braki i pytania przed procedurą.", "primaryView": "core" },
+    { "id": "rg-p1-doctor", "patientId": "p1", "role": "doctor", "goal": "Szybko zobaczyć leki, braki i pytania przed procedurą.", "primaryView": "core" },
     { "id": "rg-p1-patient", "patientId": "p1", "role": "patient", "goal": "Przygotować dokumenty, pytania i listę leków do omówienia.", "primaryView": "visitChecklist" },
     { "id": "rg-p1-caregiver", "patientId": "p1", "role": "caregiver", "goal": "Pomóc ojcu w lekach, transporcie i dokumentach w zakresie zgody.", "primaryView": "caregiverPortal" },
     { "id": "rg-p2-doctor", "patientId": "p2", "role": "doctor", "goal": "Zobaczyć kontekst kontroli kardiologicznej i pytania pacjenta.", "primaryView": "core" },
@@ -205,7 +205,7 @@
     { "id": "rg-p3-caregiver", "patientId": "p3", "role": "caregiver", "goal": "Wiedzieć, co mama i tata widzą w zakresie zgody.", "primaryView": "caregiverPortal" }
   ],
   "roleVisibleSections": [
-    { "id": "rvs-p1-doctor", "patientId": "p1", "role": "doctor", "sections": ["brief 90 sekund", "leki do potwierdzenia", "źródła", "pytania do rozmowy"] },
+    { "id": "rvs-p1-doctor", "patientId": "p1", "role": "doctor", "sections": ["krótki kontekst", "leki do potwierdzenia", "źródła", "pytania do rozmowy"] },
     { "id": "rvs-p1-patient", "patientId": "p1", "role": "patient", "sections": ["co teraz", "checklista", "moje pytania", "udostępnianie córce"] },
     { "id": "rvs-p1-caregiver", "patientId": "p1", "role": "caregiver", "sections": ["dokumenty", "mapa", "leki", "wyniki", "gotowy wywiad", "zgody"] },
     { "id": "rvs-p2-doctor", "patientId": "p2", "role": "doctor", "sections": ["echo serca", "lek do potwierdzenia", "wywiad pacjenta", "brak opiekuna"] },
@@ -220,7 +220,7 @@
       "id": "dc1",
       "patientId": "p1",
       "type": "Gotowość do procedury",
-      "clinicalQuestion": "Co lekarz musi wyjaśnić przed decyzją o planowanej procedurze?",
+      "clinicalQuestion": "Co wymaga omówienia z lekarzem przed planowaną procedurą?",
       "contactDate": {
         "__p360DateOffset": 3
       },
@@ -1405,6 +1405,7 @@
       "patientId": "p1",
       "name": "Glukoza",
       "type": "laboratorium",
+      "evidenceClass": "official_document",
       "unit": "mg/dl",
       "normalMin": 70,
       "normalMax": 99,
@@ -1443,6 +1444,7 @@
       "patientId": "p1",
       "name": "Kreatynina",
       "type": "laboratorium",
+      "evidenceClass": "official_document",
       "unit": "mg/dl",
       "normalMin": 0.7,
       "normalMax": 1.3,
@@ -1481,6 +1483,7 @@
       "patientId": "p1",
       "name": "Hemoglobina",
       "type": "laboratorium",
+      "evidenceClass": "official_document",
       "unit": "g/dl",
       "normalMin": 13.5,
       "normalMax": 17.5,
@@ -1519,6 +1522,7 @@
       "patientId": "p1",
       "name": "Potas",
       "type": "laboratorium",
+      "evidenceClass": "official_document",
       "unit": "mmol/l",
       "normalMin": 3.5,
       "normalMax": 5.1,
@@ -1557,6 +1561,7 @@
       "patientId": "p2",
       "name": "NT-proBNP",
       "type": "laboratorium",
+      "evidenceClass": "official_document",
       "unit": "pg/ml",
       "normalMin": 0,
       "normalMax": 125,
@@ -1586,6 +1591,7 @@
       "patientId": "p3",
       "name": "CRP",
       "type": "laboratorium",
+      "evidenceClass": "official_document",
       "unit": "mg/l",
       "normalMin": 0,
       "normalMax": 5,
@@ -1711,7 +1717,7 @@
       "color": "amber",
       "category": "Brak aktualnego EKG",
       "question": "Czy aktualne EKG jest dostępne albo lekarz uznał, że nie jest potrzebne?",
-      "evidence": "EKG nie jest widoczne w danych. Do potwierdzenia z lekarzem przed decyzją.",
+      "evidence": "EKG nie jest widoczne w danych. Do potwierdzenia podczas rozmowy z lekarzem.",
       "status": "do wyjaśnienia",
       "sourceRefs": [
         "doc:d3"
@@ -1854,7 +1860,7 @@
       "id": "ku3",
       "patientId": "p1",
       "category": "Unknown",
-      "description": "EKG nie jest widoczne w danych. Do potwierdzenia z lekarzem przed decyzją.",
+      "description": "EKG nie jest widoczne w danych. Do potwierdzenia podczas rozmowy z lekarzem.",
       "sourceRefs": [
         "doc:d3"
       ]

@@ -117,7 +117,7 @@ const ROLE_META = Object.freeze({
     label: "Lekarz360",
     icon: "stethoscope",
     view: "core",
-    promise: "Mam 90 sekund, żeby zobaczyć, co trzeba wyjaśnić.",
+    promise: "Chcę szybko zobaczyć, co pacjent przygotował do omówienia.",
     cta: "Wejdź do Lekarz360"
   },
   patient: {
@@ -630,7 +630,7 @@ const REPORT_CASE_STUDIES = [
     questions: [
       "Czy objaw może mieć więcej niż jedną przyczynę?",
       "Czy lista leków i wywiad pacjenta zmieniają interpretację danych?",
-      "Jakie dane są potrzebne specjaliście przed decyzją?"
+      "Jakie dane warto przygotować dla specjalisty do omówienia?"
     ]
   },
   {
@@ -1721,14 +1721,14 @@ function renderCriticalStrip() {
     criticalStrip.innerHTML = "";
     return;
   }
-  const redFlags = byPatient(state.flags).filter((flag) => flag.color === "red" && flag.status !== "wyjaśnione" && flag.status !== "odrzucone");
-  if (!redFlags.length) {
+  const openQuestions = byPatient(state.flags).filter((flag) => flag.color !== "green" && flag.status !== "wyjaśnione" && flag.status !== "odrzucone");
+  if (!openQuestions.length) {
     criticalStrip.classList.remove("visible");
     criticalStrip.innerHTML = "";
     return;
   }
   criticalStrip.classList.add("visible");
-  criticalStrip.innerHTML = `<i data-lucide="triangle-alert"></i><strong>${formatCount(redFlags.length, "punkt do sprawdzenia", "punkty do sprawdzenia", "punktów do sprawdzenia")}:</strong> ${escapeHtml(redFlags[0].question)}`;
+  criticalStrip.innerHTML = `<i data-lucide="circle-help"></i><strong>${formatCount(openQuestions.length, "pytanie czeka", "pytania czekają", "pytań czeka")} na omówienie z lekarzem.</strong>`;
 }
 
 function isCaregiverRestrictedView(view = state.activeView) {
@@ -2070,7 +2070,7 @@ function renderCore() {
     <div class="page-intro">
       <div>
         <p class="eyebrow">Kontekst wizyty i pytania do lekarza</p>
-        <h1>Lekarz360: kontekst w 90 sekund</h1>
+        <h1>Lekarz360: krótki kontekst wizyty</h1>
         <p>${escapeHtml(patient.name)}, ${formatAge(patient.birthDate)}. System pokazuje pytania i luki do wyjaśnienia, bez automatycznej decyzji po stronie systemu.</p>
       </div>
       <div class="inline-actions">
@@ -2101,7 +2101,7 @@ function renderCore() {
     })}
     ${renderCareContractPanel("doctor")}
 
-    ${renderCockpitDetails("Pełne dane Lekarz360: leki, źródła, karta 90 sekund, historia pacjenta i skróty", `
+    ${renderCockpitDetails("Pełne dane Lekarz360: leki, źródła, karta kontekstu, historia pacjenta i skróty", `
       ${renderFullDataAccess("clinician")}
 
       <section class="section-band decision-hero core-brief">
@@ -2207,6 +2207,14 @@ function renderS2DoctorReadOnly(doctor) {
         <strong>${escapeHtml(packetSection?.items?.[0]?.text || "Brak karty 90s.")}</strong>
         <div class="source-line">${sourceChips(packetSection?.sourceRefs || [])}</div>
       </div>
+      ${(doctor.topMatters || []).length ? `
+      <div class="s2-doctor-top-matters" data-s2-doctor-top-matters="true">
+        <p class="eyebrow">Sprawy wskazane przez pacjenta/opiekuna do rozmowy (max 3)</p>
+        <ul class="plain-list compact-list">
+          ${doctor.topMatters.map((matter) => `<li><i data-lucide="circle-help"></i><span>${escapeHtml(matter.text || "")}</span></li>`).join("")}
+        </ul>
+        <p class="muted">${escapeHtml(doctor.topMattersNote || "")}</p>
+      </div>` : ""}
       <div class="s2-section-grid">
         ${renderS2SectionCard("sources", "Zrodla", sourceSection, "documents")}
         ${renderS2SectionCard("questions", "Pytania", questionSection, "risks")}
@@ -3938,7 +3946,7 @@ function renderInterviewCard(interview) {
           <div class="record-meta">
             <span class="tag">${formatDate(interview.date)}</span>
             <span class="tag">rozmówca: ${escapeHtml(interview.speaker)}</span>
-            <span class="status-chip ${statusClass(interview.confidence)}">pewność: ${escapeHtml(interview.confidence)}</span>
+            <span class="status-chip ${statusClass(interview.confidence)}">kompletność odpowiedzi: ${escapeHtml(interview.confidence)}</span>
           </div>
         </div>
       </div>
@@ -4150,7 +4158,7 @@ function historyCurrentNotice(issues) {
     return {
       tone: "attention",
       label: "Do potwierdzenia",
-      text: "EKG nie jest widoczne w danych. Do potwierdzenia z lekarzem przed decyzją.",
+      text: "EKG nie jest widoczne w danych. Do potwierdzenia podczas rozmowy z lekarzem.",
       sourceRefs: ekgIssue.sourceRefs || []
     };
   }
@@ -4196,7 +4204,7 @@ function renderHistoryIssues(issues) {
       <div class="section-head compact-head">
         <div>
           <p class="eyebrow">Do rozmowy</p>
-          <h3>3 sprawy, które lekarz powinien zobaczyć</h3>
+          <h3>3 sprawy wskazane przez pacjenta/opiekuna do rozmowy</h3>
         </div>
       </div>
       <div class="history-priority-grid">
@@ -5092,7 +5100,7 @@ function renderObservations() {
     <section class="section-band flush">
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Parametr</th><th>Ostatni wynik</th><th>Wykres względem normy</th><th>Zakres podany przez źródło</th><th>Źródło</th></tr></thead>
+          <thead><tr><th>Parametr</th><th>Ostatni wynik</th><th>Wykres względem zakresu ze źródła</th><th>Zakres podany przez źródło</th><th>Źródło</th></tr></thead>
           <tbody>
             ${observations.map((obs) => {
               const latest = latestValue(obs);
@@ -5438,7 +5446,7 @@ function renderOnePagerV2(type) {
       </ul>
     </article>
     <article class="report-section">
-      <h3>Kontekst w 90 sekund</h3>
+      <h3>Krótki kontekst wizyty</h3>
       <ul class="plain-list">
         <li><i data-lucide="user-round-check"></i><span><strong>Stan bazowy:</strong> ${escapeHtml(patient.baselineState)}</span></li>
         <li><i data-lucide="activity"></i><span><strong>Aktualny problem:</strong> ${escapeHtml(patient.currentProblem)}</span></li>
@@ -6042,7 +6050,7 @@ function renderEvidenceCard(ref, parsed, record) {
       <div class="evidence-card">
         <article class="record">
           <p class="record-title">${escapeHtml(parsed.type === "transcript" ? "Transkrypcja rozmowy" : record.scenario)}</p>
-          <div class="record-meta"><span class="tag">${formatDate(record.date)}</span><span class="tag">rozmówca: ${escapeHtml(record.speaker)}</span><span class="status-chip ${statusClass(record.confidence)}">pewność: ${escapeHtml(record.confidence)}</span></div>
+          <div class="record-meta"><span class="tag">${formatDate(record.date)}</span><span class="tag">rozmówca: ${escapeHtml(record.speaker)}</span><span class="status-chip ${statusClass(record.confidence)}">kompletność odpowiedzi: ${escapeHtml(record.confidence)}</span></div>
           <p class="record-body">${escapeHtml(parsed.type === "transcript" ? record.transcript : Object.values(record.answers || {}).join(" "))}</p>
         </article>
       </div>

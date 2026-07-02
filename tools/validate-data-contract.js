@@ -138,6 +138,10 @@ function addSource(sources, ref, type, title, record, date = "") {
     ref,
     type,
     evidenceClass: record?.evidenceClass || SOURCE_TYPE_TO_EVIDENCE_CLASS[type] || "system_generated",
+    hasDocumentRef: [
+      ...(Array.isArray(record?.sourceRefs) ? record.sourceRefs : []),
+      ...(Array.isArray(record?.values) ? record.values.flatMap((value) => (Array.isArray(value?.sourceRefs) ? value.sourceRefs : [])) : [])
+    ].some((refValue) => String(refValue).startsWith("doc:")),
     title: title || ref,
     patientId: record?.patientId || "",
     date: date || record?.date || record?.eventDate || record?.contactDate || record?.generatedAt || "",
@@ -369,8 +373,12 @@ function validateContract(contract) {
     if (source.evidenceClass !== undefined) {
       if (!EVIDENCE_CLASSES.includes(source.evidenceClass)) errors.push(`source ${source.ref} has invalid evidenceClass ${source.evidenceClass}`);
       const expectedClass = SOURCE_TYPE_TO_EVIDENCE_CLASS[source.type];
-      if (expectedClass && source.evidenceClass !== expectedClass && source.evidenceClass !== "caregiver_reported") {
+      const documentBackedObservation = source.type === "observation" && source.evidenceClass === "official_document" && source.hasDocumentRef === true;
+      if (expectedClass && source.evidenceClass !== expectedClass && source.evidenceClass !== "caregiver_reported" && !documentBackedObservation) {
         errors.push(`source ${source.ref} has evidenceClass ${source.evidenceClass}, expected ${expectedClass}`);
+      }
+      if (source.type === "observation" && source.evidenceClass === "official_document" && source.hasDocumentRef !== true) {
+        errors.push(`source ${source.ref} claims official_document evidence without doc: sourceRef`);
       }
     }
   });

@@ -216,7 +216,7 @@
   }
 
   function statusClass(status) {
-    if (status === "within") return "done";
+    if (status === "within") return "info";
     if (status === "above" || status === "below") return "pending";
     return "info";
   }
@@ -241,9 +241,6 @@
       statusLabel(point.status, series.range),
       `zrodlo: ${(point.sourceRefs || []).join(", ") || SOURCE_MISSING_REF}`
     ];
-    if (Number.isFinite(point.normIndex)) {
-      parts.push(`pozycja wzgledem normy: ${formatNumber(point.normIndex)}`);
-    }
     if (point.isVisualCapped) {
       parts.push("poza limitem skali wizualnej");
     }

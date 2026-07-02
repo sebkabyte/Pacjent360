@@ -127,11 +127,14 @@
       : questionsFromState(state, patientId).slice(0, 6);
     const decision = latestByDate(byPatient(state, "decisionContexts", patientId), "contactDate");
     const topMatters = packet
-      ? asArray(packet.topMatters).map((item) => ({ id: item.id, text: item.title, sourceRefs: sourceRefsFor(item) }))
+      ? asArray(packet.topMatters).map((item) => ({ id: item.id, text: item.title, sourceRefs: sourceRefsFor(item) })).slice(0, 3)
       : [
           ...byPatient(state, "knownUnknowns", patientId).slice(0, 3).map((item) => ({ id: item.id, text: item.description, sourceRefs: sourceRefsFor(item) })),
           ...questions.slice(0, 2).map((item) => ({ id: item.id, text: item.text, sourceRefs: sourceRefsFor(item) }))
-        ].slice(0, 4);
+        ].slice(0, 3);
+    const topMattersNote = packet
+      ? "wybor wskazany przez pacjenta/opiekuna"
+      : "kolejnosc wg daty dodania, nie waznosci";
     const sourceIndex = packet ? packetSources(packet) : stateSources(state, patientId);
     const summaryText = packet?.summary90s?.text || decision?.summary || decision?.clinicalQuestion || "Krotki, zrodlowy kontekst wizyty bez decyzji systemu.";
     const featureEnabled = flagEnabled("doctorReadOnlyPacket", variant, input.flags);
@@ -196,6 +199,7 @@
       safetyNotice: packet?.safetyNotice || "Widok pokazuje tylko udostepniony zakres, zrodla, braki i pytania DITL.",
       sections,
       topMatters,
+      topMattersNote,
       blockedCapabilities: ["edit_patient_data", "write_note_to_record", "medical_assessment"]
     };
   }

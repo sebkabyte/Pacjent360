@@ -303,7 +303,7 @@ async function main() {
         activeView: document.querySelector('nav button.active')?.dataset.view || null,
         role: JSON.parse(localStorage.getItem('pacjent360-state-v11') || '{}').activeRole || '',
         patient: document.querySelector('#patientSelect')?.value || '',
-        hasDoctorBrief: (document.querySelector('#viewRoot')?.textContent || '').toLowerCase().includes('kontekst w 90 sekund') || false
+        hasDoctorBrief: (document.querySelector('#viewRoot')?.textContent || '').toLowerCase().includes('krótki kontekst wizyty') || false
       };
     })()`);
     assert(roleStart.roleFound && roleStart.hasSubpage && roleStart.scenarioCount === 3 && roleStart.roleChoiceCount === 0 && roleStart.found && roleStart.activeView === "core" && roleStart.role === "doctor" && roleStart.patient === "p1" && roleStart.hasDoctorBrief, `Guided perspective demo should show a step-2 subpage before entering doctor cockpit for Jan: ${JSON.stringify(roleStart)}`);
