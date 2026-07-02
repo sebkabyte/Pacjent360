@@ -52,6 +52,7 @@ tools/validate-s2-runtime-contracts.js
 tools/validate-s2-prototypes.ps1
 tools/validate-s2-prototypes.js
 tools/acceptance/
+tools/validate-sh-loop-state.js
 tools/validate-data-contract.ps1
 tools/validate-data-contract.js
 tools/validate-format.ps1
