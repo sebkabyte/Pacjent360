@@ -323,6 +323,7 @@
     S2_DOCUMENT_STATUSES: Object.freeze([...S2_DOCUMENT_STATUSES]),
     S2_QUESTION_STATUSES: Object.freeze([...S2_QUESTION_STATUSES]),
     S2_OBSERVATION_TYPES: Object.freeze([...S2_OBSERVATION_TYPES]),
-    FORBIDDEN_CLAIM_PHRASES: Object.freeze([...FORBIDDEN_CLAIM_PHRASES])
+    FORBIDDEN_CLAIM_PHRASES: Object.freeze([...FORBIDDEN_CLAIM_PHRASES]),
+    normalizeClaimPhrase
   });
 });

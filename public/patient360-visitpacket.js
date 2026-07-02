@@ -36,6 +36,14 @@
   ]);
   const DITL_STATUSES = Object.freeze(contract?.DITL_STATUSES || ["do wyjaśnienia", "wyjaśnione", "odrzucone", "dalsza kontrola"]);
   const FORBIDDEN_CLAIM_PHRASES = Object.freeze(contract?.FORBIDDEN_CLAIM_PHRASES || []);
+  // Case-insensitive + bez diakrytykow: "Poza Norma" i "poza norma" musza byc traktowane tak samo.
+  const normalizeClaimText = contract?.normalizeClaimPhrase || function normalizeClaimTextFallback(value) {
+    return String(value == null ? "" : value)
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .replace(/ł/g, "l");
+  };
 
   function asArray(value) {
     return Array.isArray(value) ? value : [];
@@ -124,10 +132,10 @@
       });
       if (!item.ditlStatus || !DITL_STATUSES.includes(item.ditlStatus)) errors.push(`${path}.ditlStatus.invalid`);
     });
-    collectText(packet).join(" ").toLowerCase();
-    const allText = collectText(packet).join(" ");
+    const allText = normalizeClaimText(collectText(packet).join(" "));
     FORBIDDEN_CLAIM_PHRASES.forEach((phrase) => {
-      if (phrase && allText.includes(phrase)) errors.push(`forbiddenPhrase:${phrase}`);
+      const normalizedPhrase = normalizeClaimText(phrase);
+      if (normalizedPhrase && allText.includes(normalizedPhrase)) errors.push(`forbiddenPhrase:${phrase}`);
     });
     return { valid: errors.length === 0, errors };
   }

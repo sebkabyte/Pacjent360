@@ -58,6 +58,7 @@ $nodeCheckFiles = @(
   "public/sw.js",
   "tools/validate-data-contract.js",
   "tools/validate-format.js",
+  "tools/validate-forbidden-claims-sync.js",
   "tools/validate-glossary.js",
   "tools/validate-map-model.js",
   "tools/validate-previsit-workflow.js",
@@ -168,6 +169,7 @@ Invoke-External "JSON fixture and schema parse" "node" @(
 Invoke-External "Data Contract validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-data-contract.ps1"))
 Invoke-External "Polish format validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-format.ps1"))
 Invoke-External "Public glossary validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-glossary.ps1"))
+Invoke-External "Forbidden claims register sync" "node" @("tools/validate-forbidden-claims-sync.js")
 Invoke-External "Patient map model validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-map-model.ps1"))
 Invoke-External "Pre-visit workflow validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-previsit-workflow.ps1"))
 Invoke-External "Caregiver scope validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-caregiver-scope.ps1"))

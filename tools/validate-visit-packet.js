@@ -21,9 +21,12 @@ function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, "utf8"));
 }
 
-function applyMutation(packet, mutation) {
+function applyMutation(packet, testCase) {
+  const mutation = typeof testCase === "string" ? testCase : testCase.mutate;
   const mutated = clone(packet);
-  if (mutation === "removeSummarySources") {
+  if (mutation === "injectSummaryText") {
+    mutated.summary90s.text = String(testCase.text || "");
+  } else if (mutation === "removeSummarySources") {
     delete mutated.summary90s.sourceRefs;
     delete mutated.summary90s.sourceRef;
     delete mutated.summary90s.sourceMissing;
@@ -60,7 +63,7 @@ function validatePositive(id, packet) {
 }
 
 function validateNegative(basePacket, testCase) {
-  const packet = applyMutation(basePacket, testCase.mutate);
+  const packet = applyMutation(basePacket, testCase);
   const result = visitPacket.validateVisitPacket(packet);
   assert(!result.valid, `${testCase.id}: expected invalid VisitPacket`);
   if (testCase.expectedError) {
@@ -90,7 +93,7 @@ function main() {
   ];
   const negatives = (edgecases.negativeCases || []).map((testCase) => validateNegative(snapshot, testCase));
   assert(positives.length >= 3, "VisitPacket positives should include snapshot and edge cases");
-  assert(negatives.length >= 7, "VisitPacket negatives should cover source, consent, DITL and audit failures");
+  assert(negatives.length >= 13, "VisitPacket negatives should cover source, consent, DITL, audit and forbidden-phrase (case/diacritics) failures");
   positives.forEach((item) => console.log(`${item.id}: valid sections=${item.sections}`));
   negatives.forEach((item) => console.log(`${item.id}: rejected errors=${item.errors.join(",")}`));
   console.log("VisitPacket validation passed");

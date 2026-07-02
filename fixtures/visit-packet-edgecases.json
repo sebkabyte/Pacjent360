@@ -73,19 +73,25 @@
         "visitContext": {
           "goal": "Pokazanie lekarzowi pytań przygotowanych przez osobę wspierającą.",
           "ditlStatus": "do wyjaśnienia",
-          "sourceRefs": ["observation:caregiver-note-001"]
+          "sourceRefs": [
+            "observation:caregiver-note-001"
+          ]
         },
         "summary90s": {
           "text": "Osoba wspierająca dodała obserwacje organizacyjne i pytania do rozmowy.",
           "ditlStatus": "do wyjaśnienia",
-          "sourceRefs": ["observation:caregiver-note-001"]
+          "sourceRefs": [
+            "observation:caregiver-note-001"
+          ]
         },
         "topMatters": [
           {
             "id": "matter-edge-001",
             "title": "Potwierdzić z pacjentem, czy opis obserwacji jest aktualny.",
             "ditlStatus": "do wyjaśnienia",
-            "sourceRefs": ["observation:caregiver-note-001"]
+            "sourceRefs": [
+              "observation:caregiver-note-001"
+            ]
           }
         ],
         "medicationsToConfirm": [],
@@ -94,7 +100,9 @@
             "id": "question-edge-001",
             "question": "Czy lista dokumentów jest wystarczająca do rozmowy?",
             "ditlStatus": "do wyjaśnienia",
-            "sourceRefs": ["observation:caregiver-note-001"]
+            "sourceRefs": [
+              "observation:caregiver-note-001"
+            ]
           }
         ],
         "timelineHighlights": [],
@@ -110,7 +118,10 @@
         ],
         "excludedByScope": {
           "count": 2,
-          "categories": ["documents", "medications"]
+          "categories": [
+            "documents",
+            "medications"
+          ]
         },
         "safetyNotice": "Pakiet pokazuje zakres udostępniony przez pacjenta. Decyzje medyczne podejmuje lekarz.",
         "auditPolicy": {
@@ -155,6 +166,42 @@
       "id": "invalid-ditl-status",
       "mutate": "invalidDitlStatus",
       "expectedError": "visitContext.ditlStatus.invalid"
+    },
+    {
+      "id": "forbidden-diagnoza-capitalized",
+      "mutate": "injectSummaryText",
+      "text": "Diagnoza: opis fikcyjny, tekst zakazany w pakiecie.",
+      "expectedErrorIncludes": "forbiddenPhrase"
+    },
+    {
+      "id": "forbidden-triage-uppercase",
+      "mutate": "injectSummaryText",
+      "text": "Pacjent oznaczony jako TRIAGE poziom 2.",
+      "expectedErrorIncludes": "forbiddenPhrase"
+    },
+    {
+      "id": "forbidden-poza-norma-mixedcase-diacritics",
+      "mutate": "injectSummaryText",
+      "text": "Ostatni wynik jest Poza Normą według systemu.",
+      "expectedErrorIncludes": "forbiddenPhrase"
+    },
+    {
+      "id": "forbidden-zalecam-uppercase",
+      "mutate": "injectSummaryText",
+      "text": "ZALECAM kontynuację obecnej dawki.",
+      "expectedErrorIncludes": "forbiddenPhrase"
+    },
+    {
+      "id": "forbidden-w-granicach-normy-diacritics",
+      "mutate": "injectSummaryText",
+      "text": "Wszystkie wartości mieszczą się w granicach normy.",
+      "expectedErrorIncludes": "forbiddenPhrase"
+    },
+    {
+      "id": "forbidden-pilnej-oceny-diacritics",
+      "mutate": "injectSummaryText",
+      "text": "Wynik wymaga pilnej oceny w gabinecie.",
+      "expectedErrorIncludes": "forbiddenPhrase"
     }
   ]
 }
