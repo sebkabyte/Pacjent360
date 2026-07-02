@@ -163,6 +163,8 @@ function Compare-DeployedFilesWithLocalPackage {
       Get-RelativePath -Base $localRoot -Path $_.FullName
     } | Sort-Object
 
+    $mismatches = New-Object System.Collections.Generic.List[string]
+
     foreach ($relative in $localFiles) {
       if ($relative -eq ".htaccess") {
         continue
@@ -173,12 +175,31 @@ function Compare-DeployedFilesWithLocalPackage {
       $compareUrl = Add-PageSpeedOff -Url $remoteUrl
       $tempFile = Join-Path $tempRoot ($relative -replace '[\\/:*?"<>|]', "_")
       $status = Get-HttpStatus $compareUrl
-      Assert-True ($status -eq 200) "Expected 200 for deployed file $remoteUrl, got $status"
-      Invoke-WebRequest -Uri $compareUrl -UseBasicParsing -TimeoutSec 20 -OutFile $tempFile | Out-Null
+      if ($status -ne 200) {
+        $mismatches.Add("MISSING $relative status=$status") | Out-Null
+        continue
+      }
+
+      try {
+        Invoke-WebRequest -Uri $compareUrl -UseBasicParsing -TimeoutSec 20 -OutFile $tempFile | Out-Null
+      } catch {
+        $mismatches.Add("FETCH_FAILED $relative") | Out-Null
+        continue
+      }
 
       $localHash = (Get-FileHash -LiteralPath $localFile -Algorithm SHA256).Hash.ToLowerInvariant()
       $remoteHash = (Get-FileHash -LiteralPath $tempFile -Algorithm SHA256).Hash.ToLowerInvariant()
-      Assert-True ($localHash -eq $remoteHash) "Deployed file differs from local package: $relative"
+      if ($localHash -ne $remoteHash) {
+        $mismatches.Add("DIFF $relative local=$($localHash.Substring(0, 12)) remote=$($remoteHash.Substring(0, 12))") | Out-Null
+      }
+    }
+
+    if ($mismatches.Count -gt 0) {
+      $sample = ($mismatches | Select-Object -First 12) -join "; "
+      if ($mismatches.Count -gt 12) {
+        $sample = "$sample; ... $($mismatches.Count - 12) more"
+      }
+      throw "Deployed package differs from local package: $($mismatches.Count) issue(s): $sample"
     }
   } finally {
     if (Test-Path $tempRoot) {
