@@ -25,8 +25,11 @@
     "revoked_access"
   ]);
   const SECTION_KEYS = Object.freeze(contract?.VISIT_PACKET_SECTION_KEYS || [
+    "discrepancies",
     "summary90s",
     "topMatters",
+    "allergies",
+    "medicationsFull",
     "medicationsToConfirm",
     "questionsForDoctor",
     "timelineHighlights",
@@ -34,6 +37,8 @@
     "missingOrUncertain",
     "sourceIndex"
   ]);
+  const PACKET_SCHEMA_VERSION = contract?.VISIT_PACKET_SCHEMA_VERSION || 2;
+  const MEDICATION_GROUPS = Object.freeze(contract?.VISIT_PACKET_MEDICATION_GROUPS || ["potwierdzone", "OTC", "do potwierdzenia"]);
   const DITL_STATUSES = Object.freeze(contract?.DITL_STATUSES || ["do wyjaśnienia", "wyjaśnione", "odrzucone", "dalsza kontrola"]);
   const FORBIDDEN_CLAIM_PHRASES = Object.freeze(contract?.FORBIDDEN_CLAIM_PHRASES || []);
   // Case-insensitive + bez diakrytykow: "Poza Norma" i "poza norma" musza byc traktowane tak samo.
@@ -73,7 +78,7 @@
     }
     if (!value || typeof value !== "object") return texts;
     Object.entries(value).forEach(([key, item]) => {
-      if (["text", "title", "goal", "label", "description", "question", "safetyNotice"].includes(key) && item) {
+      if (["text", "title", "goal", "label", "description", "question", "safetyNotice", "topic", "documentSays", "reportedSays", "name", "reaction", "dose", "patientLabel", "preparedByLabel", "preparedByRelation"].includes(key) && item) {
         texts.push(String(item));
       } else if (typeof item === "object") {
         collectText(item, texts);
@@ -90,7 +95,7 @@
     const items = [];
     if (packet?.visitContext) items.push(["visitContext", packet.visitContext]);
     if (packet?.summary90s) items.push(["summary90s", packet.summary90s]);
-    ["topMatters", "medicationsToConfirm", "questionsForDoctor", "timelineHighlights", "documentsIncluded", "missingOrUncertain"].forEach((key) => {
+    ["discrepancies", "topMatters", "allergies", "medicationsFull", "medicationsToConfirm", "questionsForDoctor", "timelineHighlights", "documentsIncluded", "missingOrUncertain"].forEach((key) => {
       asArray(packet?.[key]).forEach((item) => items.push([`${key}.${item.id || item.documentId || item.questionId || "item"}`, item]));
     });
     return items;
@@ -111,6 +116,38 @@
       if (packet[key] === undefined) errors.push(`${key}.missing`);
     });
     if (!packet.visitContext?.goal) errors.push("visitContext.goal.missing");
+    if (packet.visitPacketSchemaVersion !== PACKET_SCHEMA_VERSION) errors.push("visitPacketSchemaVersion.invalid");
+    if (SECTION_KEYS[0] !== "discrepancies") errors.push("sectionOrder.discrepancies_first.violated");
+    if (!packet.identityHeader || typeof packet.identityHeader !== "object") {
+      errors.push("identityHeader.missing");
+    } else {
+      ["patientLabel", "patientBirthYear", "preparedByLabel", "preparedByRelation", "visitDate", "generatedAt"].forEach((field) => {
+        if (!packet.identityHeader[field]) errors.push(`identityHeader.${field}.missing`);
+      });
+    }
+    asArray(packet.discrepancies).forEach((item) => {
+      const id = item.id || "item";
+      if (!item.documentSays) errors.push(`discrepancies.${id}.documentSays.missing`);
+      if (!item.reportedSays) errors.push(`discrepancies.${id}.reportedSays.missing`);
+      if (!normalizeRefs(item.documentSourceRefs).length) errors.push(`discrepancies.${id}.documentSourceRefs.missing`);
+      if (!normalizeRefs(item.reportedSourceRefs).length) errors.push(`discrepancies.${id}.reportedSourceRefs.missing`);
+    });
+    if (!Array.isArray(packet.allergies) || !packet.allergies.length) {
+      errors.push("allergies.empty_requires_explicit_no_data");
+    }
+    asArray(packet.allergies).forEach((item) => {
+      const id = item.id || "item";
+      if (item.noData === true) return;
+      if (!item.name) errors.push(`allergies.${id}.name.missing`);
+      if (!item.reaction) errors.push(`allergies.${id}.reaction.missing`);
+      if (!item.certainty) errors.push(`allergies.${id}.certainty.missing`);
+    });
+    asArray(packet.medicationsFull).forEach((item) => {
+      const id = item.id || "item";
+      if (!item.name) errors.push(`medicationsFull.${id}.name.missing`);
+      if (!item.dose) errors.push(`medicationsFull.${id}.dose.missing`);
+      if (!MEDICATION_GROUPS.includes(item.group)) errors.push(`medicationsFull.${id}.group.invalid`);
+    });
     if (!packet.auditPolicy || packet.auditPolicy.mode !== "audit-before-read" || packet.auditPolicy.failClosed !== true) {
       errors.push("auditPolicy.audit_before_read.missing");
     }
@@ -145,6 +182,8 @@
     PREPARED_BY_ROLES,
     SOURCE_STATUSES,
     SECTION_KEYS,
+    PACKET_SCHEMA_VERSION,
+    MEDICATION_GROUPS,
     validateVisitPacket
   });
 });

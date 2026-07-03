@@ -114,9 +114,16 @@
     "outdated",
     "revoked_access"
   ];
+  // Wersja kontraktu sekcji VisitPacket (S2-REWORK/WP-D): v2 dodaje rozbieznosci,
+  // alergie, pelna liste lekow i naglowek tozsamosciowy. Rozbieznosci sa PIERWSZA
+  // sekcja w kolejnosci renderowania pakietu lekarza.
+  const VISIT_PACKET_SCHEMA_VERSION = 2;
   const VISIT_PACKET_SECTION_KEYS = [
+    "discrepancies",
     "summary90s",
     "topMatters",
+    "allergies",
+    "medicationsFull",
     "medicationsToConfirm",
     "questionsForDoctor",
     "timelineHighlights",
@@ -124,6 +131,7 @@
     "missingOrUncertain",
     "sourceIndex"
   ];
+  const VISIT_PACKET_MEDICATION_GROUPS = ["potwierdzone", "OTC", "do potwierdzenia"];
   const DOCTOR_VIEWER_TYPES = ["guest_doctor", "known_clinician", "clinic_user_later"];
   const DOCTOR_VIEWER_IDENTITY_STATUSES = ["unknown", "declared", "verified_later"];
   const DOCTOR_SESSION_STATUSES = ["created", "opened", "expired", "revoked", "blocked"];
@@ -307,7 +315,9 @@
     VISIT_PACKET_STATUSES: Object.freeze([...VISIT_PACKET_STATUSES]),
     VISIT_PACKET_PREPARED_BY_ROLES: Object.freeze([...VISIT_PACKET_PREPARED_BY_ROLES]),
     VISIT_PACKET_SOURCE_STATUSES: Object.freeze([...VISIT_PACKET_SOURCE_STATUSES]),
+    VISIT_PACKET_SCHEMA_VERSION,
     VISIT_PACKET_SECTION_KEYS: Object.freeze([...VISIT_PACKET_SECTION_KEYS]),
+    VISIT_PACKET_MEDICATION_GROUPS: Object.freeze([...VISIT_PACKET_MEDICATION_GROUPS]),
     DOCTOR_VIEWER_TYPES: Object.freeze([...DOCTOR_VIEWER_TYPES]),
     DOCTOR_VIEWER_IDENTITY_STATUSES: Object.freeze([...DOCTOR_VIEWER_IDENTITY_STATUSES]),
     DOCTOR_SESSION_STATUSES: Object.freeze([...DOCTOR_SESSION_STATUSES]),
