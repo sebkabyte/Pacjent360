@@ -52,7 +52,28 @@
         "auditPolicy": {
           "mode": "audit-before-read",
           "failClosed": true
-        }
+        },
+        "visitPacketSchemaVersion": 2,
+        "identityHeader": {
+          "patientLabel": "Dziecko demo (szkic, fikcyjne)",
+          "patientBirthYear": 2018,
+          "preparedByLabel": "Rodzic demo",
+          "preparedByRelation": "rodzic",
+          "visitDate": "2026-06-20",
+          "generatedAt": "2026-06-17T09:00:00.000Z"
+        },
+        "discrepancies": [],
+        "allergies": [
+          {
+            "id": "alg-edge-nodata",
+            "name": "alergie",
+            "noData": true,
+            "description": "Brak danych o alergiach w tym szkicu.",
+            "ditlStatus": "do wyjaśnienia",
+            "sourceMissing": true
+          }
+        ],
+        "medicationsFull": []
       }
     },
     {
@@ -127,7 +148,28 @@
         "auditPolicy": {
           "mode": "audit-before-read",
           "failClosed": true
-        }
+        },
+        "visitPacketSchemaVersion": 2,
+        "identityHeader": {
+          "patientLabel": "Pacjent demo (fikcyjny)",
+          "patientBirthYear": 1960,
+          "preparedByLabel": "Osoba wspierająca demo",
+          "preparedByRelation": "osoba wspierająca",
+          "visitDate": "2026-06-19",
+          "generatedAt": "2026-06-17T10:00:00.000Z"
+        },
+        "discrepancies": [],
+        "allergies": [
+          {
+            "id": "alg-edge-nodata",
+            "name": "alergie",
+            "noData": true,
+            "description": "Brak danych o alergiach w tym szkicu.",
+            "ditlStatus": "do wyjaśnienia",
+            "sourceMissing": true
+          }
+        ],
+        "medicationsFull": []
       }
     }
   ],
@@ -202,6 +244,36 @@
       "mutate": "injectSummaryText",
       "text": "Wynik wymaga pilnej oceny w gabinecie.",
       "expectedErrorIncludes": "forbiddenPhrase"
+    },
+    {
+      "id": "discrepancy-missing-reported-side",
+      "mutate": "discrepancyMissingReportedSide",
+      "expectedError": "discrepancies.disc-001.reportedSays.missing"
+    },
+    {
+      "id": "allergy-without-certainty",
+      "mutate": "allergyWithoutCertainty",
+      "expectedError": "allergies.alg-001.certainty.missing"
+    },
+    {
+      "id": "medication-full-unknown-group",
+      "mutate": "medicationFullUnknownGroup",
+      "expectedError": "medicationsFull.medf-001.group.invalid"
+    },
+    {
+      "id": "missing-identity-header",
+      "mutate": "removeIdentityHeader",
+      "expectedError": "identityHeader.missing"
+    },
+    {
+      "id": "wrong-packet-schema-version",
+      "mutate": "wrongPacketSchemaVersion",
+      "expectedError": "visitPacketSchemaVersion.invalid"
+    },
+    {
+      "id": "allergies-empty-without-no-data",
+      "mutate": "emptyAllergies",
+      "expectedError": "allergies.empty_requires_explicit_no_data"
     }
   ]
 }

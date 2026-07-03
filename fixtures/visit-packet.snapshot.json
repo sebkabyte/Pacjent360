@@ -1,112 +1,231 @@
 {
   "schemaVersion": 7,
   "contractVersion": "0.1",
+  "visitPacketSchemaVersion": 2,
   "packetId": "vp-demo-001",
-  "version": "0.1.0",
-  "generatedAt": "2026-06-17T09:00:00.000Z",
-  "generatedByUserId": "user-demo-patient",
+  "version": "0.2.0",
+  "generatedAt": "2026-06-30T09:00:00.000Z",
+  "generatedByUserId": "user-demo-support",
   "patientProfileId": "patient-demo-001",
-  "preparedByRole": "patient",
+  "preparedByRole": "support_person",
   "consentGrantId": "consent-demo-doctor-001",
   "accessScopeId": "scope-demo-visit-001",
-  "expiresAt": "2026-06-24T09:00:00.000Z",
+  "expiresAt": "2026-07-07T09:00:00.000Z",
   "status": "ready_to_share",
+  "identityHeader": {
+    "patientLabel": "Jan S. — fikcyjny pacjent demo (case p1)",
+    "patientBirthYear": 1949,
+    "patientAgeLabel": "77 lat (rocznik 1949)",
+    "preparedByLabel": "Madeline S.",
+    "preparedByRelation": "córka (osoba wspierająca)",
+    "visitDate": "2026-07-04",
+    "generatedAt": "2026-06-30T09:00:00.000Z"
+  },
   "visitContext": {
     "visitId": "visit-demo-001",
-    "type": "consultation",
-    "date": "2026-06-20",
-    "goal": "Uporządkowanie pytań i dokumentów przed rozmową z lekarzem.",
+    "type": "qualification",
+    "date": "2026-07-04",
+    "goal": "Kwalifikacja do planowej procedury jednodniowej: potwierdzenie listy leków, alergii i dokumentów.",
     "ditlStatus": "do wyjaśnienia",
-    "sourceRefs": ["interview:visit-goal-demo"]
+    "sourceRefs": ["interview:jan-cel-wizyty"]
   },
   "summary90s": {
-    "text": "Pacjent przygotował dokumenty, listę leków do potwierdzenia i pytania do omówienia podczas wizyty.",
+    "text": "Córka przygotowała z Janem dokumenty i pełną listę leków. Jedna rozbieżność lekowa (atorwastatyna 20 mg) i alergia o niskiej pewności czekają na omówienie w gabinecie.",
     "ditlStatus": "do wyjaśnienia",
-    "sourceRefs": ["interview:visit-goal-demo", "doc:lab-demo-001", "medication:med-demo-001"]
+    "sourceRefs": ["interview:jan-cel-wizyty", "doc:karta-leczenia-2026", "interview:jan-madeline-leki"]
   },
+  "discrepancies": [
+    {
+      "id": "disc-001",
+      "topic": "Atorwastatyna 20 mg: dokument vs relacja córki",
+      "documentSays": "Karta leczenia z poradni: atorwastatyna 20 mg, 1 tabletka wieczorem, codziennie.",
+      "reportedSays": "Relacja córki: tata przyjmuje atorwastatynę nieregularnie, w ostatnim tygodniu pominął trzy dawki.",
+      "documentSourceRefs": ["doc:karta-leczenia-2026"],
+      "reportedSourceRefs": ["interview:jan-madeline-leki"],
+      "sourceRefs": ["doc:karta-leczenia-2026", "interview:jan-madeline-leki"],
+      "ditlStatus": "do wyjaśnienia"
+    }
+  ],
   "topMatters": [
     {
       "id": "matter-001",
-      "title": "Omówić najnowszy wynik badania z dokumentu demo.",
+      "title": "Omówić rozbieżność: atorwastatyna 20 mg codziennie w dokumencie, nieregularne przyjmowanie w relacji córki.",
       "ditlStatus": "do wyjaśnienia",
-      "sourceRefs": ["doc:lab-demo-001"]
+      "sourceRefs": ["doc:karta-leczenia-2026", "interview:jan-madeline-leki"]
     },
     {
       "id": "matter-002",
-      "title": "Potwierdzić aktualną listę leków.",
-      "ditlStatus": "do wyjaśnienia",
-      "sourceRefs": ["medication:med-demo-001"]
+      "title": "Kwas acetylosalicylowy 75 mg — zgłoszony do omówienia przed planowaną procedurą.",
+      "ditlStatus": "dalsza kontrola",
+      "sourceRefs": ["doc:karta-leczenia-2026"]
     },
     {
       "id": "matter-003",
-      "title": "Wyjaśnić, których dokumentów brakuje przed kolejną rozmową.",
+      "title": "Potwierdzić, których dokumentów brakuje do kwalifikacji.",
       "ditlStatus": "do wyjaśnienia",
       "sourceMissing": true
+    }
+  ],
+  "allergies": [
+    {
+      "id": "alg-001",
+      "name": "penicylina",
+      "reaction": "wysypka w dzieciństwie",
+      "certainty": "niska",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceRefs": ["doc:ankieta-kwalifikacyjna"]
+    },
+    {
+      "id": "alg-002",
+      "name": "inne alergie",
+      "noData": true,
+      "description": "Brak danych o innych alergiach w zebranych źródłach.",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceMissing": true
+    }
+  ],
+  "medicationsFull": [
+    {
+      "id": "medf-001",
+      "name": "atorwastatyna",
+      "dose": "20 mg, 1x wieczorem",
+      "group": "do potwierdzenia",
+      "description": "Dokument i relacja córki różnią się co do regularności przyjmowania.",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceRefs": ["doc:karta-leczenia-2026", "interview:jan-madeline-leki"]
+    },
+    {
+      "id": "medf-002",
+      "name": "ramipryl",
+      "dose": "5 mg rano",
+      "group": "potwierdzone",
+      "description": "Potwierdzony w dokumencie i w wywiadzie.",
+      "ditlStatus": "wyjaśnione",
+      "sourceRefs": ["doc:karta-leczenia-2026", "interview:jan-madeline-leki"]
+    },
+    {
+      "id": "medf-003",
+      "name": "magnez (preparat OTC)",
+      "dose": "brak danych o dawce",
+      "group": "OTC",
+      "description": "Suplement zgłoszony w wywiadzie, brak danych o dawce i składzie.",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceRefs": ["interview:jan-madeline-leki"]
+    },
+    {
+      "id": "medf-004",
+      "name": "kwas acetylosalicylowy",
+      "dose": "75 mg rano",
+      "group": "do potwierdzenia",
+      "description": "Zgłoszony do omówienia przed procedurą.",
+      "ditlStatus": "dalsza kontrola",
+      "sourceRefs": ["doc:karta-leczenia-2026"]
     }
   ],
   "medicationsToConfirm": [
     {
       "id": "med-demo-001",
-      "name": "Lek demo A",
-      "description": "Wpis ręczny pacjenta, do potwierdzenia z lekarzem.",
+      "name": "atorwastatyna 20 mg",
+      "description": "Dokument i relacja córki różnią się co do regularności przyjmowania.",
       "ditlStatus": "do wyjaśnienia",
-      "sourceRefs": ["medication:med-demo-001"]
+      "sourceRefs": ["doc:karta-leczenia-2026", "interview:jan-madeline-leki"]
+    },
+    {
+      "id": "med-demo-002",
+      "name": "magnez (preparat OTC)",
+      "description": "Suplement z wywiadu, brak dawki w dokumentach.",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceRefs": ["interview:jan-madeline-leki"]
     }
   ],
   "questionsForDoctor": [
     {
       "id": "question-demo-001",
-      "question": "Które dokumenty warto omówić podczas tej wizyty?",
+      "question": "Czy nadal mam przyjmować atorwastatynę tak, jak zapisano w karcie leczenia?",
       "ditlStatus": "do wyjaśnienia",
-      "sourceRefs": ["interview:visit-goal-demo"]
+      "sourceRefs": ["doc:karta-leczenia-2026", "interview:jan-madeline-leki"]
+    },
+    {
+      "id": "question-demo-002",
+      "question": "Które z moich leków przyjąć w dniu procedury?",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceRefs": ["doc:karta-leczenia-2026"]
+    },
+    {
+      "id": "question-demo-003",
+      "question": "Czy wysypka po penicylinie z dzieciństwa ma znaczenie przy kwalifikacji?",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceRefs": ["doc:ankieta-kwalifikacyjna"]
     }
   ],
   "timelineHighlights": [
     {
       "id": "timeline-demo-001",
-      "title": "Dodano dokument badania demo.",
-      "date": "2026-06-10",
+      "title": "Dodano kartę leczenia z poradni (fikcyjną).",
+      "date": "2026-06-20",
+      "ditlStatus": "wyjaśnione",
+      "sourceRefs": ["doc:karta-leczenia-2026"]
+    },
+    {
+      "id": "timeline-demo-002",
+      "title": "Wywiad córki o lekach faktycznie przyjmowanych w domu.",
+      "date": "2026-06-28",
       "ditlStatus": "do wyjaśnienia",
-      "sourceRefs": ["doc:lab-demo-001"]
+      "sourceRefs": ["interview:jan-madeline-leki"]
     }
   ],
   "documentsIncluded": [
     {
-      "documentId": "doc-demo-001",
-      "title": "Wynik badania demo",
-      "type": "lab_result",
-      "date": "2026-06-10",
+      "documentId": "doc-karta-leczenia-2026",
+      "title": "Karta leczenia z poradni (dokument fikcyjny)",
+      "type": "medication_card",
+      "date": "2026-06-20",
       "fileIncluded": true,
+      "ditlStatus": "wyjaśnione",
+      "sourceRef": "doc:karta-leczenia-2026"
+    },
+    {
+      "documentId": "doc-ankieta-kwalifikacyjna",
+      "title": "Ankieta kwalifikacyjna przed procedurą (dokument fikcyjny)",
+      "type": "questionnaire",
+      "date": "2026-06-18",
+      "fileIncluded": false,
       "ditlStatus": "do wyjaśnienia",
-      "sourceRef": "doc:lab-demo-001"
+      "sourceRef": "doc:ankieta-kwalifikacyjna"
     }
   ],
   "missingOrUncertain": [
     {
       "id": "missing-demo-001",
-      "title": "Brak dokumentu z poprzedniej konsultacji.",
+      "title": "Brak aktualnego EKG w zebranych dokumentach. Do potwierdzenia podczas rozmowy z lekarzem.",
       "ditlStatus": "do wyjaśnienia",
       "sourceMissing": true
     }
   ],
   "sourceIndex": [
     {
-      "ref": "interview:visit-goal-demo",
+      "ref": "interview:jan-cel-wizyty",
       "type": "interview",
-      "title": "Cel wizyty wpisany przez pacjenta",
+      "title": "Cel wizyty wpisany z pomocą córki",
       "status": "patient_reported"
     },
     {
-      "ref": "doc:lab-demo-001",
+      "ref": "interview:jan-madeline-leki",
+      "type": "interview",
+      "title": "Wywiad córki o lekach podawanych w domu",
+      "status": "caregiver_observed"
+    },
+    {
+      "ref": "doc:karta-leczenia-2026",
       "type": "document",
-      "title": "Wynik badania demo",
-      "status": "document_derived"
+      "title": "Karta leczenia z poradni (dokument fikcyjny)",
+      "status": "conflicting"
     },
     {
-      "ref": "medication:med-demo-001",
-      "type": "medication",
-      "title": "Lek demo A",
-      "status": "patient_reported"
+      "ref": "doc:ankieta-kwalifikacyjna",
+      "type": "document",
+      "title": "Ankieta kwalifikacyjna przed procedurą (dokument fikcyjny)",
+      "status": "document_derived"
     }
   ],
   "excludedByScope": {
@@ -114,7 +233,7 @@
     "categories": ["observations"],
     "detail": "Poza zakresem pokazujemy tylko liczbę i kategorię, bez treści."
   },
-  "safetyNotice": "Pakiet porządkuje kontekst, źródła, braki i pytania. Decyzje medyczne podejmuje lekarz.",
+  "safetyNotice": "Pakiet porządkuje kontekst, źródła, rozbieżności, braki i pytania. Decyzje medyczne podejmuje lekarz.",
   "auditPolicy": {
     "mode": "audit-before-read",
     "failClosed": true

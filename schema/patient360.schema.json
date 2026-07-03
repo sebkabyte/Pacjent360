@@ -508,7 +508,12 @@
         "sourceIndex",
         "excludedByScope",
         "safetyNotice",
-        "auditPolicy"
+        "auditPolicy",
+        "visitPacketSchemaVersion",
+        "identityHeader",
+        "discrepancies",
+        "allergies",
+        "medicationsFull"
       ],
       "properties": {
         "schemaVersion": {
@@ -555,6 +560,100 @@
             },
             "failClosed": {
               "const": true
+            }
+          }
+        },
+        "visitPacketSchemaVersion": {
+          "const": 2
+        },
+        "identityHeader": {
+          "type": "object",
+          "required": [
+            "patientLabel",
+            "patientBirthYear",
+            "preparedByLabel",
+            "preparedByRelation",
+            "visitDate",
+            "generatedAt"
+          ],
+          "properties": {
+            "patientLabel": {
+              "type": "string",
+              "minLength": 1
+            },
+            "patientBirthYear": {
+              "type": "integer"
+            },
+            "preparedByLabel": {
+              "type": "string",
+              "minLength": 1
+            },
+            "preparedByRelation": {
+              "type": "string",
+              "minLength": 1
+            },
+            "visitDate": {
+              "type": "string",
+              "minLength": 1
+            },
+            "generatedAt": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "discrepancies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "topic",
+              "documentSays",
+              "reportedSays",
+              "documentSourceRefs",
+              "reportedSourceRefs",
+              "ditlStatus"
+            ],
+            "properties": {
+              "documentSays": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reportedSays": {
+                "type": "string",
+                "minLength": 1
+              },
+              "documentSourceRefs": {
+                "type": "array",
+                "minItems": 1
+              },
+              "reportedSourceRefs": {
+                "type": "array",
+                "minItems": 1
+              }
+            }
+          }
+        },
+        "allergies": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object"
+          }
+        },
+        "medicationsFull": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "group": {
+                "enum": [
+                  "potwierdzone",
+                  "OTC",
+                  "do potwierdzenia"
+                ]
+              }
             }
           }
         }

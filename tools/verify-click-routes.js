@@ -356,9 +356,10 @@ async function assertS2PrototypeRoutes(client, baseUrl) {
   }))()`);
   assert(s2.activeView === "s2Prototype" && s2.hasBundle, `S2 prototype should render bundle: ${JSON.stringify(s2)}`);
   assert(s2.heading.includes("S2") && s2.doctorReadonly === "true", `S2 prototype should expose read-only doctor packet: ${JSON.stringify(s2)}`);
-  ["packet90s", "sources", "questions", "timeline", "documentDrawer"].forEach((section) => {
+  ["discrepancies", "packet90s", "sources", "questions", "timeline", "documentDrawer"].forEach((section) => {
     assert(s2.doctorSections.includes(section), `S2 doctor prototype missing section ${section}: ${JSON.stringify(s2)}`);
   });
+  assert(s2.doctorSections[0] === "discrepancies", `S2 doctor prototype must render discrepancies first: ${JSON.stringify(s2.doctorSections)}`);
   ["profile", "visitGoal", "documents", "medications", "questions", "consent", "packet"].forEach((step) => {
     assert(s2.flowSteps.includes(step), `S2 PWA prototype missing step ${step}: ${JSON.stringify(s2)}`);
   });

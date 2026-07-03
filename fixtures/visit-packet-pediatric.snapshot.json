@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 7,
+  "contractVersion": "0.1",
+  "visitPacketSchemaVersion": 2,
+  "packetId": "vp-demo-p3-001",
+  "version": "0.2.0",
+  "generatedAt": "2026-06-29T18:30:00.000Z",
+  "generatedByUserId": "user-demo-parent",
+  "patientProfileId": "patient-demo-p3",
+  "preparedByRole": "parent",
+  "consentGrantId": "consent-demo-pediatra-001",
+  "accessScopeId": "scope-demo-visit-p3-001",
+  "expiresAt": "2026-07-06T18:30:00.000Z",
+  "status": "ready_to_share",
+  "identityHeader": {
+    "patientLabel": "Maja N. — fikcyjna pacjentka demo (case p3)",
+    "patientBirthYear": 2017,
+    "patientAgeLabel": "8 lat (rocznik 2017)",
+    "preparedByLabel": "Marta N.",
+    "preparedByRelation": "mama (rodzic)",
+    "visitDate": "2026-07-02",
+    "generatedAt": "2026-06-29T18:30:00.000Z"
+  },
+  "visitContext": {
+    "visitId": "visit-demo-p3-001",
+    "type": "follow_up",
+    "date": "2026-07-02",
+    "goal": "Kontrola pediatryczna po infekcji: porównanie leków podanych w domu z dokumentacją i pytania o powrót do szkoły.",
+    "ditlStatus": "do wyjaśnienia",
+    "sourceRefs": ["interview:maja-cel-kontroli"]
+  },
+  "summary90s": {
+    "text": "Mama przygotowała wypis z porady i relację z domu. Antybiotyk z dokumentacji był podawany krócej, niż zapisano — różnica czeka na omówienie podczas kontroli.",
+    "ditlStatus": "do wyjaśnienia",
+    "sourceRefs": ["interview:maja-cel-kontroli", "doc:wypis-porada-2026", "interview:marta-leki-dom"]
+  },
+  "discrepancies": [
+    {
+      "id": "disc-p3-001",
+      "topic": "Amoksycylina 250 mg/5 ml: czas podawania — dokument vs relacja mamy",
+      "documentSays": "Wypis z porady: amoksycylina 250 mg/5 ml, 2 x 5 ml dziennie przez 7 dni.",
+      "reportedSays": "Relacja mamy: syrop podawany przez 4 dni, przerwany po poprawie samopoczucia.",
+      "documentSourceRefs": ["doc:wypis-porada-2026"],
+      "reportedSourceRefs": ["interview:marta-leki-dom"],
+      "sourceRefs": ["doc:wypis-porada-2026", "interview:marta-leki-dom"],
+      "ditlStatus": "do wyjaśnienia"
+    }
+  ],
+  "topMatters": [
+    {
+      "id": "matter-p3-001",
+      "title": "Omówić różnicę: amoksycylina 7 dni w wypisie, 4 dni podawania według relacji mamy.",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceRefs": ["doc:wypis-porada-2026", "interview:marta-leki-dom"]
+    },
+    {
+      "id": "matter-p3-002",
+      "title": "Kaszel utrzymuje się rano — pytanie o powrót do szkoły i na basen.",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceRefs": ["interview:marta-leki-dom"]
+    },
+    {
+      "id": "matter-p3-003",
+      "title": "Temperatura mierzona w domu — relacja mamy do potwierdzenia w gabinecie.",
+      "ditlStatus": "dalsza kontrola",
+      "sourceRefs": ["interview:marta-leki-dom"]
+    }
+  ],
+  "allergies": [
+    {
+      "id": "alg-p3-001",
+      "name": "alergie",
+      "noData": true,
+      "description": "Brak danych o alergiach w zebranych źródłach — do potwierdzenia z rodzicem w gabinecie.",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceMissing": true
+    }
+  ],
+  "medicationsFull": [
+    {
+      "id": "medf-p3-001",
+      "name": "amoksycylina 250 mg/5 ml",
+      "dose": "2 x 5 ml dziennie (wg wypisu przez 7 dni)",
+      "group": "do potwierdzenia",
+      "description": "Według relacji mamy podawana przez 4 dni.",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceRefs": ["doc:wypis-porada-2026", "interview:marta-leki-dom"]
+    },
+    {
+      "id": "medf-p3-002",
+      "name": "paracetamol syrop (OTC)",
+      "dose": "doraźnie według relacji mamy, brak dawki w dokumentach",
+      "group": "OTC",
+      "description": "Podawany w domu przy gorączce, tylko w relacji mamy.",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceRefs": ["interview:marta-leki-dom"]
+    }
+  ],
+  "medicationsToConfirm": [
+    {
+      "id": "med-p3-001",
+      "name": "amoksycylina 250 mg/5 ml",
+      "description": "Czas podawania w domu różni się od zapisu w wypisie z porady.",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceRefs": ["doc:wypis-porada-2026", "interview:marta-leki-dom"]
+    }
+  ],
+  "questionsForDoctor": [
+    {
+      "id": "question-p3-001",
+      "question": "Podawaliśmy antybiotyk 4 dni zamiast 7 — co to oznacza dla kontroli i następnej infekcji?",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceRefs": ["doc:wypis-porada-2026", "interview:marta-leki-dom"]
+    },
+    {
+      "id": "question-p3-002",
+      "question": "Kaszel utrzymuje się rano — kiedy Maja może wrócić do szkoły i na basen?",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceRefs": ["interview:marta-leki-dom"]
+    },
+    {
+      "id": "question-p3-003",
+      "question": "Czy po tej infekcji potrzebne jest badanie kontrolne, np. powtórzenie CRP?",
+      "ditlStatus": "dalsza kontrola",
+      "sourceRefs": ["doc:wypis-porada-2026"]
+    }
+  ],
+  "timelineHighlights": [
+    {
+      "id": "timeline-p3-001",
+      "title": "Wypis z porady po infekcji (dokument fikcyjny).",
+      "date": "2026-06-10",
+      "ditlStatus": "wyjaśnione",
+      "sourceRefs": ["doc:wypis-porada-2026"]
+    },
+    {
+      "id": "timeline-p3-002",
+      "title": "Relacja mamy: leki podane w domu i obserwacje po infekcji.",
+      "date": "2026-06-27",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceRefs": ["interview:marta-leki-dom"]
+    }
+  ],
+  "documentsIncluded": [
+    {
+      "documentId": "doc-wypis-porada-2026",
+      "title": "Wypis z porady po infekcji (dokument fikcyjny)",
+      "type": "discharge_note",
+      "date": "2026-06-10",
+      "fileIncluded": true,
+      "ditlStatus": "wyjaśnione",
+      "sourceRef": "doc:wypis-porada-2026"
+    }
+  ],
+  "missingOrUncertain": [
+    {
+      "id": "missing-p3-001",
+      "title": "Brak danych o alergiach i szczepieniu przeciw grypie w zebranych źródłach.",
+      "ditlStatus": "do wyjaśnienia",
+      "sourceMissing": true
+    }
+  ],
+  "sourceIndex": [
+    {
+      "ref": "interview:maja-cel-kontroli",
+      "type": "interview",
+      "title": "Cel kontroli wpisany przez mamę",
+      "status": "caregiver_observed"
+    },
+    {
+      "ref": "interview:marta-leki-dom",
+      "type": "interview",
+      "title": "Relacja mamy: leki podane w domu i obserwacje",
+      "status": "caregiver_observed"
+    },
+    {
+      "ref": "doc:wypis-porada-2026",
+      "type": "document",
+      "title": "Wypis z porady po infekcji (dokument fikcyjny)",
+      "status": "conflicting"
+    }
+  ],
+  "excludedByScope": {
+    "count": 1,
+    "categories": ["observations"],
+    "detail": "Poza zakresem pokazujemy tylko liczbę i kategorię, bez treści."
+  },
+  "safetyNotice": "Pakiet porządkuje kontekst, źródła, rozbieżności, braki i pytania. Decyzje medyczne podejmuje lekarz.",
+  "auditPolicy": {
+    "mode": "audit-before-read",
+    "failClosed": true
+  }
+}

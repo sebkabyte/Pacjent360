@@ -2200,6 +2200,7 @@ function renderS2Gate(label, value, expected) {
 }
 
 function renderS2DoctorReadOnly(doctor) {
+  const discrepancySection = doctor.sections.find((section) => section.id === "discrepancies");
   const packetSection = doctor.sections.find((section) => section.id === "packet90s");
   const sourceSection = doctor.sections.find((section) => section.id === "sources");
   const questionSection = doctor.sections.find((section) => section.id === "questions");
@@ -2209,19 +2210,20 @@ function renderS2DoctorReadOnly(doctor) {
     <article class="s2-doctor-panel" data-s2-doctor-readonly="true">
       <div class="s2-panel-head">
         <div>
-          <p class="eyebrow">Doctor web · read-only</p>
-          <h3>Packet 90s z audytem</h3>
+          <p class="eyebrow">Widok lekarza · tylko odczyt</p>
+          <h3>Pakiet wizyty z audytem</h3>
           <p>${escapeHtml(doctor.variantCopy?.disclaimer || doctor.safetyNotice)}</p>
         </div>
         <span class="status-chip ${doctor.dataVisible ? "done" : "pending"}">${doctor.dataVisible ? "audit written" : "fail closed"}</span>
       </div>
       <div class="s2-metric-row">
-        ${metric("Sekcje", doctor.sections.length, "packet, sources, questions, timeline, drawer", "layout-list")}
+        ${metric("Sekcje", doctor.sections.length, "rozbieznosci, pakiet, zrodla, pytania, os czasu, dokumenty", "layout-list")}
         ${metric("Zrodla", sourceSection?.itemCount || 0, "w indeksie pakietu", "files")}
-        ${metric("Pytania", questionSection?.itemCount || 0, "DITL do rozmowy", "message-circle-question")}
+        ${metric("Pytania", questionSection?.itemCount || 0, "pacjenta do omowienia", "message-circle-question")}
       </div>
+      ${renderS2SectionCard("discrepancies", "Rozbieżności: dokument vs relacja", discrepancySection, "medications")}
       <div class="s2-doctor-brief" data-s2-doctor-section="packet90s">
-        <strong>${escapeHtml(packetSection?.items?.[0]?.text || "Brak karty 90s.")}</strong>
+        <strong>${escapeHtml(packetSection?.items?.[0]?.text || "Brak podsumowania pakietu.")}</strong>
         <div class="source-line">${sourceChips(packetSection?.sourceRefs || [])}</div>
       </div>
       ${(doctor.topMatters || []).length ? `
@@ -2233,15 +2235,15 @@ function renderS2DoctorReadOnly(doctor) {
         <p class="muted">${escapeHtml(doctor.topMattersNote || "")}</p>
       </div>` : ""}
       <div class="s2-section-grid">
-        ${renderS2SectionCard("sources", "Zrodla", sourceSection, "documents")}
-        ${renderS2SectionCard("questions", "Pytania", questionSection, "risks")}
-        ${renderS2SectionCard("timeline", "Timeline", timelineSection, "timeline")}
-        ${renderS2SectionCard("documentDrawer", "Document drawer", documentSection, "documents")}
+        ${renderS2SectionCard("sources", "Źródła", sourceSection, "documents")}
+        ${renderS2SectionCard("questions", "Pytania pacjenta do omówienia", questionSection, "risks")}
+        ${renderS2SectionCard("timeline", "Oś czasu", timelineSection, "timeline")}
+        ${renderS2SectionCard("documentDrawer", "Dokumenty pacjenta", documentSection, "documents")}
       </div>
       <div class="inline-actions">
         <button class="primary-button" data-set-view="reports"><i data-lucide="clipboard-list"></i>Podsumowanie</button>
         <button class="ghost-button" data-set-view="timeline"><i data-lucide="git-branch"></i>Timeline</button>
-        <button class="ghost-button" data-set-view="documents"><i data-lucide="files"></i>Document drawer</button>
+        <button class="ghost-button" data-set-view="documents"><i data-lucide="files"></i>Dokumenty pacjenta</button>
       </div>
     </article>
   `;

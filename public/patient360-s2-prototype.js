@@ -13,7 +13,8 @@
   const S2_MODEL_VERSION = contract?.S2_MODEL_VERSION || "0.2";
   const LEGAL_VARIANTS = Object.freeze(flags?.LEGAL_VARIANTS || ["A", "B", "C"]);
   const FLOW_STEP_IDS = Object.freeze(["profile", "visitGoal", "documents", "medications", "questions", "consent", "packet"]);
-  const DOCTOR_SECTION_IDS = Object.freeze(["packet90s", "sources", "questions", "timeline", "documentDrawer"]);
+  // S2-R7: rozbieznosci sa pierwsza sekcja pakietu lekarza.
+  const DOCTOR_SECTION_IDS = Object.freeze(["discrepancies", "packet90s", "sources", "questions", "timeline", "documentDrawer"]);
   const SAFE_DOCTOR_ACTIONS = Object.freeze(["view_packet_90s", "view_source", "view_document_metadata", "view_timeline", "close_session"]);
   const WRITE_ACTION_PATTERN = /(add|create|delete|edit|mutate|patch|post|put|save|update|write)/i;
 
@@ -136,6 +137,21 @@
       ? "wybor wskazany przez pacjenta/opiekuna"
       : "kolejnosc wg daty dodania, nie waznosci";
     const sourceIndex = packet ? packetSources(packet) : stateSources(state, patientId);
+    const discrepancies = packet
+      ? asArray(packet.discrepancies).map((item) => ({
+          id: item.id,
+          text: `${item.topic || "Rozbieznosc"} - dokument: ${item.documentSays || "brak"} / relacja: ${item.reportedSays || "brak"}`,
+          sourceRefs: sourceRefsFor(item)
+        }))
+      : byPatient(state, "medications", patientId)
+          .filter((item) => item.actualStatus && item.status && String(item.actualStatus) !== String(item.status))
+          .slice(0, 3)
+          .map((item) => ({
+            id: `disc-${item.id}`,
+            text: `${item.name}: dokument - ${item.status} / relacja - ${item.actualStatus}`,
+            sourceRefs: sourceRefsFor(item)
+          }));
+    const discrepancySectionRefs = unique(discrepancies.flatMap((item) => sourceRefsFor(item)));
     const summaryText = packet?.summary90s?.text || decision?.summary || decision?.clinicalQuestion || "Krotki, zrodlowy kontekst wizyty bez decyzji systemu.";
     const featureEnabled = flagEnabled("doctorReadOnlyPacket", variant, input.flags);
     const auditWriteStatus = session?.auditStatus || "written";
@@ -146,8 +162,15 @@
     const documentSectionRefs = unique(documents.flatMap((item) => sourceRefsFor(item)));
     const sections = [
       {
+        id: "discrepancies",
+        label: "Rozbieznosci: dokument vs relacja",
+        itemCount: discrepancies.length,
+        sourceRefs: discrepancySectionRefs.length ? discrepancySectionRefs : [SOURCE_MISSING_REF],
+        items: discrepancies
+      },
+      {
         id: "packet90s",
-        label: "Packet 90s",
+        label: "Pakiet wizyty",
         itemCount: 1,
         sourceRefs: sourceRefsFor(packet?.summary90s || decision || patientProfile),
         items: [{ text: summaryText, sourceRefs: sourceRefsFor(packet?.summary90s || decision || patientProfile) }]
@@ -161,7 +184,7 @@
       },
       {
         id: "questions",
-        label: "Pytania DITL",
+        label: "Pytania pacjenta do omowienia",
         itemCount: questions.length,
         sourceRefs: questionSectionRefs.length ? questionSectionRefs : [SOURCE_MISSING_REF],
         items: questions
@@ -175,7 +198,7 @@
       },
       {
         id: "documentDrawer",
-        label: "Document drawer",
+        label: "Dokumenty pacjenta",
         itemCount: documents.length,
         sourceRefs: documentSectionRefs.length ? documentSectionRefs : [SOURCE_MISSING_REF],
         items: documents
@@ -196,7 +219,7 @@
       dataVisible,
       allowedActions: asArray(session?.allowedActions).length ? asArray(session.allowedActions) : SAFE_DOCTOR_ACTIONS.slice(),
       mutationActions: [],
-      safetyNotice: packet?.safetyNotice || "Widok pokazuje tylko udostepniony zakres, zrodla, braki i pytania DITL.",
+      safetyNotice: packet?.safetyNotice || "Widok pokazuje tylko udostepniony zakres, zrodla, rozbieznosci, braki i pytania pacjenta.",
       sections,
       topMatters,
       topMattersNote,

@@ -297,7 +297,7 @@
       "id": "dc3",
       "patientId": "p3",
       "type": "Przygotowanie kontroli pediatrycznej",
-      "clinicalQuestion": "Co lekarz musi wyjaśnić z rodzicem podczas kontroli po infekcji dziecka?",
+      "clinicalQuestion": "Co omówić podczas kontroli po infekcji: leki podane w domu, kaszel i powrót do szkoły?",
       "contactDate": {
         "__p360DateOffset": 2
       },
@@ -310,7 +310,7 @@
       "ditlQuestions": [
         {
           "id": "hq6",
-          "question": "Czy lista leków faktycznie podanych w domu została porównana z dokumentacją?",
+          "question": "Podawaliśmy lek A krócej, niż zapisano w dokumentacji — czy omówić to podczas kontroli?",
           "status": "do wyjaśnienia",
           "sourceRefs": [
             "interview:i3",
@@ -320,7 +320,7 @@
         },
         {
           "id": "hq7",
-          "question": "Czy obserwacje rodzica po infekcji są zapisane jako wywiad, a nie jako fakt laboratoryjny?",
+          "question": "Kaszel po infekcji utrzymuje się rano — kiedy Maja może wrócić do szkoły i na basen?",
           "status": "do wyjaśnienia",
           "sourceRefs": [
             "interview:i3",
@@ -330,7 +330,7 @@
         },
         {
           "id": "hq8",
-          "question": "Czy dokumenty i wyniki potrzebne na kontrolę są kompletne w zakresie danych demo?",
+          "question": "Czy po infekcji potrzebna jest kontrola wyników, np. powtórzenie CRP?",
           "status": "dalsza kontrola",
           "sourceRefs": [
             "doc:d5",
@@ -1793,7 +1793,7 @@
       "patientId": "p3",
       "color": "amber",
       "category": "Rozbieżność lekowa u dziecka",
-      "question": "Czy lek A z dokumentacji został porównany z tym, co rodzic zgłasza jako faktycznie podane?",
+      "question": "Lek A podawaliśmy krócej, niż wynika z dokumentacji — czy to temat na kontrolę?",
       "evidence": "Dokument i wywiad rodzica opisują różny czas podawania leku A.",
       "status": "do wyjaśnienia",
       "sourceRefs": [
@@ -1807,7 +1807,7 @@
       "patientId": "p3",
       "color": "blue",
       "category": "Pytanie do lekarza: kontrola po infekcji",
-      "question": "Jakie obserwacje rodzica lekarz chce omówić podczas kontroli dziecka?",
+      "question": "Mama zapisała w domu temperaturę i aktywność — które z tych obserwacji omówić na kontroli?",
       "evidence": "Rodzic zgłasza obserwacje temperatury, aktywności i pytanie o kaszel.",
       "status": "do wyjaśnienia",
       "sourceRefs": [
