@@ -366,6 +366,32 @@ async function assertS2PrototypeRoutes(client, baseUrl) {
   assert(s2.writeDialogCount === 0, `S2 prototype should not expose write dialogs: ${JSON.stringify(s2)}`);
   assert(s2.text.includes("Backend") && s2.text.includes("closed") && s2.text.includes("AI runtime"), `S2 prototype should show closed gates: ${JSON.stringify(s2)}`);
 
+  // S2-R9: przycisk "Drukuj pakiet" wywoluje window.print(); jednostronicowy wydruk sprawdzany ponizej przez Page.printToPDF.
+  const printButton = await client.evaluate(`(() => {
+    window.__p360Printed = false;
+    window.print = () => { window.__p360Printed = true; };
+    const button = document.querySelector('[data-print-packet]');
+    if (button) button.click();
+    return {
+      found: Boolean(button),
+      printed: Boolean(window.__p360Printed),
+      bodyHasPrintClass: document.body.classList.contains('p360-print-packet'),
+      sheetVisible: Boolean(document.querySelector('[data-s2-print-packet="true"]'))
+    };
+  })()`);
+  assert(printButton.found, "S2 prototype should render a 'Drukuj pakiet' button");
+  assert(printButton.printed, "Drukuj pakiet button should call window.print()");
+  assert(printButton.bodyHasPrintClass, "Drukuj pakiet button should toggle p360-print-packet body class");
+  assert(printButton.sheetVisible, "Print sheet markup should be present in the DOM");
+  await client.evaluate(`document.body.classList.remove('p360-print-packet')`);
+
+  // Headless print-to-pdf as a smoke check that @page/print CSS renders without error;
+  // the one-page-A4 layout claim itself is enforced by static CSS assertions in validate-s2-prototypes.js
+  // (DoD-E: "asercje CSS" jako dopuszczalna alternatywa, gdy PDF page-count nie jest niezawodnie parsowalny).
+  const printPdf = await client.call("Page.printToPDF", { printBackground: false, preferCSSPageSize: true });
+  assert(printPdf?.data, "Page.printToPDF should render the S2 prototype view to PDF without error");
+  console.log(`S2 print packet: headless print-to-pdf rendered successfully (${Buffer.from(printPdf.data, "base64").length} bytes)`);
+
   await client.evaluate(`document.querySelector('[data-s2-flow-step="documents"]')?.click()`);
   await waitForCondition(client, "document.querySelector('nav button.active')?.dataset.view === 'documents'", "S2 documents step did not navigate to documents");
   const docs = await snapshotDemo(client);

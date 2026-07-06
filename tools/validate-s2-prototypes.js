@@ -66,6 +66,40 @@ function validateDemoWiring() {
   assert(!app.includes('data-open-dialog="s2Prototype"'), "S2 prototype must not wire write dialogs");
 }
 
+// S2-R9: jednostronicowy wydruk pakietu lekarza (print CSS statyczny check, bez backendowego PDF).
+function validatePrintPacket() {
+  const app = read("public/app.js");
+  const css = read("public/styles.css");
+  assert(app.includes('data-print-packet="true"'), "app.js should render a print-packet button");
+  assert(app.includes("renderS2PrintSheet"), "app.js should render the one-page print sheet markup");
+  assert(app.includes('data-s2-print-packet="true"'), "app.js should expose a browser-test sentinel for the print sheet");
+  assert(/window\.print\(\)/.test(app), "print-packet button should call window.print()");
+  assert(app.includes("p360-print-packet"), "app.js should toggle a print-scoped class on document.body");
+  assert(
+    app.includes("Materiał pomocniczy przygotowany przez pacjenta") && app.includes("nie zastępuje dokumentacji medycznej"),
+    "print sheet footer should carry the mandatory non-substitute disclaimer"
+  );
+  const sectionOrder = [
+    "1. Rozbieżności: dokument vs relacja",
+    "2. Alergie",
+    "3. Leki",
+    "4. Sprawy wskazane przez pacjenta",
+    "5. Pytania pacjenta do omówienia"
+  ];
+  const sectionIndexes = sectionOrder.map((label) => app.indexOf(label));
+  sectionIndexes.forEach((index, position) => {
+    assert(index > -1, `print sheet should include section heading containing "${sectionOrder[position]}"`);
+  });
+  for (let i = 1; i < sectionIndexes.length; i += 1) {
+    assert(sectionIndexes[i] > sectionIndexes[i - 1], `print sheet sections out of order: expected ${sectionOrder.join(" -> ")}`);
+  }
+  assert(css.includes("@media print"), "styles.css should define @media print rules");
+  assert(css.includes(".s2-print-sheet"), "styles.css should style .s2-print-sheet");
+  assert(css.includes("p360-print-packet"), "styles.css should scope print visibility to the p360-print-packet body class");
+  assert(/@page\s*\{[^}]*size:\s*A4/.test(css), "styles.css should set @page size: A4 for the one-page packet");
+  console.log("Print packet CSS and markup present, sections ordered discrepancies -> allergies -> medications -> topMatters -> questions");
+}
+
 function validatePositive(edgecases) {
   for (const variant of edgecases.validVariants || ["A", "B", "C"]) {
     for (const patientId of ["p1", "p2", "p3"]) {
@@ -95,6 +129,7 @@ function main() {
   validateDemoWiring();
   validatePositive(edgecases);
   validateNegative(edgecases);
+  validatePrintPacket();
   console.log("S2 prototype validation passed");
 }
 

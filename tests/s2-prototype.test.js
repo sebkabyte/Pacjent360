@@ -59,9 +59,11 @@ test("S2 prototype covers doctor packet and patient/caregiver clickable views", 
   const flowViews = new Set(bundle.flow.steps.map((step) => step.view));
   assert.equal(doctorViews.has("packet90s"), true);
   assert.equal(doctorViews.has("documentDrawer"), true);
-  ["patientPortal", "visitChecklist", "documents", "medications", "risks", "consent", "s2Prototype"].forEach((view) => {
+  ["patientPortal", "visitChecklist", "documents", "medications", "patientQuestions", "consent", "s2Prototype"].forEach((view) => {
     assert.equal(flowViews.has(view), true, `missing view ${view}`);
   });
+  // S2-R13: krok pytan nie moze mapowac na widok "risks".
+  assert.equal(flowViews.has("risks"), false, "questions step must not map to the risks view");
   assert.equal(bundle.flow.caregiver.zeroKnowledgeWhenNoConsent, false);
 });
 
@@ -73,4 +75,15 @@ test("S2 prototype rejects unsafe or incomplete prototype mutations", () => {
     assert.equal(result.valid, false, `${testCase.id}: expected invalid`);
     assert.ok(result.errors.includes(testCase.expectedError), `${testCase.id}: expected ${testCase.expectedError}, got ${result.errors.join("; ")}`);
   }
+});
+
+test("S2-R13: minimum-na-jutro path covers visitGoal+documents+questions and is flagged in the UI model", () => {
+  const bundle = buildBundle("B", "p1");
+  const minimumIds = bundle.flow.minimumPath.stepIds;
+  assert.deepEqual(new Set(minimumIds), new Set(["visitGoal", "documents", "questions"]));
+  bundle.flow.steps.forEach((step) => {
+    assert.equal(step.minimum, minimumIds.includes(step.id), `step ${step.id} minimum flag mismatch`);
+    if (!step.minimum) assert.ok(step.optionalNote, `non-minimum step ${step.id} should carry an optional note`);
+  });
+  assert.ok(bundle.flow.minimumPath.note.length > 0);
 });

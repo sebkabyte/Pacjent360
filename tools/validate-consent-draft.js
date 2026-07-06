@@ -94,6 +94,27 @@ function validateNegativeConsentGrantCase(testCase) {
   return { id: testCase.id, valid: false, errors: validation.errors };
 }
 
+// S2-R12: presety zgody (preset -> zestaw scope'ow zgodny z macierza consent) + negatyw preset spoza macierzy.
+function validatePresetMatrixCase(presetCases) {
+  if (!presetCases) return { valid: [], negative: [] };
+  const definitions = caregiverModel.CAREGIVER_AREAS;
+  const validResult = consentModel.validateConsentPresets(consentModel.CONSENT_PRESETS, definitions);
+  assert(validResult.valid, `built-in consent presets should validate against the consent matrix: ${validResult.errors.join("; ")}`);
+  (presetCases.validPresets || []).forEach((presetId) => {
+    const preset = consentModel.presetById(presetId);
+    assert(preset, `preset ${presetId} should exist in CONSENT_PRESETS`);
+  });
+
+  const negativeResults = (presetCases.negativePresets || []).map((testCase) => {
+    const result = consentModel.validateConsentPresets([testCase.preset], definitions);
+    assert(!result.valid, `${testCase.id}: expected invalid preset`);
+    assert(result.errors.includes(testCase.expectedError), `${testCase.id}: expected ${testCase.expectedError}, got ${result.errors.join("; ")}`);
+    return { id: testCase.id, errors: result.errors };
+  });
+
+  return { valid: presetCases.validPresets || [], negative: negativeResults };
+}
+
 function main() {
   assert(fs.existsSync(fixturePath), `Missing fixture: ${fixturePath}`);
   const fixture = JSON.parse(fs.readFileSync(fixturePath, "utf8"));
@@ -104,14 +125,19 @@ function main() {
   const results = fixture.cases.map((testCase) => validateCase(fixture, testCase));
   const grantResults = (fixture.consentGrantCases || []).map(validateConsentGrantCase);
   const negativeGrantResults = (fixture.negativeConsentGrantCases || []).map(validateNegativeConsentGrantCase);
+  const presetResults = validatePresetMatrixCase(fixture.presetMatrixCases);
   assert(consentModel.ACCESS_SCOPE_KEYS.includes("report.view"), "consent matrix should include report.view");
   assert(consentModel.ROLE_SCOPE_MATRIX.doctor.includes("report.view"), "doctor should be able to view report only through grant");
   assert(!consentModel.ROLE_SCOPE_MATRIX.doctor.includes("report.share"), "doctor must not share report");
+  assert(consentModel.CONSENT_PRESETS.length === 3, "S2-R12 requires exactly 3 consent presets");
+  assert(typeof consentModel.SECOND_PARENT_NOTICE === "string" && consentModel.SECOND_PARENT_NOTICE.length > 0, "second-parent statutory-rights notice must be defined");
   results.forEach((result) => {
     console.log(`${result.id}: ${result.valid ? `valid areas=${result.areas.join(",")} role=${result.role}` : `invalid errors=${result.errors.join(",")}`}`);
   });
   grantResults.forEach((result) => console.log(`${result.id}: valid accessChecks=${result.accessChecks}`));
   negativeGrantResults.forEach((result) => console.log(`${result.id}: invalid errors=${result.errors.join(",")}`));
+  console.log(`preset matrix: valid=${presetResults.valid.join(",")}`);
+  presetResults.negative.forEach((result) => console.log(`${result.id}: invalid errors=${result.errors.join(",")}`));
   console.log("Consent draft validation passed");
 }
 

@@ -789,7 +789,11 @@ async function main() {
       if (addConsentButton) addConsentButton.click();
       const formDialog = document.querySelector('#entryDialog');
       const checkboxCount = document.querySelectorAll('#entryDialog .checkbox-option input[type="checkbox"]').length;
-      const radioCount = document.querySelectorAll('#entryDialog .radio-option input[type="radio"]').length;
+      const radioCount = document.querySelectorAll('#entryDialog input[name="recipientKind"][type="radio"]').length;
+      const presetRadioCount = document.querySelectorAll('#entryDialog input[name="consentPreset"][type="radio"]').length;
+      const hasAdvancedAreaDetails = Boolean(document.querySelector('#entryDialog details.advanced-settings'));
+      const hasRelationSelect = Boolean(document.querySelector('#entryDialog select[name="relation"]'));
+      const hasSecondParentNotice = document.body.textContent.includes('ustawowych praw rodzica');
       const defaultRecipient = document.querySelector('#entryDialog input[name="recipientKind"]:checked')?.value || '';
       const initiallyCheckedCount = document.querySelectorAll('#entryDialog .checkbox-option input[type="checkbox"]:checked').length;
       const hasLegacyAreasTextarea = Boolean(document.querySelector('#entryDialog textarea[name="areas"]'));
@@ -800,12 +804,14 @@ async function main() {
       const visitArea = document.querySelector('#consentArea_visits');
       const documentArea = document.querySelector('#consentArea_documents');
       const reportArea = document.querySelector('#consentArea_report');
-      if (subjectField) subjectField.value = 'Blokada bez zakresu';
-      if (caregiverField) caregiverField.value = 'Opiekun testowy';
-      if (scopeField) scopeField.value = 'opis zawiera leki i wizyty, ale bez checkboxów';
+      // S2-R12: preset zawsze ma domyslny wybor (radioGroup), wiec brak zakresu nie jest juz osiagalny przez UI bez
+      // recipienta; realny blokowany przypadek to brak odbiorcy (subject/caregiverName), ktory preset nie wypelnia.
+      if (subjectField) subjectField.value = '';
+      if (caregiverField) caregiverField.value = '';
+      if (scopeField) scopeField.value = 'opis bez wskazanego odbiorcy, tylko domyslny preset';
       if (formDialog?.open) document.querySelector('#dialogForm').requestSubmit();
       const storedAfterBlocked = JSON.parse(localStorage.getItem('pacjent360-state-v11') || '{}');
-      const blockedConsentSaved = (storedAfterBlocked.consents || []).some((item) => item.subject === 'Blokada bez zakresu');
+      const blockedConsentSaved = (storedAfterBlocked.consents || []).some((item) => item.scope === 'opis bez wskazanego odbiorcy, tylko domyslny preset');
       const blockedDialogStillOpen = Boolean(formDialog?.open);
       if (subjectField) subjectField.value = 'Test zakresu zgody';
       if (scopeField) scopeField.value = 'opis zawiera wizyty i dokumenty, ale zakres kontrolują checkboxy';
@@ -888,6 +894,10 @@ async function main() {
         consentFormOpened: Boolean(formDialog),
         consentAreaCheckboxCount: checkboxCount,
         consentRecipientRadioCount: radioCount,
+        consentPresetRadioCount: presetRadioCount,
+        consentHasAdvancedAreaDetails: hasAdvancedAreaDetails,
+        consentHasRelationSelect: hasRelationSelect,
+        consentHasSecondParentNotice: hasSecondParentNotice,
         consentDefaultRecipientIsSupport: defaultRecipient === 'support',
         consentAreaInitiallyUnchecked: initiallyCheckedCount === 0,
         consentFormRemovedLegacyTextarea: !hasLegacyAreasTextarea,
@@ -943,9 +953,14 @@ async function main() {
     assert(consent.consentFormOpened, "Consent add dialog should open from consent view");
     assert(consent.consentAreaCheckboxCount >= 7, `Consent dialog should expose area checkboxes, got ${consent.consentAreaCheckboxCount}`);
     assert(consent.consentRecipientRadioCount === 2 && consent.consentDefaultRecipientIsSupport, "Consent dialog should distinguish support recipient from patient");
+    // S2-R12: 3 presety zgody jako radioGroup, szczegolowe obszary schowane w ustawieniach zaawansowanych, role po ludzku (relacja) + zastrzezenie o prawach rodzica.
+    assert(consent.consentPresetRadioCount === 3, `Consent dialog should expose exactly 3 consent presets, got ${consent.consentPresetRadioCount}`);
+    assert(consent.consentHasAdvancedAreaDetails, "Consent dialog should tuck detailed area checkboxes under advanced settings");
+    assert(consent.consentHasRelationSelect, "Consent dialog should ask for a human relation (mama/tata/babcia/...) instead of raw taxonomy role");
+    assert(consent.consentHasSecondParentNotice, "Consent view should carry the second-parent statutory-rights notice");
     assert(consent.consentAreaInitiallyUnchecked, "Consent area checkboxes should not be preselected");
     assert(consent.consentFormRemovedLegacyTextarea, "Consent dialog should not use free-text areas field");
-    assert(!consent.blockedConsentSaved && consent.blockedDialogStillOpen, "Consent save without selected area should be blocked");
+    assert(!consent.blockedConsentSaved && consent.blockedDialogStillOpen, "Consent save without a recipient (subject/caregiverName) should be blocked, even with a default preset selected");
     assert(consent.createPreviewOpened, "Consent submit should open create preview before saving");
     assert(consent.createPreviewHasRecipient && consent.createPreviewHasScope, "Consent create preview should show recipient and selected areas only");
     assert(consent.createPreviewHasNeutralCopy && consent.createPreviewAvoidsForbiddenPhrases, "Consent create preview should use neutral non-clinical wording");

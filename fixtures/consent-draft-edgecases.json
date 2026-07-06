@@ -116,8 +116,132 @@
         "valid": false,
         "errorCode": "missing_area"
       }
+    },
+    {
+      "id": "preset-pomoc-w-organizacji-no-checkboxes",
+      "patientId": "consent-p1",
+      "consentId": "cg-test-7",
+      "values": {
+        "recipientKind": "support",
+        "subject": "Babcia Krystyna",
+        "caregiverName": "Babcia Krystyna",
+        "relation": "babcia",
+        "scope": "preset ustawia zakres, bez zaznaczania szczegolowych checkboxow",
+        "validTo": "2026-09-30",
+        "consentPreset": "pomoc_w_organizacji"
+      },
+      "expect": {
+        "valid": true,
+        "role": "osoba wspierająca",
+        "subject": "Babcia Krystyna",
+        "areas": ["documents", "visits", "tasks"],
+        "absentAreas": ["medications", "results", "observations", "report"],
+        "caregiverIdPrefix": "caregiver-",
+        "sourceRefs": ["consent:cg-test-7"]
+      }
+    },
+    {
+      "id": "preset-pelny-dostep-no-checkboxes",
+      "patientId": "consent-p1",
+      "consentId": "cg-test-8",
+      "values": {
+        "recipientKind": "support",
+        "subject": "Mama Anna",
+        "caregiverName": "Mama Anna",
+        "relation": "mama",
+        "scope": "pelny dostep bez checkboxow, tylko preset",
+        "validTo": "2026-09-30",
+        "consentPreset": "pelny_dostep"
+      },
+      "expect": {
+        "valid": true,
+        "role": "rodzic",
+        "subject": "Mama Anna",
+        "areas": ["documents", "results", "medications", "observations", "visits", "tasks", "report"],
+        "caregiverIdPrefix": "caregiver-",
+        "sourceRefs": ["consent:cg-test-8"]
+      }
+    },
+    {
+      "id": "preset-tylko-terminy-no-checkboxes",
+      "patientId": "consent-p1",
+      "consentId": "cg-test-9",
+      "values": {
+        "recipientKind": "support",
+        "subject": "Inny bliski Marek",
+        "caregiverName": "Inny bliski Marek",
+        "relation": "inny_bliski",
+        "scope": "tylko terminy, bez dokumentow medycznych",
+        "validTo": "2026-09-30",
+        "consentPreset": "tylko_terminy"
+      },
+      "expect": {
+        "valid": true,
+        "role": "osoba wspierająca",
+        "subject": "Inny bliski Marek",
+        "areas": ["visits"],
+        "absentAreas": ["documents", "medications", "results", "observations", "report", "tasks"],
+        "caregiverIdPrefix": "caregiver-",
+        "sourceRefs": ["consent:cg-test-9"]
+      }
+    },
+    {
+      "id": "explicit-checkboxes-override-preset",
+      "patientId": "consent-p1",
+      "consentId": "cg-test-10",
+      "values": {
+        "recipientKind": "support",
+        "subject": "Tata Piotr",
+        "caregiverName": "Tata Piotr",
+        "relation": "tata",
+        "scope": "zaznaczone checkboxy wygrywaja z presetem",
+        "validTo": "2026-09-30",
+        "consentPreset": "tylko_terminy",
+        "consentArea_medications": "medications"
+      },
+      "expect": {
+        "valid": true,
+        "role": "rodzic",
+        "subject": "Tata Piotr",
+        "areas": ["medications"],
+        "absentAreas": ["visits"],
+        "caregiverIdPrefix": "caregiver-",
+        "sourceRefs": ["consent:cg-test-10"]
+      }
     }
   ],
+  "presetMatrixCases": {
+    "validPresets": ["pelny_dostep", "pomoc_w_organizacji", "tylko_terminy"],
+    "negativePresets": [
+      {
+        "id": "preset-area-outside-matrix",
+        "preset": {
+          "id": "preset_niestandardowy",
+          "label": "Niestandardowy preset spoza macierzy",
+          "description": "Preset testowy z obszarem spoza macierzy zgod.",
+          "areas": ["documents", "vault_full_access"]
+        },
+        "expectedError": "preset.preset_niestandardowy.area.outside_matrix:vault_full_access"
+      },
+      {
+        "id": "preset-missing-label",
+        "preset": {
+          "id": "preset_bez_etykiety",
+          "areas": ["visits"]
+        },
+        "expectedError": "preset.preset_bez_etykiety.label.missing"
+      },
+      {
+        "id": "preset-empty-areas",
+        "preset": {
+          "id": "preset_pusty",
+          "label": "Pusty preset",
+          "areas": []
+        },
+        "expectedError": "preset.preset_pusty.areas.empty"
+      }
+    ]
+  },
   "consentGrantCases": [
     {
       "id": "doctor-visit-packet-consent",
