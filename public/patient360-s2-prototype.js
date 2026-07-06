@@ -285,7 +285,7 @@
       {
         id: "questions",
         label: "Pytania",
-        view: "risks",
+        view: "patientQuestions",
         status: questions.length ? "ready" : "to_confirm",
         count: questions.length,
         sourceRefs: questionRefs.length ? questionRefs : [SOURCE_MISSING_REF]
@@ -308,6 +308,14 @@
       }
     ];
 
+    // S2-R13: jawna sciezka "minimum na jutro": cel wizyty + 1 dokument + pytania.
+    const minimumStepIds = Object.freeze(["visitGoal", "documents", "questions"]);
+    const stepsWithMinimum = steps.map((step) => ({
+      ...step,
+      minimum: minimumStepIds.includes(step.id),
+      optionalNote: minimumStepIds.includes(step.id) ? "" : "mozna uzupelnic pozniej"
+    }));
+
     return {
       prototypeId: "s2-patient-caregiver-pwa-v0.1",
       role: "patient_caregiver",
@@ -320,8 +328,12 @@
         zeroKnowledgeWhenNoConsent: activeConsents.length === 0,
         scopeLabels: activeConsents.flatMap((grant) => asArray(grant.scopes || grant.areas)).slice(0, 8)
       },
-      steps,
-      ctaSequence: steps.map((step) => ({ stepId: step.id, view: step.view }))
+      steps: stepsWithMinimum,
+      minimumPath: {
+        stepIds: [...minimumStepIds],
+        note: "Minimum na jutro: cel wizyty, jeden dokument i pytania. Reszte mozna uzupelnic pozniej."
+      },
+      ctaSequence: stepsWithMinimum.map((step) => ({ stepId: step.id, view: step.view }))
     };
   }
 
@@ -369,6 +381,16 @@
 
   function validateFlowPrototype(flow, errors) {
     if (!flow?.featureEnabled) errors.push("flow.feature.disabled");
+    const minimumIds = asArray(flow?.minimumPath?.stepIds);
+    if (!minimumIds.length) errors.push("flow.minimumPath.missing");
+    ["visitGoal", "documents", "questions"].forEach((stepId) => {
+      if (!minimumIds.includes(stepId)) errors.push(`flow.minimumPath.step.missing:${stepId}`);
+    });
+    minimumIds.forEach((stepId) => {
+      if (!FLOW_STEP_IDS.includes(stepId)) errors.push(`flow.minimumPath.step.unknown:${stepId}`);
+    });
+    const questionsStep = asArray(flow?.steps).find((step) => step.id === "questions");
+    if (questionsStep && questionsStep.view === "risks") errors.push("flow.questions.view.risks_not_allowed");
     FLOW_STEP_IDS.forEach((stepId) => {
       const step = asArray(flow?.steps).find((item) => item.id === stepId);
       if (!step) {

@@ -63,6 +63,67 @@
     admin_governance: ["audit.view"]
   });
 
+  // S2-R12: presety zgod w jezyku czlowieka. Preset to skrot do zestawu obszarow
+  // z macierzy consent; szczegolowe obszary pozostaja w ustawieniach zaawansowanych.
+  const CONSENT_PRESETS = Object.freeze([
+    {
+      id: "pelny_dostep",
+      label: "Pelny dostep",
+      description: "Wszystkie obszary: dokumenty, wyniki, leki, obserwacje, wizyty, zadania i raport.",
+      areas: Object.freeze(["documents", "results", "medications", "observations", "visits", "tasks", "report"])
+    },
+    {
+      id: "pomoc_w_organizacji",
+      label: "Pomoc w organizacji: dokumenty, wizyty, zadania",
+      description: "Osoba pomaga ogarnac papiery i terminy, bez wgladu w wyniki i leki.",
+      areas: Object.freeze(["documents", "visits", "tasks"])
+    },
+    {
+      id: "tylko_terminy",
+      label: "Tylko terminy",
+      description: "Tylko wizyty i terminy, bez dostepu do dokumentow medycznych.",
+      areas: Object.freeze(["visits"])
+    }
+  ]);
+
+  // S2-R12: role pytane relacja (po ludzku), mapowana na taksonomie w tle.
+  const CONSENT_RELATION_OPTIONS = Object.freeze([
+    { id: "mama", label: "mama", role: "rodzic", taxonomyRole: "parent" },
+    { id: "tata", label: "tata", role: "rodzic", taxonomyRole: "parent" },
+    { id: "babcia", label: "babcia", role: "osoba wspierająca", taxonomyRole: "support_person" },
+    { id: "dziadek", label: "dziadek", role: "osoba wspierająca", taxonomyRole: "support_person" },
+    { id: "opiekun_prawny", label: "opiekun prawny", role: "opiekun prawny", taxonomyRole: "legal_guardian" },
+    { id: "inny_bliski", label: "inny bliski", role: "osoba wspierająca", taxonomyRole: "support_person" }
+  ]);
+
+  const SECOND_PARENT_NOTICE = "Zakres w aplikacji nie ogranicza ustawowych praw rodzica do informacji o zdrowiu dziecka.";
+
+  function presetById(presetId) {
+    return CONSENT_PRESETS.find((preset) => preset.id === presetId) || null;
+  }
+
+  function relationById(relationId) {
+    return CONSENT_RELATION_OPTIONS.find((relation) => relation.id === relationId) || null;
+  }
+
+  function validateConsentPresets(presets = CONSENT_PRESETS, definitions) {
+    const errors = [];
+    const allowedKeys = new Set(areaKeys(definitions));
+    (Array.isArray(presets) ? presets : []).forEach((preset) => {
+      if (!preset || !preset.id) {
+        errors.push("preset.id.missing");
+        return;
+      }
+      if (!preset.label) errors.push(`preset.${preset.id}.label.missing`);
+      const areas = Array.isArray(preset.areas) ? preset.areas : [];
+      if (!areas.length) errors.push(`preset.${preset.id}.areas.empty`);
+      areas.forEach((area) => {
+        if (!allowedKeys.has(area)) errors.push(`preset.${preset.id}.area.outside_matrix:${area}`);
+      });
+    });
+    return { valid: errors.length === 0, errors };
+  }
+
   const FALLBACK_AREA_DEFINITIONS = Object.freeze([
     { key: "medications", label: "Leki" },
     { key: "visits", label: "Wizyty" },
@@ -138,7 +199,16 @@
     const errors = [];
     const resolvedPatientId = patientId || patient?.id || "";
     const resolvedPatientName = patientName || patient?.name || resolvedPatientId;
-    const areas = selectedConsentAreas(values, definitions);
+    let areas = selectedConsentAreas(values, definitions);
+    let presetUsed = null;
+    if (!areas.length && values.consentPreset) {
+      const preset = presetById(values.consentPreset);
+      if (preset) {
+        const allowedKeys = new Set(areaKeys(definitions));
+        areas = preset.areas.filter((area) => allowedKeys.has(area));
+        presetUsed = preset.id;
+      }
+    }
     if (!id) errors.push({ code: "missing_id", message: "Brakuje identyfikatora zgody." });
     if (!resolvedPatientId) errors.push({ code: "missing_patient", message: "Brakuje identyfikatora pacjenta." });
     if (!areas.length) errors.push({ code: "missing_area", message: "Wybierz co najmniej jeden obszar udostępnienia." });
@@ -151,8 +221,11 @@
 
     if (errors.length) return { valid: false, errors };
 
+    const relation = recipientKind === "patient" ? null : relationById(values.relation);
     const subject = recipientKind === "patient" ? "Pacjent" : supportSubject;
-    const role = recipientKind === "patient" ? "pacjent" : normalize(values.role) || "osoba wspierająca";
+    const role = recipientKind === "patient"
+      ? "pacjent"
+      : relation?.role || normalize(values.role) || "osoba wspierająca";
     const caregiverName = recipientKind === "patient" ? "Pacjent" : normalize(values.caregiverName) || supportSubject;
     const caregiverId = recipientKind === "patient" ? `patient-self-${resolvedPatientId}` : `caregiver-${id}`;
     const areaLabels = areas.map((area) => areaLabel(area, definitions));
@@ -169,6 +242,9 @@
           subject,
           scope: normalize(values.scope),
           role,
+          relation: relation?.id || "",
+          taxonomyRole: recipientKind === "patient" ? "patient" : relation?.taxonomyRole || "",
+          preset: presetUsed || "",
           caregiverId,
           caregiverName,
           areas,
@@ -265,6 +341,12 @@
 
   return Object.freeze({
     FALLBACK_AREA_DEFINITIONS,
+    CONSENT_PRESETS,
+    CONSENT_RELATION_OPTIONS,
+    SECOND_PARENT_NOTICE,
+    presetById,
+    relationById,
+    validateConsentPresets,
     ACCESS_SCOPE_KEYS,
     CONSENT_ACTOR_ROLES,
     CONSENT_GRANTEE_TYPES,

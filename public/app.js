@@ -332,9 +332,9 @@ const VIEW_ROLE_HINT = Object.freeze({
 });
 
 const ROLE_VIEW_ACCESS = Object.freeze({
-  doctor: new Set(["roleStart", "a1Core", "core", "s2Prototype", "visitChecklist", "interview", "documents", "timeline", "medications", "observations", "risks", "reports", "consent"]),
-  patient: new Set(["roleStart", "a1Core", "s2Prototype", "visitChecklist", "patientPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "consent"]),
-  caregiver: new Set(["roleStart", "a1Core", "s2Prototype", "visitChecklist", "caregiverPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "consent"])
+  doctor: new Set(["roleStart", "a1Core", "core", "s2Prototype", "visitChecklist", "interview", "documents", "timeline", "medications", "observations", "risks", "patientQuestions", "reports", "consent"]),
+  patient: new Set(["roleStart", "a1Core", "s2Prototype", "visitChecklist", "patientPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "patientQuestions", "consent"]),
+  caregiver: new Set(["roleStart", "a1Core", "s2Prototype", "visitChecklist", "caregiverPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "patientQuestions", "consent"])
 });
 
 const ROLE_HOME_VIEW = Object.freeze({
@@ -478,6 +478,7 @@ const CAREGIVER_VIEW_AREAS = Object.freeze({
   medications: ["medications"],
   observations: ["results", "observations"],
   risks: ["report"],
+  patientQuestions: ["report"],
   consent: ["documents", "results", "medications", "observations", "visits", "tasks", "report"]
 });
 
@@ -863,7 +864,7 @@ function loadState() {
       loaded.specialist = "internist";
     }
     loaded.roleSelectionConfirmed = Boolean(loaded.roleSelectionConfirmed);
-    const renderableViews = new Set(["roleStart", "a1Core", "core", "s2Prototype", "visitChecklist", "patientPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "reports", "caregiverPortal", "consent", "audit"]);
+    const renderableViews = new Set(["roleStart", "a1Core", "core", "s2Prototype", "visitChecklist", "patientPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "patientQuestions", "reports", "caregiverPortal", "consent", "audit"]);
     if (!renderableViews.has(loaded.activeView)) {
       loaded.activeView = "roleStart";
     }
@@ -1750,7 +1751,7 @@ function renderCriticalStrip() {
 
 function isCaregiverRestrictedView(view = state.activeView) {
   if (activeRole() !== "caregiver") return false;
-  if (!["visitChecklist", "interview", "documents", "timeline", "medications", "observations", "risks"].includes(view)) return false;
+  if (!["visitChecklist", "interview", "documents", "timeline", "medications", "observations", "risks", "patientQuestions"].includes(view)) return false;
   const activeAreas = activeCaregiverAreas();
   const requiredAreas = CAREGIVER_VIEW_AREAS[view] || [];
   return !requiredAreas.some((area) => activeAreas.has(area));
@@ -1792,6 +1793,7 @@ function renderView() {
     medications: renderMedications,
     observations: renderObservations,
     risks: renderRisks,
+    patientQuestions: renderRisks,
     reports: renderReportsV2,
     caregiverPortal: renderCaregiverPortal,
     consent: renderConsent,
@@ -2185,6 +2187,52 @@ function renderS2Prototype() {
         ${renderS2DoctorReadOnly(bundle.doctor)}
         ${renderS2PatientCaregiverFlow(bundle.flow)}
       </div>
+      <div class="inline-actions">
+        <button class="ghost-button" type="button" data-print-packet="true"><i data-lucide="printer"></i>Drukuj pakiet</button>
+      </div>
+      ${renderS2PrintSheet(bundle.doctor, patient)}
+    </section>
+  `;
+}
+
+// S2-R9: jednostronicowy wydruk pakietu lekarza. Kolejnosc sekcji:
+// rozbieznosci -> alergie -> leki -> 3 sprawy -> pytania. Bez backendowego PDF.
+function renderS2PrintSheet(doctor, patient) {
+  const discrepancySection = doctor.sections.find((section) => section.id === "discrepancies");
+  const questionSection = doctor.sections.find((section) => section.id === "questions");
+  const allergies = byPatient(state.allergies);
+  const medications = byPatient(state.medications);
+  const printList = (items, empty) => items.length
+    ? `<ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`
+    : `<p class="muted">${escapeHtml(empty)}</p>`;
+  return `
+    <section class="s2-print-sheet" data-s2-print-packet="true" aria-hidden="true">
+      <header class="s2-print-head">
+        <h2>Pakiet wizyty — ${escapeHtml(patientDisplayName(patient))}</h2>
+        <p>Przygotowane przez pacjenta/opiekuna · dane fikcyjne demo · wygenerowano: ${escapeHtml(todayInputValue())}</p>
+      </header>
+      <section class="s2-print-section">
+        <h3>1. Rozbieżności: dokument vs relacja</h3>
+        ${printList((discrepancySection?.items || []).map((item) => item.text || ""), "Brak zgłoszonych rozbieżności w danych demo.")}
+      </section>
+      <section class="s2-print-section">
+        <h3>2. Alergie</h3>
+        ${printList(allergies.map((item) => `${item.substance} — ${item.reaction} (pewność: ${item.certainty})`), "Brak danych o alergiach w zebranych źródłach — do potwierdzenia w gabinecie.")}
+      </section>
+      <section class="s2-print-section">
+        <h3>3. Leki</h3>
+        ${printList(medications.map((item) => `${item.name} — ${item.dose || "dawka: brak danych"} · ${item.frequency || "częstotliwość: brak danych"} · ${item.actualStatus || item.status || ""}`), "Brak leków w danych demo.")}
+      </section>
+      <section class="s2-print-section">
+        <h3>4. Sprawy wskazane przez pacjenta/opiekuna (max 3)</h3>
+        ${printList((doctor.topMatters || []).map((item) => item.text || ""), "Brak wskazanych spraw.")}
+        <p class="muted">${escapeHtml(doctor.topMattersNote || "")}</p>
+      </section>
+      <section class="s2-print-section">
+        <h3>5. Pytania pacjenta do omówienia</h3>
+        ${printList((questionSection?.items || []).map((item) => item.text || ""), "Brak pytań w danych demo.")}
+      </section>
+      <footer class="s2-print-footer">Materiał pomocniczy przygotowany przez pacjenta — nie zastępuje dokumentacji medycznej.</footer>
     </section>
   `;
 }
@@ -2277,8 +2325,16 @@ function renderS2PatientCaregiverFlow(flow) {
         </div>
         <span class="status-chip ${flow.featureEnabled ? "done" : "pending"}">${flow.featureEnabled ? "enabled" : "disabled"}</span>
       </div>
+      <p class="record-body s2-minimum-note" data-s2-minimum-path="${escapeHtml((flow.minimumPath?.stepIds || []).join("|"))}">${escapeHtml(flow.minimumPath?.note || "")}</p>
       <div class="s2-flow-steps">
         ${flow.steps.map(renderS2FlowStep).join("")}
+      </div>
+      <div class="s2-consent-presets" data-s2-consent-presets="true">
+        <span>Krok zgody: 3 presety</span>
+        <ul class="plain-list compact-list">
+          ${PATIENT360_CONSENT_MODEL.CONSENT_PRESETS.map((preset) => `<li><i data-lucide="shield-check"></i><span><strong>${escapeHtml(preset.label)}</strong> — ${escapeHtml(preset.description)}</span></li>`).join("")}
+        </ul>
+        <p class="muted">Szczegółowe obszary dostępu są w ustawieniach zaawansowanych formularza zgody.</p>
       </div>
       <div class="s2-caregiver-scope">
         <span>Opiekun</span>
@@ -2296,12 +2352,16 @@ function renderS2PatientCaregiverFlow(flow) {
 
 function renderS2FlowStep(step, index) {
   const sourceCount = (step.sourceRefs || []).filter(Boolean).length;
+  const minimumBadge = step.minimum
+    ? '<span class="s2-minimum-badge">minimum na jutro</span>'
+    : `<span class="s2-optional-note">${escapeHtml(step.optionalNote || "można uzupełnić później")}</span>`;
   return `
-    <button class="s2-flow-step" type="button" data-s2-flow-step="${escapeHtml(step.id)}" data-set-view="${escapeHtml(step.view)}">
+    <button class="s2-flow-step ${step.minimum ? "s2-flow-step-minimum" : ""}" type="button" data-s2-flow-step="${escapeHtml(step.id)}" data-s2-flow-minimum="${step.minimum ? "true" : "false"}" data-set-view="${escapeHtml(step.view)}">
       <span>${String(index + 1).padStart(2, "0")}</span>
       <strong>${escapeHtml(step.label)}</strong>
       <small>${escapeHtml(step.status)} · ${escapeHtml(String(step.count))}</small>
       <em>${escapeHtml(formatCount(sourceCount, "zrodlo", "zrodla", "zrodel"))}</em>
+      ${minimumBadge}
     </button>
   `;
 }
@@ -6128,6 +6188,15 @@ function bindViewActions() {
     });
   });
 
+  viewRoot.querySelectorAll("[data-print-packet]").forEach((button) => {
+    button.addEventListener("click", () => {
+      document.body.classList.add("p360-print-packet");
+      const cleanup = () => document.body.classList.remove("p360-print-packet");
+      window.addEventListener("afterprint", cleanup, { once: true });
+      window.print();
+    });
+  });
+
   viewRoot.querySelectorAll("[data-journey-step]").forEach((button) => {
     button.addEventListener("click", () => {
       setJourneyStep(button.dataset.journeyStep);
@@ -6373,10 +6442,18 @@ function renderField(field) {
     return `<div class="field"><label for="${field.name}">${field.label}</label><textarea id="${field.name}" name="${field.name}" ${required}>${escapeHtml(field.value || "")}</textarea></div>`;
   }
   if (field.kind === "select") {
-    return `<div class="field"><label for="${field.name}">${field.label}</label><select id="${field.name}" name="${field.name}" ${required}>${field.options.map((option) => `<option value="${escapeHtml(optionValue(option))}">${escapeHtml(optionLabel(option))}</option>`).join("")}</select></div>`;
+    return `<div class="field"><label for="${field.name}">${field.label}</label><select id="${field.name}" name="${field.name}" ${required}>${field.options.map((option) => `<option value="${escapeHtml(optionValue(option))}">${escapeHtml(optionLabel(option))}</option>`).join("")}</select>${field.help ? `<p class="field-help">${escapeHtml(field.help)}</p>` : ""}</div>`;
   }
   if (field.kind === "checkboxGroup") {
     const selected = new Set(field.value || []);
+    if (field.advanced) {
+      return `
+        <details class="field advanced-settings">
+          <summary>${escapeHtml(field.label)}</summary>
+          ${renderField({ ...field, advanced: false })}
+        </details>
+      `;
+    }
     return `
       <fieldset class="field checkbox-group">
         <legend>${escapeHtml(field.label)}</legend>
@@ -6503,16 +6580,31 @@ function dialogConfig(type) {
         },
         { name: "subject", label: "Odbiorca / nazwa opiekuna" },
         { name: "caregiverName", label: "Imię lub nazwa opiekuna" },
-        { name: "role", label: "Rola", kind: "select", options: ["rodzic", "opiekun prawny", "osoba wspierająca", "rodzina"] },
+        {
+          name: "relation",
+          label: "Kim ta osoba jest dla pacjenta? (relacja)",
+          kind: "select",
+          options: PATIENT360_CONSENT_MODEL.CONSENT_RELATION_OPTIONS.map((relation) => ({ value: relation.id, label: relation.label })),
+          help: `Dla mamy/taty: ${PATIENT360_CONSENT_MODEL.SECOND_PARENT_NOTICE}`
+        },
+        {
+          name: "consentPreset",
+          label: "Zakres dostępu (preset)",
+          kind: "radioGroup",
+          value: "pomoc_w_organizacji",
+          options: PATIENT360_CONSENT_MODEL.CONSENT_PRESETS.map((preset) => ({ value: preset.id, label: preset.label })),
+          help: "Preset ustawia obszary dostępu. Szczegóły możesz doprecyzować w ustawieniach zaawansowanych poniżej."
+        },
         {
           name: "consentArea",
-          label: "Obszary udostępnienia",
+          label: "Ustawienia zaawansowane: szczegółowe obszary",
           kind: "checkboxGroup",
+          advanced: true,
           options: consentAreaOptions(),
           value: [],
-          help: "Wybierz tylko te obszary, które opiekun ma widzieć w demo."
+          help: "Zaznaczenie obszarów zastępuje preset. Wybierz tylko te obszary, które osoba ma widzieć w demo."
         },
-        { name: "scope", label: "Zakres", required: true },
+        { name: "scope", label: "Zakres (opis własnymi słowami)", required: true },
         { name: "validTo", label: "Ważna do", kind: "date", value: today, required: true }
       ]
     }
