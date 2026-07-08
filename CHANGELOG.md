@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-- Brak zmian po `v0.2.2-alpha`.
+- Dodano `docs/PROJECT_CHRONICLE.md` jako publiczną kronikę decyzji i kamieni milowych projektu.
+- Uzupełniono README o status founder-declared: wniosek dotyczący ochrony znaku Pacjent360 został złożony, bez publikowania numeru zgłoszenia i bez twierdzenia o udzielonej ochronie.
 
 ## v0.2.2-alpha - aktualny release candidate
 

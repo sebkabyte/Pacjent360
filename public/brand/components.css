@@ -154,3 +154,40 @@
   font: inherit;
   cursor: pointer;
 }
+
+/* SourceChip: maps source refs and EVIDENCE_CLASSES from patient360-contract.js. */
+.source-chip,
+.p360-source-chip {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* RelationChip: maps patient_reported / caregiver_reported evidence classes. */
+.relation-chip,
+.status-chip.relation-reported-badge {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* UnknownChip: maps SOURCE_MISSING_REF and claim type Unknown. */
+.unknown-chip {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ConsentBadge: maps consent scopes and presets from patient360-consent-model.js. */
+.consent-badge {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* AuditDot: maps read events from patient360-audit-catalog.js. */
+.audit-dot {
+  display: inline-grid;
+  place-items: center;
+}
+
+/* FieldVerifier: reserved alias for future OCR-GATE field-by-field checking. */
+.field-verifier {
+  display: grid;
+}

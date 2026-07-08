@@ -1,12 +1,13 @@
 (function initPatient360ConsentModel(root, factory) {
-  const consentModel = factory();
+  const contract =
+    root.Patient360Contract ||
+    (typeof require === "function" ? require("./patient360-contract.js") : null);
+  const consentModel = factory(contract);
   if (typeof module !== "undefined" && module.exports) {
     module.exports = consentModel;
   }
   root.Patient360ConsentModel = consentModel;
-})(typeof globalThis !== "undefined" ? globalThis : this, function buildPatient360ConsentModel() {
-  const contract =
-    typeof require === "function" ? require("./patient360-contract.js") : null;
+})(typeof globalThis !== "undefined" ? globalThis : this, function buildPatient360ConsentModel(contract) {
 
   const ACCESS_SCOPE_KEYS = Object.freeze(contract?.ACCESS_SCOPE_KEYS || [
     "profile.view",
@@ -334,7 +335,12 @@
     if (!grantScopes.has(requestedScope)) reasons.push("grant_scope.denied");
     if (actorRole === "doctor") {
       if (grant.granteeType !== "doctor") reasons.push("doctor.granteeType.required");
-      if (request.packetId && grant.resourceFilters?.packetId && grant.resourceFilters.packetId !== request.packetId) reasons.push("packet.scope_mismatch");
+      const boundPacketId = grant.resourceFilters?.packetId;
+      if (!boundPacketId) {
+        reasons.push("packet.not_bound");
+      } else if (request.packetId && boundPacketId !== request.packetId) {
+        reasons.push("packet.scope_mismatch");
+      }
     }
     return { allowed: reasons.length === 0, reasons };
   }

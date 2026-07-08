@@ -100,6 +100,27 @@ function validatePrintPacket() {
   console.log("Print packet CSS and markup present, sections ordered discrepancies -> allergies -> medications -> topMatters -> questions");
 }
 
+function validateUiContestCherryPicks() {
+  const app = read("public/app.js");
+  const css = read("public/styles.css");
+  const brandComponents = read("public/brand/components.css");
+  const prototype = read("public/patient360-s2-prototype.js");
+  assert(prototype.includes("computeReadinessStatus"), "S2 prototype model should expose computeReadinessStatus");
+  assert(prototype.includes("Masz wystarczajaco na jutro."), "S2 prototype should compute the readiness copy");
+  assert(prototype.includes("photo-source-placeholder"), "S2 prototype should model disabled photo-as-source placeholder actions");
+  assert(app.includes("s2-readiness-banner"), "app.js should render readiness banner");
+  assert(app.includes("discrepancy-sidebyside"), "app.js should render side-by-side discrepancies");
+  assert(app.includes("unknown-chip"), "app.js should render source_missing as UnknownChip");
+  assert(app.includes("UI Layer Architecture"), "app.js should document the L1-L4 UI architecture");
+  assert(css.includes(".s2-readiness-banner"), "styles.css should style readiness banner");
+  assert(css.includes(".discrepancy-sidebyside"), "styles.css should style side-by-side discrepancies");
+  assert(css.includes(".unknown-chip"), "styles.css should style UnknownChip");
+  ["SourceChip", "RelationChip", "UnknownChip", "ConsentBadge", "AuditDot", "FieldVerifier"].forEach((name) => {
+    assert(brandComponents.includes(name), `brand components should document ${name}`);
+  });
+  console.log("UI contest cherry-picks present: readiness, discrepancies, disabled photo placeholder, component aliases, UnknownChip, L1-L4 comment");
+}
+
 function validatePositive(edgecases) {
   for (const variant of edgecases.validVariants || ["A", "B", "C"]) {
     for (const patientId of ["p1", "p2", "p3"]) {
@@ -130,6 +151,7 @@ function main() {
   validatePositive(edgecases);
   validateNegative(edgecases);
   validatePrintPacket();
+  validateUiContestCherryPicks();
   console.log("S2 prototype validation passed");
 }
 

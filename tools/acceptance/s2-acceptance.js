@@ -65,15 +65,39 @@ function assertFileContains(relativePath, fragments) {
   });
 }
 
+function validateScopeFreezeDecision(scopeFreeze) {
+  const signed = /ZATWIERDZAM/i.test(scopeFreeze) && /founder/i.test(scopeFreeze);
+  const decisionMatch = scopeFreeze.match(/^Decision:\s*(continue|narrow|continue_with_evidence_debt)\s*$/im);
+  const decision = decisionMatch ? decisionMatch[1] : "";
+  const hasFrozenScope = /Frozen S3 scope:/i.test(scopeFreeze) && /Explicitly outside S3:/i.test(scopeFreeze);
+  const hasPhotoAsSource = /Photo-as-source/i.test(scopeFreeze);
+  const evidenceFirst = /Evidence basis:/i.test(scopeFreeze) &&
+    /SH-1 evidence table completed:\s*yes/i.test(scopeFreeze);
+  const evidenceDebt = /evidence-debt/i.test(scopeFreeze) &&
+    /Right to narrow after evidence:\s*yes/i.test(scopeFreeze);
+
+  return {
+    valid: signed && Boolean(decision) && hasFrozenScope && hasPhotoAsSource &&
+      (decision === "continue_with_evidence_debt" ? evidenceDebt : evidenceFirst),
+    signed,
+    decision,
+    hasFrozenScope,
+    hasPhotoAsSource,
+    evidenceFirst,
+    evidenceDebt
+  };
+}
+
 function backendGateEvidence() {
   const scopeFreeze = readIfExists("BLUEPRINT/SH2_REVIEW_READY/SCOPE_FREEZE_SIGNED.md");
   const loopState = readIfExists("BLUEPRINT/SH_LOOP_STATE.md");
-  const signedScopeFreeze = /ZATWIERDZAM/i.test(scopeFreeze) && /founder/i.test(scopeFreeze);
+  const scopeFreezeDecision = validateScopeFreezeDecision(scopeFreeze);
   const s2Approved = /S2[^\n]*(accepted|approved|zaakceptowane|zatwierdzone)/i.test(loopState) ||
     /(accepted|approved|zaakceptowane|zatwierdzone)[^\n]*S2/i.test(loopState);
   return {
-    open: signedScopeFreeze && s2Approved,
-    signedScopeFreeze,
+    open: scopeFreezeDecision.valid && s2Approved,
+    signedScopeFreeze: scopeFreezeDecision.signed,
+    scopeFreezeDecision,
     s2Approved,
     loopState
   };
@@ -224,11 +248,39 @@ const criteria = [
         assertNoBackendImplementation("backend gate is closed");
         assert(!/Biezacy sprint:\s*S3|Current sprint:\s*S3/i.test(evidence.loopState), "S3 cannot become the current sprint before backend gate evidence exists");
       }
+      if (evidence.signedScopeFreeze) {
+        assert(
+          evidence.scopeFreezeDecision.valid,
+          "signed scope freeze must include Decision, frozen scope, photo-as-source and evidence-first or evidence-debt basis"
+        );
+      }
 
       const deliveryPrompt = readIfExists("CODEX_SH_DELIVERY_LOOP_PROMPT.md");
       if (deliveryPrompt) {
         assert(deliveryPrompt.includes("SCOPE_FREEZE_SIGNED"), "delivery loop must name SCOPE_FREEZE_SIGNED as backend gate evidence");
         assert(deliveryPrompt.includes("approved") || deliveryPrompt.includes("approved/scalone"), "delivery loop must require human S2 approval before S3");
+        [
+          "Decision: continue|narrow|continue_with_evidence_debt",
+          "Frozen S3 scope",
+          "Explicitly outside S3",
+          "Photo-as-source"
+        ].forEach((fragment) => {
+          assert(deliveryPrompt.includes(fragment), `delivery loop backend gate missing ${fragment}`);
+        });
+      }
+
+      const s3Prompt = readIfExists("CODEX_S3_BACKEND_SPRINT_PROMPT.md");
+      if (s3Prompt) {
+        [
+          "Decision: continue|narrow|continue_with_evidence_debt",
+          "Frozen S3 scope",
+          "Explicitly outside S3",
+          "Photo-as-source",
+          "SH-1 evidence table completed: yes",
+          "Right to narrow after evidence: yes"
+        ].forEach((fragment) => {
+          assert(s3Prompt.includes(fragment), `S3 prompt preflight missing ${fragment}`);
+        });
       }
     }
   },

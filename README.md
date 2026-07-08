@@ -248,6 +248,7 @@ Root repozytorium ma być czytelny. Szczegółowe dokumenty są w `docs/`, żeby
 - `docs/product/FIRST_WEDGE.md` - pierwszy wedge produktu: ścieżka przygotowania wizyty (opiekun mobile + lekarz desktop).
 - `docs/TIMELINE_VISION.md` - docelowa mapa pacjenta, warstwy, epizody i zasilanie danymi.
 - `docs/ROADMAP.md`, `docs/SPRINTS.md` - roadmapa i aktywny backlog rozwoju.
+- `docs/PROJECT_CHRONICLE.md` - publiczna kronika decyzji i kamieni milowych projektu.
 - `docs/legal/` - disclaimer, prywatność i licencja dokumentacji.
 - `docs/governance/` - risk register, komunikacja kryzysowa i dostępność.
 - `docs/governance/DEFINITION_OF_HARM.md` - katalog szkód H-001..H-010 i bramki, które je blokują.
@@ -264,6 +265,8 @@ Kod, skrypty, modele danych, testy i pliki techniczne Pacjent360™ są udostęp
 Dokumentacja, architektura, roadmapa, opisy koncepcyjne i materiały projektowe są udostępniane na warunkach Creative Commons Attribution 4.0 International (CC BY 4.0), chyba że dany plik wskazuje inaczej.
 
 Nazwa Pacjent360™, domena `pacjent360.com.pl`, identyfikacja projektu i materiały opisujące jego status nie mogą być używane w sposób sugerujący oficjalną afiliację z CeZ, NFZ, IKP, P1, e-Profilem Pacjenta, certyfikację kliniczną, status wyrobu medycznego albo gotowość do użycia medycznego. Szczegóły: `NOTICE`, `docs/legal/DISCLAIMER.md` i `docs/legal/DOCS_LICENSE.md`.
+
+Według deklaracji foundera z 2026-07-06 wniosek dotyczący ochrony znaku Pacjent360 został złożony. Repozytorium nie publikuje numeru zgłoszenia ani nie twierdzi, że ochrona została już udzielona; status formalny powinien być potwierdzany w odpowiednim rejestrze lub przez kancelarię.
 
 ## Ważne ograniczenie
 

@@ -75,6 +75,29 @@
       "fileContents": {
         "BLUEPRINT/SH2_REVIEW_READY/SCOPE_FREEZE_SIGNED.md": "draft without required founder approval"
       }
+    },
+    {
+      "name": "signed scope freeze without decision cannot open S3",
+      "valid": false,
+      "checkGit": false,
+      "expectedError": "SCOPE_FREEZE_SIGNED exists but backend gate is not open",
+      "files": {
+        "BLUEPRINT/SH2_REVIEW_READY/SCOPE_FREEZE_SIGNED.md": true
+      },
+      "fileContents": {
+        "BLUEPRINT/SH2_REVIEW_READY/SCOPE_FREEZE_SIGNED.md": "# SCOPE FREEZE SIGNED\n\nZATWIERDZAM - founder\n\nFrozen S3 scope:\n- Photo-as-source\n\nExplicitly outside S3:\n- OCR\n"
+      }
+    },
+    {
+      "name": "complete evidence-debt scope freeze can satisfy backend gate parser",
+      "valid": true,
+      "checkGit": false,
+      "files": {
+        "BLUEPRINT/SH2_REVIEW_READY/SCOPE_FREEZE_SIGNED.md": true
+      },
+      "fileContents": {
+        "BLUEPRINT/SH2_REVIEW_READY/SCOPE_FREEZE_SIGNED.md": "# SCOPE FREEZE SIGNED\n\nDate: 2026-07-07\nFounder: founder\nDecision: continue_with_evidence_debt\n\nZATWIERDZAM - founder: freeze MVP scope for S3 Backend Core with evidence-debt: SH-1 pending.\n\nEvidence basis:\n- S2 technical review accepted: yes\n- SH-1 evidence table completed: partial\n- Evidence-debt owner: founder\n- Evidence-debt deadline: 2026-07-21\n- Right to narrow after evidence: yes\n\nFrozen S3 scope:\n- Patient/caregiver preparation flow.\n- Photo-as-source: patient/caregiver may attach a medication package or document photo as a source artifact.\n\nExplicitly outside S3:\n- OCR, IKP/P1/FHIR, scraping and native mobile.\n- Runtime AI on real patient data.\n"
+      }
     }
   ]
 }

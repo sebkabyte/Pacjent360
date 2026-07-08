@@ -87,3 +87,22 @@ test("S2-R13: minimum-na-jutro path covers visitGoal+documents+questions and is 
   });
   assert.ok(bundle.flow.minimumPath.note.length > 0);
 });
+
+test("UI contest cherry-picks expose readiness, safe photo placeholder and side-by-side discrepancies", () => {
+  const bundle = buildBundle("B", "p1");
+  assert.equal(bundle.flow.readinessStatus.label, "Masz wystarczajaco na jutro.");
+  assert.equal(bundle.flow.readinessStatus.key, "ready");
+  ["documents", "medications"].forEach((stepId) => {
+    const step = bundle.flow.steps.find((item) => item.id === stepId);
+    assert.ok(step.actions.some((action) => action.key === "photo-source-placeholder" && action.disabled === true), `${stepId}: photo placeholder should be disabled`);
+    assert.ok(step.actions.some((action) => action.key === "choose-from-vault"), `${stepId}: choose-from-vault action missing`);
+    assert.ok(step.actions.some((action) => action.key === "no-source-now"), `${stepId}: no-source action missing`);
+  });
+  const discrepancySection = bundle.doctor.sections.find((section) => section.id === "discrepancies");
+  assert.ok(discrepancySection.items.length > 0, "demo bundle should expose discrepancies");
+  discrepancySection.items.forEach((item) => {
+    assert.ok(item.documentSays, `${item.id}: document side missing`);
+    assert.ok(item.reportedSays, `${item.id}: reported side missing`);
+    assert.ok(item.reviewStatus, `${item.id}: review status missing`);
+  });
+});

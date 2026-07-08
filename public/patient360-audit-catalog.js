@@ -44,6 +44,7 @@
     asArray(events).forEach((event, index) => {
       const validation = validateAuditEvent(event);
       validation.errors.forEach((error) => errors.push(`${event?.auditEventId || `event-${index}`}.${error}`));
+      if (!event || typeof event !== "object") return;
       if (seen.has(event.auditEventId)) errors.push(`duplicate:${event.auditEventId}`);
       seen.add(event.auditEventId);
       if (previousTime && event.createdAt < previousTime) errors.push(`appendOnly.order:${event.auditEventId}`);

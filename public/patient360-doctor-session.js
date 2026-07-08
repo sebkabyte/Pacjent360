@@ -16,6 +16,7 @@
   const AUDIT_STATUSES = Object.freeze(contract?.DOCTOR_AUDIT_STATUSES || ["pending", "written", "failed_blocked"]);
   const ALLOWED_READ_ACTIONS = Object.freeze(contract?.DOCTOR_ALLOWED_READ_ACTIONS || ["open_packet", "view_summary", "view_source", "view_document_metadata", "close_session"]);
   const FORBIDDEN_CLAIM_PHRASES = Object.freeze(contract?.FORBIDDEN_CLAIM_PHRASES || []);
+  const normalizeClaimPhrase = contract?.normalizeClaimPhrase || ((value) => String(value == null ? "" : value).toLowerCase());
 
   function asArray(value) {
     return Array.isArray(value) ? value : [];
@@ -87,9 +88,9 @@
       if (packet.consentGrantId && packet.consentGrantId !== session.consentGrantId) errors.push("consentGrantId.mismatch");
       if (packet.accessScopeId && packet.accessScopeId !== session.accessScopeId) errors.push("accessScopeId.mismatch");
     }
-    const text = collectText(session).join(" ");
+    const text = normalizeClaimPhrase(collectText(session).join(" "));
     FORBIDDEN_CLAIM_PHRASES.forEach((phrase) => {
-      if (phrase && text.includes(phrase)) errors.push(`forbiddenPhrase:${phrase}`);
+      if (phrase && text.includes(normalizeClaimPhrase(phrase))) errors.push(`forbiddenPhrase:${phrase}`);
     });
     return { valid: errors.length === 0, errors };
   }

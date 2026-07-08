@@ -11,6 +11,7 @@ CHANGELOG.md
 public/
 docs/ARCHITECTURE.md
 docs/PROGRAM_PLAN.md
+docs/PROJECT_CHRONICLE.md
 docs/ROADMAP.md
 docs/SPRINTS.md
 docs/SSOT.md

@@ -165,6 +165,16 @@
       "dataVisible": true,
       "auditTrail": [],
       "expectedError": "dataVisible.audit_event_missing"
+    },
+    {
+      "id": "audit-trail-null-entry",
+      "resourceId": "vp-demo-001",
+      "requiredAction": "doctor_session.packet_viewed",
+      "policyAllowed": true,
+      "auditWriteStatus": "written",
+      "dataVisible": false,
+      "auditTrail": [null],
+      "expectedError": "auditTrail.event-0.auditEvent.missing"
     }
   ]
 }

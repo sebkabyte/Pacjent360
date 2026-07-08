@@ -314,6 +314,35 @@
           "reason": "grant_scope.denied"
         }
       ]
+    },
+    {
+      "id": "doctor-packet-version-only-consent",
+      "grant": {
+        "consentGrantId": "consent-demo-doctor-version-only",
+        "patientProfileId": "patient-demo-001",
+        "grantorUserId": "user-demo-patient",
+        "granteeType": "doctor",
+        "granteeIdOrTokenRef": "doctor-token-version-only",
+        "purpose": "pre_visit_review",
+        "scopes": ["report.view"],
+        "resourceFilters": {
+          "packetVersion": "0.1.0"
+        },
+        "validFrom": "2026-06-17T09:00:00.000Z",
+        "validUntil": "2026-06-24T09:00:00.000Z",
+        "status": "active"
+      },
+      "accessRequests": [
+        {
+          "id": "doctor-version-only-denied",
+          "actorRole": "doctor",
+          "scope": "report.view",
+          "packetId": "vp-demo-001",
+          "at": "2026-06-17T10:00:00.000Z",
+          "expectAllowed": false,
+          "reason": "packet.not_bound"
+        }
+      ]
     }
   ],
   "negativeConsentGrantCases": [

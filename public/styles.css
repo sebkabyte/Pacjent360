@@ -409,11 +409,11 @@ textarea {
   right: 18px;
   bottom: 18px;
   z-index: 35;
-  width: min(560px, calc(100vw - 300px));
-  max-height: min(62vh, 620px);
+  width: min(340px, calc(100vw - 300px));
+  max-height: min(44vh, 420px);
   overflow: auto;
   margin: 0;
-  padding: 14px;
+  padding: 12px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #ffffff;
@@ -423,7 +423,7 @@ textarea {
 .legal-variant-head {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 16px;
+  gap: 12px;
   align-items: start;
 }
 
@@ -437,8 +437,19 @@ textarea {
   max-width: 880px;
   margin: 0;
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.84rem;
   line-height: 1.45;
+}
+
+.legal-variant-details {
+  margin-top: 10px;
+}
+
+.legal-variant-details summary {
+  cursor: pointer;
+  color: var(--teal);
+  font-size: 0.82rem;
+  font-weight: 900;
 }
 
 .legal-variant-switch {
@@ -467,7 +478,7 @@ textarea {
 
 .legal-variant-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  grid-template-columns: 1fr;
   gap: 12px;
   margin-top: 12px;
 }
@@ -6777,6 +6788,25 @@ body[data-register="caregiver"] .consent-dashboard {
   background: var(--p360-register-ledger-accent);
 }
 
+.unknown-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 24px;
+  padding: 3px 9px;
+  border: 1px solid #e6c164;
+  border-radius: 999px;
+  background: var(--amber-soft);
+  color: #7a5a12;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.unknown-chip svg {
+  width: 14px;
+  height: 14px;
+}
+
 .consent-scope-table tr,
 .audit-table tr {
   border-left: 3px solid transparent;
@@ -7010,6 +7040,64 @@ body[data-register="caregiver"] .page-intro p {
   padding: 12px;
 }
 
+.s2-discrepancy-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.discrepancy-sidebyside {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid #ead08a;
+  border-left: 4px solid #e6c164;
+  border-radius: 8px;
+  background: #fffaf0;
+}
+
+.discrepancy-sidebyside > strong {
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.discrepancy-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.discrepancy-columns > div {
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.discrepancy-columns span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.discrepancy-columns p {
+  margin: 0 0 6px;
+  line-height: 1.4;
+}
+
+.discrepancy-sidebyside em {
+  justify-self: start;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--amber-soft);
+  color: #7a5a12;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 900;
+}
+
 .s2-section-card > div:first-child {
   display: flex;
   justify-content: space-between;
@@ -7021,6 +7109,45 @@ body[data-register="caregiver"] .page-intro p {
 }
 
 .s2-flow-steps {
+  display: grid;
+  gap: 8px;
+}
+
+.s2-readiness-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid #a7d5cf;
+  border-radius: 8px;
+  background: #e9f6f4;
+  color: var(--teal);
+}
+
+.s2-readiness-banner.partial,
+.s2-readiness-banner.empty {
+  border-color: #e6c164;
+  background: var(--amber-soft);
+  color: #7a5a12;
+}
+
+.s2-readiness-banner svg {
+  width: 20px;
+  height: 20px;
+}
+
+.s2-readiness-banner strong {
+  min-width: 0;
+  flex: 1;
+}
+
+.s2-readiness-banner span {
+  color: inherit;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.s2-flow-step-card {
   display: grid;
   gap: 8px;
 }
@@ -7043,6 +7170,49 @@ body[data-register="caregiver"] .page-intro p {
 .s2-flow-step:hover {
   border-color: #a7d5cf;
   background: #f4fbfa;
+}
+
+.s2-flow-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-left: 52px;
+}
+
+.s2-flow-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 30px;
+  padding: 6px 9px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.s2-flow-action.primary {
+  border-color: #a7d5cf;
+  background: #f4fbfa;
+  color: var(--teal);
+}
+
+.s2-flow-action.ghost {
+  border-style: dashed;
+  background: transparent;
+  color: var(--muted);
+}
+
+.s2-flow-action:disabled {
+  opacity: 0.62;
+  cursor: not-allowed;
+}
+
+.s2-flow-action svg {
+  width: 14px;
+  height: 14px;
 }
 
 .s2-flow-step span {
@@ -7086,6 +7256,10 @@ body[data-register="caregiver"] .page-intro p {
 
   .s2-section-grid,
   .s2-metric-row {
+    grid-template-columns: 1fr;
+  }
+
+  .discrepancy-columns {
     grid-template-columns: 1fr;
   }
 
@@ -7171,6 +7345,33 @@ body[data-register="caregiver"] .page-intro p {
 
   .s2-print-sheet li {
     margin: 0 0 1mm;
+  }
+
+  .s2-print-sheet .discrepancy-sidebyside {
+    break-inside: avoid;
+    margin: 0 0 2mm;
+    padding: 2mm;
+    border: 1pt solid #000;
+    border-left: 2pt solid #000;
+    background: #fff;
+  }
+
+  .s2-print-sheet .discrepancy-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2mm;
+  }
+
+  .s2-print-sheet .discrepancy-columns > div {
+    padding: 1.5mm;
+    border: 1pt solid #000;
+  }
+
+  .s2-print-sheet .discrepancy-sidebyside em {
+    display: inline-block;
+    margin-top: 1mm;
+    color: #000;
+    background: #fff;
   }
 
   .s2-print-sheet .s2-print-footer {

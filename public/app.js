@@ -60,6 +60,18 @@ const DATA_SCHEMA_VERSION = PATIENT360_CONTRACT.DATA_SCHEMA_VERSION;
 const DATA_CONTRACT_VERSION = PATIENT360_CONTRACT.DATA_CONTRACT_VERSION;
 const SOURCE_MISSING_REF = PATIENT360_CONTRACT.SOURCE_MISSING_REF;
 
+/*
+ * UI Layer Architecture (progressive disclosure):
+ * L1 Intent   - Task views: "Minimum na jutro", dashboard, quick actions
+ * L2 Friction - Verification: OCR field-by-field, consent confirmation, AI review
+ * L3 Source   - Ground truth: drill-down to original photo/PDF/document
+ * L4 Audit    - Trust log: who entered, who read, when, consent basis
+ *
+ * Rule: L2 intentionally slows UX (friction-as-feature for safety).
+ * Rule: L3 must always be reachable from L1 (every claim links to source).
+ * Rule: L4 is invisible unless user drills into "Informacje o wpisie".
+ */
+
 const DEMO_WATERMARK_TEXT = "PROTOTYP KONCEPCYJNY — DANE FIKCYJNE — NIE UŻYWAĆ Z REALNYMI DANYMI PACJENTA";
 const DEMO_FORM_WARNING =
   "Formularz służy wyłącznie do fikcyjnych danych demo. Nie wpisuj realnych danych pacjenta, danych identyfikujących ani treści z dokumentacji medycznej.";
@@ -1228,30 +1240,33 @@ function renderLegalVariantPanel() {
         `).join("")}
       </div>
     </div>
-    <div class="legal-variant-grid">
-      <div>
-        <strong>Widoczne w demo</strong>
-        <ul>
-          ${visible.map((feature) => `
-            <li>
-              <span>${escapeHtml(feature.item.label)}</span>
-              <small>${escapeHtml(feature.copy.disclaimer)}</small>
-            </li>
-          `).join("")}
-        </ul>
+    <details class="legal-variant-details">
+      <summary>Zakres wariantu</summary>
+      <div class="legal-variant-grid">
+        <div>
+          <strong>Widoczne w demo</strong>
+          <ul>
+            ${visible.map((feature) => `
+              <li>
+                <span>${escapeHtml(feature.item.label)}</span>
+                <small>${escapeHtml(feature.copy.disclaimer)}</small>
+              </li>
+            `).join("")}
+          </ul>
+        </div>
+        <div>
+          <strong>Wylaczone przez bramke</strong>
+          <ul>
+            ${hidden.map((feature) => `
+              <li>
+                <span>${escapeHtml(feature.item.label)}</span>
+                <small>${escapeHtml(feature.item.runtimeGate || "poza tym wariantem")}</small>
+              </li>
+            `).join("")}
+          </ul>
+        </div>
       </div>
-      <div>
-        <strong>Wylaczone przez bramke</strong>
-        <ul>
-          ${hidden.map((feature) => `
-            <li>
-              <span>${escapeHtml(feature.item.label)}</span>
-              <small>${escapeHtml(feature.item.runtimeGate || "poza tym wariantem")}</small>
-            </li>
-          `).join("")}
-        </ul>
-      </div>
-    </div>
+    </details>
   `;
   legalVariantPanel.querySelectorAll("[data-legal-variant]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -1578,11 +1593,12 @@ function evidenceClassLabel(ref) {
 
 function sourceChips(refs) {
   const list = Array.isArray(refs) ? refs : [refs].filter(Boolean);
-  if (!list.length) return `<span class="tag">${escapeHtml(demoText("evidence.noSource", "Brak źródła"))}</span>`;
+  const unknownChip = () => `<span class="unknown-chip" title="${escapeHtml("Brak danych to tez jest informacja dla lekarza")}"><i data-lucide="circle-help"></i>${escapeHtml(demoText("evidence.noData", "Brak danych"))}</span>`;
+  if (!list.length) return unknownChip();
   return list
     .map((ref) => {
       if (ref === SOURCE_MISSING_REF) {
-        return `<span class="tag">${escapeHtml(demoText("evidence.noSource", "Brak źródła"))}</span>`;
+        return unknownChip();
       }
       const evidence = evidenceClassLabel(ref);
       const tooltip = evidence ? `${evidence} — ${demoText("evidence.showSource", "pokaż źródło")}` : demoText("evidence.showSource", "Pokaż źródło");
@@ -2205,6 +2221,18 @@ function renderS2PrintSheet(doctor, patient) {
   const printList = (items, empty) => items.length
     ? `<ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`
     : `<p class="muted">${escapeHtml(empty)}</p>`;
+  const printDiscrepancies = (items) => items.length
+    ? `<div class="s2-print-discrepancies">${items.map((item) => `
+        <article class="discrepancy-sidebyside">
+          <strong>${escapeHtml(item.topic || "Rozbieznosc")}</strong>
+          <div class="discrepancy-columns">
+            <div><span>dokument</span><p>${escapeHtml(item.documentSays || item.text || "Brak danych")}</p></div>
+            <div><span>relacja pacjenta/opiekuna</span><p>${escapeHtml(item.reportedSays || "Brak danych")}</p></div>
+          </div>
+          <em>do omowienia z lekarzem</em>
+        </article>
+      `).join("")}</div>`
+    : `<p class="muted">Brak zgloszonych rozbieznosci w danych demo.</p>`;
   return `
     <section class="s2-print-sheet" data-s2-print-packet="true" aria-hidden="true">
       <header class="s2-print-head">
@@ -2213,7 +2241,7 @@ function renderS2PrintSheet(doctor, patient) {
       </header>
       <section class="s2-print-section">
         <h3>1. Rozbieżności: dokument vs relacja</h3>
-        ${printList((discrepancySection?.items || []).map((item) => item.text || ""), "Brak zgłoszonych rozbieżności w danych demo.")}
+        ${printDiscrepancies(discrepancySection?.items || [])}
       </section>
       <section class="s2-print-section">
         <h3>2. Alergie</h3>
@@ -2299,18 +2327,49 @@ function renderS2DoctorReadOnly(doctor) {
 
 function renderS2SectionCard(sectionId, title, section, targetView) {
   const preview = (section?.items || []).slice(0, 3);
+  const content = sectionId === "discrepancies"
+    ? renderS2DiscrepancyPreview(preview)
+    : `<ul class="plain-list compact-list">
+        ${preview.map((item) => `<li><i data-lucide="circle"></i><span>${escapeHtml(item.text || item.title || item.label || item.id || "Element pakietu")}</span></li>`).join("") || `<li><i data-lucide="circle"></i><span>Brak elementow w tej sekcji.</span></li>`}
+      </ul>`;
   return `
     <section class="s2-section-card" data-s2-doctor-section="${escapeHtml(sectionId)}">
       <div>
         <span>${escapeHtml(title)}</span>
         <strong>${escapeHtml(String(section?.itemCount || 0))}</strong>
       </div>
-      <ul class="plain-list compact-list">
-        ${preview.map((item) => `<li><i data-lucide="circle"></i><span>${escapeHtml(item.text || item.title || item.label || item.id || "Element pakietu")}</span></li>`).join("") || `<li><i data-lucide="circle"></i><span>Brak elementow w tej sekcji.</span></li>`}
-      </ul>
+      ${content}
       <div class="source-line">${sourceChips(section?.sourceRefs || [])}</div>
       <button class="small-action" data-set-view="${escapeHtml(targetView)}">Otworz widok</button>
     </section>
+  `;
+}
+
+function renderS2DiscrepancyPreview(items) {
+  if (!items.length) {
+    return `<p class="muted">Brak elementow w tej sekcji.</p>`;
+  }
+  return `
+    <div class="s2-discrepancy-stack">
+      ${items.map((item) => `
+        <article class="discrepancy-sidebyside">
+          <strong>${escapeHtml(item.topic || "Rozbieznosc")}</strong>
+          <div class="discrepancy-columns">
+            <div>
+              <span>dokument (zrodlo)</span>
+              <p>${escapeHtml(item.documentSays || item.text || "Brak danych")}</p>
+              <div class="source-line">${sourceChips(item.documentSourceRefs || item.sourceRefs || [])}</div>
+            </div>
+            <div>
+              <span>relacja pacjenta/opiekuna</span>
+              <p>${escapeHtml(item.reportedSays || "Brak danych")}</p>
+              <div class="source-line">${sourceChips(item.reportedSourceRefs || item.sourceRefs || [])}</div>
+            </div>
+          </div>
+          <em>${escapeHtml(item.reviewStatus || "do omowienia z lekarzem")}</em>
+        </article>
+      `).join("")}
+    </div>
   `;
 }
 
@@ -2325,6 +2384,7 @@ function renderS2PatientCaregiverFlow(flow) {
         </div>
         <span class="status-chip ${flow.featureEnabled ? "done" : "pending"}">${flow.featureEnabled ? "enabled" : "disabled"}</span>
       </div>
+      ${renderS2ReadinessBanner(flow.readinessStatus)}
       <p class="record-body s2-minimum-note" data-s2-minimum-path="${escapeHtml((flow.minimumPath?.stepIds || []).join("|"))}">${escapeHtml(flow.minimumPath?.note || "")}</p>
       <div class="s2-flow-steps">
         ${flow.steps.map(renderS2FlowStep).join("")}
@@ -2350,19 +2410,45 @@ function renderS2PatientCaregiverFlow(flow) {
   `;
 }
 
+function renderS2ReadinessBanner(status = {}) {
+  return `
+    <div class="s2-readiness-banner ${escapeHtml(status.className || "empty")}" data-s2-readiness-status="${escapeHtml(status.key || "empty")}">
+      <i data-lucide="${escapeHtml(status.icon || "circle-help")}"></i>
+      <strong>${escapeHtml(status.label || "Zacznij od celu wizyty.")}</strong>
+      <span>${escapeHtml(`${status.readyCount || 0}/${status.totalCount || 3} elementy minimum`)}</span>
+    </div>
+  `;
+}
+
 function renderS2FlowStep(step, index) {
   const sourceCount = (step.sourceRefs || []).filter(Boolean).length;
   const minimumBadge = step.minimum
     ? '<span class="s2-minimum-badge">minimum na jutro</span>'
     : `<span class="s2-optional-note">${escapeHtml(step.optionalNote || "można uzupełnić później")}</span>`;
   return `
-    <button class="s2-flow-step ${step.minimum ? "s2-flow-step-minimum" : ""}" type="button" data-s2-flow-step="${escapeHtml(step.id)}" data-s2-flow-minimum="${step.minimum ? "true" : "false"}" data-set-view="${escapeHtml(step.view)}">
-      <span>${String(index + 1).padStart(2, "0")}</span>
-      <strong>${escapeHtml(step.label)}</strong>
-      <small>${escapeHtml(step.status)} · ${escapeHtml(String(step.count))}</small>
-      <em>${escapeHtml(formatCount(sourceCount, "zrodlo", "zrodla", "zrodel"))}</em>
-      ${minimumBadge}
-    </button>
+    <article class="s2-flow-step-card ${step.minimum ? "s2-flow-step-minimum" : ""}">
+      <button class="s2-flow-step" type="button" data-s2-flow-step="${escapeHtml(step.id)}" data-s2-flow-minimum="${step.minimum ? "true" : "false"}" data-set-view="${escapeHtml(step.view)}">
+        <span>${String(index + 1).padStart(2, "0")}</span>
+        <strong>${escapeHtml(step.label)}</strong>
+        <small>${escapeHtml(step.status)} · ${escapeHtml(String(step.count))}</small>
+        <em>${escapeHtml(formatCount(sourceCount, "zrodlo", "zrodla", "zrodel"))}</em>
+        ${minimumBadge}
+      </button>
+      ${renderS2FlowActions(step)}
+    </article>
+  `;
+}
+
+function renderS2FlowActions(step) {
+  if (!Array.isArray(step.actions) || !step.actions.length) return "";
+  return `
+    <div class="s2-flow-actions" data-s2-flow-actions="${escapeHtml(step.id)}">
+      ${step.actions.map((action) => `
+        <button class="s2-flow-action ${escapeHtml(action.kind || "secondary")}" type="button" ${action.disabled ? "disabled" : ""} ${action.view ? `data-set-view="${escapeHtml(action.view)}"` : ""} title="${escapeHtml(action.title || action.label || "")}">
+          <i data-lucide="${escapeHtml(action.icon || "circle")}"></i>${escapeHtml(action.label || "")}
+        </button>
+      `).join("")}
+    </div>
   `;
 }
 

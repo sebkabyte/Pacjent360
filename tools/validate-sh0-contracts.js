@@ -40,6 +40,11 @@ function validateSchemaEnums() {
   compareEnum("consentGrant.scopes", defs.consentGrant.properties.scopes.items.enum, contract.ACCESS_SCOPE_KEYS);
   compareEnum("audit.action", defs.sh0AuditEvent.properties.action.enum, contract.SH0_AUDIT_ACTIONS);
   compareEnum("audit.policyDecision", defs.sh0AuditEvent.properties.policyDecision.enum, contract.SH0_AUDIT_POLICY_DECISIONS);
+  compareEnum("doctor.viewerIdentityStatus", defs.doctorReadOnlySession.properties.viewerIdentityStatus.enum, contract.DOCTOR_VIEWER_IDENTITY_STATUSES);
+  compareEnum("doctor.auditStatus", defs.doctorReadOnlySession.properties.auditStatus.enum, contract.DOCTOR_AUDIT_STATUSES);
+  compareEnum("doctor.allowedActions", defs.doctorReadOnlySession.properties.allowedActions.items.enum, contract.DOCTOR_ALLOWED_READ_ACTIONS);
+  compareEnum("consentGrant.status", defs.consentGrant.properties.status.enum, contract.CONSENT_GRANT_STATUSES);
+  compareEnum("audit.resourceType", defs.sh0AuditEvent.properties.resourceType.enum, contract.SH0_AUDIT_RESOURCE_TYPES);
 }
 
 function validateVisitPacketConsent(packet, grant) {

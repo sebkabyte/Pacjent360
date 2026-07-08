@@ -40,14 +40,33 @@ function currentBranch() {
   return result.status === 0 ? result.stdout.trim() : "";
 }
 
+function validateScopeFreezeDecision(scopeFreeze) {
+  const signed = /ZATWIERDZAM/i.test(scopeFreeze) && /founder/i.test(scopeFreeze);
+  const decisionMatch = scopeFreeze.match(/^Decision:\s*(continue|narrow|continue_with_evidence_debt)\s*$/im);
+  const decision = decisionMatch ? decisionMatch[1] : "";
+  const hasFrozenScope = /Frozen S3 scope:/i.test(scopeFreeze) && /Explicitly outside S3:/i.test(scopeFreeze);
+  const hasPhotoAsSource = /Photo-as-source/i.test(scopeFreeze);
+  const evidenceFirst = /Evidence basis:/i.test(scopeFreeze) &&
+    /SH-1 evidence table completed:\s*yes/i.test(scopeFreeze);
+  const evidenceDebt = /evidence-debt/i.test(scopeFreeze) &&
+    /Right to narrow after evidence:\s*yes/i.test(scopeFreeze);
+
+  return {
+    valid: signed && Boolean(decision) && hasFrozenScope && hasPhotoAsSource &&
+      (decision === "continue_with_evidence_debt" ? evidenceDebt : evidenceFirst),
+    signed,
+    decision
+  };
+}
+
 function backendGateOpen(state, options = {}) {
   const scopeFreeze = optionFileExists("BLUEPRINT/SH2_REVIEW_READY/SCOPE_FREEZE_SIGNED.md", options)
     ? optionRead("BLUEPRINT/SH2_REVIEW_READY/SCOPE_FREEZE_SIGNED.md", options)
     : "";
-  const signedScopeFreeze = /ZATWIERDZAM/i.test(scopeFreeze) && /founder/i.test(scopeFreeze);
+  const scopeFreezeDecision = validateScopeFreezeDecision(scopeFreeze);
   const s2Approved = /S2[^\n]*(accepted|approved|zaakceptowane|zatwierdzone)/i.test(state) ||
     /(accepted|approved|zaakceptowane|zatwierdzone)[^\n]*S2/i.test(state);
-  return signedScopeFreeze && s2Approved;
+  return scopeFreezeDecision.valid && s2Approved;
 }
 
 function parseMilestoneRows(state) {
@@ -112,9 +131,13 @@ function validateSh2ReviewPack(state, options = {}, gateOpen = false) {
 
   const evidence = optionRead(requiredFiles[2], options);
   assertContainsAll("SH1 evidence table", evidence, [
-    "Status: empty template",
+    "Status: ready template",
     "SH1-DOC-01",
     "SH1-PAT-01",
+    "Evidence Capture Matrix",
+    "WTP/Payer Signal",
+    "Manual vs Photo Signal",
+    "Scope Freeze Readiness Checklist",
     "Sessions with real data used | 0 | 0",
     "Serious safety concerns | 0 | 0"
   ]);
@@ -123,7 +146,12 @@ function validateSh2ReviewPack(state, options = {}, gateOpen = false) {
   assertContainsAll("Scope freeze template", freezeTemplate, [
     "Status: template only - not a gate file",
     "SCOPE_FREEZE_SIGNED.md",
+    "Decision: continue / narrow",
+    "Decision: continue_with_evidence_debt",
     "ZATWIERDZAM - founder",
+    "Photo-as-source",
+    "SH-1 evidence table completed: yes",
+    "Right to narrow after evidence: yes",
     "evidence-debt: SH-1 pending"
   ]);
 
@@ -250,7 +278,9 @@ function runEdgeCases(baseState) {
     const mutated = testCase.mutation ? applyMutation(baseState, testCase.mutation) : baseState;
     const options = {
       actualBranch: testCase.actualBranch === undefined ? currentBranch() : testCase.actualBranch,
-      backendGateOpen: false,
+      backendGateOpen: Object.prototype.hasOwnProperty.call(testCase, "backendGateOpen")
+        ? testCase.backendGateOpen
+        : undefined,
       checkGit: testCase.checkGit !== false,
       files: testCase.files,
       fileContents: testCase.fileContents

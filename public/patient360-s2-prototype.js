@@ -43,6 +43,73 @@
     return unique(refs.length ? refs : [fallback]);
   }
 
+  function isReadyStep(step) {
+    return ["ready", "ready_to_share", "done", "active", "aktywny"].includes(String(step?.status || "").toLowerCase());
+  }
+
+  function computeReadinessStatus(steps, minimumStepIds = ["visitGoal", "documents", "questions"]) {
+    const minimumSteps = asArray(steps).filter((step) => minimumStepIds.includes(step.id));
+    const readyCount = minimumSteps.filter(isReadyStep).length;
+    const totalCount = minimumSteps.length || minimumStepIds.length;
+    if (readyCount >= totalCount) {
+      return {
+        key: "ready",
+        label: "Masz wystarczajaco na jutro.",
+        icon: "check-circle-2",
+        className: "ready",
+        readyCount,
+        totalCount
+      };
+    }
+    if (readyCount > 0) {
+      return {
+        key: "partial",
+        label: "Brakuje jeszcze jednej rzeczy.",
+        icon: "circle-help",
+        className: "partial",
+        readyCount,
+        totalCount
+      };
+    }
+    return {
+      key: "empty",
+      label: "Zacznij od celu wizyty.",
+      icon: "circle-dot",
+      className: "empty",
+      readyCount,
+      totalCount
+    };
+  }
+
+  function flowActionsForStep(stepId) {
+    if (!["documents", "medications"].includes(stepId)) return [];
+    const subject = stepId === "documents" ? "dokumentu" : "opakowania";
+    return [
+      {
+        key: "photo-source-placeholder",
+        label: `Zrob zdjecie ${subject}`,
+        icon: "camera",
+        kind: "primary",
+        disabled: true,
+        title: "Dostepne wkrotce - wymaga S3 PWA i bezpiecznego zbioru zrodel"
+      },
+      {
+        key: "choose-from-vault",
+        label: "Wybierz ze zrodel",
+        icon: "folder-open",
+        kind: "secondary",
+        view: stepId === "documents" ? "documents" : "medications"
+      },
+      {
+        key: "no-source-now",
+        label: "Nie mam nic pod reka - to tez w porzadku",
+        icon: "circle-help",
+        kind: "ghost",
+        title: "W prototypie oznacza source_missing albo relacje pacjenta/opiekuna"
+      }
+    ];
+  }
+
   function byPatient(state, key, patientId) {
     return asArray(state?.[key]).filter((item) => item.patientId === patientId);
   }
@@ -140,6 +207,12 @@
     const discrepancies = packet
       ? asArray(packet.discrepancies).map((item) => ({
           id: item.id,
+          topic: item.topic || "Rozbieznosc",
+          documentSays: item.documentSays || "brak danych w dokumencie",
+          reportedSays: item.reportedSays || "brak danych w relacji",
+          documentSourceRefs: normalizeRefs(item.documentSourceRefs),
+          reportedSourceRefs: normalizeRefs(item.reportedSourceRefs),
+          reviewStatus: "do omowienia z lekarzem",
           text: `${item.topic || "Rozbieznosc"} - dokument: ${item.documentSays || "brak"} / relacja: ${item.reportedSays || "brak"}`,
           sourceRefs: sourceRefsFor(item)
         }))
@@ -148,6 +221,12 @@
           .slice(0, 3)
           .map((item) => ({
             id: `disc-${item.id}`,
+            topic: item.name || "Lek",
+            documentSays: item.status || "brak danych w dokumencie",
+            reportedSays: item.actualStatus || "brak danych w relacji",
+            documentSourceRefs: sourceRefsFor(item),
+            reportedSourceRefs: sourceRefsFor(item),
+            reviewStatus: "do omowienia z lekarzem",
             text: `${item.name}: dokument - ${item.status} / relacja - ${item.actualStatus}`,
             sourceRefs: sourceRefsFor(item)
           }));
@@ -313,8 +392,10 @@
     const stepsWithMinimum = steps.map((step) => ({
       ...step,
       minimum: minimumStepIds.includes(step.id),
-      optionalNote: minimumStepIds.includes(step.id) ? "" : "mozna uzupelnic pozniej"
+      optionalNote: minimumStepIds.includes(step.id) ? "" : "mozna uzupelnic pozniej",
+      actions: flowActionsForStep(step.id)
     }));
+    const readinessStatus = computeReadinessStatus(stepsWithMinimum, minimumStepIds);
 
     return {
       prototypeId: "s2-patient-caregiver-pwa-v0.1",
@@ -329,6 +410,7 @@
         scopeLabels: activeConsents.flatMap((grant) => asArray(grant.scopes || grant.areas)).slice(0, 8)
       },
       steps: stepsWithMinimum,
+      readinessStatus,
       minimumPath: {
         stepIds: [...minimumStepIds],
         note: "Minimum na jutro: cel wizyty, jeden dokument i pytania. Reszte mozna uzupelnic pozniej."
@@ -391,6 +473,7 @@
     });
     const questionsStep = asArray(flow?.steps).find((step) => step.id === "questions");
     if (questionsStep && questionsStep.view === "risks") errors.push("flow.questions.view.risks_not_allowed");
+    if (!flow?.readinessStatus?.label) errors.push("flow.readinessStatus.missing");
     FLOW_STEP_IDS.forEach((stepId) => {
       const step = asArray(flow?.steps).find((item) => item.id === stepId);
       if (!step) {
@@ -421,6 +504,7 @@
     DOCTOR_SECTION_IDS,
     SAFE_DOCTOR_ACTIONS,
     clone,
+    computeReadinessStatus,
     buildDoctorReadOnlyPrototype,
     buildPatientCaregiverFlow,
     buildS2PrototypeBundle,
