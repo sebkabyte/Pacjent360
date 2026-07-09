@@ -94,7 +94,10 @@ $nodeCheckFiles = @(
   "tools/release-readiness.js",
   "tools/smoke-browser.js",
   "tools/verify-click-routes.js",
-  "tools/verify-reactivity.js"
+  "tools/verify-reactivity.js",
+  "tools/check-no-cdss-copy.mjs",
+  "tools/check-normal-ui-no-tech-names.mjs",
+  "tools/check-task-driven-ui-boundaries.mjs"
 )
 
 $powerShellCheckFiles = @(
@@ -199,6 +202,9 @@ Invoke-External "Brand contrast validation" "node" @("tools/validate-brand-contr
 Invoke-External "Validation pack validation" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-validation-pack.ps1"))
 Invoke-External "Definition of Harm gates" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-harm-gates.ps1"))
 Invoke-External "Site consistency" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/validate-site-consistency.ps1"))
+Invoke-External "Normal UI technical-name guard" "node" @("tools/check-normal-ui-no-tech-names.mjs")
+Invoke-External "No-CDSS copy guard" "node" @("tools/check-no-cdss-copy.mjs")
+Invoke-External "Task-driven UI boundary guard" "node" @("tools/check-task-driven-ui-boundaries.mjs")
 
 Invoke-External "Prepare public package" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/prepare-public.ps1"), "-Zip")
 Invoke-External "Verify public package" "powershell" @("-ExecutionPolicy", "Bypass", "-File", (Join-Path $root "tools/verify-public.ps1"))

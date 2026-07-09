@@ -815,7 +815,7 @@ async function main() {
       mobile: false
     });
 
-    const demoUrl = `http://127.0.0.1:${serverPort}/demo.html?r1=${Date.now()}`;
+    const demoUrl = `http://127.0.0.1:${serverPort}/demo.html?start=1&tech=1&r1=${Date.now()}`;
     await client.call("Page.navigate", { url: demoUrl });
     await waitForReady(client);
 

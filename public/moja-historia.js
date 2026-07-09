@@ -106,12 +106,12 @@ class MojaHistoriaApp {
 
   switchSection(name) {
     // Hide all sections
-    MH.qsa('[data-section]').forEach(s => { s.hidden = true; s.classList.remove('mh-section-active'); });
+    MH.qsa('[data-section]').forEach(s => { s.hidden = true; s.classList.remove('active'); });
     // Show target section
     const target = MH.qs(`[data-section="${name}"]`);
     if (target) {
       target.hidden = false;
-      requestAnimationFrame(() => target.classList.add('mh-section-active'));
+      requestAnimationFrame(() => target.classList.add('active'));
     }
     // Update nav active state
     MH.qsa('[data-nav]').forEach(btn => {

@@ -105,6 +105,14 @@ const PATIENT_SCOPED_COLLECTION_KEYS = [
 ];
 
 const VIEW_REGISTER = Object.freeze({
+  home: "app",
+  medicalHistory: "app",
+  visitPreparation: "app",
+  visitPacket: "app",
+  doctorBrief: "app",
+  postVisit: "app",
+  caregiverHome: "app",
+  accessScope: "app",
   roleStart: "app",
   visitChecklist: "patient",
   a1Core: "doctor",
@@ -122,6 +130,60 @@ const VIEW_REGISTER = Object.freeze({
   consent: "caregiver",
   audit: "caregiver"
 });
+
+const NORMAL_PRODUCT_VIEWS = Object.freeze(new Set([
+  "medicalHistory",
+  "visitPreparation",
+  "caregiverHome",
+  "accessScope"
+]));
+
+const PRODUCT_FLOW_VIEWS = Object.freeze(new Set([
+  ...NORMAL_PRODUCT_VIEWS,
+  "visitPacket",
+  "doctorBrief",
+  "postVisit"
+]));
+
+const NORMAL_RENDERABLE_PRODUCT_VIEWS = Object.freeze(new Set([
+  ...NORMAL_PRODUCT_VIEWS,
+  "visitPacket",
+  "postVisit"
+]));
+
+const TECH_ONLY_VIEWS = Object.freeze(new Set([
+  "roleStart",
+  "a1Core",
+  "s2Prototype",
+  "visitChecklist",
+  "doctorBrief",
+  "audit"
+]));
+
+const TECHNICAL_DEMO_VIEWS = Object.freeze(new Set([
+  "roleStart",
+  "a1Core",
+  "core",
+  "s2Prototype",
+  "visitChecklist",
+  "patientPortal",
+  "caregiverPortal",
+  "interview",
+  "documents",
+  "timeline",
+  "medications",
+  "observations",
+  "risks",
+  "patientQuestions",
+  "reports",
+  "consent",
+  "audit"
+]));
+
+const ALL_RENDERABLE_VIEWS = Object.freeze(new Set([
+  ...PRODUCT_FLOW_VIEWS,
+  ...TECHNICAL_DEMO_VIEWS
+]));
 
 const ROLE_ORDER = ["doctor", "patient", "caregiver"];
 const ROLE_META = Object.freeze({
@@ -344,15 +406,15 @@ const VIEW_ROLE_HINT = Object.freeze({
 });
 
 const ROLE_VIEW_ACCESS = Object.freeze({
-  doctor: new Set(["roleStart", "a1Core", "core", "s2Prototype", "visitChecklist", "interview", "documents", "timeline", "medications", "observations", "risks", "patientQuestions", "reports", "consent"]),
-  patient: new Set(["roleStart", "a1Core", "s2Prototype", "visitChecklist", "patientPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "patientQuestions", "consent"]),
-  caregiver: new Set(["roleStart", "a1Core", "s2Prototype", "visitChecklist", "caregiverPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "patientQuestions", "consent"])
+  doctor: new Set([...PRODUCT_FLOW_VIEWS, "roleStart", "a1Core", "core", "s2Prototype", "visitChecklist", "interview", "documents", "timeline", "medications", "observations", "risks", "patientQuestions", "reports", "consent"]),
+  patient: new Set([...PRODUCT_FLOW_VIEWS, "roleStart", "a1Core", "s2Prototype", "visitChecklist", "patientPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "patientQuestions", "reports", "consent"]),
+  caregiver: new Set([...PRODUCT_FLOW_VIEWS, "roleStart", "a1Core", "s2Prototype", "visitChecklist", "caregiverPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "patientQuestions", "reports", "consent"])
 });
 
 const ROLE_HOME_VIEW = Object.freeze({
-  doctor: "core",
-  patient: "visitChecklist",
-  caregiver: "caregiverPortal"
+  doctor: "medicalHistory",
+  patient: "medicalHistory",
+  caregiver: "medicalHistory"
 });
 
 const DEMO_JOURNEY_STEPS = Object.freeze([
@@ -365,6 +427,14 @@ const DEMO_JOURNEY_STEPS = Object.freeze([
 ]);
 
 const VIEW_JOURNEY_STAGE = Object.freeze({
+  home: "cockpit",
+  medicalHistory: "map",
+  visitPreparation: "data",
+  visitPacket: "summary",
+  doctorBrief: "summary",
+  postVisit: "summary",
+  caregiverHome: "data",
+  accessScope: "data",
   core: "cockpit",
   a1Core: "cockpit",
   visitChecklist: "cockpit",
@@ -843,15 +913,30 @@ function initialDemoLanguage() {
   return demoUrlLanguage() || demoStoredLanguage() || demoBrowserPreferredLanguage();
 }
 
+function isTechMode() {
+  return new URLSearchParams(window.location.search).get("tech") === "1";
+}
+
+function isProductFlowView(view = state?.activeView) {
+  return PRODUCT_FLOW_VIEWS.has(view);
+}
+
+function isNormalProductView(view = state?.activeView) {
+  return NORMAL_PRODUCT_VIEWS.has(view);
+}
+
 function freshDemoStartState() {
   const fresh = clone(demoState);
-  fresh.activeView = "roleStart";
-  fresh.activeRole = "doctor";
+  const techMode = isTechMode();
+  fresh.activeView = techMode ? "roleStart" : "medicalHistory";
+  fresh.activeRole = techMode ? "doctor" : "patient";
   fresh.activeLanguage = initialDemoLanguage();
-  fresh.roleSelectionConfirmed = false;
+  fresh.roleSelectionConfirmed = !techMode;
   fresh.selectedSourceRef = null;
   fresh.selectedTimelineEventId = null;
   fresh.search = "";
+  fresh.selectedVisitPacketItemIds = [];
+  fresh.medicalHistoryItems = [];
   return fresh;
 }
 
@@ -876,9 +961,18 @@ function loadState() {
       loaded.specialist = "internist";
     }
     loaded.roleSelectionConfirmed = Boolean(loaded.roleSelectionConfirmed);
-    const renderableViews = new Set(["roleStart", "a1Core", "core", "s2Prototype", "visitChecklist", "patientPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "patientQuestions", "reports", "caregiverPortal", "consent", "audit"]);
-    if (!renderableViews.has(loaded.activeView)) {
-      loaded.activeView = "roleStart";
+    if (!Array.isArray(loaded.selectedVisitPacketItemIds)) {
+      loaded.selectedVisitPacketItemIds = [];
+    }
+    if (!Array.isArray(loaded.medicalHistoryItems)) {
+      loaded.medicalHistoryItems = [];
+    }
+    if (!ALL_RENDERABLE_VIEWS.has(loaded.activeView)) {
+      loaded.activeView = "medicalHistory";
+    }
+    if (!isTechMode() && TECHNICAL_DEMO_VIEWS.has(loaded.activeView)) {
+      loaded.activeView = "medicalHistory";
+      loaded.roleSelectionConfirmed = true;
     }
     if (loaded.activeView === "roleStart") {
       loaded.roleSelectionConfirmed = false;
@@ -901,7 +995,7 @@ function loadState() {
     }
     return loaded;
   } catch {
-    const fallback = clone(demoState);
+    const fallback = freshDemoStartState();
     fallback.activeLanguage = initialDemoLanguage();
     return fallback;
   }
@@ -997,6 +1091,9 @@ function allowedViewsForRole(role = activeRole()) {
 }
 
 function canAccessViewForRole(view, role = activeRole()) {
+  if (!isTechMode()) {
+    return NORMAL_RENDERABLE_PRODUCT_VIEWS.has(view) && allowedViewsForRole(role).has(view);
+  }
   return allowedViewsForRole(role).has(view);
 }
 
@@ -1008,7 +1105,7 @@ function switchActiveRole(role, view = null) {
   const nextRole = ROLE_META[role] ? role : "doctor";
   state.activeRole = nextRole;
   state.roleSelectionConfirmed = true;
-  state.activeView = view || viewForRole(nextRole);
+  state.activeView = view || (isTechMode() ? viewForRole(nextRole) : "medicalHistory");
   state.selectedSourceRef = null;
   state.selectedTimelineEventId = null;
   state.search = "";
@@ -1149,6 +1246,13 @@ function journeyStepByOffset(offset) {
 }
 
 function setActiveView(view) {
+  if (!isTechMode() && !NORMAL_RENDERABLE_PRODUCT_VIEWS.has(view)) {
+    state.activeView = "medicalHistory";
+    state.selectedSourceRef = null;
+    state.selectedTimelineEventId = null;
+    state.search = "";
+    return;
+  }
   if (VIEW_ROLE_HINT[view]) {
     switchActiveRole(VIEW_ROLE_HINT[view], view);
     return;
@@ -1172,7 +1276,7 @@ function startRoleScenario(role, patientId) {
   state.activeRole = ROLE_META[role] ? role : "doctor";
   state.roleSelectionConfirmed = true;
   state.activePatientId = patientId || state.activePatientId;
-  state.activeView = viewForRole(state.activeRole);
+  state.activeView = isTechMode() ? viewForRole(state.activeRole) : "medicalHistory";
   state.activeCaseStudy = defaultCaseStudyForPatient(state.activePatientId);
   state.selectedSourceRef = null;
   state.selectedTimelineEventId = null;
@@ -1220,6 +1324,12 @@ function legalVariantFeatures(variant = activeLegalVariant) {
 
 function renderLegalVariantPanel() {
   if (!legalVariantPanel) return;
+  if (!isTechMode()) {
+    legalVariantPanel.hidden = true;
+    legalVariantPanel.innerHTML = "";
+    return;
+  }
+  legalVariantPanel.hidden = false;
   const variant = PATIENT360_FLAGS.aktywnyWariant(activeLegalVariant);
   const features = legalVariantFeatures(variant);
   const visible = features.filter((feature) => feature.enabled && feature.visibleInDemo && feature.copy);
@@ -1613,7 +1723,643 @@ function compactSourceRefs(refs, limit = 3) {
   return unique.slice(0, limit);
 }
 
+function listify(value) {
+  return Array.isArray(value) ? value.filter(Boolean) : [value].filter(Boolean);
+}
+
+function historyTypeLabel(type) {
+  const labels = {
+    document: "Dokument",
+    result: "Wynik",
+    visit: "Wizyta",
+    medication: "Lek",
+    allergy: "Alergia",
+    observation: "Obserwacja",
+    question: "Pytanie",
+    gap: "Brak",
+    discrepancy: "Rozbieżność",
+    task: "Zadanie",
+    note: "Notatka"
+  };
+  return labels[type] || "Wpis";
+}
+
+function historyAreaForType(type) {
+  const map = {
+    document: "documents",
+    result: "results",
+    visit: "visits",
+    medication: "medications",
+    allergy: "medications",
+    observation: "observations",
+    question: "tasks",
+    gap: "tasks",
+    discrepancy: "tasks",
+    task: "tasks",
+    note: "tasks"
+  };
+  return map[type] || "documents";
+}
+
+function sourceLabelForHistory(source) {
+  const labels = {
+    document: "z dokumentu",
+    patient: "od pacjenta",
+    caregiver: "od opiekuna",
+    none: "brak źródła",
+    postVisit: "po wizycie"
+  };
+  return labels[source] || source || labels.none;
+}
+
+function defaultSharingScope(type, refs = [], createdByRole = "patient") {
+  const area = historyAreaForType(type);
+  const caregiverVisible = createdByRole === "caregiver"
+    || activeCaregiverAreas().has(area)
+    || listify(refs).some((ref) => String(ref).startsWith("consent:"));
+  return {
+    patient: true,
+    doctor: true,
+    caregiver: caregiverVisible,
+    areas: [area]
+  };
+}
+
+function makeMedicalHistoryItem(input) {
+  const sourceRefs = listify(input.sourceRefs);
+  const createdByRole = input.createdByRole || "patient";
+  const sharingScope = input.sharingScope || defaultSharingScope(input.type, sourceRefs, createdByRole);
+  return {
+    id: input.id,
+    personId: input.personId || input.patientId || state.activePatientId,
+    type: input.type || "note",
+    title: input.title || "Wpis w historii",
+    date: input.date || todayInputValue(),
+    text: input.text || "",
+    source: input.source || "none",
+    author: input.author || (createdByRole === "caregiver" ? "opiekun" : "pacjent"),
+    status: input.status || "do potwierdzenia",
+    sharingScope,
+    createdByRole,
+    sourceRefs,
+    usedInVisitPackets: input.usedInVisitPackets || []
+  };
+}
+
+function customMedicalHistoryItems() {
+  return (state.medicalHistoryItems || [])
+    .filter((item) => item.personId === state.activePatientId || item.patientId === state.activePatientId)
+    .map(makeMedicalHistoryItem);
+}
+
+function buildMedicalHistoryItems(patientId = state.activePatientId) {
+  const previousPatientId = state.activePatientId;
+  const scoped = (collection) => (collection || []).filter((item) => item.patientId === patientId);
+  const documents = scoped(state.documents).map((doc) => makeMedicalHistoryItem({
+    id: `doc:${doc.id}`,
+    personId: patientId,
+    type: "document",
+    title: doc.title || doc.type,
+    date: doc.eventDate || doc.date,
+    text: doc.summary || doc.source || "",
+    source: "document",
+    author: doc.author || doc.facility || "dokument",
+    status: doc.extractionStatus || doc.quality || "z dokumentu",
+    sourceRefs: [`doc:${doc.id}`]
+  }));
+
+  const timeline = scoped(state.timelineEvents).map((event) => makeMedicalHistoryItem({
+    id: `event:${event.id}`,
+    personId: patientId,
+    type: event.track === "badania" ? "result" : event.track === "leki" ? "medication" : event.track === "obserwacje z wywiadu" ? "observation" : "visit",
+    title: event.title,
+    date: event.date,
+    text: event.description || "",
+    source: listify(event.sourceRefs).some((ref) => String(ref).startsWith("interview:")) ? "patient" : "document",
+    author: "oś historii",
+    status: event.status || "do omówienia",
+    sourceRefs: event.sourceRefs
+  }));
+
+  const interviews = scoped(state.interviews).map((interview) => {
+    const caregiver = interview.evidenceClass === "caregiver_reported" || normalize(interview.speaker).includes("opiekun") || normalize(interview.speaker).includes("mama") || normalize(interview.speaker).includes("córka");
+    return makeMedicalHistoryItem({
+      id: `interview:${interview.id}`,
+      personId: patientId,
+      type: "observation",
+      title: interview.scenario || "Wywiad",
+      date: interview.date,
+      text: interview.transcript || Object.values(interview.answers || {}).join(" "),
+      source: caregiver ? "caregiver" : "patient",
+      author: interview.speaker || (caregiver ? "opiekun" : "pacjent"),
+      status: "do potwierdzenia",
+      createdByRole: caregiver ? "caregiver" : "patient",
+      sourceRefs: [`interview:${interview.id}`]
+    });
+  });
+
+  const medications = scoped(state.medications).map((med) => makeMedicalHistoryItem({
+    id: `medication:${med.id}`,
+    personId: patientId,
+    type: "medication",
+    title: med.name,
+    date: med.date || todayInputValue(),
+    text: [med.dose, med.frequency, med.actualStatus, med.story, med.question].filter(Boolean).join(" · "),
+    source: med.evidenceClass === "caregiver_reported" ? "caregiver" : "patient",
+    author: med.evidenceClass === "caregiver_reported" ? "opiekun" : "pacjent / dokument",
+    status: med.confirmationStatus || med.actualStatus || med.status || "do potwierdzenia",
+    createdByRole: med.evidenceClass === "caregiver_reported" ? "caregiver" : "patient",
+    sourceRefs: [`medication:${med.id}`, ...(med.sourceRefs || [])]
+  }));
+
+  const allergies = scoped(state.allergies).map((allergy) => makeMedicalHistoryItem({
+    id: `allergy:${allergy.id}`,
+    personId: patientId,
+    type: "allergy",
+    title: allergy.substance,
+    date: allergy.date || todayInputValue(),
+    text: [allergy.reaction, allergy.certainty].filter(Boolean).join(" · "),
+    source: "patient",
+    author: allergy.author || "pacjent / dokument",
+    status: "do potwierdzenia",
+    sourceRefs: allergy.sourceRefs || []
+  }));
+
+  const observations = scoped(state.observations).map((observation) => {
+    const latest = latestValue(observation);
+    const caregiver = observation.evidenceClass === "caregiver_reported";
+    return makeMedicalHistoryItem({
+      id: `observation:${observation.id}`,
+      personId: patientId,
+      type: observation.evidenceClass ? "observation" : "result",
+      title: observation.name,
+      date: latest?.date || observation.date || todayInputValue(),
+      text: latest ? `${latest.value} ${observation.unit || ""}`.trim() : observation.story || observation.note || "",
+      source: caregiver ? "caregiver" : observation.evidenceClass === "patient_reported" ? "patient" : "document",
+      author: caregiver ? "opiekun" : observation.evidenceClass === "patient_reported" ? "pacjent" : "dokument",
+      status: observation.evidenceClass ? "do potwierdzenia" : "z dokumentu",
+      createdByRole: caregiver ? "caregiver" : "patient",
+      sourceRefs: [`observation:${observation.id}`, ...(observation.sourceRefs || [])]
+    });
+  });
+
+  const flags = scoped(state.flags).map((flag) => makeMedicalHistoryItem({
+    id: `flag:${flag.id}`,
+    personId: patientId,
+    type: "question",
+    title: flag.category || "Pytanie do omówienia",
+    date: flag.date || todayInputValue(),
+    text: flag.question || flag.evidence || "",
+    source: "patient",
+    author: "Pacjent360 demo",
+    status: publicStatusLabel(flag.status || "do omówienia"),
+    sourceRefs: [`flag:${flag.id}`, ...(flag.sourceRefs || [])]
+  }));
+
+  const knownUnknowns = scoped(state.knownUnknowns).map((gap) => makeMedicalHistoryItem({
+    id: `gap:${gap.id}`,
+    personId: patientId,
+    type: "gap",
+    title: gap.topic || gap.title || "Brak w historii",
+    date: gap.date || todayInputValue(),
+    text: gap.question || gap.description || gap.note || "",
+    source: gap.source ? "document" : "none",
+    author: gap.owner || "pacjent",
+    status: gap.status || "brak źródła",
+    sourceRefs: gap.sourceRefs || []
+  }));
+
+  const custom = customMedicalHistoryItems().filter((item) => item.personId === patientId);
+  state.activePatientId = previousPatientId;
+  return [...custom, ...documents, ...timeline, ...interviews, ...medications, ...allergies, ...observations, ...flags, ...knownUnknowns]
+    .filter((item) => item.personId === patientId)
+    .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0) || a.title.localeCompare(b.title));
+}
+
+function accessScopeAllowsItem(item, role = activeRole()) {
+  if (!item) return false;
+  if (role === "doctor") return item.sharingScope?.doctor !== false;
+  if (role === "patient") return item.sharingScope?.patient !== false;
+  if (role !== "caregiver") return false;
+  if (!caregiverHasActiveScope()) return false;
+  if (item.createdByRole === "caregiver") return true;
+  if (item.sharingScope?.caregiver === false) return false;
+  const activeAreas = activeCaregiverAreas();
+  const areas = listify(item.sharingScope?.areas);
+  return areas.some((area) => activeAreas.has(area));
+}
+
+function applyAccessPolicy(items, role = activeRole()) {
+  return listify(items).filter((item) => accessScopeAllowsItem(item, role));
+}
+
+function visibleMedicalHistoryItems(role = activeRole()) {
+  return applyAccessPolicy(buildMedicalHistoryItems(), role);
+}
+
+function selectedVisitPacketIds(items = visibleMedicalHistoryItems()) {
+  const available = new Set(items.map((item) => item.id));
+  const selected = (state.selectedVisitPacketItemIds || []).filter((id) => available.has(id));
+  if (selected.length) return selected;
+  return items.slice(0, 5).map((item) => item.id);
+}
+
+function snapshotHistoryItem(item) {
+  return {
+    id: item.id,
+    personId: item.personId,
+    type: item.type,
+    title: item.title,
+    date: item.date,
+    text: item.text,
+    source: item.source,
+    author: item.author,
+    status: item.status,
+    sharingScope: clone(item.sharingScope),
+    createdByRole: item.createdByRole,
+    sourceRefs: [...listify(item.sourceRefs)],
+    usedInVisitPackets: [...listify(item.usedInVisitPackets)]
+  };
+}
+
+function buildVisitPacketFromHistory(role = activeRole()) {
+  const items = visibleMedicalHistoryItems(role);
+  const selectedIds = new Set(selectedVisitPacketIds(items));
+  const selectedItemSnapshots = items.filter((item) => selectedIds.has(item.id)).map(snapshotHistoryItem);
+  const decision = activeDecision();
+  return {
+    id: `visitPacket:${state.activePatientId}:${state.activeCaseStudy || "demo"}`,
+    personId: state.activePatientId,
+    visit: {
+      title: decision?.type || activePatient().decisionToday || "Wizyta",
+      date: decision?.contactDate || todayInputValue()
+    },
+    preparedBy: activeRole(),
+    selectedItemSnapshots,
+    sharingScope: { patient: true, doctor: true, caregiver: role === "caregiver" && caregiverHasActiveScope() },
+    createdAt: todayInputValue()
+  };
+}
+
+function renderHistoryMeta(item) {
+  const source = sourceLabelForHistory(item.source);
+  const scope = item.sharingScope?.caregiver ? "widoczne w zakresie" : "zakres pacjent/lekarz";
+  return `
+    <div class="history-meta-row">
+      <span class="source-chip">${escapeHtml(source)}</span>
+      <span class="source-chip">${escapeHtml(item.author || "autor nieznany")}</span>
+      <span class="status-chip ${statusClass(item.status)}">${escapeHtml(item.status || "do potwierdzenia")}</span>
+      <span class="source-chip">${escapeHtml(scope)}</span>
+    </div>
+  `;
+}
+
+function renderHistoryCard(item, options = {}) {
+  const selectedIds = new Set(selectedVisitPacketIds(options.items || visibleMedicalHistoryItems()));
+  const selected = selectedIds.has(item.id);
+  const action = options.showPacketAction === false ? "" : `
+    <button class="${selected ? "primary-button" : "ghost-button"} compact-action" type="button" data-toggle-packet-item="${escapeHtml(item.id)}">
+      <i data-lucide="${selected ? "check" : "plus"}"></i>${selected ? "Wybrane" : "Dodaj do wizyty"}
+    </button>
+  `;
+  return `
+    <article class="history-item-card" data-history-item="${escapeHtml(item.id)}">
+      <div class="history-item-top">
+        <div>
+          <span class="history-type">${escapeHtml(historyTypeLabel(item.type))}</span>
+          <h3>${escapeHtml(item.title)}</h3>
+          <time>${escapeHtml(formatDate(item.date))}</time>
+        </div>
+        ${action}
+      </div>
+      <p>${escapeHtml(item.text || "Brak opisu w danych demo.")}</p>
+      ${renderHistoryMeta(item)}
+      <div class="history-source-row">${sourceChips(item.sourceRefs || [])}</div>
+    </article>
+  `;
+}
+
+function addMedicalHistoryItem(input) {
+  const item = makeMedicalHistoryItem({
+    id: `custom:${Date.now()}:${Math.random().toString(36).slice(2, 8)}`,
+    personId: state.activePatientId,
+    date: todayInputValue(),
+    ...input
+  });
+  state.medicalHistoryItems = [...(state.medicalHistoryItems || []), item];
+  saveState();
+  return item;
+}
+
+function toggleVisitPacketItem(itemId) {
+  const items = visibleMedicalHistoryItems();
+  const selected = new Set(selectedVisitPacketIds(items));
+  if (selected.has(itemId)) {
+    selected.delete(itemId);
+  } else {
+    selected.add(itemId);
+  }
+  state.selectedVisitPacketItemIds = [...selected].filter((id) => items.some((item) => item.id === id));
+}
+
+function renderProductShell(title, lead, body, actions = "") {
+  return `
+    <section class="product-shell">
+      <header class="product-hero">
+        <div>
+          <p class="eyebrow">Pacjent360</p>
+          <h1>${escapeHtml(title)}</h1>
+          <p>${escapeHtml(lead)}</p>
+        </div>
+        ${actions ? `<div class="product-hero-actions">${actions}</div>` : ""}
+      </header>
+      ${body}
+    </section>
+  `;
+}
+
+function renderHome() {
+  const items = visibleMedicalHistoryItems("patient");
+  const recent = items.slice(0, 3);
+  return renderProductShell(
+    "Historia medyczna",
+    "Jedno miejsce na dokumenty, pytania, obserwacje i zadania przed rozmową z lekarzem.",
+    `
+      <div class="core-action-grid">
+        <button class="core-action primary" data-set-view="visitPreparation">
+          <i data-lucide="clipboard-check"></i>
+          <span>Przygotuj wizytę</span>
+          <small>Wybierz najważniejsze informacje na rozmowę.</small>
+        </button>
+        <button class="core-action" data-set-view="medicalHistory">
+          <i data-lucide="book-open-text"></i>
+          <span>Otwórz historię medyczną</span>
+          <small>Dokumenty, leki, wyniki, pytania i braki.</small>
+        </button>
+        <button class="core-action" data-set-view="caregiverHome">
+          <i data-lucide="users-round"></i>
+          <span>Pomagam komuś</span>
+          <small>Dodaj informację jako opiekun w zakresie dostępu.</small>
+        </button>
+        <button class="core-action" data-set-view="accessScope">
+          <i data-lucide="shield-check"></i>
+          <span>Dostępy</span>
+          <small>Sprawdź, kto widzi które elementy.</small>
+        </button>
+      </div>
+      <section class="section-band product-band">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Ostatnie wpisy</p>
+            <h2>${escapeHtml(patientDisplayName())}</h2>
+          </div>
+          <span class="status-chip info">${escapeHtml(formatCount(items.length, "element", "elementy", "elementów"))}</span>
+        </div>
+        <div class="history-list compact-history">
+          ${recent.map((item) => renderHistoryCard(item, { showPacketAction: false, items })).join("") || emptyState("Brak wpisów w historii demo.")}
+        </div>
+      </section>
+      <p class="safety-footnote">Pacjent360 porządkuje kontekst i źródła. Nie diagnozuje, nie ustala kolejności pomocy i nie proponuje leczenia.</p>
+    `
+  );
+}
+
+function renderMedicalHistory() {
+  const role = activeRole() === "caregiver" ? "caregiver" : "patient";
+  const items = visibleMedicalHistoryItems(role);
+  const counts = items.reduce((acc, item) => {
+    acc[item.type] = (acc[item.type] || 0) + 1;
+    return acc;
+  }, {});
+  return renderProductShell(
+    "Historia medyczna",
+    "Źródłowa oś informacji pacjenta. Przygotowanie wizyty wybiera tylko potrzebny wycinek tej historii.",
+    `
+      <section class="history-summary-strip">
+        ${["document", "result", "medication", "observation", "question", "gap"].map((type) => `
+          <article>
+            <span>${escapeHtml(historyTypeLabel(type))}</span>
+            <strong>${counts[type] || 0}</strong>
+          </article>
+        `).join("")}
+      </section>
+      <div class="history-list">
+        ${items.map((item) => renderHistoryCard(item, { showPacketAction: false, items })).join("") || emptyState("Brak elementów widocznych w aktualnym zakresie.")}
+      </div>
+    `,
+    `<button class="primary-button" data-set-view="visitPreparation"><i data-lucide="clipboard-check"></i>Przygotuj wizytę</button>`
+  );
+}
+
+function renderVisitPreparation() {
+  const items = visibleMedicalHistoryItems();
+  const selectedIds = new Set(selectedVisitPacketIds(items));
+  const selected = items.filter((item) => selectedIds.has(item.id));
+  const available = items.filter((item) => !selectedIds.has(item.id));
+  return renderProductShell(
+    "Przygotuj wizytę",
+    "Wybierz tylko te elementy historii, które są potrzebne na najbliższą rozmowę. Każdy element zachowuje źródło, autora, status i zakres.",
+    `
+      <section class="packet-builder">
+        <div class="packet-column">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Wybrane na wizytę</p>
+              <h2>${escapeHtml(formatCount(selected.length, "element", "elementy", "elementów"))}</h2>
+            </div>
+            <button class="primary-button" data-set-view="visitPacket"><i data-lucide="file-text"></i>Zobacz skrót wizyty</button>
+          </div>
+          <div class="history-list compact-history">
+            ${selected.map((item) => renderHistoryCard(item, { showPacketAction: false, items })).join("") || emptyState("Wybierz elementy z historii.")}
+          </div>
+        </div>
+        <div class="packet-column">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Historia do wyboru</p>
+              <h2>Źródłowe wpisy</h2>
+            </div>
+          </div>
+          <div class="history-list compact-history">
+            ${available.map((item) => renderHistoryCard(item, { items })).join("") || emptyState("Wszystkie widoczne elementy są już wybrane.")}
+          </div>
+        </div>
+      </section>
+    `,
+    `<button class="ghost-button" data-set-view="medicalHistory"><i data-lucide="book-open-text"></i>Historia</button>`
+  );
+}
+
+function renderVisitPacket() {
+  const packet = buildVisitPacketFromHistory();
+  return renderProductShell(
+    "Skrót wizyty",
+    "Wybrane elementy historii przygotowane do rozmowy. Ten widok nie tworzy osobnych wniosków klinicznych.",
+    `
+      <section class="section-band product-band">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Snapshot</p>
+            <h2>${escapeHtml(packet.visit.title)}</h2>
+          </div>
+          <span class="status-chip info">${escapeHtml(formatDate(packet.createdAt))}</span>
+        </div>
+        <div class="history-list">
+          ${packet.selectedItemSnapshots.map((item) => renderHistoryCard(item, { showPacketAction: false, items: packet.selectedItemSnapshots })).join("") || emptyState("Nie wybrano jeszcze elementów na wizytę.")}
+        </div>
+      </section>
+    `,
+    `
+      <button class="ghost-button" data-set-view="visitPreparation"><i data-lucide="pencil"></i>Zmień wybór</button>
+      ${isTechMode() ? `<button class="ghost-button" data-set-view="doctorBrief"><i data-lucide="file-text"></i>Doctor brief</button>` : ""}
+      <button class="primary-button" data-set-view="postVisit"><i data-lucide="corner-down-left"></i>Po wizycie</button>
+    `
+  );
+}
+
+function renderDoctorBrief() {
+  const packet = buildVisitPacketFromHistory();
+  return renderProductShell(
+    "Skrót wizyty",
+    "Read-only projekcja wybranych informacji. W v1 nie ma konta lekarza, edycji, zatwierdzania ani rekomendacji.",
+    `
+      <section class="doctor-brief-readonly">
+        ${packet.selectedItemSnapshots.slice(0, 8).map((item) => `
+          <article>
+            <span>${escapeHtml(historyTypeLabel(item.type))}</span>
+            <h3>${escapeHtml(item.title)}</h3>
+            <p>${escapeHtml(item.text || "")}</p>
+            ${renderHistoryMeta(item)}
+          </article>
+        `).join("") || emptyState("Brak elementów w skrócie.")}
+      </section>
+    `,
+    `<button class="ghost-button" data-set-view="visitPacket"><i data-lucide="file-text"></i>Wróć do skrótu wizyty</button>`
+  );
+}
+
+function renderPostVisit() {
+  const custom = customMedicalHistoryItems().filter((item) => item.source === "postVisit").slice(0, 6);
+  return renderProductShell(
+    "Po wizycie",
+    "Notatki, braki, pytania i zadania wracają do historii jako nowe, oznaczone wpisy.",
+    `
+      <form class="post-visit-form" data-post-visit-form>
+        <label>
+          Typ wpisu
+          <select name="type">
+            <option value="note">Notatka</option>
+            <option value="gap">Brak dokumentu</option>
+            <option value="question">Pytanie otwarte</option>
+            <option value="task">Zadanie organizacyjne</option>
+          </select>
+        </label>
+        <label>
+          Tytuł
+          <input name="title" required placeholder="Np. Dosłać wynik badania" />
+        </label>
+        <label>
+          Treść
+          <textarea name="text" required placeholder="Zapisz fakt, pytanie albo zadanie bez interpretacji klinicznej."></textarea>
+        </label>
+        <button class="primary-button" type="submit"><i data-lucide="save"></i>Zapisz do historii</button>
+      </form>
+      <div class="history-list compact-history">
+        ${custom.map((item) => renderHistoryCard(item, { showPacketAction: false, items: custom })).join("") || emptyState("Po wizycie nie zapisano jeszcze nowych wpisów.")}
+      </div>
+    `,
+    `<button class="ghost-button" data-set-view="medicalHistory"><i data-lucide="book-open-text"></i>Historia</button>`
+  );
+}
+
+function renderCaregiverHome() {
+  if (!caregiverHasActiveScope()) {
+    return renderProductShell(
+      "Pomagam komuś",
+      "Nie pokazujemy danych bez aktywnego zakresu dostępu.",
+      `
+        <section class="section-band product-band">
+          <div class="empty-state">Brak aktywnego dostępu opiekuna dla tego scenariusza. To neutralny stan, nie błąd.</div>
+        </section>
+      `,
+      `<button class="primary-button" data-set-view="accessScope"><i data-lucide="shield-check"></i>Sprawdź dostępy</button>`
+    );
+  }
+  const items = visibleMedicalHistoryItems("caregiver");
+  const caregiverItems = items.filter((item) => item.createdByRole === "caregiver").slice(0, 6);
+  return renderProductShell(
+    "Pomagam komuś",
+    "Opiekun może dodać dokument, obserwację albo pytanie w zakresie udostępnienia. Każdy wpis jest oznaczony jako od opiekuna.",
+    `
+      <form class="post-visit-form" data-caregiver-form>
+        <label>
+          Typ wpisu
+          <select name="type">
+            <option value="document">Dokument</option>
+            <option value="observation">Obserwacja</option>
+            <option value="question">Pytanie</option>
+          </select>
+        </label>
+        <label>
+          Tytuł
+          <input name="title" required placeholder="Np. Pytanie przed wizytą" />
+        </label>
+        <label>
+          Treść
+          <textarea name="text" required placeholder="Wpis opiekuna do potwierdzenia z pacjentem lub lekarzem."></textarea>
+        </label>
+        <button class="primary-button" type="submit"><i data-lucide="plus"></i>Dodaj jako opiekun</button>
+      </form>
+      <section class="section-band product-band">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Widoczne w zakresie</p>
+            <h2>${escapeHtml(formatCount(items.length, "element", "elementy", "elementów"))}</h2>
+          </div>
+          <button class="ghost-button" data-set-view="accessScope"><i data-lucide="shield-check"></i>Dostępy</button>
+        </div>
+        <div class="history-list compact-history">
+          ${caregiverItems.map((item) => renderHistoryCard(item, { showPacketAction: false, items })).join("") || emptyState("Nie dodano jeszcze wpisu opiekuna w tym scenariuszu.")}
+        </div>
+      </section>
+    `
+  );
+}
+
+function renderAccessScope() {
+  const items = visibleMedicalHistoryItems(activeRole() === "caregiver" ? "caregiver" : "patient");
+  const caregiverModel = caregiverModelForActivePatient();
+  return renderProductShell(
+    "Dostępy",
+    "Zakres jest stosowany przed renderem historii, przygotowania wizyty, skrótu i eksportu demo.",
+    `
+      <section class="access-scope-grid">
+        <article>
+          <span>Pacjent</span>
+          <strong>${escapeHtml(patientDisplayName())}</strong>
+          <p>Pełny widok własnej historii medycznej.</p>
+        </article>
+        <article>
+          <span>Opiekun</span>
+          <strong>${caregiverModel.activeScopes.length ? "aktywny zakres" : "brak aktywnego zakresu"}</strong>
+          <p>${escapeHtml(caregiverModel.activeScopes.map((scope) => scope.subject || scope.caregiverName || "opiekun").join(", ") || "Nie renderujemy danych opiekunowi bez zakresu.")}</p>
+        </article>
+        <article>
+          <span>Widoczne teraz</span>
+          <strong>${items.length}</strong>
+          <p>Ta sama lista zasila UI, przygotowanie wizyty i skrót dla lekarza.</p>
+        </article>
+      </section>
+      <div class="history-list compact-history">
+        ${items.slice(0, 8).map((item) => renderHistoryCard(item, { showPacketAction: false, items })).join("") || emptyState("Brak elementów w aktualnym zakresie.")}
+      </div>
+    `,
+    `<button class="ghost-button" data-set-view="medicalHistory"><i data-lucide="book-open-text"></i>Historia</button>`
+  );
+}
+
 function render() {
+  document.body.dataset.techMode = isTechMode() ? "true" : "false";
   applyDemoLanguageChrome();
   renderRoleSwitcher();
   renderPatientSelect();
@@ -1715,8 +2461,9 @@ function applyDemoLanguageChrome() {
 function renderPatientSelect() {
   const patientSwitcher = patientSelect?.closest(".patient-switcher");
   const globalSearch = searchInput?.closest(".global-search");
-  if (patientSwitcher) patientSwitcher.hidden = state.activeView === "roleStart";
-  if (globalSearch) globalSearch.hidden = state.activeView === "roleStart";
+  const chromeHidden = state.activeView === "roleStart" || isProductFlowView();
+  if (patientSwitcher) patientSwitcher.hidden = chromeHidden;
+  if (globalSearch) globalSearch.hidden = chromeHidden;
   patientSelect.innerHTML = state.patients
     .map((patient) => `<option value="${escapeHtml(patient.id)}" ${patient.id === state.activePatientId ? "selected" : ""}>${escapeHtml(patient.name)}</option>`)
     .join("");
@@ -1725,8 +2472,8 @@ function renderPatientSelect() {
 
 function renderRoleSwitcher() {
   if (!roleSwitcher) return;
-  roleSwitcher.hidden = state.activeView === "roleStart";
-  if (state.activeView === "roleStart") {
+  roleSwitcher.hidden = state.activeView === "roleStart" || isProductFlowView();
+  if (roleSwitcher.hidden) {
     roleSwitcher.innerHTML = "";
     return;
   }
@@ -1750,7 +2497,7 @@ function renderRoleSwitcher() {
 }
 
 function renderCriticalStrip() {
-  if (state.activeView === "roleStart") {
+  if (state.activeView === "roleStart" || isProductFlowView()) {
     criticalStrip.classList.remove("visible");
     criticalStrip.innerHTML = "";
     return;
@@ -1797,6 +2544,14 @@ function renderCaregiverRestrictedData(view = state.activeView) {
 
 function renderView() {
   const renderers = {
+    home: renderHome,
+    medicalHistory: renderMedicalHistory,
+    visitPreparation: renderVisitPreparation,
+    visitPacket: renderVisitPacket,
+    doctorBrief: renderDoctorBrief,
+    postVisit: renderPostVisit,
+    caregiverHome: renderCaregiverHome,
+    accessScope: renderAccessScope,
     roleStart: renderRoleStart,
     a1Core: renderA1Core,
     core: renderCore,
@@ -1816,6 +2571,10 @@ function renderView() {
     audit: renderAudit
   };
 
+  if (!isTechMode() && !NORMAL_RENDERABLE_PRODUCT_VIEWS.has(state.activeView)) {
+    state.activeView = "medicalHistory";
+    saveState();
+  }
   if (!canAccessViewForRole(state.activeView, activeRole())) {
     state.activeView = fallbackViewForRole(activeRole());
     saveState();
@@ -1833,26 +2592,31 @@ function renderView() {
 
   document.querySelectorAll(".nav-item").forEach((button) => {
     const view = button.dataset.view;
+    const technicalOnly = TECH_ONLY_VIEWS.has(view);
+    const productView = PRODUCT_FLOW_VIEWS.has(view);
     const isStart = view === "roleStart";
     const isCockpitSwitch = button.classList.contains("cockpit-nav") || Boolean(VIEW_ROLE_HINT[view]);
     const isLibraryItem = !isStart && !isCockpitSwitch;
-    const allowed = isStart || isCockpitSwitch || canShowSidebarLibraryView(view, role);
+    const finalAllowed = isTechMode()
+      ? productView || isStart || isCockpitSwitch || canShowSidebarLibraryView(view, role)
+      : NORMAL_PRODUCT_VIEWS.has(view);
     const item = isLibraryItem ? sidebarLibraryItem(view, role) : null;
-    if (isLibraryItem) {
+    if (isLibraryItem && !productView) {
       const label = demoText(`sidebar.${view}`, SIDEBAR_LIBRARY_LABELS[view] || item?.[1] || "");
       const caption = item?.[3] || button.title;
       const labelNode = button.querySelector("span");
       if (labelNode) labelNode.textContent = label;
       button.title = caption;
     }
-    button.hidden = !allowed;
-    button.disabled = !allowed;
-    button.setAttribute("aria-hidden", allowed ? "false" : "true");
-    button.classList.toggle("is-hidden", !allowed);
-    button.classList.toggle("active", allowed && view === state.activeView);
+    button.hidden = !finalAllowed;
+    button.disabled = !finalAllowed;
+    button.setAttribute("aria-hidden", finalAllowed ? "false" : "true");
+    button.classList.toggle("is-hidden", !finalAllowed);
+    button.classList.toggle("tech-only", technicalOnly);
+    button.classList.toggle("active", finalAllowed && view === state.activeView);
   });
 
-  document.body.dataset.register = state.activeView === "roleStart"
+  document.body.dataset.register = isProductFlowView() || state.activeView === "roleStart"
     ? "app"
     : activeRole() || VIEW_REGISTER[state.activeView] || "doctor";
   const renderedView = isCaregiverRestrictedView()
@@ -1867,7 +2631,7 @@ function renderView() {
       setEvidencePanelCollapsed(false, { persist: false });
     }
   }
-  viewRoot.innerHTML = state.activeView === "roleStart"
+  viewRoot.innerHTML = state.activeView === "roleStart" || isProductFlowView()
     ? renderedView
     : `${renderDemoJourney()}${renderedView}`;
   bindViewActions();
@@ -6270,6 +7034,61 @@ function bindViewActions() {
     button.addEventListener("click", () => {
       setActiveView(button.dataset.setView);
       saveState();
+      render();
+    });
+  });
+
+  viewRoot.querySelectorAll("[data-toggle-packet-item]").forEach((button) => {
+    button.addEventListener("click", () => {
+      toggleVisitPacketItem(button.dataset.togglePacketItem);
+      saveState();
+      render();
+    });
+  });
+
+  viewRoot.querySelectorAll("[data-post-visit-form]").forEach((form) => {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const type = data.get("type") || "note";
+      const title = String(data.get("title") || "").trim();
+      const text = String(data.get("text") || "").trim();
+      if (!title || !text) return;
+      addMedicalHistoryItem({
+        type,
+        title,
+        text,
+        source: "postVisit",
+        author: "pacjent po wizycie",
+        status: type === "gap" ? "brak źródła" : "do omówienia",
+        createdByRole: "patient",
+        sharingScope: defaultSharingScope(type, [], "patient")
+      });
+      showToast("Wpis zapisany do historii medycznej.");
+      render();
+    });
+  });
+
+  viewRoot.querySelectorAll("[data-caregiver-form]").forEach((form) => {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!caregiverHasActiveScope()) return;
+      const data = new FormData(form);
+      const type = data.get("type") || "observation";
+      const title = String(data.get("title") || "").trim();
+      const text = String(data.get("text") || "").trim();
+      if (!title || !text) return;
+      addMedicalHistoryItem({
+        type,
+        title,
+        text,
+        source: "caregiver",
+        author: "opiekun",
+        status: "do potwierdzenia",
+        createdByRole: "caregiver",
+        sharingScope: defaultSharingScope(type, [], "caregiver")
+      });
+      showToast("Wpis opiekuna dodany do historii.");
       render();
     });
   });

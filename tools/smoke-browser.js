@@ -208,6 +208,15 @@ async function waitForReady(client) {
   throw new Error("Demo did not finish rendering the app in time");
 }
 
+async function waitForCondition(client, expression, message, timeoutMs = 10000) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (await client.evaluate(expression)) return;
+    await new Promise((resolve) => setTimeout(resolve, 120));
+  }
+  throw new Error(message);
+}
+
 async function main() {
   assert(fs.existsSync(packageDir), `Public package does not exist: ${packageDir}`);
 
@@ -245,9 +254,50 @@ async function main() {
       mobile: false
     });
 
-    const demoUrl = `http://127.0.0.1:${serverPort}/demo.html?browser-smoke=${Date.now()}`;
-    await client.call("Page.navigate", { url: demoUrl });
+    const normalDemoUrl = `http://127.0.0.1:${serverPort}/demo.html?start=1&browser-smoke-normal=${Date.now()}`;
+    await client.call("Page.navigate", { url: normalDemoUrl });
+    await waitForCondition(client, "location.href.includes('browser-smoke-normal=')", "Normal browser smoke URL did not load");
     await waitForReady(client);
+    await waitForCondition(client, "document.body.dataset.techMode === 'false' && document.querySelector('nav button.active')?.dataset.view === 'medicalHistory'", "Normal browser smoke did not settle on medicalHistory");
+    const normalStart = await client.evaluate(`(() => {
+      const visible = (element) => Boolean(element && (element.offsetWidth || element.offsetHeight || element.getClientRects().length));
+      return {
+        activeView: document.querySelector('nav button.active')?.dataset.view || null,
+        h1: document.querySelector('#viewRoot h1')?.textContent.trim() || '',
+        techMode: document.body.dataset.techMode || '',
+        visibleNav: [...document.querySelectorAll('nav .nav-item')]
+          .filter(visible)
+          .map((button) => button.dataset.view),
+        legalVisible: visible(document.querySelector('.legal-variant-panel')),
+        evidenceVisible: visible(document.querySelector('.evidence-panel')),
+        packetButtonsInHistory: document.querySelectorAll('#viewRoot .history-item-card [data-toggle-packet-item]').length,
+        hasPrepareAction: Boolean(document.querySelector('#viewRoot [data-set-view="visitPreparation"]')),
+        overflowCount: [...document.querySelectorAll('#viewRoot .history-item-card, #viewRoot .product-hero')]
+          .filter((element) => element.scrollWidth > element.clientWidth + 2).length
+      };
+    })()`);
+    assert(normalStart.activeView === "medicalHistory" && normalStart.h1.includes("Historia medyczna"), `Normal demo should start on medical history: ${JSON.stringify(normalStart)}`);
+    assert(normalStart.techMode === "false", `Normal demo should not be technical mode: ${JSON.stringify(normalStart)}`);
+    ["medicalHistory", "visitPreparation", "caregiverHome", "accessScope"].forEach((view) => {
+      assert(normalStart.visibleNav.includes(view), `Normal demo should expose ${view}: ${JSON.stringify(normalStart)}`);
+    });
+    ["roleStart", "s2Prototype", "a1Core", "visitChecklist", "doctorBrief", "audit", "core", "patientPortal", "caregiverPortal", "interview", "documents", "timeline", "medications", "observations", "risks", "patientQuestions", "reports", "consent"].forEach((view) => {
+      assert(!normalStart.visibleNav.includes(view), `Normal demo should hide technical view ${view}: ${JSON.stringify(normalStart)}`);
+    });
+    assert(!normalStart.legalVisible && !normalStart.evidenceVisible, `Normal demo should hide technical/legal/evidence panels: ${JSON.stringify(normalStart)}`);
+    assert(normalStart.packetButtonsInHistory === 0 && normalStart.hasPrepareAction, `History should keep one primary prepare action without per-card packet buttons: ${JSON.stringify(normalStart)}`);
+    assert(normalStart.overflowCount === 0, `Normal demo should not overflow history cards or hero: ${JSON.stringify(normalStart)}`);
+
+    await client.call("Page.navigate", { url: "about:blank" });
+    await waitForCondition(client, "location.href === 'about:blank'", "Browser smoke did not reset to blank page before technical mode");
+
+    const demoUrl = `http://127.0.0.1:${serverPort}/demo.html?start=1&tech=1&browser-smoke=${Date.now()}`;
+    await client.call("Page.navigate", { url: demoUrl });
+    await waitForCondition(client, "location.href.includes('tech=1') && location.href.includes('browser-smoke=')", "Technical browser smoke URL did not load");
+    await waitForReady(client);
+    await waitForCondition(client, "document.body.dataset.techMode === 'true' && Boolean(document.querySelector('nav button[data-view=\"roleStart\"]'))", "Technical browser smoke did not expose roleStart navigation");
+    await client.evaluate(`document.querySelector('nav button[data-view="roleStart"]')?.click()`);
+    await waitForCondition(client, "document.querySelector('nav button.active')?.dataset.view === 'roleStart'", "Technical browser smoke did not settle on roleStart");
 
     const initial = await client.evaluate(`(() => ({
       title: document.title,
@@ -477,8 +527,8 @@ async function main() {
     assert(cockpitSidebar.doctor.text !== cockpitSidebar.patient.text && cockpitSidebar.patient.text !== cockpitSidebar.caregiver.text, "Sidebar cockpit switches should visibly change cockpit content");
     assert(cockpitSidebar.finalDoctor.role === "doctor" && cockpitSidebar.finalDoctor.activeView === "core", "Sidebar should switch back to Lekarz360 for later smoke checks");
     assert(cockpitSidebar.doctor.libraryHeading === "Dane i źródła" && cockpitSidebar.doctor.libraryLabels.includes("Pytania") && cockpitSidebar.doctor.libraryLabels.includes("Podsumowanie"), `Doctor sidebar library should expose context items with canonical labels: ${JSON.stringify(cockpitSidebar.doctor.libraryLabels)}`);
-    assert(cockpitSidebar.patient.libraryHeading === "Dane i źródła" && cockpitSidebar.patient.libraryLabels.includes("Dokumenty") && cockpitSidebar.patient.libraryLabels.includes("Pytania") && !cockpitSidebar.patient.libraryLabels.includes("Podsumowanie"), `Patient sidebar library should expose pre-visit questions but hide summary: ${JSON.stringify(cockpitSidebar.patient.libraryLabels)}`);
-    assert(cockpitSidebar.caregiver.libraryHeading === "Dane i źródła" && cockpitSidebar.caregiver.libraryLabels.includes("Zgody") && cockpitSidebar.caregiver.libraryLabels.includes("Pytania") && !cockpitSidebar.caregiver.libraryLabels.includes("Podsumowanie"), `Caregiver sidebar library should expose scoped pre-visit questions but hide summary: ${JSON.stringify(cockpitSidebar.caregiver.libraryLabels)}`);
+    assert(cockpitSidebar.patient.libraryHeading === "Dane i źródła" && cockpitSidebar.patient.libraryLabels.includes("Dokumenty") && cockpitSidebar.patient.libraryLabels.includes("Pytania") && cockpitSidebar.patient.libraryLabels.includes("Podsumowanie"), `Patient sidebar library should expose source/data views including summary: ${JSON.stringify(cockpitSidebar.patient.libraryLabels)}`);
+    assert(cockpitSidebar.caregiver.libraryHeading === "Dane i źródła" && cockpitSidebar.caregiver.libraryLabels.includes("Zgody") && cockpitSidebar.caregiver.libraryLabels.includes("Pytania") && cockpitSidebar.caregiver.libraryLabels.includes("Podsumowanie"), `Caregiver sidebar library should expose scoped source/data views including summary: ${JSON.stringify(cockpitSidebar.caregiver.libraryLabels)}`);
 
     const caregiverNoConsentSidebar = await client.evaluate(`(() => {
       const setPatient = (patientId) => {
@@ -492,7 +542,8 @@ async function main() {
       const text = (document.querySelector('#viewRoot')?.textContent || '').toLowerCase();
       const labels = [...document.querySelectorAll('nav .nav-item:not(.cockpit-nav):not([data-view="roleStart"])')]
         .filter((button) => !button.hidden && button.getAttribute('aria-hidden') !== 'true')
-        .map((button) => button.querySelector('span')?.textContent.trim() || '');
+        .map((button) => button.querySelector('span')?.textContent.trim() || '')
+        .filter((label) => !["Historia medyczna", "Przygotuj wizytę", "Pomagam komuś", "Dostępy"].includes(label));
       const heading = document.querySelector('[data-nav-section="library"]')?.textContent.trim() || '';
       const deniedCards = document.querySelectorAll('.caregiver-access-card.denied').length;
       const hasZeroKnowledgeCopy = text.includes('nie wczytano element') || text.includes('nie ma jeszcze udost');
@@ -993,9 +1044,14 @@ async function main() {
       deviceScaleFactor: 1,
       mobile: true
     });
-    await client.evaluate(`localStorage.removeItem('pacjent360-state-v11')`);
-    await client.call("Page.navigate", { url: `http://127.0.0.1:${serverPort}/demo.html?start=1&mobile-smoke=${Date.now()}` });
+    await client.call("Page.navigate", { url: "about:blank" });
+    await waitForCondition(client, "location.href === 'about:blank'", "Browser smoke did not reset to blank page before mobile technical mode");
+    await client.call("Page.navigate", { url: `http://127.0.0.1:${serverPort}/demo.html?start=1&tech=1&mobile-smoke=${Date.now()}` });
+    await waitForCondition(client, "location.href.includes('tech=1') && location.href.includes('mobile-smoke=')", "Mobile technical browser smoke URL did not load");
     await waitForReady(client);
+    await waitForCondition(client, "document.body.dataset.techMode === 'true' && Boolean(document.querySelector('nav button[data-view=\"roleStart\"]'))", "Mobile technical browser smoke did not expose roleStart navigation");
+    await client.evaluate(`document.querySelector('nav button[data-view="roleStart"]')?.click()`);
+    await waitForCondition(client, "document.querySelector('nav button.active')?.dataset.view === 'roleStart'", "Mobile technical browser smoke did not settle on roleStart");
     const mobileStart = await client.evaluate(`(() => {
       const grid = document.querySelector('#contentGrid');
       const evidence = document.querySelector('.evidence-panel');

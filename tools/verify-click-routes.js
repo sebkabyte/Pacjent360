@@ -225,7 +225,7 @@ async function snapshotDemo(client) {
 }
 
 async function openPerspective(client, baseUrl, role, patientId) {
-  await navigate(client, `${baseUrl}/demo.html?start=1&click-routes=${Date.now()}`);
+  await navigate(client, `${baseUrl}/demo.html?start=1&tech=1&click-routes=${Date.now()}`);
   await waitForDemoReady(client);
   await client.evaluate(`document.querySelector('[data-select-role="${role}"]')?.click()`);
   await waitForCondition(client, "document.querySelectorAll('[data-start-patient]').length === 3", `Scenario picker did not open for ${role}`);
@@ -262,7 +262,7 @@ async function assertLandingRoutes(client, baseUrl) {
   await client.evaluate(`document.querySelector('.hero-actions a[href="demo.html?start=1&lang=pl"]')?.click()`);
   await waitForDemoReady(client);
   const afterHero = await snapshotDemo(client);
-  assert(afterHero.activeView === "roleStart" && afterHero.roleCards === 3 && afterHero.scenarioCards === 0, `Hero CTA should open perspective choice: ${JSON.stringify(afterHero)}`);
+  assert(afterHero.activeView === "medicalHistory" && afterHero.h1.includes("Historia medyczna") && afterHero.roleCards === 0 && afterHero.scenarioCards === 0, `Hero CTA should open product medical history: ${JSON.stringify(afterHero)}`);
 
   await setViewport(client, 1366, 900, false);
   await navigate(client, `${baseUrl}/index.html?lang=en&click-routes-en=${Date.now()}`);
@@ -286,8 +286,8 @@ async function assertLandingRoutes(client, baseUrl) {
   const afterHeroEn = await snapshotDemo(client);
   const afterHeroEnUrl = await client.evaluate(`location.href`);
   assert(afterHeroEnUrl.includes("lang=en"), `English hero CTA should preserve lang=en in demo URL: ${afterHeroEnUrl}`);
-  assert(afterHeroEn.activeView === "roleStart" && afterHeroEn.roleCards === 3 && afterHeroEn.scenarioCards === 0, `English hero CTA should open perspective choice: ${JSON.stringify(afterHeroEn)}`);
-  assert(afterHeroEn.text.includes("Choose a 360") && afterHeroEn.text.includes("One story, three perspectives"), `English hero CTA should render English demo start copy: ${JSON.stringify(afterHeroEn)}`);
+  assert(afterHeroEn.activeView === "medicalHistory" && afterHeroEn.h1.includes("Historia medyczna") && afterHeroEn.roleCards === 0 && afterHeroEn.scenarioCards === 0, `English hero CTA should open product medical history: ${JSON.stringify(afterHeroEn)}`);
+  assert(afterHeroEn.text.includes("Historia medyczna"), `English hero CTA should render the product medical-history start: ${JSON.stringify(afterHeroEn)}`);
   assert(!afterHeroEn.text.includes("Wybierz perspektyw") && !afterHeroEn.text.includes("Jedna historia, trzy perspektywy"), `English demo start should not leak Polish start copy: ${JSON.stringify(afterHeroEn)}`);
 
   await setViewport(client, 390, 844, true);
@@ -301,7 +301,7 @@ async function assertLandingRoutes(client, baseUrl) {
   await client.evaluate(`document.querySelector('.mobile-jump-nav a[href="demo.html?start=1&lang=pl"]')?.click()`);
   await waitForDemoReady(client);
   const afterMobileStart = await snapshotDemo(client);
-  assert(afterMobileStart.activeView === "roleStart" && afterMobileStart.roleCards === 3 && afterMobileStart.scenarioCards === 0, `Mobile Start should open perspective choice: ${JSON.stringify(afterMobileStart)}`);
+  assert(afterMobileStart.activeView === "medicalHistory" && afterMobileStart.h1.includes("Historia medyczna") && afterMobileStart.roleCards === 0 && afterMobileStart.scenarioCards === 0, `Mobile Start should open product medical history: ${JSON.stringify(afterMobileStart)}`);
 }
 
 async function assertPerspectiveRoutes(client, baseUrl) {
@@ -328,7 +328,9 @@ async function assertCaregiverNoConsent(client, baseUrl) {
   const snap = await openPerspective(client, baseUrl, "caregiver", "p2");
   const protectedViews = new Set(["interview", "documents", "timeline", "medications", "observations"]);
   const leakedActions = snap.visibleSetViews.filter((item) => protectedViews.has(item.view));
-  assert(snap.visibleLibrary.length === 1 && snap.visibleLibrary[0] === "Zgody", `Caregiver without consent should only see consent in sidebar: ${JSON.stringify(snap.visibleLibrary)}`);
+  const productNavLabels = new Set(["Historia medyczna", "Przygotuj wizytę", "Pomagam komuś", "Dostępy"]);
+  const technicalLibrary = snap.visibleLibrary.filter((label) => !productNavLabels.has(label));
+  assert(technicalLibrary.length === 1 && technicalLibrary[0] === "Zgody", `Caregiver without consent should only see consent in technical sidebar library: ${JSON.stringify(snap.visibleLibrary)}`);
   assert(!leakedActions.length, `Caregiver without consent should not see data action buttons: ${JSON.stringify(leakedActions)}`);
   const lower = snap.text.toLowerCase();
   assert(lower.includes("nie wczytano element") || lower.includes("nie ma jeszcze udost"), "Caregiver without consent should render neutral zero-knowledge empty state");

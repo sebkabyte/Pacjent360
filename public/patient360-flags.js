@@ -11,6 +11,7 @@
   const LEGAL_VARIANTS = Object.freeze(["A", "B", "C"]);
   const DEFAULT_ACTIVE_VARIANT = "B";
   const REQUIRED_SURFACES = Object.freeze(["demo", "navigation", "copy"]);
+  const REGULATED_FEATURES_ENABLED = false;
   const FORBIDDEN_COPY_PATTERNS = Object.freeze([
     /diagnoz/i,
     /rozpoznanie/i,
@@ -221,6 +222,8 @@
   return Object.freeze({
     LEGAL_VARIANTS,
     DEFAULT_ACTIVE_VARIANT,
+    REGULATED_FEATURES_ENABLED,
+    regulatedFeaturesEnabled: REGULATED_FEATURES_ENABLED,
     LEGAL_VARIANT_FLAGS,
     cloneFlags: () => clone(LEGAL_VARIANT_FLAGS),
     aktywnyWariant,

@@ -17,7 +17,7 @@
     <link rel="icon" href="assets/hero-clinical-context.png" />
     <link rel="stylesheet" href="brand/tokens.css?v=20260613-role-data" />
     <link rel="stylesheet" href="brand/components.css?v=20260613-role-data" />
-    <link rel="stylesheet" href="styles.css?v=20260613-role-data" />
+    <link rel="stylesheet" href="styles.css?v=20260709-governance-pack1" />
     <script
       src="assets/lucide.min.js"
       integrity="sha384-uTYyvsSSUZeaPhb5RbKlQa0zY/WpX/QHfvg2mczXyBQOpkWPEDy9lczyp+w7SKXu"
@@ -40,7 +40,7 @@
     <script src="patient360-demo-data.js?v=20260613-role-data" defer></script>
     <script src="p360-result-series.js?v=20260613-role-data" defer></script>
     <script src="p360-pwa.js?v=20260702-s1-foundation" defer></script>
-    <script src="app.js?v=20260613-role-data" defer></script>
+    <script src="app.js?v=20260709-governance-pack1" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#viewRoot">Przejdź do treści demo</a>
@@ -59,6 +59,22 @@
 
         <nav class="nav-list" aria-label="Widoki demo">
           <div class="nav-section-label">Start</div>
+          <button class="nav-item active" data-view="medicalHistory" title="Historia medyczna">
+            <i data-lucide="book-open-text"></i>
+            <span>Historia medyczna</span>
+          </button>
+          <button class="nav-item" data-view="visitPreparation" title="Przygotuj wizytę">
+            <i data-lucide="clipboard-check"></i>
+            <span>Przygotuj wizytę</span>
+          </button>
+          <button class="nav-item" data-view="caregiverHome" title="Pomagam komuś">
+            <i data-lucide="users-round"></i>
+            <span>Pomagam komuś</span>
+          </button>
+          <button class="nav-item" data-view="accessScope" title="Dostępy">
+            <i data-lucide="shield-check"></i>
+            <span>Dostępy</span>
+          </button>
           <button class="nav-item active" data-view="roleStart" title="Wybierz perspektywę i scenariusz">
             <i data-lucide="play-circle"></i>
             <span>Start demo</span>
