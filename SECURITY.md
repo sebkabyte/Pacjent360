@@ -51,7 +51,7 @@ Priorytetowe obszary:
 
 Do czasu osobnej walidacji Pacjent360™ nie wysyła realnych danych pacjentów do zewnętrznych modeli LLM. Prompt, fixture, dry-run, eksport testowy i log agenta mogą używać wyłącznie danych fikcyjnych, kompozytowych albo syntetycznych.
 
-Każda przyszła funkcja LLM musi przejść przez `docs/SSOT.md`, Sprint A0 Safety & Contracts, przegląd prywatności i przegląd bezpieczeństwa. Szczególne ryzyka bezpieczeństwa i prywatności:
+AI, LLM i OCR są obecnie zablokowane przez `PRODUCT_SSOT.md` i `docs/product/PACJENT360_FOUNDER_CONTROL_PACK_V1_2026-07-10.md`. Każda przyszła propozycja ich użycia wymaga najpierw osobnej decyzji Foundera zmieniającej product boundary, aktualizacji current scope manifestu i aktywnego work orderu, a następnie przejścia aktualnych bramek prywatności, bezpieczeństwa i `docs/governance/SAFETY_GATE_MATRIX.md`. Historyczne `docs/SSOT.md` i `docs/SPRINTS.md` nie odblokowują takiej funkcji. Szczególne ryzyka bezpieczeństwa i prywatności:
 
 - prompt injection w dokumentach, transkrypcjach, wynikach lub notatkach;
 - leakage danych przez podsumowanie, błąd walidatora, log, eksport albo telemetrykę;

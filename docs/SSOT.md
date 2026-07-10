@@ -1,8 +1,10 @@
-# Pacjent360™ SSOT: LLM i agenci operacyjni
+# Pacjent360™ — historyczny SSOT LLM i agentów operacyjnych
 
-Status: decyzja produktowa po council. Zakres: wyłącznie rola LLM i agentów operacyjnych.
+<!-- P360_CONTROL_STATUS: SUPERSEDED -->
 
-Nadrzędnym źródłem prawdy o produkcie jest `PRODUCT_SSOT.md` w katalogu głównym repo (ADR 0005). Ten dokument jest pojedynczym źródłem prawdy **dla roli LLM i agentów** w Pacjent360™ i działa w granicach wyznaczonych przez `PRODUCT_SSOT.md`. Obowiązuje dla backlogu, prototypów, demo, przyszłych PR oraz rozmów z partnerami. W razie konfliktu języka lub zakresu agentów z innymi materiałami produktowymi ten dokument ma pierwszeństwo do czasu formalnej aktualizacji; w razie konfliktu o to, czym jest produkt, rozstrzyga `PRODUCT_SSOT.md`.
+> **SUPERSEDED / REFERENCE_ONLY:** ten dokument zachowuje historyczny projekt roli LLM i agentów. Nie jest current SSOT, aktywnym backlogiem, zgodą na implementację ani bramką dla bieżących lub przyszłych PR. Normatywne sformułowania poniżej opisują wyłącznie dawny model i nie mają mocy sterującej.
+
+Aktywny zakres wyznaczają `PRODUCT_SSOT.md`, `docs/product/PACJENT360_FOUNDER_CONTROL_PACK_V1_2026-07-10.md`, `docs/governance/CURRENT_SCOPE_MANIFEST.json`, aktualne dokumenty safety oraz jeden aktywny work order. AI, LLM i OCR pozostają zablokowane, dopóki Founder nie podejmie osobnej decyzji zastrzeżonej i nie zaktualizuje aktywnego control plane.
 
 ## Decyzja główna
 

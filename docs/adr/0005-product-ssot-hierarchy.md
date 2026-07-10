@@ -2,7 +2,13 @@
 
 Data: 2026-06-10
 
-Status: przyjęte
+Status: **SUPERSEDED BY ADR 0008 FOR CURRENT GOVERNANCE HIERARCHY**
+
+Superseded: 2026-07-10
+Owner: Sebastian Kalisz, Founder
+Replacement: `docs/adr/0008-founder-control-pack-v1-scope-freeze.md`
+
+Ten ADR pozostaje historycznym uzasadnieniem utworzenia `PRODUCT_SSOT.md`. Nie definiuje już kolejności aktywnych planów, sprintów ani agentowego SSOT. W przypadku konfliktu obowiązuje ADR 0008 i `CURRENT_SCOPE_MANIFEST.json`.
 
 ## Kontekst
 
@@ -12,7 +18,7 @@ Status: przyjęte
 
 1. Powstaje `PRODUCT_SSOT.md` w katalogu głównym repo jako nadrzędne źródło prawdy o produkcie: definicja, czym produkt nie jest, kanoniczny model `Source -> Claim -> Event -> Episode -> Report`, perspektywy użytkowników, rozdział krąg opieki vs agenci operacyjni, DITL jako zasada architektoniczna, zasada traceability strona↔repo, lista no-go.
 2. `docs/SSOT.md` zostaje przemianowany tytułem na „SSOT: LLM i agenci operacyjni" i jawnie podporządkowany `PRODUCT_SSOT.md`. Treść zasad agentowych pozostaje bez zmian.
-3. Hierarchia: `PRODUCT_SSOT.md` / dokumenty safety → `docs/PROGRAM_PLAN.md` (harmonogram) → architektura → roadmapa/sprinty → `docs/SSOT.md` (zakres agentów).
+3. Historyczna hierarchia z 2026-06-10 została zastąpiona 2026-07-10 przez hierarchię ADR 0008. `docs/SSOT.md` i stare sprinty są obecnie `REFERENCE_ONLY`.
 4. Nie zmienia się żaden kod, UI ani dane demo w ramach tej decyzji.
 
 ## Konsekwencje

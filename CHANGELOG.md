@@ -1,5 +1,9 @@
 # Changelog
 
+<!-- P360_CONTROL_STATUS: REFERENCE_ONLY -->
+
+> **REFERENCE_ONLY dla current scope:** ten plik jest historycznym rejestrem zmian. Starsze wpisy mogą opisywać superseded wedge, role lub roadmapy i nie aktywują bieżącego zakresu produktu.
+
 ## Unreleased
 
 - Dodano `docs/PROJECT_CHRONICLE.md` jako publiczną kronikę decyzji i kamieni milowych projektu.

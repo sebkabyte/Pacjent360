@@ -2,6 +2,21 @@
 
 Status: obowiązuje od 2026-06-10 (milestone M14). Wersja dla prototypu alpha.
 
+<!-- P360_PHASE_NOTE
+Ten dokument opisuje architekturę bezpieczeństwa CAŁEJ powierzchni prototypu, w tym role i
+mechanizmy późniejszych faz. Nie definiuje current scope i nie aktywuje żadnej roli.
+Current scope wyznacza docs/governance/CURRENT_SCOPE_MANIFEST.json:
+kompetentny dorosły pacjent + jedna nazwana dorosła osoba wspierająca + jedna planowana wizyta;
+synthetic-only; lekarz = późniejszy odbiorca read-only, NIE current user;
+dzieci i opiekunowie prawni = BLOCKED; AI/OCR/CDSS/backend = BLOCKED.
+Wzmianki o lekarzu i opiekunie prawnym poniżej są warunkową przyszłością albo opisem
+granicy DITL, nigdy deklaracją current phase.
+-->
+
+> **Zakres fazowy:** poniższe pod-twierdzenia opisują docelową architekturę bezpieczeństwa.
+> W current phase (S0) nie ma lekarza jako użytkownika, nie ma ról dziecka ani opiekuna prawnego
+> i nie ma backendu. Patrz `P360_PHASE_NOTE` powyżej.
+
 Disclaimer mówi: „nie jesteśmy lekarzem". Safety Case pokazuje, **jak architektura wymusza, że system nie zachowuje się jak lekarz** — z dowodami w kodzie, kontraktach i walidatorach, nie tylko w deklaracjach.
 
 ## Twierdzenie główne
@@ -27,8 +42,8 @@ Disclaimer mówi: „nie jesteśmy lekarzem". Safety Case pokazuje, **jak archit
 
 ### C3. Pytania klinicznie istotne pozostają pytaniami do człowieka
 
-- `DITL_STATUSES`: do wyjaśnienia / wyjaśnione / odrzucone / dalsza kontrola — status nadaje lekarz, nie system.
-- `STATUS_MAP`/`personaStatus()`: pacjent widzi „Do omówienia"/„Lekarz sprawdzi", nigdy języka decyzyjnego.
+- `DITL_STATUSES`: do wyjaśnienia / wyjaśnione / odrzucone / dalsza kontrola — statusu NIE nadaje system. W docelowej architekturze rozstrzyga je człowiek podczas wizyty; w current phase pozostają wyłącznie pytaniami użytkownika, bo lekarz nie jest current userem.
+- `STATUS_MAP`/`personaStatus()`: pacjent widzi „Do omówienia", nigdy języka decyzyjnego. Etykiety odsyłające do weryfikacji podczas wizyty opisują intencję rozmowy, nie obecność lekarza w produkcie.
 - Brak jakiejkolwiek auto-akcji medycznej w kodzie (brak bookingu, brak zmian terapii, brak przypomnień lekowych w rozumieniu MDCG 2019-11).
 
 ### C4. Wyniki badań nie są interpretowane klinicznie
@@ -40,7 +55,7 @@ Disclaimer mówi: „nie jesteśmy lekarzem". Safety Case pokazuje, **jak archit
 ### C5. Dostęp opiekuna jest ograniczony zgodą i audytowany
 
 - Modele `patient360-caregiver-model.js` + `patient360-consent-model.js`: zakresy obszarów (`areas`), statusy zgód, cofnięcie zmienia widoczność.
-- Role kręgu opieki to relacje ludzi (rodzic, opiekun prawny, osoba wspierająca); asystenci to funkcje systemu (CC-01).
+- Role kręgu opieki to relacje ludzi, nie funkcje systemu; asystenci to funkcje systemu (CC-01). **Current phase dopuszcza wyłącznie jedną nazwaną dorosłą osobę wspierającą.** Rodzic i opiekun prawny pozostają rolami późniejszej fazy i są BLOCKED (patrz `P360_PHASE_NOTE`).
 - Weryfikacja: `tools/validate-caregiver-scope.ps1` i `tools/validate-consent-draft.ps1` + edge-case fixtures (wygasła/cofnięta zgoda, brak leakage przez komunikat).
 
 ### C6. Brak realnych danych pacjentów
@@ -50,10 +65,10 @@ Disclaimer mówi: „nie jesteśmy lekarzem". Safety Case pokazuje, **jak archit
 - Zakaz w `CONTRIBUTING.md` (Clinical Safety Checklist, pytanie 7).
 - Weryfikacja: `tools/validate-harm-gates.js` (H-010), `tools/smoke-browser.ps1`.
 
-### C7. Automatyzacja LLM jest zablokowana do czasu kontraktów bezpieczeństwa
+### C7. AI, LLM i OCR są zablokowane przez current product boundary
 
-- Runtime LLM/agentów = no-go do zamknięcia Sprint A0 (kontrakty outputów, `AgentPolicy`, walidator zakazanych outputów, dry-run, audyt) — `docs/SPRINTS.md`, `docs/PROGRAM_PLAN.md` (P0 no-go).
-- Klasyfikacja agentów safe/caution/forbidden w `docs/SSOT.md`; diagnoza/triage/terapia/scoring zawsze `forbidden`.
+- Runtime AI/LLM/OCR jest `no-go` na mocy `PRODUCT_SSOT.md` i `docs/product/PACJENT360_FOUNDER_CONTROL_PACK_V1_2026-07-10.md`. Zmiana wymaga osobnej decyzji Foundera, aktualizacji current scope manifestu i aktywnego work orderu oraz przejścia aktualnych bramek safety, privacy i security.
+- `docs/governance/SAFETY_GATE_MATRIX.md` blokuje m.in. diagnozę, triage, terapię, ocenę pilności, scoring oraz ukryte wywołania zewnętrzne. Historyczne `docs/SSOT.md` i `docs/SPRINTS.md` nie są aktywną klasyfikacją ani ścieżką odblokowania.
 
 ## Czego ten Safety Case jeszcze NIE dowodzi
 

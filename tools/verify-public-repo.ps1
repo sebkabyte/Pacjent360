@@ -168,10 +168,10 @@ Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-a
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-s2-runtime-contracts.js"
 & node --check (Join-Path $target "tools/validate-s2-prototypes.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-s2-prototypes.js"
-& node --check (Join-Path $target "tools/acceptance/s2-acceptance.js") | Out-Null
-Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/acceptance/s2-acceptance.js"
-& node --check (Join-Path $target "tools/validate-sh-loop-state.js") | Out-Null
-Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-sh-loop-state.js"
+& node --check (Join-Path $target "tools/validate-current-scope.mjs") | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-current-scope.mjs"
+& node (Join-Path $target "tools/validate-current-scope.mjs") --root $target | Out-Null
+Assert-True ($LASTEXITCODE -eq 0) "current scope validation failed for public repo package"
 & node --check (Join-Path $target "tools/validate-consent-draft.js") | Out-Null
 Assert-True ($LASTEXITCODE -eq 0) "node --check failed for repo tools/validate-consent-draft.js"
 & node --check (Join-Path $target "tools/validate-demo-coherence.js") | Out-Null

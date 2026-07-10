@@ -1,6 +1,10 @@
 # Pacjent360™: Mapa Pacjenta 360
 
-Status: vision SSOT
+<!-- P360_CONTROL_STATUS: REFERENCE_ONLY -->
+
+> **REFERENCE_ONLY:** historyczna wizja docelowa. Nie jest current SSOT ani zakresem MVP/S0. W szczególności nie aktywuje lekarza, dziecka/rodzica, AI/OCR ani backendu.
+
+Status historyczny: vision draft, superseded dla current scope przez Product SSOT, First Wedge i ADR 0008
 Zakres: docelowy timeline, warstwy, epizody, zasilanie danymi, asystenci operacyjni
 Wersja: 0.1
 

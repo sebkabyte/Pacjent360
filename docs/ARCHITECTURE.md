@@ -1,10 +1,14 @@
 # Pacjent360™ - architektura systemu
 
+<!-- P360_CONTROL_STATUS: REFERENCE_ONLY -->
+
+> **REFERENCE_ONLY:** historyczna architektura docelowa. Nie jest current SSOT, aktywnym backlogiem ani zgodą na lekarza, dzieci, AI/OCR lub backend w S0. Obowiązują `PRODUCT_SSOT.md`, ADR 0008, `CURRENT_SCOPE_MANIFEST.json` i aktywny work order.
+
 Wersja: `0.2`
 
-Cel: zaprojektowac Pacjent360™ jako otwarta warstwe kontekstu pacjenta nad istniejacym ekosystemem e-zdrowia, w szczegolnosci IKP/P1, bez zastapienia IKP i bez obchodzenia oficjalnych mechanizmow dostepu.
+Cel historyczny: opisać rozważaną architekturę docelową Pacjent360 jako warstwy kontekstu nad ekosystemem e-zdrowia.
 
-Dokument nadrzedny dla LLM i asystentow operacyjnych: `SSOT.md`. Jesli opis agentow, zakresow lub outputow w architekturze koliduje z `SSOT.md`, obowiazuje `SSOT.md` do czasu formalnej aktualizacji ADR.
+Historyczna zależność od `SSOT.md` została superseded. Ten dokument nie rozstrzyga obecnego zakresu LLM ani asystentów.
 
 ## Teza architektoniczna
 

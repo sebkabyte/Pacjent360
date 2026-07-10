@@ -1,105 +1,142 @@
-# Pacjent360™ — Product SSOT
+# Pacjent360 - Product SSOT
 
-Status: nadrzędne źródło prawdy o produkcie. Obowiązuje od 2026-06-10 (ADR 0005).
+Status: **ACTIVE AND RATIFIED**
+Ratyfikacja: Founder, 2026-07-10
+Podstawa: ADR 0008 i Founder Control Pack v1
+Zakres zmian: D1-D5 wymagają RFC Level C oraz wpisu w Decision Logu
 
-Ten dokument mówi, **czym jest produkt**. Dokument `docs/SSOT.md` mówi wyłącznie, **jak wolno działać LLM i agentom operacyjnym** i jest podrzędny wobec tego pliku. Harmonogram prac prowadzi `docs/PROGRAM_PLAN.md`.
+<!-- P360_CURRENT_SCOPE_V1
+contract_id=FCV1-D1-D8-2026-07-10
+current_sprint=S0
+gate=G0_PENDING
+primary_user=competent_adult_patient
+support_user=one_named_adult_supporter
+wedge=one_planned_visit
+data=synthetic_only
+doctor=later_read_only_recipient
+children_guardians=blocked
+runtime_ai_ocr_cdss=blocked
+backend=blocked
+public_launch=blocked_2026_2027
+-->
 
-## 1. Definicja jednozdaniowa
+## 1. Definicja produktu
 
-Pacjent360™ jest warstwą kontekstu pacjenta, która pomaga pacjentowi, rodzicowi/opiekunowi i lekarzowi zobaczyć, co wiadomo, czego brakuje, co jest niepewne, co jest rozbieżne i co trzeba wyjaśnić z uprawnionym profesjonalistą medycznym.
+Pacjent360 jest **Sekretariatem Kontekstu Zdrowotnego**. Prowadzi źródłową historię, pozwala ręcznie wybrać informacje do jednej planowanej wizyty, zapisać maksymalnie trzy pytania i utworzyć wersjonowany Pakiet wizyty.
 
-## 2. Czym Pacjent360™ nie jest
+Produkt nie odpowiada na pytanie "co mi jest?". Pomaga odpowiedzieć na pytanie "co chcę zabrać i omówić podczas wizyty oraz skąd pochodzi ta informacja?".
 
-- systemem diagnozującym;
-- systemem oceny pilności;
-- rekomendatorem terapii, dawkowania ani postępowania medycznego;
-- zamiennikiem IKP/P1/EDM/HIS ani usługą CeZ/NFZ;
-- miejscem przechowywania loginów do IKP ani kanałem scrapingu systemów państwowych;
-- autonomicznym agentem opieki medycznej;
-- systemem gotowym do użycia klinicznego (status: prototyp alpha, dane fikcyjne).
+## 2. Pierwszy wedge
 
-## 3. Kanoniczny model produktu
+Jedyny current wedge:
 
-```text
-Source -> Claim -> Event -> Episode / Encounter -> DITL Question / CareTask -> Report / View -> Audit
-```
+> kompetentny dorosły pacjent + jedna nazwana dorosła osoba wspierająca + jedna planowana wizyta.
 
-Docelowo (po walidacji i decyzjach M13+) model rozszerza się o warstwy zaufania:
+Główny case badawczy: dorosłe dziecko pomaga starszemu rodzicowi przygotować wizytę przy jawnym, ograniczonym zakresie pomocy. Określenie "osoba wspierająca" nie oznacza opiekuna prawnego ani automatycznego upoważnienia medycznego.
 
-```text
-Identity + Authority -> Consent / Access Policy -> [model powyżej] -> Report Version -> Correction / Supersede
-```
+## 3. Current phase
 
-UI jest soczewką nad modelem, nie źródłem prawdy. Implementacja modelu: `public/patient360-contract.js`, `schema/patient360.schema.json`, walidatory w `tools/`.
+Aktywny jest wyłącznie Sprint 0 - Governance Freeze, do bramki G0 24.07.2026.
 
-## 4. Perspektywy użytkowników
+Current phase obejmuje tylko:
 
-Główny użytkownik MVP: pacjent, rodzic albo opiekun przygotowujący kontekst przed wizytą. Lekarz jest głównym odbiorcą i osobą weryfikującą raport kontekstowy. Szerszy produkt nadal obejmuje trzy perspektywy, ale walidacja wersji alfa zaczyna się od ścieżki przygotowania wizyty.
+- porządkowanie kanonu produktu i governance;
+- dane syntetyczne;
+- historię źródłową jako rdzeń przyszłej Alphy;
+- ręczne przygotowanie jednej wizyty;
+- pacjenta oraz jedną nazwaną dorosłą osobę wspierającą.
 
-### Lekarz (desktop)
-Szybki, źródłowy kontekst przed decyzją: „Pacjent w 90 sekund", oś czasu, leki do potwierdzenia, braki, rozbieżności i pytania DITL. Źródło zawsze obok twierdzenia. Lekarz pozostaje decydentem.
+S1-P7 są warunkowe. Nie są aktywnym backlogiem ani zgodą na implementację.
 
-### Pacjent (mobile-first)
-Przygotowanie wizyty: dokumenty, leki faktycznie przyjmowane, pytania, zgody, zadania organizacyjne po wizycie. Prosty język bez żargonu klinicznego.
+## 4. Model produktu
 
-### Rodzic / opiekun / osoba wspierająca (mobile-first)
-Człowiek w kręgu opieki — nie agent. Ma relację z pacjentem, podstawę dostępu, zakres zgody i audyt. Rodzic dziecka lub opiekun prawny wymaga innej semantyki dostępu niż osoba wspierająca dorosłego pacjenta (macierz authority: kierunek M13).
-
-## 5. Krąg opieki vs agenci operacyjni
-
-```text
-Krąg opieki         = ludzie: relacje, podstawa dostępu, zgody, zakres widoczności
-Agenci operacyjni   = funkcje systemu: drafty, checklisty, walidacje, pytania, zadania
-CareTask            = pomost między człowiekiem, źródłem i agentem
-```
-
-Nie nazywamy ludzi „opiekunem lekowym" czy „opiekunem wizyt" tam, gdzie chodzi o automatyzację. Wzorzec językowy:
-
-> Człowiek ma dostęp do obszaru leków. System pomaga uporządkować listę. Człowiek decyduje.
-
-Agent nigdy nie jest właścicielem decyzji, nie sprawuje opieki i nie występuje jako osoba.
-
-## 6. DITL jako zasada architektoniczna
-
-DITL = lekarz w procesie decyzyjnym. Każda informacja klinicznie istotna pozostaje pytaniem, kontekstem, brakiem danych, rozbieżnością albo szkicem do weryfikacji, dopóki nie oceni jej lekarz lub inny właściwy profesjonalista.
-
-Konsekwencje techniczne:
-
-- każdy claim ma `sourceRefs` albo jawny `source_missing`;
-- pytania i flagi mają status DITL (`do wyjaśnienia` / `wyjaśnione` / `odrzucone` / `dalsza kontrola`);
-- zakazane słownictwo outputu systemowego jest egzekwowane przez `FORBIDDEN_CLAIM_PHRASES` w kontrakcie i walidatory CLI;
-- relacje na osi czasu mają `causality: not_asserted` — system nie twierdzi o przyczynowości;
-- wyniki opisywane są względem zakresu referencyjnego, nigdy jako „w normie"/„poza normą".
-
-Pełne zasady dla LLM/agentów: `docs/SSOT.md`.
-
-## 7. Zasada traceability (repo ↔ strona)
-
-Każda deklaracja na stronie publicznej musi mieć odpowiednik w repo: dokument produktowy, kontrakt danych, fixture, walidator albo milestone. Jeżeli artefakt nie istnieje, strona może opisywać funkcję wyłącznie jako `kierunek` / `w planie` / `w walidacji` — nigdy jako istniejącą.
-
-## 8. Hierarchia dokumentów
+Docelowa sekwencja informacyjna narrow Core:
 
 ```text
-PRODUCT_SSOT.md (ten plik)
-  / docs/legal/DISCLAIMER.md / SECURITY.md / docs/governance/RISKS.md  (safety — zawsze wygrywają)
-    -> docs/PROGRAM_PLAN.md          (nadrzędny harmonogram M0-M12+)
-      -> docs/ARCHITECTURE.md / docs/TIMELINE_VISION.md
-        -> docs/ROADMAP.md / docs/SPRINTS.md
-          -> docs/SSOT.md            (zakres: LLM i agenci operacyjni)
+SourceRecord
+-> typed record
+-> HistoryItem projection
+-> manual VisitDraft selection
+-> immutable VisitPacket
+-> optional post-visit organizational write-back
 ```
 
-Przy konflikcie zakresu LLM/agentów rozstrzyga `docs/SSOT.md` w ramach granic tego pliku. Przy konflikcie harmonogramów rozstrzyga `docs/PROGRAM_PLAN.md`.
+Zasady:
 
-## 9. No-go produktu
+- źródło jest prawdą; historia jest projekcją;
+- każdy element ma osobę, autora, źródło/status oraz datę albo jawne `unknown`;
+- Pakiet wizyty zawiera wyłącznie ręcznie wybrane elementy;
+- pytania pochodzą od pacjenta lub osoby wspierającej, maksymalnie trzy;
+- zmiana pakietu tworzy nową wersję;
+- system nie tworzy klinicznego rankingu, kompletności ani wniosku.
 
-- realne dane pacjentów w demo, fixtures, promptach lub walidacji publicznej;
-- output brzmiący jak diagnoza, ocena pilności albo zalecenie;
-- agent występujący jako osoba sprawująca opiekę;
-- dostęp poza zakresem zgody (w UI, eksporcie, raporcie lub komunikacie błędu);
-- claim bez źródła prezentowany jak fakt;
-- scraping IKP/P1 albo przechowywanie loginów;
-- deklaracja funkcji na stronie bez artefaktu w repo.
+## 5. Role
 
-## 10. Status wdrożenia (2026-06-10)
+### Pacjent
 
-Prototyp alpha v0.2.x: statyczny SPA (`public/`), dane fikcyjne w `localStorage`, Data Contract v0.1 (`schemaVersion: 7`), modele mapy/pre-visit/kręgu opieki/zgód z walidatorami i fixtures. Publiczne repo: GitHub `sebkabyte/Pacjent360`. Domena w przygotowaniu. Walidacja z lekarzami i pacjentami/opiekunami: przed nami (M5/M6). LLM/agenci: no-go do zamknięcia A0 (kontrakty, walidator, dry-run, audyt).
+Właściciel własnego kontekstu i osoba wybierająca informacje do wizyty.
+
+### Nazwana dorosła osoba wspierająca
+
+Pomaga w jawnym zakresie. Każdy jej wpis zachowuje autorstwo. Current Alpha nie udaje prawnej delegacji ani produkcyjnego mechanizmu dostępu.
+
+### Lekarz
+
+Nie jest current product ani użytkownikiem v1. Może być późniejszym odbiorcą ręcznie wybranego, read-only pakietu. Najpierw należy sprawdzić PDF/print. Osobny Doctor Context wymaga późniejszego dowodu i bramki.
+
+### AI/Codex/Founder OS
+
+Mogą przygotowywać analizę, kod, testy i drafty dokumentów. Nie mogą podpisywać opinii prawnej, DPIA, medical-safety acceptance, security acceptance, pentestu ani human-owned gate.
+
+## 6. Granica danych
+
+Do formalnego Real-Data Gate obowiązuje:
+
+- synthetic-only;
+- moderowane badania;
+- brak binarnych dokumentów;
+- brak OCR, LLM, RAG, embeddings i integracji;
+- brak kont lekarzy;
+- brak publicznego self-service;
+- brak produkcyjnego backendu i auth.
+
+## 7. Czym produkt nie jest
+
+Pacjent360 nie jest:
+
+- EHR ani oficjalną dokumentacją medyczną;
+- AI-lekarzem;
+- CDSS;
+- systemem diagnozy, triage lub oceny pilności;
+- narzędziem interpretacji wyników;
+- systemem rekomendacji leczenia;
+- systemem wykrywania interakcji lub konfliktów lekowych;
+- usługą IKP/P1/CeZ/NFZ;
+- wyrobem medycznym deklarowanym bez formalnej klasyfikacji.
+
+## 8. Hipoteza rynku
+
+- Hipoteza użytkowa 2026: B2C dla synthetic research.
+- Hipoteza komercyjna 2026: równoległe discovery B2B2C.
+- Decyzja biznesowa i tenancy: po G2/Expert Gate.
+- Bezpieczny kierunek danych do oceny: patient vault; organizacja nie staje się automatycznie właścicielem całej historii.
+
+## 9. Hierarchia prawdy
+
+```text
+PRODUCT_SSOT.md + dokumenty safety
+-> FIRST_WEDGE.md
+-> zatwierdzone ADR-y + DECISION_LOG.md
+-> ROADMAP_2026_2027.md
+-> EXECUTION_PLAN_2026_2027.md
+-> jeden aktywny work order
+-> evidence
+```
+
+`docs/PROGRAM_PLAN.md` i `docs/ROADMAP.md` są aktywnymi widokami tej samej ratyfikowanej struktury. Founder Control Pack jest skrótem zarządczym, nie drugim Product SSOT. `docs/product-delivery/`, starsze sprinty, blueprints, TEMP i raporty są `REFERENCE_ONLY`, chyba że ADR wyraźnie przywróci konkretny element.
+
+## 10. Current state
+
+Repo zawiera statyczny prototyp i liczne historyczne moduły. Nie dowodzi to current scope ani gotowości produkcyjnej. Do zamknięcia G0 nie wolno rozpoczynać nowego patcha UI, backendu, AI, doctor workflow ani release.
+
+Stan bramki: `G0_PENDING`.

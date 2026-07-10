@@ -1,0 +1,650 @@
+{
+  "schemaVersion": 2,
+  "label": "S0 corrective governance evidence and scope gates",
+  "capturedAt": "2026-07-28T22:39:36.624Z",
+  "repository": {
+    "branch": "codex/s2-rework",
+    "baseHead": "1a2e4b6a9bef10259b874bf4c3672fcdfb84f8a4",
+    "candidateBeforeEvidenceWrite": "77599081a9e0bac21271a0edae6e7e67b7adf389",
+    "candidateBeforeEvidenceWriteType": "index_tree"
+  },
+  "baselinePath": "docs/governance/S0_REPAIR_BASELINE_2026-07-10.json",
+  "baselineRawStatusSha256": "081595C783029E35588B6B8BB3F252A8D3BC64CAE004A4D5AEC648DD3F9BF18F",
+  "allowlistPath": "docs/governance/S0_REPAIR_ALLOWLIST_2026-07-10.json",
+  "changeCount": 43,
+  "outsideAllowlist": [],
+  "forbiddenAreaChanges": [],
+  "changes": [
+    {
+      "path": ".github/workflows/validate.yml",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "79742C9A05A7469D94C3D1FE9D510CE0B262FBFC161862B8A2C69392E086E3BD",
+        "size": 1838,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "31508EE1CA395212E4FD0AA92D291938CFA924A3887CBCA230476024C8FA9FB8",
+        "size": 2693,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "CHANGELOG.md",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "9953B1FF1A9427B94B2F1714676F15C986819569EB2E1DC3DC2EA3E5462AA704",
+        "size": 2118,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "57CAB46057C6269D67459FFB8356C8EA01BD2EDFC3BEF389BFCB6831C13178FC",
+        "size": 2361,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "PRODUCT_SSOT.md",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "D401CB0D494FF919A0E0A53F993B884ECACAEB1D0D97BB247408696DC8735225",
+        "size": 5878,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "C0FA979F5F2F95BCA629DE964FE50E5A972AEAC123E7EBA8DF5C16DD92EFF9EF",
+        "size": 4977,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "README.md",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "63F4AD3ECFBF88D3E854CE24521470A667E350AA750B971ABF0D78C9A721DB9A",
+        "size": 17774,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "70E99DAE8B6D81B9D577BF6766323DA179CD4EE13EA8D1A0945075EE364DA306",
+        "size": 13954,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "SECURITY.md",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "A05AC8217EE138B095FC6DD76240D7C6A9449A00EFB1D469161C4997A735D91D",
+        "size": 2992,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "CD90EF6AC463159BA664AD9A78EBD33F112C46C07B90445A70B10DDFF05F31C5",
+        "size": 3343,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "7085CC714E399D4D024B672E8709A8B20B70F08BACBB3695E6A9A93591E509A2",
+        "size": 30166,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "D731EAE9A9DCB1E3CC022AC3334BBE23BAA3B323CC42A26EF365619EA9426B3C",
+        "size": 30300,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/PROGRAM_PLAN.md",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "358CEF8200779D01DAA9331625B8ADF0AE16AA4382BA9F606C0A6DB3F6CA6996",
+        "size": 32566,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "1126140A2A16C0D95FFF2A3D1B745DE2E694E1394AF7885E0F64180527641286",
+        "size": 4026,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/PROJECT_CHRONICLE.md",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "0B328519D8BBE3F6BFE50250AEA9049C048BF1742A43C67771412990AE063E1F",
+        "size": 2292,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "40852CD304688304F3FA5414654F028840728EF7BCBF4285491234FA8279C710",
+        "size": 2553,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "A038B44205F8BFCD8FD3EAA0C98FFAE8BDBFC50138CCDB8CBE8543E55EDB594C",
+        "size": 6181,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "43E97E1295200579EF62669B3D5D663D84BB2EA40BE9A3F535A4B19BCDDFDD19",
+        "size": 1940,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/SPRINTS.md",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "30369548074EFAC7ED115E86ACBBD6B0E3E15F7C902E5C196BE64C5536D2DF9F",
+        "size": 28387,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "C2FE68DD7B2D77AB317387C336F4BD54863BC2F3378978AF3184AD6921F6A86E",
+        "size": 28427,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/SSOT.md",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "84DF1DD381E89CA54F563561838682483A86131CFD7EE0096AF6590E24175A0D",
+        "size": 18168,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "7AEB3D7081A3E3B9E26BE7267000958FE45E666B4737FC905678270E6E6060C7",
+        "size": 18245,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/TIMELINE_VISION.md",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "A1885BF029E6980FC13DFB4875A37641A93B002B3254641A456EBEA7DB913415",
+        "size": 19251,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "C74D5936B6D0480CD25F68CA87A9809DBEE6DA082A1FFA83C3AA845163537525",
+        "size": 19555,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/adr/0005-product-ssot-hierarchy.md",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "E8AD5778CA5E26E9AB1C625617DFD639D6688EADFECC154C8BACA065E100372F",
+        "size": 1839,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "2ED0E7E4ADFB10E920A5E2B9F5A18AC587A464A4C4AC958E70413FAC407C6DDD",
+        "size": 2239,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/adr/0008-founder-control-pack-v1-scope-freeze.md",
+      "changeKind": "added_after_baseline",
+      "allowed": true,
+      "before": null,
+      "after": {
+        "sha256": "E29797881A756DFA6F8F64AE3DCF3175D3CC7174292996A56D0090AB61270DE7",
+        "size": 2734,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/governance/CURRENT_SCOPE_MANIFEST.json",
+      "changeKind": "added_after_baseline",
+      "allowed": true,
+      "before": null,
+      "after": {
+        "sha256": "C654B6573C39F7E54A531DD30CFC317970701608127E555C59AB5F77FBB7141E",
+        "size": 19858,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/governance/DECISION_LOG.md",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "01753B82A2CAF88C434108A340227AC0EB057907E3BD407874B8B76CADDA3029",
+        "size": 1708,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "08834A030605E6FF1A0D1C8DD350CF8F3EB239FC16627CFD3D46CED6394DAB6E",
+        "size": 11735,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/governance/DEFINITION_OF_HARM.md",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "29DB01DEFB138DFF3E22CB09934E9D3110939AA8A6732BF8C2994049B37C4B51",
+        "size": 4067,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "34612DE3BE021A1C6EEBAAED9A71647929B1531006E293D7CF810A8879A623B0",
+        "size": 4274,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/governance/FOUNDER_ATTESTATION_D1_D8_2026-07-10.md",
+      "changeKind": "added_after_baseline",
+      "allowed": true,
+      "before": null,
+      "after": {
+        "sha256": "2DD0E75F5F14A455BE98506C5D048A347C232F7570BD16392C2DB5ABC8E446FE",
+        "size": 3437,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/governance/GOVERNANCE_V2_STANDING_DELEGATION.md",
+      "changeKind": "added_after_baseline",
+      "allowed": true,
+      "before": null,
+      "after": {
+        "sha256": "A63C386A904D7356278C70691B6D35AB589C35975EE76643D4D971A59DF1686D",
+        "size": 4253,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/governance/OWNER_RACI_MATRIX.md",
+      "changeKind": "added_after_baseline",
+      "allowed": true,
+      "before": null,
+      "after": {
+        "sha256": "F7BA88FCBDB6E0B9F70C8C551A67D5CEEF82DFC6EFD48F45165476C35C92B159",
+        "size": 4330,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/governance/RISKS.md",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "802173EC00987A729BFFD103A0969CCE0695F23517ECF69F411AC56DBC1F76FF",
+        "size": 3834,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "1924DEFB6C058CB5A37D2C37749EB7972A7A68349C457AC8D45B71A6F130632A",
+        "size": 4689,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/governance/S0_CORRECTIVE_EVIDENCE_PACK_2026-07-10.md",
+      "changeKind": "added_after_baseline",
+      "allowed": true,
+      "before": null,
+      "after": {
+        "sha256": "F9238CA358FBD61E6395D2FD11FCCF13B1C1F0DC12477D48197BC4CC1F68F547",
+        "size": 7410,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/governance/S0_G0_EVIDENCE_PACK_2026-07-10.md",
+      "changeKind": "added_after_baseline",
+      "allowed": true,
+      "before": null,
+      "after": {
+        "sha256": "732ADB482D434788EC611DC459C1A5FD196C38721A57349184E39C8A4DC000AA",
+        "size": 8172,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/governance/S0_REPAIR_ALLOWLIST_2026-07-10.json",
+      "changeKind": "added_after_baseline",
+      "allowed": true,
+      "before": null,
+      "after": {
+        "sha256": "B6E3C5C1E221556DACE4BEEC0AF422DDCEDF3418BA1EF159F56813318D9E9244",
+        "size": 4491,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/governance/S0_REPAIR_BASELINE_2026-07-10.json",
+      "changeKind": "added_after_baseline",
+      "allowed": true,
+      "before": null,
+      "after": {
+        "sha256": "7DB6B67A79101FEB595B16028F9EEFD74C2F184089A42E4D3B25778E8560577B",
+        "size": 32665,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/governance/S0_REPAIR_CHANGESET_2026-07-10.json",
+      "changeKind": "generated_evidence_self",
+      "allowed": true,
+      "before": null,
+      "after": {
+        "sha256": null,
+        "size": null,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/governance/SAFETY_CASE.md",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "A834856428BE69A46083921F7BEE775D11ABF816583F0244189DF9F9B3618729",
+        "size": 4736,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "9EE13127E17060BF1D0AAD3D088159E396F458F74D961D0F008F359F83275198",
+        "size": 6283,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/governance/SCOPE_GUARDRAILS.md",
+      "changeKind": "added_after_baseline",
+      "allowed": true,
+      "before": null,
+      "after": {
+        "sha256": "EBC17996EA3B9AF62BCF66A8292A9B75A5FBD05D717D3EE4C99DE89287FABE2B",
+        "size": 2727,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/product/A1_A8_ROADMAP_REFRAME.md",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "787778675956154A0C53B7AE6B3DDA229DB86C911063CBF870DB91A0A501B2FD",
+        "size": 3310,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "9655387AC25BE3EF602CEA610F4EA73068967DE2D6CF2336B2EB709CB741EDC1",
+        "size": 3803,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/product/A1_SAFE_DRAFT_DASHBOARD_BRIEF.md",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "CC27AC97691DA0B2642E2A59B5CF8E54F626E2C4AF871395EBE2E9CE0AFFB86D",
+        "size": 5302,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "DDEC7D774165C38D5FFCDB906584BB9A95856212597CAEDBC8E7220CE443E1CD",
+        "size": 5764,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/product/EXECUTION_PLAN_2026_2027.md",
+      "changeKind": "added_after_baseline",
+      "allowed": true,
+      "before": null,
+      "after": {
+        "sha256": "1A861B7524A6BB50579DAFA8499CE538F5CBC4AB46D896B1D5AA462E4B3F9093",
+        "size": 47746,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/product/FIRST_WEDGE.md",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "21DF826C3B0FEBB9952AC5779C33ECF74FB2A4522DB7CCA2FF21C4A06D835E4F",
+        "size": 2365,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "D268F41F98C420BE500066D81A5F80214319A003A557383D993726394CFA764B",
+        "size": 2995,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/product/PACJENT360_FOUNDER_CONTROL_PACK_V1_2026-07-10.md",
+      "changeKind": "added_after_baseline",
+      "allowed": true,
+      "before": null,
+      "after": {
+        "sha256": "E6684440FE4E18ACAEC535C345A888305B730E6B88856D2D4A67E883B50FF116",
+        "size": 16699,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/product/PRODUCT_CONSTITUTION.md",
+      "changeKind": "added_after_baseline",
+      "allowed": true,
+      "before": null,
+      "after": {
+        "sha256": "50933DFBBBAC4E819FC86C2947D3FAB8FD57E0748C3E4DB16973DBD9DDE43E9D",
+        "size": 3006,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/product/ROADMAP_2026_2027.md",
+      "changeKind": "added_after_baseline",
+      "allowed": true,
+      "before": null,
+      "after": {
+        "sha256": "C1E7D9B8B9F6691C9A8A7DA13821E0246C2E0187C71DCEAFFD0B5B24FCFE3D09",
+        "size": 46436,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/product/WO_P360_S0_GOVERNANCE_FREEZE_2026-07-10.md",
+      "changeKind": "added_after_baseline",
+      "allowed": true,
+      "before": null,
+      "after": {
+        "sha256": "9BBE373DB4B074305EFCEBCBD56BA4AE0DB236D2CE52083334E742D9AA602D02",
+        "size": 10480,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "docs/qa/DEFINITION_OF_READY_DONE.md",
+      "changeKind": "added_after_baseline",
+      "allowed": true,
+      "before": null,
+      "after": {
+        "sha256": "941CC8F17A8EAB56396688BF7D6A8F95EB494AAF40D3583FFC4EEF4E4DDF8AC4",
+        "size": 2737,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "tests/current-scope-validator.test.mjs",
+      "changeKind": "added_after_baseline",
+      "allowed": true,
+      "before": null,
+      "after": {
+        "sha256": "592AB83D70FDC1EE0E0FC9E4F0E40D621418C32E94B21F7F661B02507A62E475",
+        "size": 22217,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "tools/capture-s0-boundary.mjs",
+      "changeKind": "added_after_baseline",
+      "allowed": true,
+      "before": null,
+      "after": {
+        "sha256": "645422021E4279CFC2972A818E535280A51E074EEE17C35DB27BD0FB7858E6AB",
+        "size": 13180,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "tools/public-repo-manifest.txt",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "CC68F4310A74BE7E8B369C8A2CA4088EF2EBC7B80797257492F31523FDCB4A90",
+        "size": 3428,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "86C8BE168B4EAD664FA5527783051DE4EB67A7A29C28D3B32944FC2B523E3198",
+        "size": 3912,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "tools/validate-current-scope.mjs",
+      "changeKind": "added_after_baseline",
+      "allowed": true,
+      "before": null,
+      "after": {
+        "sha256": "B4AC69F3E3448C381C7C25F22BB2F2EEC8C4F013F93EEBF4BCCD1EEA9FDEA28D",
+        "size": 54819,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "tools/validate-go-live.ps1",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "0A1D63C790F87A0F3177B2BDE1C96C45CA692BE26AF39625AD112B41355BA3AE",
+        "size": 14370,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "71900FC11EEC7CC9E3C8DDAE3069FAF8E10C665ECD1F67602DF919F0A219A49A",
+        "size": 14367,
+        "tracked": true,
+        "ignored": false
+      }
+    },
+    {
+      "path": "tools/verify-public-repo.ps1",
+      "changeKind": "modified_after_baseline",
+      "allowed": true,
+      "before": {
+        "sha256": "9BFF37B9179CE0E4127D574E74E84A0CB685F15E7B641918742008FE934B68AB",
+        "size": 11948,
+        "tracked": true,
+        "ignored": false
+      },
+      "after": {
+        "sha256": "D02FC78EB30BA0B29F35C2CF50FE0FA2A7171BA626B31C86B765A45D797556D2",
+        "size": 11949,
+        "tracked": true,
+        "ignored": false
+      }
+    }
+  ]
+}

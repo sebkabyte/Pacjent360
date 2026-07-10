@@ -1,6 +1,21 @@
 # Pacjent360™
 
-Pacjent przychodzi do systemu ochrony zdrowia z historią, nie z tabelą danych.
+<!-- P360_CURRENT_SCOPE_V1
+contract_id=FCV1-D1-D8-2026-07-10
+current_sprint=S0
+gate=G0_PENDING
+primary_user=competent_adult_patient
+support_user=one_named_adult_supporter
+wedge=one_planned_visit
+data=synthetic_only
+doctor=later_read_only_recipient
+children_guardians=blocked
+runtime_ai_ocr_cdss=blocked
+backend=blocked
+public_launch=blocked_2026_2027
+-->
+
+Pacjent przychodzi do systemu ochrony zdrowia z historią, nie z tabelą danych. Pacjent360 porządkuje źródła i przygotowanie do rozmowy. Nie interpretuje klinicznie ich znaczenia.
 
 Ma wyniki badań, wypisy, listę leków, skierowania, objawy, wspomnienia z poprzednich wizyt, obserwacje rodziny i rzeczy, których sam nie potrafi dobrze nazwać. Lekarz ma kilka minut, przeciążony system i decyzję do podjęcia tu i teraz.
 
@@ -8,21 +23,24 @@ Problemem bardzo często nie jest brak danych. Problemem jest brak kontekstu.
 
 **Pacjent360™** to otwarty projekt, który próbuje odpowiedzieć na jedno praktyczne pytanie:
 
-> Co trzeba wyjaśnić przed dzisiejszą decyzją medyczną?
+> Co warto zebrać i wyjaśnić przed dzisiejszą rozmową z lekarzem?
 
-## Status projektu
+## Bieżący status i zakres
 
 - Status projektu: **alpha / v0.2.2-alpha**.
 - Strona projektu: https://pacjent360.com.pl/
-- Demo MVP: https://pacjent360.com.pl/demo.html
+- Demo MVP: https://pacjent360.com.pl/demo.html?start=1&lang=pl
 - To jest statyczny prototyp koncepcyjny i demonstracyjny, nie system gotowy do użycia klinicznego.
 - Demo korzysta z fikcyjnych, kompozytowych przypadków i nie powinno przyjmować realnych danych pacjentów.
-- Publiczna wersja domeny przeszła bramki publikacyjne: czysta paczka hostingowa, kontakt mailowy, blokada artefaktów pomocniczych i porównanie wdrożenia z `dist/upload-ready`.
-- Kod i dokumentacja pozostają w fazie alpha: projekt wymaga walidacji z lekarzami, pacjentami, opiekunami, ekspertami prawa, prywatności i bezpieczeństwa.
+- Ratyfikowany current wedge: **kompetentny dorosły pacjent + jedna nazwana dorosła osoba wspierająca + jedna planowana wizyta**.
+- Bieżący przepływ: źródłowa historia → ręczny wybór informacji → maksymalnie 3 pytania użytkownika → wersjonowany pakiet wizyty.
+- Aktywny jest wyłącznie Sprint 0 Governance Freeze. Wszystkie późniejsze sprinty pozostają warunkowe do odpowiedniej bramki i podpisu człowieka.
+- Lekarz nie jest bieżącym użytkownikiem produktu. Może zostać późniejszym odbiorcą read-only pakietu po osobnej decyzji i walidacji.
+- Dzieci, opiekunowie prawni, runtime AI/LLM/OCR, backend, realne dane i publiczny self-service pozostają zablokowane.
 
 ## O co chodzi
 
-Pacjent360™ ma być warstwą porządkującą historię pacjenta: dokumenty, badania, leki, wizyty, wywiady, obserwacje, zgody, przypomnienia i pytania do lekarza.
+Pacjent360™ ma być warstwą porządkującą historię pacjenta: dokumenty, badania, leki do potwierdzenia, wizyty, obserwacje i pytania zapisane przez użytkownika.
 
 Nie chodzi o to, żeby system zastąpił lekarza. Chodzi o to, żeby przed rozmową z lekarzem szybciej zobaczyć:
 
@@ -34,109 +52,21 @@ Nie chodzi o to, żeby system zastąpił lekarza. Chodzi o to, żeby przed rozmo
 
 To jest projekt o lepszym kontekście, nie o automatycznej diagnozie.
 
-## Dlaczego to ważne
+## Pierwszy problem do zbadania
 
-Polski pacjent coraz częściej ma dostęp do danych w IKP, mojeIKP, dokumentach PDF, wynikach badań i systemach placówek. Ale sam dostęp do informacji nie oznacza jeszcze, że da się ją szybko zrozumieć w sytuacji medycznej.
+Czy dorosły pacjent, wspierany przez jedną wybraną osobę, potrafi na fikcyjnych danych przygotować jedną planowaną wizytę bez pomylenia źródła, osoby, uprawnienia albo statusu informacji?
 
-Pacjent360™ ma ułożyć tę historię w formę przydatną dla trzech stron:
+Current Alpha może pokazywać wyłącznie:
 
-- dla pacjenta, który chce rozumieć swoje badania, wizyty, leki i plan opieki,
-- dla lekarza, który potrzebuje krótkiego kontekstu decyzyjnego,
-- dla rodziny lub opiekuna, jeśli pacjent świadomie udzieli im dostępu.
+- źródłową historię i neutralne statusy informacji;
+- ręczny wybór wpisów do jednej wizyty;
+- maksymalnie trzy pytania zapisane przez pacjenta lub osobę wspierającą;
+- zakres widoczności osoby wspierającej;
+- wersjonowany pakiet przygotowany przez użytkownika.
 
-W obecnej wersji alfa pierwszy proces jest węższy: pacjent, rodzic albo opiekun przygotowuje kontekst przed wizytą, a lekarz ocenia krótki raport i pytania DITL.
+Techniczne lub historyczne widoki lekarza, agentów i wcześniejszych sprintów mogą pozostawać wyłącznie materiałem laboratoryjnym `REFERENCE_ONLY`. Nie definiują bieżącego produktu ani backlogu.
 
-## Dlaczego teraz
-
-Tak. Pacjent360™ powinien iść z duchem aktualnych publikacji, ale bez udawania, że jest częścią państwowego systemu, certyfikowanym wyrobem medycznym albo narzędziem podejmującym decyzje kliniczne.
-
-Aktualny kierunek jest spójny w kilku miejscach:
-
-- **EHDS i europejska wymiana danych zdrowotnych** wzmacniają dostęp pacjenta do elektronicznych danych zdrowotnych, kontrolę nad ich użyciem oraz interoperacyjność systemów.
-- **International Patient Summary / HL7 FHIR IPS** pokazuje, że krótkie, przenośne i możliwie standardowe podsumowanie pacjenta jest naturalnym formatem wymiany kontekstu.
-- **Polska dyskusja o IKP, EDM, P1 i e-Profilu Pacjenta** przesuwa się w stronę pytania: jak lekarz i pacjent mają szybko zobaczyć pełniejszy, praktyczny kontekst w chwili wizyty.
-- **Publikacje WHO o AI w zdrowiu** podkreślają, że automatyzacja w ochronie zdrowia wymaga jasnego celu, transparentności, ochrony danych, nadzoru człowieka i odpowiedzialności za użycie.
-
-Wniosek dla projektu jest prosty: Pacjent360™ nie powinien budować "AI lekarza" ani obchodzić IKP. Powinien rozwijać się jako niezależna, open source warstwa porządkowania kontekstu:
-
-- źródła i proweniencja danych,
-- oś czasu i epizody opieki,
-- leki przepisane, wykupione i faktycznie przyjmowane,
-- zgody pacjenta i krąg wsparcia,
-- `Znane / Nieznane / Niepewne / Do weryfikacji`,
-- pytania DITL,
-- raport kontekstowy przed wizytą,
-- asystenci operacyjni jako wsparcie organizacyjne, nie kliniczne.
-
-To oznacza, że roadmapa powinna być inspirowana aktualnymi standardami i publikacjami, ale wdrażana ostrożnie: najpierw lokalny prototyp, fikcyjne dane, walidacja z lekarzami i pacjentami, a dopiero później rozmowa o oficjalnych integracjach.
-
-## Wizja
-
-Docelowo Pacjent360™ powinien działać jak **otwarty, niezależny towarzysz kontekstu dla IKP/P1**.
-
-Nie zastępuje IKP. Nie obchodzi IKP. Nie przechowuje loginów pacjenta. Nie udaje systemu państwowego.
-
-Może natomiast stać się warstwą, która pomaga pacjentowi i lekarzowi lepiej wykorzystać dane: zbudować oś czasu, uporządkować leki, zobaczyć braki, przygotować pytania i wygenerować krótki raport przed wizytą lub decyzją medyczną.
-
-W tej wizji jest też miejsce na asystentów operacyjnych: asystenta lekowego i asystenta wizyt. Ich rola nie polega na decyzjach klinicznych, tylko na pilnowaniu harmonogramu, checklist, brakujących dokumentów, zgód i pytań do lekarza.
-
-## Co pokazuje obecne MVP
-
-Prototyp jest lokalny i demonstracyjny. Pokazuje kierunek produktu:
-
-- trzy kokpity oparte o te same dane: **Lekarz**, **Pacjent** i **Opiekun**,
-- widok lekarza **Pacjent w 90 sekund**,
-- widok pacjenta **Mój Pacjent360™**,
-- wywiad i transkrypcję rozmowy jako ważne źródło danych,
-- wielotorowa oś czasu od ogółu do szczegółu,
-- historia leków: leki przepisane vs faktycznie przyjmowane,
-- statusy danych, braki, rozbieżności i pytania DITL jako sygnały do wyjaśnienia,
-- jednostronicowy raport w stylu `Znane / Nieznane / Niepewne / Do weryfikacji`,
-- zgody, audyt i eksport JSON.
-
-MVP używa fikcyjnych, kompozytowych przypadków. Nie opisuje historii choroby żadnej konkretnej osoby.
-
-## Co jest w planie
-
-Najbliższy rozwój projektu powinien odpowiadać na potrzeby trzech osób patrzących na tę samą historię: pacjenta, opiekuna i lekarza.
-
-1. **Przed wizytą: przygotowanie kontekstu**
-   - pacjent lub opiekun zbiera dokumenty, leki, wyniki, objawy, pytania i transkrypcję wywiadu,
-   - system pokazuje, czego brakuje przed rozmową z lekarzem,
-   - raport nie daje zaleceń, tylko porządkuje pytania DITL.
-
-2. **W trakcie wizyty: krótki raport dla lekarza**
-   - lekarz widzi `Znane / Nieznane / Niepewne / Do weryfikacji`,
-   - każde pytanie ma źródło: dokument, wynik, wywiad, lek albo transkrypcja,
-   - lekarz może oznaczyć pytania i flagi jako wyjaśnione, odrzucone albo wymagające kontroli.
-
-3. **Po wizycie: domknięcie wizyty**
-   - system zapisuje statusy DITL i źródłowo opisane zadania organizacyjne,
-   - pacjent widzi, co ma przygotować, sprawdzić lub omówić przy kolejnym kontakcie,
-   - opiekun może pilnować tylko tych zadań, do których pacjent dał mu dostęp.
-
-4. **Krąg wsparcia i zadania**
-   - pacjent świadomie udostępnia wybrane dane rodzicowi, opiekunowi lub rodzinie,
-   - człowiek z dostępem do obszaru leków widzi harmonogram i może oznaczać zadania jako wykonane,
-   - człowiek z dostępem do obszaru wizyt widzi terminy, checklisty i dokumenty potrzebne na wizytę,
-   - asystenci (funkcje systemu) pomagają porządkować te obszary; decyzje podejmuje człowiek.
-
-5. **Medication Story z udziałem farmaceuty**
-   - projekt powinien lepiej rozróżniać leki przepisane, wykupione i faktycznie przyjmowane,
-   - OTC, suplementy, odstawienia i objawy po zmianie leku powinny trafiać do pytań dla lekarza lub farmaceuty,
-   - system nie powinien samodzielnie sugerować zmiany leczenia.
-
-6. **Asystenci operacyjni**
-   - asystent lekowy może pilnować harmonogramu, braków potwierdzenia i rozbieżności,
-   - asystent wizyt może przygotować checklistę dokumentów i pytań,
-   - asystenci nie są narzędziami klinicznymi: nie diagnozują, nie oceniają pilności i nie rekomendują terapii.
-
-7. **Integracje dopiero po walidacji**
-   - najpierw import ręczny i eksport JSON,
-   - potem model gotowy na oficjalne standardy,
-   - dopiero na końcu legalna, oficjalna integracja z IKP/P1/e-Profilem Pacjenta, bez scrapingu i bez przechowywania loginów.
-
-Pierwsza hipoteza do walidacji jest prosta: **czy taki jednostronicowy raport pomaga lekarzowi szybciej zobaczyć, co trzeba wyjaśnić, a pacjentowi i opiekunowi lepiej przygotować się do wizyty.**
+Hipoteza użytkowa 2026 to B2C. B2B2C pozostaje oddzielnym, równoległym discovery komercyjnym i nie zmienia current wedge.
 
 ## Czego ten projekt nie robi
 
@@ -240,15 +170,17 @@ Root repozytorium ma być czytelny. Szczegółowe dokumenty są w `docs/`, żeby
 
 - `public/` - źródła statycznej strony, demo i plików publikowanych w document root hostingu.
 - `public/app.js`, `public/styles.css`, `public/patient360-*.js`, `schema/`, `fixtures/` - prototyp MVP, modele i fikcyjne dane testowe.
-- `README.md`, `LICENSE`, `NOTICE`, `SECURITY.md`, `CONTRIBUTING.md`, `CHANGELOG.md` - podstawowe dokumenty open source.
+- `README.md`, `LICENSE`, `NOTICE`, `SECURITY.md`, `CONTRIBUTING.md`, `CHANGELOG.md` - podstawowe dokumenty open source; `CHANGELOG.md` jest zapisem historycznym, nie current scope authority.
 - `PRODUCT_SSOT.md` - nadrzędne źródło prawdy o produkcie: czym jest, czym nie jest, kanoniczny model, no-go.
 - `docs/PROGRAM_PLAN.md` - nadrzędny plan strategiczny i harmonogram rzeczowo-techniczny.
-- `docs/ARCHITECTURE.md` - architektura Pacjent360™ jako warstwy kontekstu nad IKP/P1.
-- `docs/SSOT.md` - źródło prawdy dla roli LLM i asystentów operacyjnych (podrzędne wobec `PRODUCT_SSOT.md`).
-- `docs/product/FIRST_WEDGE.md` - pierwszy wedge produktu: ścieżka przygotowania wizyty (opiekun mobile + lekarz desktop).
-- `docs/TIMELINE_VISION.md` - docelowa mapa pacjenta, warstwy, epizody i zasilanie danymi.
-- `docs/ROADMAP.md`, `docs/SPRINTS.md` - roadmapa i aktywny backlog rozwoju.
-- `docs/PROJECT_CHRONICLE.md` - publiczna kronika decyzji i kamieni milowych projektu.
+- `docs/ARCHITECTURE.md` - `REFERENCE_ONLY`: historyczna architektura docelowa, nie current SSOT ani aktywny backlog.
+- `docs/product/FIRST_WEDGE.md` - ratyfikowany current wedge: dorosły pacjent, jedna dorosła osoba wspierająca i jedna planowana wizyta.
+- `docs/governance/CURRENT_SCOPE_MANIFEST.json` - zamknięta klasyfikacja aktywnych, wspierających i referencyjnych powierzchni sterujących.
+- `docs/governance/GOVERNANCE_V2_STANDING_DELEGATION.md` - aktywny mandat wykonawczy Codexa i katalog decyzji zastrzeżonych dla Foundera.
+- `docs/product/WO_P360_S0_GOVERNANCE_FREEZE_2026-07-10.md` - jedyny aktywny work order.
+- `docs/TIMELINE_VISION.md` - `REFERENCE_ONLY`: historyczna wizja mapy, nie zakres bieżącej Alphy.
+- `docs/ROADMAP.md` - aktywny widok bramek. `docs/SSOT.md` i `docs/SPRINTS.md` są historycznymi materiałami `SUPERSEDED / REFERENCE_ONLY`; nie sterują aktywnym backlogiem.
+- `docs/PROJECT_CHRONICLE.md` - `REFERENCE_ONLY`: kronika historyczna; decyzje wiążące są wyłącznie w ADR/Decision Logu.
 - `docs/legal/` - disclaimer, prywatność i licencja dokumentacji.
 - `docs/governance/` - risk register, komunikacja kryzysowa i dostępność.
 - `docs/governance/DEFINITION_OF_HARM.md` - katalog szkód H-001..H-010 i bramki, które je blokują.
@@ -272,13 +204,15 @@ Według deklaracji foundera z 2026-07-06 wniosek dotyczący ochrony znaku Pacjen
 
 To repozytorium jest prototypem koncepcyjnym. Każde użycie produkcyjne wymaga walidacji klinicznej, prawnej, bezpieczeństwa, ochrony danych i zgodności regulacyjnej.
 
-**Dla modeli AI, asystentów operacyjnych i nowych kontrybutorów:** zacznij od `PRODUCT_SSOT.md`, potem `docs/PROGRAM_PLAN.md`, `docs/SSOT.md`, `docs/ARCHITECTURE.md` i `docs/TIMELINE_VISION.md`.
+**Dla Codexa, innych narzędzi i nowych kontrybutorów:** zacznij od `docs/governance/CURRENT_SCOPE_MANIFEST.json`, następnie `PRODUCT_SSOT.md`, `docs/product/FIRST_WEDGE.md`, ADR 0008 i jedynego aktywnego work orderu.
 
-Najważniejszy dokument techniczny: `docs/ARCHITECTURE.md`.
+Aktualne granice techniczne wynikają z `PRODUCT_SSOT.md`, ADR 0008, manifestu current scope i aktywnego work orderu. `docs/ARCHITECTURE.md` pozostaje wyłącznie historyczną referencją.
 
 Najważniejszy dokument bezpieczeństwa medycznego: `docs/legal/DISCLAIMER.md`.
 
-Najważniejszy dokument dla LLM i asystentów operacyjnych: `docs/SSOT.md`. Sprinty i roadmapa muszą być z nim zgodne.
+<!-- P360_IGNORED_CONTROL_PLANE: docs/product-delivery/ REFERENCE_ONLY -->
+
+`docs/ARCHITECTURE.md`, `docs/TIMELINE_VISION.md`, `docs/PROJECT_CHRONICLE.md`, `CHANGELOG.md`, `docs/SSOT.md`, `docs/SPRINTS.md`, `BLUEPRINT/`, `docs/product-delivery/` i prywatne prompty `CODEX_*.md` są `REFERENCE_ONLY` dla current scope. Nie mogą sterować bieżącym backlogiem bez nowego ADR i aktualizacji manifestu.
 
 ## Referencje koncepcyjne
 

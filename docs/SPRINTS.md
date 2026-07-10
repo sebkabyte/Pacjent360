@@ -1,8 +1,10 @@
-# Sprinty LLM i asystentow operacyjnych
+# Historyczne sprinty LLM i asystentow operacyjnych
 
-Status: plan wdrozenia funkcji eksperymentalnych w prototypie Pacjent360™. **[AUDYT 26.06.2026]** Sprint A0 byl oznaczony jako nieukonczony po audycie zewnetrznym. **[AKTUALIZACJA 26.06.2026]** brakujace artefakty techniczne A0 zostaly domkniete lokalnie: `public/patient360-agent-policy.js`, `fixtures/a0-agent-policy-edgecases.json`, `tools/validate-a0-agent-policy.ps1`. Decyzja A0: `continue_with_conditions` - wolno przejsc do planowania A1, ale A1-A8 pozostaja zablokowane do osobnego uruchomienia sprintu i review human safety/privacy/security.
+<!-- P360_CONTROL_STATUS: SUPERSEDED -->
 
-Normatywne zrodlo: `SSOT.md`. Obowiazuja tez `docs/legal/DISCLAIMER.md`, `SECURITY.md`, `docs/deployment/GO_LIVE_CHECKLIST.md`, `docs/governance/RISKS.md` i `CONTRIBUTING.md`.
+> **SUPERSEDED / REFERENCE_ONLY:** to historyczny zapis eksperymentalnych sprintow A0-A8. Nie uruchamia zadnego sprintu, modulu ani backlogu i nie jest zgoda na implementacje. Statusy, wymagania i sformulowania normatywne ponizej zachowano wylacznie jako archiwalne evidence.
+
+Aktywny backlog wyznaczaja `PRODUCT_SSOT.md`, `docs/product/PACJENT360_FOUNDER_CONTROL_PACK_V1_2026-07-10.md`, `docs/governance/CURRENT_SCOPE_MANIFEST.json`, aktualne dokumenty safety oraz jeden aktywny work order. Historyczny `docs/SSOT.md` nie jest juz zrodlem normatywnym.
 
 Ten plan dotyczy wylacznie asystentow operacyjnych. Asystenci moga porzadkowac kontekst, wskazywac braki, przygotowywac pytania DITL i tworzyc wersje robocze raportow. Nie diagnozuja, nie triazuja, nie rekomenduja terapii, nie oceniaja pilnosci i nie przyjmuja realnych danych pacjentow.
 
@@ -18,7 +20,7 @@ Ten plan dotyczy wylacznie asystentow operacyjnych. Asystenci moga porzadkowac k
 
 ## Klasyfikacja agentow
 
-Klasyfikacja agentow jest normatywnie opisana w `SSOT.md`.
+Ponizsza klasyfikacja agentow jest historyczna. Nie zmienia obecnej blokady AI/LLM/OCR wynikajacej z aktywnego Product SSOT i `docs/product/PACJENT360_FOUNDER_CONTROL_PACK_V1_2026-07-10.md`.
 
 | Agent / modul | Klasa | Uwagi wdrozeniowe |
 | --- | --- | --- |
@@ -36,9 +38,9 @@ Klasyfikacja agentow jest normatywnie opisana w `SSOT.md`.
 | `CareNavigationAgent` | `caution` | Nawigacja po placowkach i terminach; bez oceny pilnosci i bez decyzji o specjalizacji. |
 | Diagnoza, triage, terapia, scoring ryzyka, dawkowanie | `forbidden` | No-go bez zmiany intended purpose i pelnej walidacji klinicznej/regulacyjnej. |
 
-## Aktywny backlog wdrozenia
+## Historyczny backlog wdrozenia (nieaktywny)
 
-Wdrozenie jest aktywowane od Sprint A0. Aktywny jest tylko zakres A0; A1-A8 sa zablokowane do czasu zamkniecia A0 i review safety/privacy/security.
+To archiwalny snapshot prac A0-A8. Nie aktywuje obecnego ani przyszlego zakresu; aktywny jest wylacznie sprint i work order wskazany przez current scope manifest.
 
 | ID | Sprint | Zadanie | Status | Zaleznosc | Kryterium zamkniecia |
 | --- | --- | --- | --- | --- | --- |

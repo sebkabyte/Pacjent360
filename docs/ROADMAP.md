@@ -1,77 +1,78 @@
-# Roadmapa Pacjent360™
+# Pacjent360 - aktywny widok roadmapy
 
-Status: kierunek rozwoju eksperymentalnego dla Pacjent360™.
+Status: **ACTIVE EXECUTIVE VIEW**
+Ratyfikacja: Founder, 2026-07-10
+Pełna roadmapa: `product/ROADMAP_2026_2027.md`
 
-Nadrzedny plan programu po audycie repo i council: `PROGRAM_PLAN.md`.
-
-FAZY 0-4, CKP/MOB/NAT i sprinty asystentow opisane nizej sa teraz szczegolowym backlogiem wykonawczym mapowanym do M0-M12 z `PROGRAM_PLAN.md`. Nie stanowia rownoleglego harmonogramu. Status 2026-06-08: M0 Publication Ready i M2 Data Contract v0.1 sa wykonane lokalnie jako powtarzalny vertical slice. Publiczne repo alpha jest otwarte z czystej allowlisty; produkcyjny go-live domeny i prywatna obsluga zgloszen nadal czekaja na potwierdzone aliasy kontaktowe.
-
-Zrodla prawdy: `PRODUCT_SSOT.md` dla produktu, `PROGRAM_PLAN.md` dla harmonogramu, `docs/SSOT.md` dla LLM/asystentow operacyjnych. Obowiazuja tez `docs/legal/DISCLAIMER.md`, `SECURITY.md`, `docs/deployment/GO_LIVE_CHECKLIST.md`, `docs/governance/RISKS.md` i `SPRINTS.md`.
-Archiwalna analiza luk kokpitow: `docs/COCKPIT_GAP_ANALYSIS.md`.
-
-Asystenci LLM w tym projekcie sa narzedziami operacyjnymi. Ich zadaniem jest porzadkowanie kontekstu, wskazywanie brakow, pilnowanie zrodel, przygotowanie checklist i tworzenie draftow do weryfikacji. Nie diagnozuja, nie triazuja, nie rekomenduja terapii i nie pracuja na realnych danych pacjentow.
+<!-- P360_CURRENT_SCOPE_V1
+contract_id=FCV1-D1-D8-2026-07-10
+current_sprint=S0
+gate=G0_PENDING
+primary_user=competent_adult_patient
+support_user=one_named_adult_supporter
+wedge=one_planned_visit
+data=synthetic_only
+doctor=later_read_only_recipient
+children_guardians=blocked
+runtime_ai_ocr_cdss=blocked
+backend=blocked
+public_launch=blocked_2026_2027
+-->
 
 ## Teraz
 
-**Najwyzszy priorytet: hardening release candidate, traceability i bezpieczne przygotowanie publikacji.**
+Aktywny jest wyłącznie:
 
-M0, M2, M3 i M4 maja lokalne vertical slice'y. Najblizszy techniczny krok to utrzymanie tych slice'ow jako bramek regresji, usuniecie rozjazdow dokumentacji i przygotowanie publikacji domeny bez nowych funkcji klinicznych.
+> **Sprint 0 - Governance Freeze, 10-24.07.2026, G0_PENDING.**
 
-- Status FAZA 0: wykonane kierunkowo, utrzymac jako safety gate przy kazdej publikacji.
-- Status FAZA 1: wykonane kierunkowo w sprincie nocnym, teraz `done / needs QA / needs hardening`.
-- Status M0: `done locally / go-live gated` przez aliasy kontaktowe.
-- Status M2: `done vertical slice` przez `patient360-contract.js`, schema, walidator i ADR.
-- Status M3: `done vertical slice + snapshot / needs further hardening`.
-- Status M4: `vertical slice + model` przez flow "Przygotowanie krok po kroku", `patient360-previsit-model.js`, fixture no-data i walidator M4.
-- Utrzymac twarda granice DITL: Pacjent360™ to prototyp kontekstowy, nie system kliniczny.
+Zakres:
 
-## Nastepne 2 tygodnie
+- Product SSOT i First Wedge;
+- ADR/Decision Log;
+- mapa dokumentów;
+- RACI;
+- Definition of Ready/Done;
+- scope validator i negatywne mutacje;
+- niezależny read-only review.
 
-- Status FAZA 2: wykonane kierunkowo w sprincie nocnym, teraz QA, hardening i dopasowanie do modelu Mapy Pacjenta 360.
-- **Mobile-first CSS** dla kokpitow pacjenta i opiekuna — utrzymac, testowac i poprawiac regresje.
-- Wzbogacic dane demo: 3+ punktow na obserwacje (sparkline), Pacjent B z wywiadami i zgodami.
-- Usunac dead code: stare `renderReports()` + `renderOnePager()`.
-- Filtrowanie po trackach na osi czasu + ukrywanie pustych trackow.
-- M3 hardening: ograniczenie duplikacji helperow w `app.js`, source coverage, neutralne relacje, statusy `planowane` i `virtual`; snapshot i edge-case fixtures sa juz aktywna bramka regresji.
-- M4 hardening: wariant opiekuna i dalszy test, ze flow przed wizyta nie brzmi jak zalecenie kliniczne; no-data fixture i walidator M4 sa juz aktywne.
-- M5 hardening zgód: rozdzielić przegląd zgód pacjenta od widoku jednej konkretnej osoby z dostępem (`selectedCaregiverId` / recipient context), uwzględnić wygaśnięcie zgody i osobną podstawę dostępu rodzica/opiekuna prawnego.
+Nie zmieniamy UI, backendu, API, runtime, `dist` ani publicznego wdrożenia.
 
-## 6 tygodni
+## Po G0, warunkowo
 
-- FAZA 3 (Kokpity C): nowe perspektywy — kokpit opiekuna (`renderCaregiverPortal`), model `CaregiverScope`, widok „Co ustalono po wizycie" (`PostVisitSummary`), wariant osi czasu per persona.
-- Nowa narracja WWW: hero, 5 sekcji, screenshot demo.
-- Sprint A0 Safety & Contracts dla agentow LLM: kontrakty, walidator, fixtures, ryzyka.
-- Zdefiniowac kontrakty outputow dla agentow: zrodlo, status DITL, `source_missing`, typ outputu, walidacja safety.
-- Zbudowac syntetyczne fixtures do testowania LLM bez realnych danych.
+| Etap | Warunek aktywacji | Status |
+|---|---|---|
+| S1 Alpha Safety | podpisane G0 `GO-S1` | CONDITIONAL |
+| S2-S6 Evidence | G1 i zamknięte P0 | CONDITIONAL |
+| P7 legal/backend/pilot | odpowiednie G2-G6 | CONDITIONAL |
 
-## Pozniej
+Nie wolno rozpoczynać etapu tylko dlatego, że występuje w roadmapie.
 
-- FAZA 4 (Kokpity D): polish — prosty jezyk wynikow, czytelne nazwy zrodel, semantyczny above/below, powiazania sourceRef.
-- **PWA**: manifest.json, service worker, ikony, instalacja z przegladarki, offline mode (cache kokpitow pacjenta i opiekuna read-only).
-- Sprint A1-A2: Manual Agent Dry-Run UI + DataQualityAgent + SourceGroundingAgent.
-- Sprint A3-A6: VisitChecklistAgent, DITLQuestionAgent, ConsentGuard, MedicationSupport, ReportDrafting.
-- Sprint A7-A8: After Visit Loop agents, Logistyka.
-- Rozszerzyc biblioteke syntetycznych przypadkow i testow regresji.
-- Rozwazac lokalne lub prywatne uruchamianie modeli dopiero po audycie prywatnosci i bezpieczenstwa.
-- Rozwazac integracje z oficjalnymi standardami danych dopiero po stabilizacji kontraktow i walidacji safety.
-- Rozwazac oficjalna integracje z IKP/P1/e-Profilem Pacjenta tylko legalna sciezka, bez scrapingu i bez przechowywania loginow.
-- Rozwazac szersze testy z lekarzami, pacjentami i opiekunami, nadal bez realnych danych medycznych w publicznym prototypie.
-- Rozwazac mechanizmy audytu promptow, wersjonowania agentow i porownywania outputow miedzy modelami.
-- **Natywna aplikacja mobilna** (React Native / Flutter) dopiero po walidacji PWA i product-market fit. Decyzja o publikacji w Google Play / App Store wymaga osobnej bramki (store review, privacy policy mobilna, biometria).
+## Current wedge
 
-## Nie robimy
+```text
+kompetentny dorosły pacjent
++ jedna nazwana dorosła osoba wspierająca
++ jedna planowana wizyta
++ ręczny wybór źródłowych informacji
++ maksymalnie trzy pytania
+-> wersjonowany Pakiet wizyty
+```
 
-- Nie diagnozujemy.
-- Nie robimy triage.
-- Nie rekomendujemy terapii.
-- Nie oceniamy pilnosci medycznej.
-- Nie podpowiadamy zmiany leczenia, dawki, odstawienia ani zamiany leku.
-- Nie interpretujemy wynikow jako prawidlowe, nieprawidlowe, alarmowe, w normie lub poza norma.
-- Nie przyjmujemy realnych danych pacjentow w demo, dry-runach, promptach, fixtures ani walidacji publicznej.
-- Nie wysylamy danych pacjenta do zewnetrznego LLM.
-- Nie scrapujemy IKP/P1 i nie przechowujemy loginow.
-- Nie udajemy CeZ, NFZ, IKP, P1 ani e-Profilu Pacjenta.
-- Nie pokazujemy opiekunowi danych poza zakresem zgody pacjenta.
-- Nie publikujemy funkcji LLM bez clinical safety gate, privacy/security review i testow zakazanych outputow.
-- Nie streszczamy realnych nagran ani transkrypcji wizyt bez zgody, retencji, mozliwosci usuniecia i review privacy/security.
-- Nie wykonujemy autonomicznego bookingu wizyty, zakupu leku ani kontaktu z placowka w MVP.
+## Zablokowane
+
+- doctor-first current product;
+- dzieci i guardian baseline;
+- runtime AI/LLM/OCR/CDSS;
+- backend i realne dane;
+- publiczny self-service i launch;
+- interpretacja, triage, pilność, scoring i rekomendacje.
+
+## Źródła prawdy
+
+1. `../PRODUCT_SSOT.md`
+2. `product/FIRST_WEDGE.md`
+3. `adr/0008-founder-control-pack-v1-scope-freeze.md`
+4. `governance/DECISION_LOG.md`
+5. `product/ROADMAP_2026_2027.md`
+6. `product/EXECUTION_PLAN_2026_2027.md`
+7. aktywny `WO_P360_S0_GOVERNANCE_FREEZE_2026-07-10.md`

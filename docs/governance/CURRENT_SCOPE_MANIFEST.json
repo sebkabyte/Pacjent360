@@ -1,0 +1,693 @@
+{
+  "schemaVersion": 3,
+  "contractId": "FCV1-D1-D8-2026-07-10",
+  "currentSprint": "S0",
+  "gate": "G0_PENDING",
+  "ratification": {
+    "attestationId": "P360-ATT-D1-D8-20260710-001",
+    "signerId": "P360-FOUNDER-SEBASTIAN-KALISZ-01",
+    "signerName": "Sebastian Kalisz",
+    "signerRole": "Founder",
+    "declaredOn": "2026-07-10",
+    "recordedAt": "2026-07-10T13:05:23+02:00",
+    "recordPath": "docs/governance/FOUNDER_ATTESTATION_D1_D8_2026-07-10.md",
+    "artifactHashes": [
+      {
+        "path": "PRODUCT_SSOT.md",
+        "sha256": "C0FA979F5F2F95BCA629DE964FE50E5A972AEAC123E7EBA8DF5C16DD92EFF9EF"
+      },
+      {
+        "path": "docs/product/PACJENT360_FOUNDER_CONTROL_PACK_V1_2026-07-10.md",
+        "sha256": "E6684440FE4E18ACAEC535C345A888305B730E6B88856D2D4A67E883B50FF116"
+      },
+      {
+        "path": "docs/product/WO_P360_S0_GOVERNANCE_FREEZE_2026-07-10.md",
+        "sha256": "9BBE373DB4B074305EFCEBCBD56BA4AE0DB236D2CE52083334E742D9AA602D02"
+      }
+    ],
+    "artifactHashRefresh": {
+      "authorizedBy": "Sebastian Kalisz",
+      "authorizedOn": "2026-07-10",
+      "reason": "Governance-only reviewer separation and Git-authority alignment; D1-D8 and product boundary unchanged"
+    }
+  },
+  "scope": {
+    "primaryUser": "competent_adult_patient",
+    "supportUser": "one_named_adult_supporter",
+    "wedge": "one_planned_visit",
+    "data": "synthetic_only",
+    "doctor": "later_read_only_recipient",
+    "childrenGuardians": "blocked",
+    "runtimeAiOcrCdss": "blocked",
+    "backend": "blocked",
+    "publicLaunch": "blocked_2026_2027"
+  },
+  "activeScopeDocuments": [
+    {
+      "path": "README.md",
+      "role": "public_bootstrap"
+    },
+    {
+      "path": "PRODUCT_SSOT.md",
+      "role": "product_ssot"
+    },
+    {
+      "path": "docs/PROGRAM_PLAN.md",
+      "role": "program_control"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "role": "executive_roadmap_view"
+    },
+    {
+      "path": "docs/product/FIRST_WEDGE.md",
+      "role": "first_wedge"
+    },
+    {
+      "path": "docs/product/PRODUCT_CONSTITUTION.md",
+      "role": "governance_baseline"
+    },
+    {
+      "path": "docs/product/ROADMAP_2026_2027.md",
+      "role": "conditional_gate_roadmap"
+    },
+    {
+      "path": "docs/product/EXECUTION_PLAN_2026_2027.md",
+      "role": "execution_system_s0_only"
+    },
+    {
+      "path": "docs/product/PACJENT360_FOUNDER_CONTROL_PACK_V1_2026-07-10.md",
+      "role": "founder_control"
+    },
+    {
+      "path": "docs/product/WO_P360_S0_GOVERNANCE_FREEZE_2026-07-10.md",
+      "role": "current_work_order"
+    },
+    {
+      "path": "docs/adr/0008-founder-control-pack-v1-scope-freeze.md",
+      "role": "current_hierarchy_adr"
+    },
+    {
+      "path": "docs/governance/DECISION_LOG.md",
+      "role": "decision_history"
+    },
+    {
+      "path": "docs/governance/GOVERNANCE_V2_STANDING_DELEGATION.md",
+      "role": "standing_operating_authority",
+      "requiredMarkers": [
+        "Status: **ACTIVE AND RATIFIED**",
+        "## 2. Standing mandate Codexa",
+        "## 3. Decyzje zastrzeżone dla Foundera"
+      ]
+    },
+    {
+      "path": "docs/governance/SCOPE_GUARDRAILS.md",
+      "role": "scope_policy"
+    },
+    {
+      "path": "docs/qa/DEFINITION_OF_READY_DONE.md",
+      "role": "delivery_gate"
+    }
+  ],
+  "activeSupportingDocuments": [
+    {
+      "path": "docs/governance/FOUNDER_ATTESTATION_D1_D8_2026-07-10.md",
+      "role": "ratification_provenance",
+      "requiredMarkers": [
+        "Attestation ID: `P360-ATT-D1-D8-20260710-001`",
+        "Signer ID: `P360-FOUNDER-SEBASTIAN-KALISZ-01`",
+        "Status: **RATIFIED; G0 REMAINS A SEPARATE FOUNDER GATE**"
+      ]
+    },
+    {
+      "path": "docs/governance/OWNER_RACI_MATRIX.md",
+      "role": "ownership",
+      "requiredMarkers": [
+        "Independent technical S0 Reviewer | GPT 5.6 SOL",
+        "tylko Founder podpisuje G0"
+      ]
+    },
+    {
+      "path": "docs/governance/S0_REPAIR_BASELINE_2026-07-10.json",
+      "role": "corrective_baseline"
+    },
+    {
+      "path": "docs/governance/S0_REPAIR_ALLOWLIST_2026-07-10.json",
+      "role": "corrective_allowlist"
+    },
+    {
+      "path": "docs/governance/S0_REPAIR_CHANGESET_2026-07-10.json",
+      "role": "corrective_changeset"
+    },
+    {
+      "path": "docs/governance/S0_CORRECTIVE_EVIDENCE_PACK_2026-07-10.md",
+      "role": "corrective_evidence",
+      "requiredMarkers": [
+        "# Pacjent360 S0 Corrective Evidence Pack",
+        "Independent S0 Reviewer: GPT 5.6 SOL",
+        "G0_PENDING"
+      ]
+    },
+    {
+      "path": "docs/legal/DISCLAIMER.md",
+      "role": "safety"
+    },
+    {
+      "path": "SECURITY.md",
+      "role": "security"
+    },
+    {
+      "path": "docs/governance/RISKS.md",
+      "role": "risk_register"
+    },
+    {
+      "path": "docs/governance/SAFETY_CASE.md",
+      "role": "safety_case"
+    },
+    {
+      "path": "docs/governance/SAFETY_GATE_MATRIX.md",
+      "role": "safety_gates"
+    }
+  ],
+  "activeExecutableControlSurfaces": [
+    ".github/workflows/validate.yml",
+    "tools/validate-go-live.ps1",
+    "tools/verify-public-repo.ps1",
+    "tools/public-repo-manifest.txt",
+    "tools/validate-current-scope.mjs",
+    "tests/current-scope-validator.test.mjs",
+    "tools/capture-s0-boundary.mjs"
+  ],
+  "closedWorld": {
+    "roots": [
+      "docs/",
+      "README.md",
+      "PRODUCT_SSOT.md",
+      "MANIFEST.md",
+      ".ai/",
+      "BLUEPRINT/",
+      "TEMP/",
+      "research/"
+    ],
+    "rootFilePatterns": [
+      "^[A-Z][A-Z0-9_-]*\\.md$"
+    ],
+    "rootFilePatternClassification": "REQUIRE_EXPLICIT_OR_REFERENCE_RULE",
+    "referenceOnlyRootPatterns": [
+      "^CODEX_.*\\.md$",
+      "^(CLAUDE|STATE|HANDOVER)\\.md$"
+    ],
+    "extensions": [
+      ".md",
+      ".json",
+      ".yml",
+      ".yaml",
+      ".js",
+      ".mjs",
+      ".ps1",
+      ".txt"
+    ],
+    "trackedDocumentation": {
+      "includePrefixes": [
+        "docs/"
+      ],
+      "includeRootFilePatterns": [
+        "^[A-Z][A-Z0-9_-]*\\.md$"
+      ],
+      "requireDiscovered": true,
+      "inventory": [
+        {
+          "path": "CHANGELOG.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "PRODUCT_SSOT.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "README.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "SECURITY.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/COCKPIT_GAP_ANALYSIS.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/PLAN_UX_MARKETING.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/PROGRAM_PLAN.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/PROJECT_CHRONICLE.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/ROADMAP.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/SPRINTS.md",
+          "status": "SUPERSEDED"
+        },
+        {
+          "path": "docs/SSOT.md",
+          "status": "SUPERSEDED"
+        },
+        {
+          "path": "docs/TIMELINE_VISION.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/adr/0001-license.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/adr/0002-local-first-mvp.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/adr/0003-ditl-boundary.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/adr/0004-data-contract-v7.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/adr/0005-product-ssot-hierarchy.md",
+          "status": "SUPERSEDED"
+        },
+        {
+          "path": "docs/adr/0006-timeline-lanes-mapping.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/adr/0007-phase2-blocked-until-review.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/adr/0008-founder-control-pack-v1-scope-freeze.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/deployment/DEPLOYMENT_RUNBOOK_NAZWA.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/deployment/GITHUB_SETUP.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/deployment/GO_LIVE_CHECKLIST.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/deployment/PUBLISHING.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/deployment/ROLLBACK.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/governance/ACCESSIBILITY_CHECKLIST.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/governance/CRISIS_COMMUNICATION.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/governance/CURRENT_SCOPE_MANIFEST.json",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/governance/DECISION_LOG.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/governance/DEFINITION_OF_HARM.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/governance/DELIVERY_CONTRACT_TASK_DRIVEN_UI.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/governance/FOUNDER_ATTESTATION_D1_D8_2026-07-10.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/governance/GOVERNANCE_V2_STANDING_DELEGATION.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/governance/OWNER_RACI_MATRIX.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/governance/RISKS.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/governance/S0_CORRECTIVE_EVIDENCE_PACK_2026-07-10.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/governance/S0_G0_EVIDENCE_PACK_2026-07-10.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/governance/S0_REPAIR_ALLOWLIST_2026-07-10.json",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/governance/S0_REPAIR_BASELINE_2026-07-10.json",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/governance/S0_REPAIR_CHANGESET_2026-07-10.json",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/governance/SAFETY_CASE.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/governance/SAFETY_GATE_MATRIX.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/governance/SCOPE_GUARDRAILS.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/governance/UI_BRAND_CHECKLIST.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/legal/A7_A8_VALIDATION_PROTOCOL.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/legal/CLAIMS_REGISTER.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/legal/CLINICAL_MODULE_GO_NO_GO_POLICY.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/legal/DISCLAIMER.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/legal/DOCS_LICENSE.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/legal/LEGAL_REVIEW_PACKAGE_INDEX.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/legal/NO_REAL_PATIENT_DATA_POLICY.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/legal/PRIVACY.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/legal/PROD_INTENDED_PURPOSE_BY_MODULE.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/product/A1_A8_ROADMAP_REFRAME.md",
+          "status": "SUPERSEDED"
+        },
+        {
+          "path": "docs/product/A1_SAFE_DRAFT_DASHBOARD_BRIEF.md",
+          "status": "SUPERSEDED"
+        },
+        {
+          "path": "docs/product/DEMO_I18N_GOAL_GUARD.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/product/DEMO_I18N_SPRINTS.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/product/EXECUTION_PLAN_2026_2027.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/product/FIRST_WEDGE.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/product/PACJENT360_FOUNDER_CONTROL_PACK_V1_2026-07-10.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/product/PACJENT360_NORTH_STAR.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/product/PRODUCT_CONSTITUTION.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/product/ROADMAP_2026_2027.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/product/WO_P360_S0_GOVERNANCE_FREEZE_2026-07-10.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/qa/DEFINITION_OF_READY_DONE.md",
+          "status": "ACTIVE"
+        },
+        {
+          "path": "docs/validation/CLICKABLE_PROTOTYPE_TEST.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/validation/SESSION_SCRIPT_CAREGIVER.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/validation/SESSION_SCRIPT_DOCTOR.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/validation/VALIDATION_FEEDBACK_FORM.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/validation/VALIDATION_PROTOCOL.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/validation/cases/CASE-01-opiekun-przygotowuje-wizyte.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/validation/cases/CASE-02-lekarz-90-sekund.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/validation/cases/CASE-03-rozbieznosc-lekowa.md",
+          "status": "REFERENCE_ONLY"
+        },
+        {
+          "path": "docs/validation/cases/CASE-04-rodzic-przygotowuje-wizyte-dziecka.md",
+          "status": "REFERENCE_ONLY"
+        }
+      ]
+    },
+    "explicitClassifications": [
+      {
+        "path": "CHANGELOG.md",
+        "status": "REFERENCE_ONLY",
+        "owner": "Sebastian Kalisz",
+        "reason": "historical release record; not current product scope",
+        "requiredMarker": "P360_CONTROL_STATUS: REFERENCE_ONLY"
+      },
+      {
+        "path": "docs/ARCHITECTURE.md",
+        "status": "REFERENCE_ONLY",
+        "owner": "Sebastian Kalisz",
+        "reason": "legacy target architecture superseded for current scope by Product SSOT and ADR 0008",
+        "requiredMarker": "P360_CONTROL_STATUS: REFERENCE_ONLY"
+      },
+      {
+        "path": "docs/COCKPIT_GAP_ANALYSIS.md",
+        "status": "REFERENCE_ONLY",
+        "owner": "Sebastian Kalisz",
+        "reason": "historical cockpit analysis"
+      },
+      {
+        "path": "docs/PLAN_UX_MARKETING.md",
+        "status": "REFERENCE_ONLY",
+        "owner": "Sebastian Kalisz",
+        "reason": "historical UX and marketing plan"
+      },
+      {
+        "path": "docs/PROJECT_CHRONICLE.md",
+        "status": "REFERENCE_ONLY",
+        "owner": "Sebastian Kalisz",
+        "reason": "historical chronicle; decisions require Decision Log or ADR",
+        "requiredMarker": "P360_CONTROL_STATUS: REFERENCE_ONLY"
+      },
+      {
+        "path": "docs/TIMELINE_VISION.md",
+        "status": "REFERENCE_ONLY",
+        "owner": "Sebastian Kalisz",
+        "reason": "legacy vision superseded for current scope by Product SSOT and First Wedge",
+        "requiredMarker": "P360_CONTROL_STATUS: REFERENCE_ONLY"
+      }
+    ],
+    "referenceOnlyDefaults": [
+      "MANIFEST.md",
+      ".ai/",
+      "BLUEPRINT/",
+      "TEMP/",
+      "research/",
+      "docs/product-delivery/",
+      "CLAUDE.md",
+      "STATE.md",
+      "HANDOVER.md",
+      "CODEX_SH_DELIVERY_LOOP_PROMPT.md"
+    ],
+    "untrackedReferenceOnlyDefaults": [
+      "docs/adr/",
+      "docs/campaign/",
+      "docs/community/",
+      "docs/deployment/",
+      "docs/governance/",
+      "docs/internal/",
+      "docs/legal/",
+      "docs/product/",
+      "docs/qa/",
+      "docs/repo/",
+      "docs/reviews/",
+      "docs/ux/",
+      "docs/validation/"
+    ],
+    "activeExactPathsOverrideReferenceDefaults": true
+  },
+  "supersededScopes": [
+    {
+      "id": "SUP-001-LEGACY-SH-CONTROL",
+      "status": "REFERENCE_ONLY",
+      "paths": [
+        "BLUEPRINT/",
+        "CODEX_SH_DELIVERY_LOOP_PROMPT.md",
+        "docs/product-delivery/",
+        "tools/acceptance/s2-acceptance.js",
+        "tools/validate-sh-loop-state.js"
+      ],
+      "owner": "Sebastian Kalisz",
+      "supersededBy": "docs/adr/0008-founder-control-pack-v1-scope-freeze.md",
+      "enforcement": "not_invoked_by_active_executable_controls"
+    },
+    {
+      "id": "SUP-002-OLD-HIERARCHY",
+      "status": "SUPERSEDED",
+      "paths": [
+        "docs/adr/0005-product-ssot-hierarchy.md",
+        "docs/SPRINTS.md",
+        "docs/SSOT.md"
+      ],
+      "owner": "Sebastian Kalisz",
+      "supersededBy": "docs/adr/0008-founder-control-pack-v1-scope-freeze.md",
+      "enforcement": "current_scope_validator"
+    },
+    {
+      "id": "SUP-003-DOCTOR-CHILD-AI-BACKEND-FIRST",
+      "status": "SUPERSEDED",
+      "paths": [
+        "docs/product/A1_A8_ROADMAP_REFRAME.md",
+        "docs/product/A1_SAFE_DRAFT_DASHBOARD_BRIEF.md",
+        "docs/product/MVP_DEMO_SPRINT_2026-07-10.md"
+      ],
+      "owner": "Sebastian Kalisz",
+      "supersededBy": "docs/product/FIRST_WEDGE.md",
+      "enforcement": "reference_only_default_and_body_drift_scan"
+    }
+  ],
+  "ignoredControlPlanes": [
+    {
+      "path": "BLUEPRINT/",
+      "markerPath": "BLUEPRINT/20_ONE_PLAN_AND_GATES.md",
+      "requiredMarker": "P360_CONTROL_STATUS: REFERENCE_ONLY"
+    },
+    {
+      "path": "CODEX_SH_DELIVERY_LOOP_PROMPT.md",
+      "markerPath": "CODEX_SH_DELIVERY_LOOP_PROMPT.md",
+      "requiredMarker": "P360_CONTROL_STATUS: REFERENCE_ONLY"
+    },
+    {
+      "path": "docs/product-delivery/",
+      "markerPath": "README.md",
+      "requiredMarker": "P360_IGNORED_CONTROL_PLANE: docs/product-delivery/ REFERENCE_ONLY"
+    }
+  ],
+  "executableIsolation": {
+    "scanPaths": [
+      ".github/workflows/validate.yml",
+      "tools/validate-go-live.ps1",
+      "tools/verify-public-repo.ps1",
+      "tools/public-repo-manifest.txt"
+    ],
+    "forbiddenReferences": [
+      "BLUEPRINT/SH_LOOP_STATE.md",
+      "SCOPE_FREEZE_SIGNED",
+      "CODEX_SH_DELIVERY_LOOP_PROMPT.md",
+      "docs/product-delivery/",
+      "tools/acceptance/s2-acceptance.js",
+      "tools/validate-sh-loop-state.js"
+    ]
+  },
+  "gitPolicy": {
+    "requireTrackedForG0": true,
+    "requireCommittedHeadForG0": true,
+    "allowUntrackedOnlyForLocalRepair": true,
+    "requiredCleanCheckoutProofAfterCommit": true
+  },
+  "activeControlInputs": [
+    {
+      "path": "docs/governance/DELIVERY_CONTRACT_TASK_DRIVEN_UI.md",
+      "consumedBy": "tools/check-task-driven-ui-boundaries.mjs"
+    },
+    {
+      "path": "docs/legal/CLAIMS_REGISTER.md",
+      "consumedBy": "tools/check-no-cdss-copy.mjs"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "consumedBy": "README.md commit checklist gate"
+    },
+    {
+      "path": "docs/governance/DEFINITION_OF_HARM.md",
+      "consumedBy": "docs/governance/SAFETY_CASE.md per-change review"
+    }
+  ]
+}

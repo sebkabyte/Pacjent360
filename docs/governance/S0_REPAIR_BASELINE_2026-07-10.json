@@ -1,0 +1,1107 @@
+{
+  "schemaVersion": 1,
+  "label": "S0 corrective review baseline before finding remediation",
+  "capturedAt": "2026-07-10T11:02:42.713Z",
+  "repository": {
+    "branch": "codex/s2-rework",
+    "head": "1a2e4b6a9bef10259b874bf4c3672fcdfb84f8a4",
+    "tree": "1d5094a48599b56ee095ac96b287c1bd05c53bce"
+  },
+  "rawStatusSha256": "081595C783029E35588B6B8BB3F252A8D3BC64CAE004A4D5AEC648DD3F9BF18F",
+  "entryCount": 106,
+  "entries": [
+    {
+      "status": " M",
+      "path": ".github/workflows/validate.yml",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 2328,
+      "sha256": "FDADAD2DAD4BC6F5B460A48980182BD6C2342A6345728D2C77D23E987DDAE469"
+    },
+    {
+      "status": " M",
+      "path": "PRODUCT_SSOT.md",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 4977,
+      "sha256": "C0FA979F5F2F95BCA629DE964FE50E5A972AEAC123E7EBA8DF5C16DD92EFF9EF"
+    },
+    {
+      "status": " M",
+      "path": "README.md",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 17800,
+      "sha256": "45B5BE151F2B36BE01C22F08998F81F32A70366E5BCABABA6466673F51587826"
+    },
+    {
+      "status": " M",
+      "path": "docs/PROGRAM_PLAN.md",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 4026,
+      "sha256": "1126140A2A16C0D95FFF2A3D1B745DE2E694E1394AF7885E0F64180527641286"
+    },
+    {
+      "status": " M",
+      "path": "docs/ROADMAP.md",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 1940,
+      "sha256": "43E97E1295200579EF62669B3D5D663D84BB2EA40BE9A3F535A4B19BCDDFDD19"
+    },
+    {
+      "status": " M",
+      "path": "docs/governance/DECISION_LOG.md",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 3055,
+      "sha256": "C822633A297A626F88E5790CB22B409C88FCEB62AAF37B99C6548DCEDD30BEA4"
+    },
+    {
+      "status": " M",
+      "path": "docs/product/FIRST_WEDGE.md",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 2995,
+      "sha256": "D268F41F98C420BE500066D81A5F80214319A003A557383D993726394CFA764B"
+    },
+    {
+      "status": " M",
+      "path": "public/agents.html",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 12100,
+      "sha256": "4A21A1BE8B46AAF3EFB4EB6F46A935F14BA98A1E1A5C1CDFCD9B2C6739E3127D"
+    },
+    {
+      "status": " M",
+      "path": "public/app.js",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 371501,
+      "sha256": "3888060C5408896817101FC1045F8A63965769EBFAF96B6A40C267845FB6B389"
+    },
+    {
+      "status": " M",
+      "path": "public/brand/tokens.css",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 3052,
+      "sha256": "37696375D9B6ED939823A2839E03FABCD7EB2C6E7A0D3C36D0FB992B5141370E"
+    },
+    {
+      "status": " M",
+      "path": "public/demo.html",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 13967,
+      "sha256": "3D6775C94BA098FC9BD12435C11B76C205B72E1A5C15684AD92F917C3AF84D03"
+    },
+    {
+      "status": " M",
+      "path": "public/index.html",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 22642,
+      "sha256": "386AEDE2AAD9168AE1C632CF0CBC959983E3F8FFBE6FEA1EF7B009D0EFABE08B"
+    },
+    {
+      "status": " M",
+      "path": "public/mapa-historii.html",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 9734,
+      "sha256": "A1D7EF2B66D48E5B452C25AB2575C004616716118EC8B355BDDCA0CA57B9CC4F"
+    },
+    {
+      "status": " M",
+      "path": "public/moja-historia.css",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 21677,
+      "sha256": "4322A5DAE3576B1B343773BF023750E8916DD92218F2D72791BA13F607AAD7AA"
+    },
+    {
+      "status": " M",
+      "path": "public/moja-historia.html",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 45204,
+      "sha256": "60B07EC942127C916F2463C7581AED25A258E75913D3BA140AC07DA76CDE0667"
+    },
+    {
+      "status": " M",
+      "path": "public/moja-historia.js",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 51679,
+      "sha256": "817A22AE635236FB77309ED1C1357D5F5CDB0A6F88F43F644388E20355BAD879"
+    },
+    {
+      "status": " M",
+      "path": "public/patient360-a4-consent-guard.js",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 12823,
+      "sha256": "637FBDAA1E1E334ADB65B1E3684BEF34F45D956B691637A9F09F33D616ACFB7A"
+    },
+    {
+      "status": " M",
+      "path": "public/patient360-caregiver-model.js",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 13586,
+      "sha256": "0346D1B2A11AE3E9053A1BBB5690018A630807C822868ABC25C016E60E4ED6D8"
+    },
+    {
+      "status": " M",
+      "path": "public/privacy.html",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 11168,
+      "sha256": "62C888BD29FBCA85FB3D76D7E72A1B855FD66E4BFFF9C12C35FEFB9C3C973C20"
+    },
+    {
+      "status": " M",
+      "path": "public/sitemap.xml",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 2148,
+      "sha256": "D2245697B4221BD0E3EF3014BA8D6B12151004C8574E6D0EF5228CEED8A310E9"
+    },
+    {
+      "status": " M",
+      "path": "public/styles.css",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 143217,
+      "sha256": "98127ECC4333A563823ACBAA7F98B46FE6868D92B728D2D36BE938A06F589F3A"
+    },
+    {
+      "status": " M",
+      "path": "public/sw.js",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 2169,
+      "sha256": "CBC2D7C20745A09799C1DFF38C64EA9F9C57FEAB0B61A328656ECE659A784822"
+    },
+    {
+      "status": " M",
+      "path": "tools/capture-screens.js",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 12033,
+      "sha256": "AA37FDE7DFBCA40CBFB8A6D7596283FA0A293AB2601E87C6B2F2DCD82B34A3EF"
+    },
+    {
+      "status": " M",
+      "path": "tools/check-no-cdss-copy.mjs",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 4316,
+      "sha256": "4FDDA9E8482BFE2FCBF220DA69ABA0971DED8DFAD56DB581748F10E44B594FA7"
+    },
+    {
+      "status": " M",
+      "path": "tools/check-normal-ui-no-tech-names.mjs",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 2752,
+      "sha256": "520B89FFC856210BF9FB7E53BE3E595A5917283A1A8A1E29DD3BD3FFB8570260"
+    },
+    {
+      "status": " M",
+      "path": "tools/check-task-driven-ui-boundaries.mjs",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 11704,
+      "sha256": "41A77116BE3A69285815E3F52C912DCC2F5C71115058263424092456B9044176"
+    },
+    {
+      "status": " M",
+      "path": "tools/prepare-public.ps1",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 4049,
+      "sha256": "02DFCEA7867D7457330DF69F8F182D07F0EDC131B06AB3F646DB62E819363328"
+    },
+    {
+      "status": " M",
+      "path": "tools/public-repo-manifest.txt",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 3615,
+      "sha256": "7065EA08463767454B390E934BDD6274B677777D42624054A7C1597043AFFE6A"
+    },
+    {
+      "status": " M",
+      "path": "tools/smoke-browser.js",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 97037,
+      "sha256": "8004F8487F37FAD7414891C6690F5A9F4C2E7A7A1DA016833DB645E15927399E"
+    },
+    {
+      "status": " M",
+      "path": "tools/validate-a4-consent-guard.js",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 5849,
+      "sha256": "DC1D527BE76F339856C6B0959CA3E1851CA96D01F8D8F55C10EF6DB3E9BD2A9A"
+    },
+    {
+      "status": " M",
+      "path": "tools/validate-brand-contrast.js",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 3939,
+      "sha256": "A3A3EF55A355D258177A1208A4DAE4168BF224E69BBF8F8E6C8FDA094E193C4E"
+    },
+    {
+      "status": " M",
+      "path": "tools/validate-caregiver-scope.js",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 9198,
+      "sha256": "151505FEBA20250914A12978890F9896610AB726D08719F61DAC0BFD57166FBF"
+    },
+    {
+      "status": " M",
+      "path": "tools/validate-harm-gates.js",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 4854,
+      "sha256": "11A1D4665BE55ECB34698C7358995E9CC9CF8EBD2FBDDFCC0D60CC12C7492EEA"
+    },
+    {
+      "status": " M",
+      "path": "tools/validate-pre-show.ps1",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 4300,
+      "sha256": "507C7403B992F64A409C3A197E0827957A84491269DE43EA31E65652DA553E33"
+    },
+    {
+      "status": " M",
+      "path": "tools/validate-pwa-baseline.js",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 3731,
+      "sha256": "1CDE696011D39DB3D16D0B652F9C845C573FDFA77DFB0C64621DFB760EB18654"
+    },
+    {
+      "status": " M",
+      "path": "tools/verify-click-routes.js",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 24858,
+      "sha256": "1D5DA6455D6A9C0791E979A3B53CA158658C339F9B32D99E63C13D6094C2A5CF"
+    },
+    {
+      "status": " M",
+      "path": "tools/verify-public.ps1",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 23449,
+      "sha256": "EA822B87EEBFF77ABC36B0F7A303B85508D1263D7C4D4DA535ECEEC624457AAF"
+    },
+    {
+      "status": "??",
+      "path": ".ai/MASTER_PROJECT_PROMPT.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 1259,
+      "sha256": "D568B5C21AFD963AAD5A3356AB31B602DB8433978E533182504EF6D9244D462F"
+    },
+    {
+      "status": "??",
+      "path": ".ai/skills/00_ORCHESTRATOR_CHAOS_COORDINATOR.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 615,
+      "sha256": "D6C1B85CE08C4A1CE7EAD00CDA898DAF670501C8E2272F0606DD3F1072E3C7ED"
+    },
+    {
+      "status": "??",
+      "path": ".ai/skills/10_PLANNER.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 532,
+      "sha256": "6EBEB7227D8EA707D527B22234A4BD3F6AA0FAAFF3C0C8DDA7BC1CA68DE2FC1B"
+    },
+    {
+      "status": "??",
+      "path": ".ai/skills/20_IMPLEMENTER.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 498,
+      "sha256": "C29A9BFA1719D4F87AD0E87604C9ECBD7492409ECC28E61A87B40A1BCBFCA336"
+    },
+    {
+      "status": "??",
+      "path": ".ai/skills/30_VERIFIER.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 620,
+      "sha256": "C19B80B92A82C5E1A575E2692401300D988688F1283977538E618100AB75AAB1"
+    },
+    {
+      "status": "??",
+      "path": ".ai/skills/40_EVALUATOR.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 512,
+      "sha256": "A03AEF6C7AFE0829441CDB91A5627A04E5AB88971F3F055C5D803CB87BE6D36D"
+    },
+    {
+      "status": "??",
+      "path": ".ai/skills/50_SCOPE_GUARD.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 386,
+      "sha256": "61C101D1551D03EC4EA0FB0623E2D32E7F88161016337D972477DE2D7FC6DFB1"
+    },
+    {
+      "status": "??",
+      "path": ".ai/skills/60_COMMUNITY_SYNTHESIZER.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 589,
+      "sha256": "9875C7BF1620C0E28EF2D39426C742373F838D162AC685D352C3C52172A4ABB0"
+    },
+    {
+      "status": "??",
+      "path": ".ai/skills/README.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 399,
+      "sha256": "AE13514C077B499F5773B281DBB0E91F1AE033178D3F979145229FB07E3F928D"
+    },
+    {
+      "status": "??",
+      "path": ".licenses/literature_search_arxiv_LICENSE.txt",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 218,
+      "sha256": "8835F5EBD8D4B88BFCF8A19B70A4436C39E41ACB23DE7AE3A1E5668CCDFB32F2"
+    },
+    {
+      "status": "??",
+      "path": "MANIFEST.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 1699,
+      "sha256": "F1EF9D312B2CE9629A6F86D61EA2B789AC37B405DAC128CED9E9CAE30105E530"
+    },
+    {
+      "status": "??",
+      "path": "docs/adr/0008-founder-control-pack-v1-scope-freeze.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 2452,
+      "sha256": "B410D6211833BB6949631253612AB820B85A4A845EBA55EB847AE036E5A8F26F"
+    },
+    {
+      "status": "??",
+      "path": "docs/community/COMMUNITY_FEEDBACK_RULES.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 785,
+      "sha256": "C404630C50F5F859E92F45B5A02A4A8702FB6ADA804CC84AA3625322D7DCA69F"
+    },
+    {
+      "status": "??",
+      "path": "docs/community/MODERATION_RULES.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 630,
+      "sha256": "572CEB0F333EAFB05BBDF858DF8F7435AFB43CB9ED2D4ACC9D6CDFEC4AE20B22"
+    },
+    {
+      "status": "??",
+      "path": "docs/community/SOCIAL_MEDIA_CLAIMS_GUIDE.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 827,
+      "sha256": "9E21A70B0E76C321475420F285C1E7A1F4C002E2A5347FC357CF7A8F99F8F61F"
+    },
+    {
+      "status": "??",
+      "path": "docs/governance/AI_AGENT_GATES.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 984,
+      "sha256": "334E7D57095D6F902F66882A834611E0804A6AB554BAE26254E921F2DC2F9527"
+    },
+    {
+      "status": "??",
+      "path": "docs/governance/CHANGE_CONTROL_AND_ODSKOKI.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 1188,
+      "sha256": "187AA8C320A95058418691233D03C474EB0C0D8FA0D62E5969A3E8349334F469"
+    },
+    {
+      "status": "??",
+      "path": "docs/governance/CURRENT_SCOPE_MANIFEST.json",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 3812,
+      "sha256": "7858B71778FDF3AC9173671F4599397568CB0CBC3E02B914D4EF19889B6C5186"
+    },
+    {
+      "status": "??",
+      "path": "docs/governance/MASTER_PROMPT_GUARDRAILED_DELIVERY.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 2898,
+      "sha256": "82CE00D019E1B6FC9C575EC93E2DD209EB97A3E4F044883DF833E09B4388B77A"
+    },
+    {
+      "status": "??",
+      "path": "docs/governance/NO_CDSS_LANGUAGE_RULES.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 1353,
+      "sha256": "56B8CA0819AF28303DE3AF342B9204A0F2392F684C4E9F5F534762E4DFB96B90"
+    },
+    {
+      "status": "??",
+      "path": "docs/governance/OWNER_RACI_MATRIX.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 2797,
+      "sha256": "BC5F38AE546431F31E3A181EE7150E71A61BFDA187E41C459522AB6D59D9E74C"
+    },
+    {
+      "status": "??",
+      "path": "docs/governance/RFC_ODSKOK_TEMPLATE.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 1074,
+      "sha256": "1E6AC424622474766DE59AFDE9868973F611EF5961FBF4D89295667E4AD41178"
+    },
+    {
+      "status": "??",
+      "path": "docs/governance/RISK_REGISTER_STARTER.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 1031,
+      "sha256": "E227D881B66FD80731A75D0268963280191C6872C3C9A40F7E2252CBC56854D0"
+    },
+    {
+      "status": "??",
+      "path": "docs/governance/ROLE_SKILL_OPERATING_MODEL.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 1243,
+      "sha256": "CFAA25D0A7EF6F528B736F41E9207B4E9032BEF56AD91C07DBA6DAAD6D6408CF"
+    },
+    {
+      "status": "??",
+      "path": "docs/governance/S0_G0_EVIDENCE_PACK_2026-07-10.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 7869,
+      "sha256": "7FA4B4037E7CF307A75B3F3F23B3E5098FE657EBE4201872D136745F48FB64EF"
+    },
+    {
+      "status": "??",
+      "path": "docs/governance/SCOPE_GUARDRAILS.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 2230,
+      "sha256": "9E42C9E719E150F8238A45A6B9263FEE784A9D8A86119CD209F87E57E2FB10DE"
+    },
+    {
+      "status": "??",
+      "path": "docs/governance/SKILL_CHAIN_PROTOCOL.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 1309,
+      "sha256": "4660748CBE6C88D68517DF1CE155A8DF6750C17C13F4E61AF6DFDC530BA860E9"
+    },
+    {
+      "status": "??",
+      "path": "docs/product/EXECUTION_PLAN_2026_2027.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 46822,
+      "sha256": "96D909AE0C69E59D99DE6FAA5AF269CE8B932E493C5E1A8A71E66B8543D14487"
+    },
+    {
+      "status": "??",
+      "path": "docs/product/FOUNDER_DECISION_PACK_2026-07-10.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 17026,
+      "sha256": "D00AF5D70F31A6E89E712182ED49C1E584A8115C3C05BB0ECFE9270B559223DA"
+    },
+    {
+      "status": "??",
+      "path": "docs/product/MVP_DEMO_SPRINT_2026-07-10.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 16852,
+      "sha256": "A8E85570670853B0FC2A7973F08DCEB7CCB0AFB81F43D2FDEE5CAE95DFEAEDA4"
+    },
+    {
+      "status": "??",
+      "path": "docs/product/MVP_SCOPE_PATIENT_CAREGIVER.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 1582,
+      "sha256": "9057CF4DD50BCD30A75750C2EC22B4A1D880599DEB1D163867E9D9FC00119FE4"
+    },
+    {
+      "status": "??",
+      "path": "docs/product/OUT_OF_SCOPE.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 987,
+      "sha256": "77873A18B1C04D0D89A6ED1D996F83D7015AF38E279CB076B87CB5B733D034E7"
+    },
+    {
+      "status": "??",
+      "path": "docs/product/PACJENT360_FOUNDER_CONTROL_PACK_V1_2026-07-10.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 15630,
+      "sha256": "61CA2A2E955059974F189B1589B0F39D5AC32549D1D9BB3BFB21621653EFC667"
+    },
+    {
+      "status": "??",
+      "path": "docs/product/PRODUCT_CONSTITUTION.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 2653,
+      "sha256": "A0A1EE73D67721491031559A3110BD09CB60BC59968592C252B48255FB80DEA0"
+    },
+    {
+      "status": "??",
+      "path": "docs/product/ROADMAP_2026_2027.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 45376,
+      "sha256": "A64434A02D54B8B40AF573FE47A8D12B3E0A4B6C2EA8937B25D48926B6C0E463"
+    },
+    {
+      "status": "??",
+      "path": "docs/product/ROADMAP_SMALL_STEPS.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 1522,
+      "sha256": "8F83DC70A1E6BA8C748E42228779CAE5D67448C6B2422095D28870EF473D3D3B"
+    },
+    {
+      "status": "??",
+      "path": "docs/product/USER_FLOWS_PATIENT_CAREGIVER.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 1147,
+      "sha256": "516DCCCFFE76C660375C84C09F083E6008135CE7014145020D4410392B8CC7A3"
+    },
+    {
+      "status": "??",
+      "path": "docs/product/WO_P360_S0_GOVERNANCE_FREEZE_2026-07-10.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 7673,
+      "sha256": "64177E32EA40DA486834151C3983C8B283947F07EA4AD9B7E0569EE24F23C0C0"
+    },
+    {
+      "status": "??",
+      "path": "docs/qa/ACCEPTANCE_CRITERIA_PATIENT_CAREGIVER.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 1151,
+      "sha256": "6F1C717CD6C2B61E988BEBCA5A607F718A377EBCC0EE2D00D384C95B879C7FE6"
+    },
+    {
+      "status": "??",
+      "path": "docs/qa/DEFINITION_OF_READY_DONE.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 2415,
+      "sha256": "A7FD017861A863ED18D6B9115259174ED5BAE425797981B54054E4227848422D"
+    },
+    {
+      "status": "??",
+      "path": "docs/qa/MOBILE_QA_CHECKLIST.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 520,
+      "sha256": "6BE7CB3FFBA31A568B3A76C5B78D9DD75B4BE9591924E8A370E290BC9FDE0939"
+    },
+    {
+      "status": "??",
+      "path": "docs/qa/SAFETY_QA_CHECKLIST.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 927,
+      "sha256": "EFBEFDFB11950ECFED5458AB9146D454B9807BB766C03D9B0209B0141D1A969B"
+    },
+    {
+      "status": "??",
+      "path": "docs/reviews/PACJENT360_DEFENSIVE_RED_TEAM_2026-07-09.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 17236,
+      "sha256": "D31FCA245B62EC122D946C24CFD143C89FD35BF411F2B0715D02B06B89925D76"
+    },
+    {
+      "status": "??",
+      "path": "docs/reviews/PACJENT360_MULTIAGENT_REVIEW_2026-07-09.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 18348,
+      "sha256": "C94FF02E9090AC0B142294CB6C35AFA66195E29C31B4EE806661DF2734C0832F"
+    },
+    {
+      "status": "??",
+      "path": "docs/ux/CAREGIVER_UX_RULES.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 910,
+      "sha256": "AED75ED5D834D229E517C889302CA1803563C0141E4E1B086687C377F9C468F0"
+    },
+    {
+      "status": "??",
+      "path": "docs/ux/HISTORY_CARD_SPEC.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 963,
+      "sha256": "4621D30D24398E97BEE46E6E2EB078B71E329EE0BB7F2F39E64177DC9FE6CC32"
+    },
+    {
+      "status": "??",
+      "path": "docs/ux/MOBILE_FIRST_RULES.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 830,
+      "sha256": "1695B5EE5A60B611A35C90A253699ECFCDB87110C9D808238676258CD3ADB5F5"
+    },
+    {
+      "status": "??",
+      "path": "public/moja-historia-tech-gate.js",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 261,
+      "sha256": "1D5AEF280E4F2078BD86343064EF3BA1B61DEE89B20AF6B888DBBCCCDB2BB94E"
+    },
+    {
+      "status": "??",
+      "path": "research/ANTIGRAVITY_RESEARCH_PROMPT.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 3621,
+      "sha256": "E5DBF2CB120CCCBAFBE0556A3B88D4F1E2F0452F8013313A29B67A2FB6882980"
+    },
+    {
+      "status": "??",
+      "path": "research/ANTIGRAVITY_RESEARCH_PROMPT_PHASE_C.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 6567,
+      "sha256": "D8C5266671AD9211BC4E00766488D1C46B7AF62E560FC37E056CE79001534E35"
+    },
+    {
+      "status": "??",
+      "path": "research/ANTIGRAVITY_RESEARCH_PROMPT_PHASE_D.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 8477,
+      "sha256": "29DF6C06A6AB252D4C039908860EEBF59222075C8E2625C3AA995ABA0894504F"
+    },
+    {
+      "status": "??",
+      "path": "research/COUNCIL_REVIEW_PHASE_D_CAREGIVER_TRANSPARENCY.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 5415,
+      "sha256": "85349E8AF1E3341A10E9FB3873ACB201C25C02A69EB5B390744239A409EC932C"
+    },
+    {
+      "status": "??",
+      "path": "research/COUNCIL_REVIEW_PROMPT_PHASE_A.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 3098,
+      "sha256": "71D9D563A678FA016CC3A2004CCD567E4AEC3282BBA1E481B9BCCE7FB7D43EE3"
+    },
+    {
+      "status": "??",
+      "path": "research/RESEARCH_01_Wywiady_Problemy_Pacjentow.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 6822,
+      "sha256": "E173B173494E6356F7E3CDDA3008CD46257D38A72547A22B884C8A0FAEB9CB0E"
+    },
+    {
+      "status": "??",
+      "path": "research/RESEARCH_02_Nawigacja_Ekran_Glowny.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 3962,
+      "sha256": "ECFC66435D67D9380C64EDE1299B7BF5A140A192F87BD1D8A0A915BE1AC7E1DF"
+    },
+    {
+      "status": "??",
+      "path": "research/RESEARCH_03_Mechanika_Wpisow_i_Zrodel.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 5157,
+      "sha256": "486230392E6ED7BC9C36AA34B154C83066E89C1F75E31F4A9B82FC05FE7D209E"
+    },
+    {
+      "status": "??",
+      "path": "research/RESEARCH_04_Prawa_Opiekuna_Zakres_Dostepu.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 6204,
+      "sha256": "4EB058448BE0D5F30485F3F999E6824B5FE6A5AAC4D32A7179CD9160AAD073C7"
+    },
+    {
+      "status": "??",
+      "path": "research/RESEARCH_05_Symulacja_Zmeczenie_Powiadomieniami.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 6101,
+      "sha256": "9219A547BE27A1F18000762D0F5F1D88CE0BECD00D1E069AE95648364CFB9E13"
+    },
+    {
+      "status": "??",
+      "path": "research/RESEARCH_06_Dostepnosc_A11y_Dla_Seniorow.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 3536,
+      "sha256": "A2B12881612FCE6F59CF23E82CC329F81286FCBF82C47D5A1ABE364078B5A697"
+    },
+    {
+      "status": "??",
+      "path": "research/RESEARCH_07_Rozwiazywanie_Konfliktow_W_Opiece.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 3471,
+      "sha256": "B7A6AD614CBB4672BFE6CAC89A1AD13E7D278E440B37ACA535147992D998F6BF"
+    },
+    {
+      "status": "??",
+      "path": "research/RESEARCH_08_Standardy_Danych_FHIR_openEHR.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 2589,
+      "sha256": "0D25221BE230CB3179C8C355238B17D3AEB7BB8C4D99034806276A98EE65F0DE"
+    },
+    {
+      "status": "??",
+      "path": "research/RESEARCH_09_Onboarding_Budowanie_Zaufania.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 3030,
+      "sha256": "C95A89FC634020E82A860418B462667B356DE105E84DD0A37121E9DB99614DA4"
+    },
+    {
+      "status": "??",
+      "path": "research/RESEARCH_10_Przeglad_Literatury_Medycznej.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 4733,
+      "sha256": "90E613869581DB3F1241564D73005A1DF185E0B5E5B016B8D166F58F60750F3D"
+    },
+    {
+      "status": "??",
+      "path": "research/RESEARCH_11_Dashboard_i_Przeciazenie_Informacyjne.md",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 4480,
+      "sha256": "8D76EEC5DB07D016A718B17A537ED3D2117700A119468F379328BE6E407450E9"
+    },
+    {
+      "status": "??",
+      "path": "research/arxiv_mhealth.json",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 68876,
+      "sha256": "40126A451EAA98796AE72B6761913875B5432C805FC20FB930A6A7A27C7E4331"
+    },
+    {
+      "status": "??",
+      "path": "research/arxiv_patient.json",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 19204,
+      "sha256": "919AE5824BB06541A1CFED8F7A2BA7B8162A023C2B366690189AA6273CF775EA"
+    },
+    {
+      "status": "??",
+      "path": "research/medrxiv_dashboards.json",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 78672,
+      "sha256": "52D0E5E9DAAFD3C56A46FD34657E2FAC7AC0913481F83F7CED17403E1087F8DE"
+    },
+    {
+      "status": "??",
+      "path": "tests/current-scope-validator.test.mjs",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 2484,
+      "sha256": "0B77D418181EC78062153D04D129BBC7B8469AF9685DF29A70D1EA0E1A29FA31"
+    },
+    {
+      "status": "??",
+      "path": "tools/validate-current-scope.mjs",
+      "exists": true,
+      "tracked": false,
+      "ignored": false,
+      "size": 7905,
+      "sha256": "7BEFFF3F2A386C9ABC7AFD2C15BF4AF8123F74D226D23C878A1CED1E635E5A62"
+    }
+  ],
+  "reconstructedTrackedEntries": [
+    {
+      "path": "CHANGELOG.md",
+      "source": "git:1a2e4b6a9bef10259b874bf4c3672fcdfb84f8a4",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 2118,
+      "sha256": "9953B1FF1A9427B94B2F1714676F15C986819569EB2E1DC3DC2EA3E5462AA704"
+    },
+    {
+      "path": "docs/adr/0005-product-ssot-hierarchy.md",
+      "source": "git:1a2e4b6a9bef10259b874bf4c3672fcdfb84f8a4",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 1839,
+      "sha256": "E8AD5778CA5E26E9AB1C625617DFD639D6688EADFECC154C8BACA065E100372F"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "source": "git:1a2e4b6a9bef10259b874bf4c3672fcdfb84f8a4",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 30166,
+      "sha256": "7085CC714E399D4D024B672E8709A8B20B70F08BACBB3695E6A9A93591E509A2"
+    },
+    {
+      "path": "docs/governance/DEFINITION_OF_HARM.md",
+      "source": "git:1a2e4b6a9bef10259b874bf4c3672fcdfb84f8a4",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 4067,
+      "sha256": "29DB01DEFB138DFF3E22CB09934E9D3110939AA8A6732BF8C2994049B37C4B51"
+    },
+    {
+      "path": "docs/governance/RISKS.md",
+      "source": "git:1a2e4b6a9bef10259b874bf4c3672fcdfb84f8a4",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 3834,
+      "sha256": "802173EC00987A729BFFD103A0969CCE0695F23517ECF69F411AC56DBC1F76FF"
+    },
+    {
+      "path": "docs/governance/SAFETY_CASE.md",
+      "source": "git:1a2e4b6a9bef10259b874bf4c3672fcdfb84f8a4",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 4736,
+      "sha256": "A834856428BE69A46083921F7BEE775D11ABF816583F0244189DF9F9B3618729"
+    },
+    {
+      "path": "docs/product/A1_A8_ROADMAP_REFRAME.md",
+      "source": "git:1a2e4b6a9bef10259b874bf4c3672fcdfb84f8a4",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 3310,
+      "sha256": "787778675956154A0C53B7AE6B3DDA229DB86C911063CBF870DB91A0A501B2FD"
+    },
+    {
+      "path": "docs/product/A1_SAFE_DRAFT_DASHBOARD_BRIEF.md",
+      "source": "git:1a2e4b6a9bef10259b874bf4c3672fcdfb84f8a4",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 5302,
+      "sha256": "CC27AC97691DA0B2642E2A59B5CF8E54F626E2C4AF871395EBE2E9CE0AFFB86D"
+    },
+    {
+      "path": "docs/PROJECT_CHRONICLE.md",
+      "source": "git:1a2e4b6a9bef10259b874bf4c3672fcdfb84f8a4",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 2292,
+      "sha256": "0B328519D8BBE3F6BFE50250AEA9049C048BF1742A43C67771412990AE063E1F"
+    },
+    {
+      "path": "docs/SPRINTS.md",
+      "source": "git:1a2e4b6a9bef10259b874bf4c3672fcdfb84f8a4",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 28387,
+      "sha256": "30369548074EFAC7ED115E86ACBBD6B0E3E15F7C902E5C196BE64C5536D2DF9F"
+    },
+    {
+      "path": "docs/SSOT.md",
+      "source": "git:1a2e4b6a9bef10259b874bf4c3672fcdfb84f8a4",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 18168,
+      "sha256": "84DF1DD381E89CA54F563561838682483A86131CFD7EE0096AF6590E24175A0D"
+    },
+    {
+      "path": "docs/TIMELINE_VISION.md",
+      "source": "git:1a2e4b6a9bef10259b874bf4c3672fcdfb84f8a4",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 19251,
+      "sha256": "A1885BF029E6980FC13DFB4875A37641A93B002B3254641A456EBEA7DB913415"
+    },
+    {
+      "path": "SECURITY.md",
+      "source": "git:1a2e4b6a9bef10259b874bf4c3672fcdfb84f8a4",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 2992,
+      "sha256": "A05AC8217EE138B095FC6DD76240D7C6A9449A00EFB1D469161C4997A735D91D"
+    },
+    {
+      "path": "tools/validate-go-live.ps1",
+      "source": "git:1a2e4b6a9bef10259b874bf4c3672fcdfb84f8a4",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 14370,
+      "sha256": "0A1D63C790F87A0F3177B2BDE1C96C45CA692BE26AF39625AD112B41355BA3AE"
+    },
+    {
+      "path": "tools/verify-public-repo.ps1",
+      "source": "git:1a2e4b6a9bef10259b874bf4c3672fcdfb84f8a4",
+      "exists": true,
+      "tracked": true,
+      "ignored": false,
+      "size": 11948,
+      "sha256": "9BFF37B9179CE0E4127D574E74E84A0CB685F15E7B641918742008FE934B68AB"
+    }
+  ],
+  "reconstructedTrackedEntryCount": 15,
+  "reconstructionMethod": "git show <captured-head>:<path> for allowlisted paths absent from porcelain baseline"
+}

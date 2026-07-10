@@ -3,6 +3,7 @@
 .github/
 .gitattributes
 README.md
+PRODUCT_SSOT.md
 LICENSE
 NOTICE
 SECURITY.md
@@ -13,8 +14,6 @@ docs/ARCHITECTURE.md
 docs/PROGRAM_PLAN.md
 docs/PROJECT_CHRONICLE.md
 docs/ROADMAP.md
-docs/SPRINTS.md
-docs/SSOT.md
 docs/TIMELINE_VISION.md
 docs/governance/
 docs/legal/
@@ -24,6 +23,13 @@ docs/adr/
 docs/product/PACJENT360_NORTH_STAR.md
 docs/product/A1_A8_ROADMAP_REFRAME.md
 docs/product/A1_SAFE_DRAFT_DASHBOARD_BRIEF.md
+docs/product/MVP_DEMO_SPRINT_2026-07-10.md
+docs/product/FIRST_WEDGE.md
+docs/product/PRODUCT_CONSTITUTION.md
+docs/product/ROADMAP_2026_2027.md
+docs/product/EXECUTION_PLAN_2026_2027.md
+docs/product/PACJENT360_FOUNDER_CONTROL_PACK_V1_2026-07-10.md
+docs/product/WO_P360_S0_GOVERNANCE_FREEZE_2026-07-10.md
 api/openapi.yaml
 tools/public-repo-manifest.txt
 tools/prepare-hosting-upload.ps1
@@ -37,6 +43,9 @@ tools/smoke-browser.js
 tools/verify-click-routes.js
 tools/verify-reactivity.ps1
 tools/verify-reactivity.js
+tools/check-task-driven-ui-boundaries.mjs
+tools/check-normal-ui-no-tech-names.mjs
+tools/check-no-cdss-copy.mjs
 tools/domain-diagnostics.js
 tools/release-readiness.js
 tools/prepare-public-repo.ps1
@@ -53,8 +62,9 @@ tools/validate-s2-runtime-contracts.ps1
 tools/validate-s2-runtime-contracts.js
 tools/validate-s2-prototypes.ps1
 tools/validate-s2-prototypes.js
-tools/acceptance/
-tools/validate-sh-loop-state.js
+tools/validate-current-scope.mjs
+tools/capture-s0-boundary.mjs
+tests/current-scope-validator.test.mjs
 tools/validate-data-contract.ps1
 tools/validate-data-contract.js
 tools/validate-format.ps1
@@ -73,6 +83,7 @@ tools/validate-demo-coherence.ps1
 tools/validate-demo-coherence.js
 tools/validate-a11y.ps1
 tools/validate-a11y.js
+tools/validate-brand-contrast.js
 tools/validate-a0-agent-policy.ps1
 tools/validate-a0-agent-policy.js
 tools/validate-a1-safe-draft-dashboard.ps1

@@ -1,8 +1,12 @@
 # A1-A8 Roadmap Reframe
 
-Status: strategic reframe, not sprint activation
+<!-- P360_CONTROL_STATUS: SUPERSEDED -->
+
+> **SUPERSEDED / REFERENCE_ONLY:** historical strategic reframe. It does not define the current product, activate a sprint, order implementation or create a Founder decision queue. Current authority is `PRODUCT_SSOT.md`, `docs/product/PACJENT360_FOUNDER_CONTROL_PACK_V1_2026-07-10.md`, `docs/governance/CURRENT_SCOPE_MANIFEST.json` and the single active work order.
+
+Status: historical strategic reframe, not current backlog
 Date: 2026-06-26
-Source input: interdisciplinary strategic review, normalized to SSOT
+Source input: interdisciplinary strategic review, preserved as historical evidence
 
 ## Decision
 
@@ -11,8 +15,9 @@ The A1-A8 roadmap is split into two phases:
 - Phase 1: Context Secretariat.
 - Phase 2: High-Risk Assistance.
 
-This document does not unlock implementation. `docs/SPRINTS.md` remains the
-execution backlog, while this file sets the strategic ordering and risk posture.
+This document does not unlock implementation. `docs/SPRINTS.md` is also
+superseded and does not remain an execution backlog. The current backlog is only
+the sprint and work order identified by the active control plane.
 
 ## Phase 1: Context Secretariat
 
@@ -89,4 +94,3 @@ Before moving beyond Phase 1 planning, keep evidence for:
 - doctor/reviewer validation on synthetic cases;
 - proof that timeline, chart, table and report use the same source-linked IDs;
 - proof that commercial messaging does not imply a medical device claim.
-

@@ -1,6 +1,10 @@
 # Kronika projektu Pacjent360
 
-Status: publiczna kronika najwazniejszych decyzji i kamieni milowych projektu.  
+<!-- P360_CONTROL_STATUS: REFERENCE_ONLY -->
+
+> **REFERENCE_ONLY dla current scope:** kronika zachowuje historię, ale nie ustanawia aktywnego wedge'a, backlogu ani gate'u. Wiążące decyzje znajdują się w ADR i `docs/governance/DECISION_LOG.md`.
+
+Status: historyczna publiczna kronika najwazniejszych decyzji i kamieni milowych projektu.
 Cel: utrzymac sladowalnosc tego, co powstalo, kiedy i na jakim poziomie pewnosci.
 
 > Kronika nie zastepuje roadmapy ani changeloga. Roadmapa mowi, dokad idziemy. Changelog mowi, co zmienilo sie w kodzie i dokumentacji. Kronika zapisuje decyzje founder/product/legal, ktore latwo zgubic w rozmowach.

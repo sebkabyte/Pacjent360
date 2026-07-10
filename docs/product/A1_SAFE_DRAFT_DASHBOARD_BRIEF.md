@@ -1,14 +1,18 @@
 # A1 Safe Draft Dashboard Brief
 
-Status: kickoff intake, not active implementation
+<!-- P360_CONTROL_STATUS: SUPERSEDED -->
+
+> **SUPERSEDED / REFERENCE_ONLY:** historical A1 design brief. It does not activate A1, authorize UI work or create current acceptance gates or Founder decisions. Current authority is `PRODUCT_SSOT.md`, `docs/product/PACJENT360_FOUNDER_CONTROL_PACK_V1_2026-07-10.md`, `docs/governance/CURRENT_SCOPE_MANIFEST.json` and the single active work order.
+
+Status: historical kickoff intake, not current implementation
 Date: 2026-06-26
-Source input: Gemini UX strategy review, normalized to Pacjent360 SSOT
+Source input: Gemini UX strategy review, preserved as historical evidence
 
 ## Positioning
 
-Sprint A1 can be planned as a separate sprint after A0, but this brief does not
-activate A1. The dashboard remains dry-run only until a human
-safety/privacy/security review explicitly opens implementation.
+This archived brief does not provide a path from A0 to A1. A1 is not current
+scope and can only be reconsidered through the active governance process and an
+explicitly authorized future work order.
 
 The product principle for A1 is:
 
@@ -113,9 +117,9 @@ Avoid in user-visible copy:
 - An export looks like official medical documentation.
 - A progress metric makes the patient feel pressure or clinical readiness.
 
-## A1 Acceptance Gates
+## Historical A1 Acceptance Gates
 
-The A1 fixture and any future UI must pass these gates:
+The archived A1 proposal used these gates. They do not activate current or future UI work:
 
 - `Data Gate`: fixture only, no user medical input and no real patient data.
 - `Runtime Gate`: runtime LLM calls are disabled.
@@ -133,7 +137,7 @@ The A1 fixture and any future UI must pass these gates:
 - `Consent Gate`: caregiver views omit blocked areas without naming them.
 - `Scope Gate`: A1 does not include booking, purchases or external actions.
 
-## Founder Decisions Before Implementation
+## Historical Open Questions (Not Current Founder Decisions)
 
 1. Whether plain language always appears next to original source text.
 2. Whether `source_missing` renders as an item-level marker or blocks a card.
